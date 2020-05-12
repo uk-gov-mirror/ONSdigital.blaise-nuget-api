@@ -1,5 +1,5 @@
 ﻿
-namespace Blaise.Nuget.Core.Models
+namespace Blaise.Nuget.Api.Core.Models
 {
     public class ConnectionModel
     {

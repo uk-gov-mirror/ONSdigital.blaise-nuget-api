@@ -1,8 +1,5 @@
 ﻿using Blaise.Nuget.Api.Helpers;
 using Blaise.Nuget.Api.Providers;
-using Blaise.Nuget.Core.Factories;
-using Blaise.Nuget.Core.Interfaces;
-using Blaise.Nuget.Core.Services;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 using System;
@@ -10,6 +7,9 @@ using System.Collections.Generic;
 using Unity;
 using Unity.Injection;
 using Blaise.Nuget.Api.Contracts.Interfaces;
+using Blaise.Nuget.Api.Core.Interfaces;
+using Blaise.Nuget.Api.Core.Services;
+using Blaise.Nuget.Api.Core.Factories;
 
 namespace Blaise.Nuget.Api
 { 

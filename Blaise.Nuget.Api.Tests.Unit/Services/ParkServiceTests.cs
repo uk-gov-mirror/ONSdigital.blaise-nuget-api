@@ -1,5 +1,5 @@
-﻿using Blaise.Nuget.Core.Interfaces;
-using Blaise.Nuget.Core.Services;
+﻿using Blaise.Nuget.Api.Core.Interfaces;
+using Blaise.Nuget.Api.Core.Services;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.ServerManager;
@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Blaise.Nuget.Tests.Unit.Services
+namespace Blaise.Nuget.Api.Tests.Unit.Services
 {
     public class ParkServiceTests
     {

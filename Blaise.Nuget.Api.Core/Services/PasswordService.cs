@@ -1,8 +1,8 @@
-﻿using Blaise.Nuget.Core.Interfaces;
+﻿using Blaise.Nuget.Api.Core.Interfaces;
 using System.Security;
 
-namespace Blaise.Nuget.Core.Services
-{
+namespace Blaise.Nuget.Api.Core.Services
+{ 
     public class PasswordService : IPasswordService
     {
         public SecureString CreateSecurePassword(string password)

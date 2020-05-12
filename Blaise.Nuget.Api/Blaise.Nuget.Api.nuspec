@@ -19,7 +19,7 @@
   <files>
     <file src="bin\release\Content\app.config.transform" target="content\app.config.transform" />
     <file src="bin\release\Blaise.Nuget.Api.dll" target="lib\net472\Blaise.Nuget.Api.dll" />
-    <file src="bin\release\Blaise.Nuget.Core.dll" target="lib\net472\Blaise.Nuget.Core.dll" />
+    <file src="bin\release\Blaise.Nuget.Api.Core.dll" target="lib\net472\Blaise.Nuget.Api.Core.dll" />
   </files>
 </package>
 

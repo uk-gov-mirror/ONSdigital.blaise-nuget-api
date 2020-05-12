@@ -1,9 +1,9 @@
-﻿using Blaise.Nuget.Core.Interfaces;
+﻿using Blaise.Nuget.Api.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Blaise.Nuget.Core.Services
+namespace Blaise.Nuget.Api.Core.Services
 {
     public class ParkService : IParkService
     {

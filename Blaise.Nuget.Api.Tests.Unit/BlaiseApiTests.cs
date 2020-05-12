@@ -1,5 +1,4 @@
-﻿using Blaise.Nuget.Api;
-using Blaise.Nuget.Core.Interfaces;
+﻿using Blaise.Nuget.Api.Core.Interfaces;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.DataRecord;
@@ -7,7 +6,7 @@ using StatNeth.Blaise.API.Meta;
 using System;
 using System.Collections.Generic;
 
-namespace Blaise.Nuget.Tests.Unit
+namespace Blaise.Nuget.Api.Tests.Unit
 {
     public class BlaiseApiTests
     {

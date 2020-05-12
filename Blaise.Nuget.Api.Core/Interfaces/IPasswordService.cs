@@ -1,7 +1,7 @@
 ﻿
 using System.Security;
 
-namespace Blaise.Nuget.Core.Interfaces
+namespace Blaise.Nuget.Api.Core.Interfaces
 {
     public interface IPasswordService
     {

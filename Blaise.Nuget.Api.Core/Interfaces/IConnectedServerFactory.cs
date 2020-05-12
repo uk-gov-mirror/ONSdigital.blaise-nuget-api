@@ -1,6 +1,6 @@
 ﻿using StatNeth.Blaise.API.ServerManager;
 
-namespace Blaise.Nuget.Core.Interfaces
+namespace Blaise.Nuget.Api.Core.Interfaces
 {
     public interface IConnectedServerFactory
     {

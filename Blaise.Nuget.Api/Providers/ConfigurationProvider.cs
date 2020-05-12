@@ -1,5 +1,5 @@
 ﻿
-using Blaise.Nuget.Core.Models;
+using Blaise.Nuget.Api.Core.Models;
 using System;
 using System.Configuration;
 

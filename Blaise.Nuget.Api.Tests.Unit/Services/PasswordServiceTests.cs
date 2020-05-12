@@ -1,5 +1,5 @@
 ﻿
-using Blaise.Nuget.Core.Services;
+using Blaise.Nuget.Api.Core.Services;
 using NUnit.Framework;
 using System.Security;
 

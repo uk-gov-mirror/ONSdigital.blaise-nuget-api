@@ -7,8 +7,8 @@
     <ProjectGuid>{0229D577-14D0-4B08-95CB-55EDC837BC0D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Blaise.Nuget.Core</RootNamespace>
-    <AssemblyName>Blaise.Nuget.Core</AssemblyName>
+    <RootNamespace>Blaise.Nuget.Api.Core</RootNamespace>
+    <AssemblyName>Blaise.Nuget.Api.Core</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Factories\ConnectedServerFactory.cs" />
     <Compile Include="Factories\RemoteDataServerFactory.cs" />
     <Compile Include="Interfaces\IConnectedServerFactory.cs" />

@@ -9,8 +9,8 @@
     <ProjectGuid>{455E87E1-3EBB-4231-9AD7-D3349B9A3D11}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Blaise.Nuget.Tests.Unit</RootNamespace>
-    <AssemblyName>Blaise.Nuget.Tests.Unit</AssemblyName>
+    <RootNamespace>Blaise.Nuget.Api.Tests.Unit</RootNamespace>
+    <AssemblyName>Blaise.Nuget.Api.Tests.Unit</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -84,9 +84,9 @@
       <Project>{0e6396dc-d598-4027-a384-15fc543d23b0}</Project>
       <Name>Blaise.Nuget.Api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Blaise.Nuget.Core\Blaise.Nuget.Core.csproj">
+    <ProjectReference Include="..\Blaise.Nuget.Api.Core\Blaise.Nuget.Api.Core.csproj">
       <Project>{0229d577-14d0-4b08-95cb-55edc837bc0d}</Project>
-      <Name>Blaise.Nuget.Core</Name>
+      <Name>Blaise.Nuget.Api.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

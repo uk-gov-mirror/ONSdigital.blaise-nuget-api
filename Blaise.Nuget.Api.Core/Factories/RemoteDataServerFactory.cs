@@ -1,8 +1,8 @@
-﻿using Blaise.Nuget.Core.Interfaces;
-using Blaise.Nuget.Core.Models;
+﻿using Blaise.Nuget.Api.Core.Interfaces;
+using Blaise.Nuget.Api.Core.Models;
 using StatNeth.Blaise.API.DataLink;
 
-namespace Blaise.Nuget.Core.Factories
+namespace Blaise.Nuget.Api.Core.Factories
 {
     public class RemoteDataServerFactory : IRemoteDataServerFactory
     {

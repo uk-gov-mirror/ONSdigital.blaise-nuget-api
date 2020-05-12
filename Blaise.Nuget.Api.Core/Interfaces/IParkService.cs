@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Blaise.Nuget.Core.Interfaces
+namespace Blaise.Nuget.Api.Core.Interfaces
 {
     public interface IParkService
     {

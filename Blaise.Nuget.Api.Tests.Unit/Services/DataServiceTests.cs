@@ -1,11 +1,11 @@
-﻿using Blaise.Nuget.Core.Interfaces;
-using Blaise.Nuget.Core.Services;
+﻿using Blaise.Nuget.Api.Core.Interfaces;
+using Blaise.Nuget.Api.Core.Services;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 
-namespace Blaise.Nuget.Tests.Unit.Services
+namespace Blaise.Nuget.Api.Tests.Unit.Services
 {
     public class DataServiceTests
     {
