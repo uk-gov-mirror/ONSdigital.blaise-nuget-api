@@ -6,14 +6,14 @@ namespace Blaise.Nuget.Core.Services
 {
     public class DataManagerService : IDataManagerService
     {
-        public IDataRecord GetDataRecord(IDatamodel datamodel)
+        public IDataRecord GetDataRecord(IDatamodel dataModel)
         {
-            return DataRecordManager.GetDataRecord(datamodel);
+            return DataRecordManager.GetDataRecord(dataModel);
         }
 
-        public IKey GetKey(IDatamodel datamodel, string keyName)
+        public IKey GetKey(IDatamodel dataModel, string keyName)
         {
-            return DataRecordManager.GetKey(datamodel, keyName);
+            return DataRecordManager.GetKey(dataModel, keyName);
         }
     }
 }

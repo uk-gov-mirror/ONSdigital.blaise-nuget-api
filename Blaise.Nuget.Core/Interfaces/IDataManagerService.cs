@@ -5,8 +5,8 @@ namespace Blaise.Nuget.Core.Interfaces
 {
     public interface IDataManagerService
     {
-        IDataRecord GetDataRecord(IDatamodel datamodel);
+        IDataRecord GetDataRecord(IDatamodel dataModel);
 
-        IKey GetKey(IDatamodel datamodel, string keyName);
+        IKey GetKey(IDatamodel dataModel, string keyName);
     }
 }
