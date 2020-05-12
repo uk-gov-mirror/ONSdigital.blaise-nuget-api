@@ -5,14 +5,14 @@ using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Core.Factories
 {
-    public class BlaiseConnectedServerFactory : IConnectedServerFactory
+    public class ConnectedServerFactory : IConnectedServerFactory
     {
         private readonly IPasswordService _passwordService;
         private readonly ConnectionModel _connectionModel;
 
         private IConnectedServer _connectedServer;
 
-        public BlaiseConnectedServerFactory(
+        public ConnectedServerFactory(
             ConnectionModel connectionModel,
             IPasswordService passwordService)
         {

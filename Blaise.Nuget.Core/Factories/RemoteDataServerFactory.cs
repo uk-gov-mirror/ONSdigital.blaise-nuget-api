@@ -4,14 +4,14 @@ using StatNeth.Blaise.API.DataLink;
 
 namespace Blaise.Nuget.Core.Factories
 {
-    public class BlaiseRemoteDataServerFactory : IRemoteDataServerFactory
+    public class RemoteDataServerFactory : IRemoteDataServerFactory
     {
         private readonly IPasswordService _passwordService;
         private readonly ConnectionModel _connectionModel;
 
         private IRemoteDataServer _remoteDataServer;
 
-        public BlaiseRemoteDataServerFactory(
+        public RemoteDataServerFactory(
             ConnectionModel connectionModel,
             IPasswordService passwordService)
         {
