@@ -9,7 +9,7 @@
     <description>API package to interact with Blaise</description>
     <dependencies>
       <group targetFramework=".NETFramework4.7.2">
-		<dependency id="Blaise.Nuget.Contracts" version="$version$" />
+		<dependency id="Blaise.Nuget.Api.Contracts" version="$version$" />
         <dependency id="Unity" version="5.11.6" exclude="Build,Analyzers" />
         <dependency id="System.Configuration.ConfigurationManager" version="4.7.0" />
 		<dependency id="StatNeth.Blaise.API.x64" version="5.7.5" />

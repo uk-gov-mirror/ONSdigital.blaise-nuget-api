@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using IDatamodel = StatNeth.Blaise.API.Meta.IDatamodel;
 
-namespace Blaise.Nuget.Contracts.Interfaces
+namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IBlaiseApi
     {

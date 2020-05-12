@@ -1,6 +1,5 @@
 ﻿using Blaise.Nuget.Api.Helpers;
 using Blaise.Nuget.Api.Providers;
-using Blaise.Nuget.Contracts.Interfaces;
 using Blaise.Nuget.Core.Factories;
 using Blaise.Nuget.Core.Interfaces;
 using Blaise.Nuget.Core.Services;
@@ -10,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using Unity;
 using Unity.Injection;
+using Blaise.Nuget.Api.Contracts.Interfaces;
 
 namespace Blaise.Nuget.Api
 { 

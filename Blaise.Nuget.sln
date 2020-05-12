@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaise.Nuget.Api", "Blaise.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{73B060C5-E402-440A-8030-1DF5788D7F4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaise.Nuget.Contracts", "Blaise.Nuget.Contracts\Blaise.Nuget.Contracts.csproj", "{246051E9-49BE-4001-9508-B73839D28DC9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaise.Nuget.Api.Contracts", "Blaise.Nuget.Api.Contracts\Blaise.Nuget.Api.Contracts.csproj", "{246051E9-49BE-4001-9508-B73839D28DC9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaise.Nuget.Core", "Blaise.Nuget.Core\Blaise.Nuget.Core.csproj", "{0229D577-14D0-4B08-95CB-55EDC837BC0D}"
 EndProject

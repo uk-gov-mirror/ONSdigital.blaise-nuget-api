@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
-    <id>Blaise.Nuget.Contracts</id>
+    <id>Blaise.Nuget.Api.Contracts</id>
 	<version>$version$</version>
     <authors>Jamie Kerr</authors>
     <owners>Jamie Kerr</owners>
@@ -14,6 +14,6 @@
     </dependencies>	
   </metadata>
   <files>
-    <file src="bin\release\Blaise.Nuget.Contracts.dll" target="lib\net472\Blaise.Nuget.Contracts.dll" />
+    <file src="bin\release\Blaise.Nuget.Api.Contracts.dll" target="lib\net472\Blaise.Nuget.Api.Contracts.dll" />
   </files>
 </package>

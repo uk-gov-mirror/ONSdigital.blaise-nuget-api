@@ -86,9 +86,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Blaise.Nuget.Contracts\Blaise.Nuget.Contracts.csproj">
+    <ProjectReference Include="..\Blaise.Nuget.Api.Contracts\Blaise.Nuget.Api.Contracts.csproj">
       <Project>{246051e9-49be-4001-9508-b73839d28dc9}</Project>
-      <Name>Blaise.Nuget.Contracts</Name>
+      <Name>Blaise.Nuget.Api.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Blaise.Nuget.Core\Blaise.Nuget.Core.csproj">
       <Project>{0229d577-14d0-4b08-95cb-55edc837bc0d}</Project>

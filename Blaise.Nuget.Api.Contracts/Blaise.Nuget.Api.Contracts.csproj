@@ -7,8 +7,8 @@
     <ProjectGuid>{246051E9-49BE-4001-9508-B73839D28DC9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Blaise.Nuget.Contracts</RootNamespace>
-    <AssemblyName>Blaise.Nuget.Contracts</AssemblyName>
+    <RootNamespace>Blaise.Nuget.Api.Contracts</RootNamespace>
+    <AssemblyName>Blaise.Nuget.Api.Contracts</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
