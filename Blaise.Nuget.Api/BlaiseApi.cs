@@ -12,12 +12,12 @@ using Unity.Injection;
 
 namespace Blaise.Nuget.Api
 { 
-    public class FluentBlaiseApi : IFluentBlaiseApi
+    public class BlaiseApi : IBlaiseApi
     {
         private readonly IDataService _dataService;
         private readonly IParkService _parkService;
 
-        internal FluentBlaiseApi(
+        internal BlaiseApi(
             IDataService dataService,
             IParkService parkService)
         {
@@ -25,7 +25,7 @@ namespace Blaise.Nuget.Api
             _parkService = parkService;
         }
 
-        public FluentBlaiseApi()
+        public BlaiseApi()
         {
             var unityContainer = new UnityContainer();
             var configurationProvider = new ConfigurationProvider();

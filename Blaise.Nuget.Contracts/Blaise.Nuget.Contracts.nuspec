@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Blaise.Nuget.Contracts</id>
+	<version>$version$</version>
+    <authors>Jamie Kerr</authors>
+    <owners>Jamie Kerr</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Contracts package for the API to interact with Blaise</description>
+    <dependencies>
+      <group targetFramework=".NETFramework4.7.2">
+		<dependency id="StatNeth.Blaise.API.x64" version="5.7.5" />
+      </group>
+    </dependencies>	
+  </metadata>
+  <files>
+    <file src="bin\release\Blaise.Nuget.Contracts.dll" target="lib\net472\Blaise.Nuget.Contracts.dll" />
+  </files>
+</package>

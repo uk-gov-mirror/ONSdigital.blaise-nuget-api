@@ -6,7 +6,7 @@ using IDatamodel = StatNeth.Blaise.API.Meta.IDatamodel;
 
 namespace Blaise.Nuget.Contracts.Interfaces
 {
-    public interface IFluentBlaiseApi
+    public interface IBlaiseApi
     {
         IEnumerable<string> GetServerParkNames();
 
