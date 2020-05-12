@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Blaise.Nuget.Api.nuspec" />
     <None Include="Content\app.config.transform">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
