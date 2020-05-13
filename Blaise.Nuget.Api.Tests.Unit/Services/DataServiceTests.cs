@@ -178,6 +178,16 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
+        public void Given_I_Call_ReadDataRecord_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.ReadDataRecord(_instrumentName, _serverParkName);
+
+            //asert
+            _dataLinkServiceMock.Verify(v => v.ReadDataRecord(_instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
         public void Given_I_Call_WriteDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act

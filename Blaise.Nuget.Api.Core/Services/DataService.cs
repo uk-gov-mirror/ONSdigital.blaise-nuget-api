@@ -1,4 +1,5 @@
 ﻿using Blaise.Nuget.Api.Core.Interfaces;
+using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 
@@ -35,6 +36,11 @@ namespace Blaise.Nuget.Api.Core.Services
         public IDataRecord GetDataRecord(IDatamodel datamodel)
         {
             return _dataManagerService.GetDataRecord(datamodel);
+        }
+
+        public IDataSet ReadDataRecord(string instrumentName, string serverParkName)
+        {
+            return _dataLinkService.ReadDataRecord(instrumentName, serverParkName);
         }
 
         public void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName)

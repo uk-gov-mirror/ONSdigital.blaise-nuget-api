@@ -518,6 +518,66 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
+        public void Given_Valid_Arguments_When_I_Call_ReadDataRecord_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _dataServiceMock.Setup(d => d.ReadDataRecord(It.IsAny<string>(), It.IsAny<string>()));
+
+            //act
+            _sut.ReadDataRecord(instrumentName, serverParkName);
+
+            //assert
+            _dataServiceMock.Verify(v => v.ReadDataRecord(instrumentName, serverParkName));
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_ReadDataRecord_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.ReadDataRecord(string.Empty, serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_ReadDataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ReadDataRecord(null, serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_ReadDataRecord_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.ReadDataRecord(instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_ReadDataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ReadDataRecord(instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
         public void Given_Valid_Arguments_When_I_Call_WriteDataRecord_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange

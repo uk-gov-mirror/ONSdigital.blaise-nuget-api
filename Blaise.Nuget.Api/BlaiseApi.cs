@@ -10,6 +10,7 @@ using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Core.Interfaces;
 using Blaise.Nuget.Api.Core.Services;
 using Blaise.Nuget.Api.Core.Factories;
+using StatNeth.Blaise.API.DataLink;
 
 namespace Blaise.Nuget.Api
 { 
@@ -110,6 +111,14 @@ namespace Blaise.Nuget.Api
             dataModel.ThrowExceptionIfNull("dataModel");
 
             return _dataService.GetDataRecord(dataModel);
+        }
+
+        public IDataSet ReadDataRecord(string instrumentName, string serverParkName)
+        {
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _dataService.ReadDataRecord(instrumentName, serverParkName);
         }
 
         public void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName)

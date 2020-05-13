@@ -27,26 +27,32 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public IDatamodel GetDataModel(string instrumentName, string serverParkName)
         {
-            SetDataLink(instrumentName, serverParkName);
+            GetDataLink(instrumentName, serverParkName);
 
             return _dataLink.Datamodel;
         }
 
         public bool KeyExists(IKey key, string instrumentName, string serverParkName)
         {
-            SetDataLink(instrumentName, serverParkName);
+            GetDataLink(instrumentName, serverParkName);
 
             return _dataLink.KeyExists(key);
         }
 
+        public IDataSet ReadDataRecord(string instrumentName, string serverParkName)
+        {
+            GetDataLink(instrumentName, serverParkName);
+
+            return _dataLink.Read(null);
+        }
         public void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
-            SetDataLink(instrumentName, serverParkName);
+            GetDataLink(instrumentName, serverParkName);
 
             _dataLink.Write(dataRecord);
         }
 
-        protected void SetDataLink(string instrumentName, string serverParkName)
+        protected void GetDataLink(string instrumentName, string serverParkName)
         {
             if (_dataLink == null | instrumentName != _instrumentName || serverParkName != _serverParkName)
             {

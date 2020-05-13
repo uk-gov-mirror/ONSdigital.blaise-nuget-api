@@ -1,4 +1,5 @@
-﻿using StatNeth.Blaise.API.DataRecord;
+﻿using StatNeth.Blaise.API.DataLink;
+using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 
 namespace Blaise.Nuget.Api.Core.Interfaces
@@ -12,6 +13,8 @@ namespace Blaise.Nuget.Api.Core.Interfaces
         bool KeyExists(IKey key, string instrumentName, string serverParkName);
 
         IDataRecord GetDataRecord(IDatamodel datamodel);
+
+        IDataSet ReadDataRecord(string instrumentName, string serverParkName);
 
         void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName);
     }
