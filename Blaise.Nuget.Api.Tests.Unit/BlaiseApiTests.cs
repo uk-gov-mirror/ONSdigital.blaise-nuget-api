@@ -352,10 +352,10 @@ namespace Blaise.Nuget.Api.Tests.Unit
         public void Given_A_Null_DataModel_When_I_Call_GetKey_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange 
-            var serverParkName = "Park1";
+            var keyName = "Key1";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetKey(null, serverParkName));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetKey(null, keyName));
             Assert.AreEqual("The argument 'dataModel' must be supplied", exception.ParamName);
         }
 

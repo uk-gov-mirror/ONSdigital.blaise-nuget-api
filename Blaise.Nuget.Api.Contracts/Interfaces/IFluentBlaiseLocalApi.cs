@@ -5,7 +5,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IFluentBlaiseLocalApi
     {
-        IFluentBlaiseLocalApi ForFile(string filePath);
+        IFluentBlaiseLocalApi WithFile(string filePath);
 
         IDataRecord GetDataRecord(IKey key);
 

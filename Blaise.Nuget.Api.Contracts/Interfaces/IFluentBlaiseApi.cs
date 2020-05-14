@@ -10,8 +10,6 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         bool ServerParkExists(string serverParkName);
 
-        IEnumerable<string> GetSurveys();
-
         IKey GetKey(IDatamodel dataModel, string keyName);
 
         IDataRecord GetDataRecord(IDatamodel dataModel);

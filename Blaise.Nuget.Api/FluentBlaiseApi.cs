@@ -1,4 +1,5 @@
 ﻿using Blaise.Nuget.Api.Contracts.Interfaces;
+using Blaise.Nuget.Api.Helpers;
 using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
@@ -15,7 +16,11 @@ namespace Blaise.Nuget.Api
         private string _serverParkName;
         private string _instrumentName;
         private string _filePath;
-        private IKey _key;
+
+        internal FluentBlaiseApi(IBlaiseApi blaiseApi)
+        {
+            _blaiseApi = blaiseApi;
+        }
 
         public FluentBlaiseApi()
         {
@@ -31,38 +36,47 @@ namespace Blaise.Nuget.Api
 
         public bool ServerParkExists(string serverParkName)
         {
-            return _blaiseApi.ServerParkExists(serverParkName);
-        }
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-        public IEnumerable<string> GetSurveys()
-        {
-            //check step
-            return _blaiseApi.GetSurveys(_serverParkName);
+            return _blaiseApi.ServerParkExists(serverParkName);
         }
 
         public IKey GetKey(IDatamodel dataModel, string keyName)
         {
+            dataModel.ThrowExceptionIfNull("dataModel");
+            keyName.ThrowExceptionIfNullOrEmpty("keyName");
+
             return _blaiseApi.GetKey(dataModel, keyName);
         }
 
-        public IFluentBlaiseLocalApi ForFile(string filePath)
+        public IDataRecord GetDataRecord(IDatamodel dataModel)
         {
-            _serverParkName = null;
-            _filePath = filePath;
+            dataModel.ThrowExceptionIfNull("dataModel");
 
-            return this;
+            return _blaiseApi.GetDataRecord(dataModel);
         }
 
-        public IFluentBlaiseRemoteApi ForServerPark(string serverParkName)
+        public IFluentBlaiseRemoteApi WithServerPark(string serverParkName)
         {
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
             _filePath = null;
             _serverParkName = serverParkName;
 
             return this;
-
         }
+
+        public IEnumerable<string> GetSurveys()
+        {
+            ValidateServerParkIsSet();
+
+            return _blaiseApi.GetSurveys(_serverParkName);
+        }
+
         public IFluentBlaiseRemoteApi ForInstrument(string instrumentName)
         {
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+
             _filePath = null;
             _instrumentName = instrumentName;
 
@@ -71,50 +85,59 @@ namespace Blaise.Nuget.Api
 
         public Guid GetInstrumentId()
         {
-            ValidateServerParksSet();
-            ValidateInstrumentSet();
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
 
             return _blaiseApi.GetInstrumentId(_instrumentName, _serverParkName);
         }
 
         public IDatamodel GetDataModel()
         {
-            ValidateServerParksSet();
-            ValidateInstrumentSet();
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
 
             return _blaiseApi.GetDataModel(_instrumentName, _serverParkName);
         }
 
         public IDataSet GetDataSet()
         {
-            ValidateServerParksSet();
-            ValidateInstrumentSet();
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
 
             return _blaiseApi.GetDataSet(_instrumentName, _serverParkName);
         }
 
         public bool KeyExists(IKey key)
         {
-            ValidateServerParksSet();
-            ValidateInstrumentSet();
+            key.ThrowExceptionIfNull("key");
+
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
 
             return _blaiseApi.KeyExists(key, _instrumentName, _serverParkName);
         }
 
-        public IDataRecord GetDataRecord(IDatamodel dataModel)
+        public IFluentBlaiseLocalApi WithFile(string filePath)
         {
-            return _blaiseApi.GetDataRecord(dataModel);
+            filePath.ThrowExceptionIfNullOrEmpty("filePath");
+
+            _serverParkName = null;
+            _filePath = filePath;
+
+            return this;
         }
 
         public IDataRecord GetDataRecord(IKey key)
         {
+            key.ThrowExceptionIfNull("key");
+
             if (!string.IsNullOrEmpty(_filePath))
             {
                 return _blaiseApi.GetDataRecord(key, _filePath);
             }
 
-            ValidateServerParksSet();
-            ValidateInstrumentSet();
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
 
             return _blaiseApi.GetDataRecord(key, _instrumentName, _serverParkName);
             
@@ -122,36 +145,30 @@ namespace Blaise.Nuget.Api
 
         public void WriteDataRecord(IDataRecord dataRecord)
         {
+            dataRecord.ThrowExceptionIfNull("dataRecord");
+
             if (!string.IsNullOrEmpty(_filePath))
             {
                 _blaiseApi.WriteDataRecord(dataRecord, _filePath);
+
+                return;
             }
 
-            ValidateServerParksSet();
-            ValidateInstrumentSet();
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
 
-            _blaiseApi.WriteDataRecord(dataRecord, _instrumentName, _serverParkName);
-
-            
+            _blaiseApi.WriteDataRecord(dataRecord, _instrumentName, _serverParkName);            
         }
 
-        private void ValidateFilePathIsSet()
-        {
-            if (string.IsNullOrWhiteSpace(_filePath))
-            {
-                throw new NullReferenceException("The 'ForFile' step needs to be called prior to this");
-            }
-        }
-
-        private void ValidateServerParksSet()
+        private void ValidateServerParkIsSet()
         {
             if (string.IsNullOrWhiteSpace(_serverParkName))
             {
-                throw new NullReferenceException("The 'ForServerPark' step needs to be called prior to this");
+                throw new NullReferenceException("The 'WithServerPark' step needs to be called prior to this");
             }
         }
 
-        private void ValidateInstrumentSet()
+        private void ValidateInstrumentIsSet()
         {
             if (string.IsNullOrWhiteSpace(_instrumentName))
             {
