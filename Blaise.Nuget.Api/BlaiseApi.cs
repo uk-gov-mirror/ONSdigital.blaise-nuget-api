@@ -113,12 +113,21 @@ namespace Blaise.Nuget.Api
             return _dataService.GetDataRecord(dataModel);
         }
 
-        public IDataSet ReadDataRecord(string instrumentName, string serverParkName)
+        public IDataSet ReadData(string instrumentName, string serverParkName)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            return _dataService.ReadDataRecord(instrumentName, serverParkName);
+            return _dataService.ReadData(instrumentName, serverParkName);
+        }
+
+        public IDataRecord ReadDataRecord(IKey key, string instrumentName, string serverParkName)
+        {
+            key.ThrowExceptionIfNull("key");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _dataService.ReadDataRecord(key, instrumentName, serverParkName);
         }
 
         public void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName)

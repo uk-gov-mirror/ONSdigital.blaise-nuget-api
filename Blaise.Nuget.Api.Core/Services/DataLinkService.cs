@@ -39,12 +39,20 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataLink.KeyExists(key);
         }
 
-        public IDataSet ReadDataRecord(string instrumentName, string serverParkName)
+        public IDataSet ReadData(string instrumentName, string serverParkName)
         {
             GetDataLink(instrumentName, serverParkName);
 
             return _dataLink.Read(null);
         }
+
+        public IDataRecord ReadDataRecord(IKey key, string instrumentName, string serverParkName)
+        {
+            GetDataLink(instrumentName, serverParkName);
+
+            return _dataLink.ReadRecord(key);
+        }
+
         public void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
             GetDataLink(instrumentName, serverParkName);

@@ -10,7 +10,9 @@ namespace Blaise.Nuget.Api.Core.Interfaces
 
         bool KeyExists(IKey key, string instrumentName, string serverParkName);
 
-        IDataSet ReadDataRecord(string instrumentName, string serverParkName);
+        IDataSet ReadData(string instrumentName, string serverParkName);
+
+        IDataRecord ReadDataRecord(IKey key, string instrumentName, string serverParkName);
 
         void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName);
     }
