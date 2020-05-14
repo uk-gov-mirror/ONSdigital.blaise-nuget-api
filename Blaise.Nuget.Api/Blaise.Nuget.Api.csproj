@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlaiseApi.cs" />
+    <Compile Include="FluentBlaiseApi.cs" />
     <Compile Include="Helpers\ParameterValidationHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ConfigurationProvider.cs" />

@@ -121,7 +121,7 @@ namespace Blaise.Nuget.Api
             return _dataService.GetDataRecord(dataModel);
         }
 
-        public IDataSet ReadData(string instrumentName, string serverParkName)
+        public IDataSet GetDataSet(string instrumentName, string serverParkName)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
@@ -129,21 +129,21 @@ namespace Blaise.Nuget.Api
             return _dataService.ReadData(instrumentName, serverParkName);
         }
 
-        public IDataRecord ReadDataRecord(IKey key, string instrumentName, string serverParkName)
+        public IDataRecord GetDataRecord(IKey key, string instrumentName, string serverParkName)
         {
             key.ThrowExceptionIfNull("key");
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            return _dataService.ReadDataRecord(key, instrumentName, serverParkName);
+            return _dataService.GetDataRecord(key, instrumentName, serverParkName);
         }
 
-        public IDataRecord ReadDataRecord(IKey key, string filePath)
+        public IDataRecord GetDataRecord(IKey key, string filePath)
         {
             key.ThrowExceptionIfNull("key");
             filePath.ThrowExceptionIfNullOrEmpty("filePath");
 
-            return _dataService.ReadDataRecord(key, filePath);
+            return _dataService.GetDataRecord(key, filePath);
         }
 
         public void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName)

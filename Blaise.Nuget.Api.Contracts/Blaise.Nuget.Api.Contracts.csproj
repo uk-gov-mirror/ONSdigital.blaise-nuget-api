@@ -48,6 +48,9 @@
   <ItemGroup>
     <Compile Include="Exceptions\DataNotFoundException.cs" />
     <Compile Include="Interfaces\IBlaiseApi.cs" />
+    <Compile Include="Interfaces\IFluentBlaiseRemoteApi.cs" />
+    <Compile Include="Interfaces\IFluentBlaiseLocalApi.cs" />
+    <Compile Include="Interfaces\IFluentBlaiseApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

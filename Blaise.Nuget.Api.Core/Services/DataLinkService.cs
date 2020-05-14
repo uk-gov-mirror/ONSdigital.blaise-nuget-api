@@ -34,21 +34,21 @@ namespace Blaise.Nuget.Api.Core.Services
             return dataLink.KeyExists(key);
         }
 
-        public IDataSet ReadData(string instrumentName, string serverParkName)
+        public IDataSet GetDataSet(string instrumentName, string serverParkName)
         {
             var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
 
             return dataLink.Read(null);
         }
 
-        public IDataRecord ReadDataRecord(IKey key, string instrumentName, string serverParkName)
+        public IDataRecord GetDataRecord(IKey key, string instrumentName, string serverParkName)
         {
             var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
 
             return dataLink.ReadRecord(key);
         }
 
-        public IDataRecord ReadDataRecord(IKey key, string filePath)
+        public IDataRecord GetDataRecord(IKey key, string filePath)
         {
             var dataLink = _localDataLinkProvider.GetDataLink(filePath);
 

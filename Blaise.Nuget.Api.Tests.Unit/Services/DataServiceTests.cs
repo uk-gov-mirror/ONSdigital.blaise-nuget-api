@@ -187,27 +187,27 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _sut.ReadData(_instrumentName, _serverParkName);
 
             //asert
-            _dataLinkServiceMock.Verify(v => v.ReadData(_instrumentName, _serverParkName), Times.Once);
+            _dataLinkServiceMock.Verify(v => v.GetDataSet(_instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
-        public void Given_An_InstrumentName_And_ServerParkName_When_I_Call_ReadDataRecord_Then_The_Correct_Services_Are_Called()
+        public void Given_An_InstrumentName_And_ServerParkName_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.ReadDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
+            _sut.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
 
             //asert
-            _dataLinkServiceMock.Verify(v => v.ReadDataRecord(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);
+            _dataLinkServiceMock.Verify(v => v.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
-        public void Given_A_Filepath_When_I_Call_ReadDataRecord_Then_The_Correct_Services_Are_Called()
+        public void Given_A_Filepath_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.ReadDataRecord(_keyMock.Object, _filePath);
+            _sut.GetDataRecord(_keyMock.Object, _filePath);
 
             //asert
-            _dataLinkServiceMock.Verify(v => v.ReadDataRecord(_keyMock.Object, _filePath), Times.Once);
+            _dataLinkServiceMock.Verify(v => v.GetDataRecord(_keyMock.Object, _filePath), Times.Once);
         }
 
         [Test]

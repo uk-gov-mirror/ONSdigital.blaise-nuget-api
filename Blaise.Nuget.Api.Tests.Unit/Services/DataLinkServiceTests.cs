@@ -147,7 +147,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
 
             //act
-            var result = _sut.ReadData(_instrumentName, _serverParkName);
+            var result = _sut.GetDataSet(_instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -161,7 +161,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
 
             //act
-            var result = _sut.ReadData(_instrumentName, _serverParkName);
+            var result = _sut.GetDataSet(_instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -175,7 +175,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(It.IsAny<IDataSet>());
 
             //act
-            _sut.ReadData(_instrumentName, _serverParkName);
+            _sut.GetDataSet(_instrumentName, _serverParkName);
 
             //assert
             _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_instrumentName, _serverParkName), Times.Once);
@@ -183,13 +183,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_ReadDataRecord_I_Get_A_DataRecord_Back()
+        public void Given_I_Call_GetDataRecord_I_Get_A_DataRecord_Back()
         {
             //arrange
             _remoteDataLinkMock.Setup(d => d.ReadRecord(It.IsAny<IKey>())).Returns(_dataRecordMock.Object);
 
             //act
-            var result = _sut.ReadDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
+            var result = _sut.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -197,13 +197,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_An_InstrumentName_And_ServerParkName_When_I_Call_ReadDataRecord_I_Get_The_Correct_DataRecord_Back()
+        public void Given_An_InstrumentName_And_ServerParkName_When_I_Call_GetDataRecord_I_Get_The_Correct_DataRecord_Back()
         {
             //arrange
             _remoteDataLinkMock.Setup(d => d.ReadRecord(It.IsAny<IKey>())).Returns(_dataRecordMock.Object);
 
             //act
-            var result = _sut.ReadDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
+            var result = _sut.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -211,13 +211,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_An_InstrumentName_And_ServerParkName_When_I_Call_ReadDataRecord_Then_The_Correct_Services_Are_Called()
+        public void Given_An_InstrumentName_And_ServerParkName_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //arrange
             _remoteDataLinkMock.Setup(d => d.ReadRecord(It.IsAny<IKey>())).Returns(It.IsAny<IDataRecord>());
 
             //act
-            _sut.ReadDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
+            _sut.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
             _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_instrumentName, _serverParkName), Times.Once);
@@ -225,13 +225,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_A_FilePath_When_I_Call_ReadDataRecord_I_Get_The_Correct_DataRecord_Back()
+        public void Given_A_FilePath_When_I_Call_GetDataRecord_I_Get_The_Correct_DataRecord_Back()
         {
             //arrange
             _localDataLinkMock.Setup(d => d.ReadRecord(It.IsAny<IKey>())).Returns(_dataRecordMock.Object);
 
             //act
-            var result = _sut.ReadDataRecord(_keyMock.Object, _filePath);
+            var result = _sut.GetDataRecord(_keyMock.Object, _filePath);
 
             //assert
             Assert.NotNull(result);
@@ -239,13 +239,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_A_FilePath_When_I_Call_ReadDataRecord_Then_The_Correct_Services_Are_Called()
+        public void Given_A_FilePath_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //arrange
             _localDataLinkMock.Setup(d => d.ReadRecord(It.IsAny<IKey>())).Returns(It.IsAny<IDataRecord>());
 
             //act
-            _sut.ReadDataRecord(_keyMock.Object, _filePath);
+            _sut.GetDataRecord(_keyMock.Object, _filePath);
 
             //assert
             _localDataLinkProviderMock.Verify(v => v.GetDataLink(_filePath), Times.Once);

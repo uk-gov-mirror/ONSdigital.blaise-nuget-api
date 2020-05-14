@@ -40,17 +40,17 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public IDataSet ReadData(string instrumentName, string serverParkName)
         {
-            return _dataLinkService.ReadData(instrumentName, serverParkName);
+            return _dataLinkService.GetDataSet(instrumentName, serverParkName);
         }
 
-        public IDataRecord ReadDataRecord(IKey key, string instrumentName, string serverParkName)
+        public IDataRecord GetDataRecord(IKey key, string instrumentName, string serverParkName)
         {
-            return _dataLinkService.ReadDataRecord(key, instrumentName, serverParkName);
+            return _dataLinkService.GetDataRecord(key, instrumentName, serverParkName);
         }
 
-        public IDataRecord ReadDataRecord(IKey key, string filePath)
+        public IDataRecord GetDataRecord(IKey key, string filePath)
         {
-            return _dataLinkService.ReadDataRecord(key, filePath);
+            return _dataLinkService.GetDataRecord(key, filePath);
         }
 
         public void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName)
