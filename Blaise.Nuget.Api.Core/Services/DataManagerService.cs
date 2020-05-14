@@ -1,4 +1,4 @@
-﻿using Blaise.Nuget.Api.Core.Interfaces;
+﻿using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 

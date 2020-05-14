@@ -48,15 +48,19 @@
   <ItemGroup>
     <Compile Include="Factories\ConnectedServerFactory.cs" />
     <Compile Include="Factories\RemoteDataServerFactory.cs" />
-    <Compile Include="Interfaces\IConnectedServerFactory.cs" />
-    <Compile Include="Interfaces\IDataLinkService.cs" />
-    <Compile Include="Interfaces\IDataManagerService.cs" />
-    <Compile Include="Interfaces\IDataService.cs" />
-    <Compile Include="Interfaces\IParkService.cs" />
-    <Compile Include="Interfaces\IPasswordService.cs" />
-    <Compile Include="Interfaces\IRemoteDataServerFactory.cs" />
+    <Compile Include="Interfaces\Factories\IConnectedServerFactory.cs" />
+    <Compile Include="Interfaces\Providers\IRemoteDataLinkProvider.cs" />
+    <Compile Include="Interfaces\Providers\ILocalDataLinkProvider.cs" />
+    <Compile Include="Interfaces\Services\IDataLinkService.cs" />
+    <Compile Include="Interfaces\Services\IDataManagerService.cs" />
+    <Compile Include="Interfaces\Services\IDataService.cs" />
+    <Compile Include="Interfaces\Services\IParkService.cs" />
+    <Compile Include="Interfaces\Services\IPasswordService.cs" />
+    <Compile Include="Interfaces\Factories\IRemoteDataServerFactory.cs" />
     <Compile Include="Models\ConnectionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\RemoteDataLinkProvider.cs" />
+    <Compile Include="Providers\LocalDataLinkProvider.cs" />
     <Compile Include="Services\DataLinkService.cs" />
     <Compile Include="Services\DataManagerService.cs" />
     <Compile Include="Services\DataService.cs" />

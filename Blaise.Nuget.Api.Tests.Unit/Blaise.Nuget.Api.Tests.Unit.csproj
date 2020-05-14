@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="BlaiseApiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\RemoteDataLinkProviderTests.cs" />
     <Compile Include="Services\DataLinkServiceTests.cs" />
     <Compile Include="Services\DataServiceTests.cs" />
     <Compile Include="Services\ParkServiceTests.cs" />

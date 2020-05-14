@@ -1,4 +1,5 @@
 ﻿using Blaise.Nuget.Api.Core.Interfaces;
+using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.DataRecord;
@@ -654,6 +655,57 @@ namespace Blaise.Nuget.Api.Tests.Unit
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
+
+
+        [Test]
+        public void Given_A_Valid_FilePath_When_I_Call_ReadDataRecord_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var keyMock = new Mock<IKey>();
+            var filePath = "FilePath";
+
+            _dataServiceMock.Setup(d => d.ReadDataRecord(It.IsAny<IKey>(), It.IsAny<string>()));
+
+            //act
+            _sut.ReadDataRecord(keyMock.Object, filePath);
+
+            //assert
+            _dataServiceMock.Verify(v => v.ReadDataRecord(keyMock.Object, filePath));
+        }
+
+        [Test]
+        public void Given_A_Valid_FilePath_But_A_Null_Key_When_I_Call_ReadDataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var filePath = "FilePath";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ReadDataRecord(null, filePath));
+            Assert.AreEqual("The argument 'key' must be supplied", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_FilePath_When_I_Call_ReadDataRecord_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var keyMock = new Mock<IKey>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.ReadDataRecord(keyMock.Object, string.Empty));
+            Assert.AreEqual("A value for the argument 'filePath' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_FilePath_When_I_Call_ReadDataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var keyMock = new Mock<IKey>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ReadDataRecord(keyMock.Object, null));
+            Assert.AreEqual("filePath", exception.ParamName);
+        }
+
         [Test]
         public void Given_Valid_Arguments_When_I_Call_WriteDataRecord_Then_The_Correct_Service_Method_Is_Called()
         {
@@ -729,6 +781,59 @@ namespace Blaise.Nuget.Api.Tests.Unit
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.WriteDataRecord(dataRecordMock.Object, instrumentName, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+
+
+
+
+        [Test]
+        public void Given_A_Valid_FilePath_When_I_Call_WriteDataRecord_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var filePath = "FilePath";
+
+            _dataServiceMock.Setup(d => d.WriteDataRecord(It.IsAny<IDataRecord>(), It.IsAny<string>()));
+
+            //act
+            _sut.WriteDataRecord(dataRecordMock.Object, filePath);
+
+            //assert
+            _dataServiceMock.Verify(v => v.WriteDataRecord(dataRecordMock.Object, filePath));
+        }
+
+        [Test]
+        public void Given_A_Valid_FilePath_But_A_Null_DataRecord_When_I_Call_WriteDataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var filePath = "FilePath";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.WriteDataRecord(null, filePath));
+            Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_FilePath_When_I_Call_WriteDataRecord_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.WriteDataRecord(dataRecordMock.Object, string.Empty));
+            Assert.AreEqual("A value for the argument 'filePath' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_FilePath_When_I_Call_WriteDataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.WriteDataRecord(dataRecordMock.Object, null));
+            Assert.AreEqual("filePath", exception.ParamName);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 
-namespace Blaise.Nuget.Api.Core.Interfaces
+namespace Blaise.Nuget.Api.Core.Interfaces.Services
 {
     public interface IDataManagerService
     {

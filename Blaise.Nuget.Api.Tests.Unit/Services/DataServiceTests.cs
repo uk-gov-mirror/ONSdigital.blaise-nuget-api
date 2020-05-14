@@ -1,4 +1,5 @@
 ﻿using Blaise.Nuget.Api.Core.Interfaces;
+using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Core.Services;
 using Moq;
 using NUnit.Framework;
@@ -18,6 +19,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
         private readonly string _instrumentName;
         private readonly string _serverParkName;
+        private readonly string _filePath;
         private readonly string _keyName;
 
         private DataService _sut;
@@ -26,6 +28,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         {
             _instrumentName = "TestInstrumentName";
             _serverParkName = "TestServerParkName";
+            _filePath = "c:\\filepath";
             _keyName = "TestKeyName";
         }
 
@@ -188,7 +191,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_ReadDataRecord_Then_The_Correct_Services_Are_Called()
+        public void Given_An_InstrumentName_And_ServerParkName_When_I_Call_ReadDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act
             _sut.ReadDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
@@ -198,13 +201,33 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_WriteDataRecord_Then_The_Correct_Services_Are_Called()
+        public void Given_A_Filepath_When_I_Call_ReadDataRecord_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.ReadDataRecord(_keyMock.Object, _filePath);
+
+            //asert
+            _dataLinkServiceMock.Verify(v => v.ReadDataRecord(_keyMock.Object, _filePath), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_InstrumentName_And_ServerParkName_When_I_Call_WriteDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act
             _sut.WriteDataRecord(_dataRecordMock.Object, _instrumentName, _serverParkName);
 
             //asert
             _dataLinkServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_Filepath_When_I_Call_WriteDataRecord_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.WriteDataRecord(_dataRecordMock.Object, _filePath);
+
+            //asert
+            _dataLinkServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _filePath), Times.Once);
         }
     }
 }

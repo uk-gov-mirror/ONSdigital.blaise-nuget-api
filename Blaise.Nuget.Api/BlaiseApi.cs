@@ -7,10 +7,13 @@ using System.Collections.Generic;
 using Unity;
 using Unity.Injection;
 using Blaise.Nuget.Api.Contracts.Interfaces;
-using Blaise.Nuget.Api.Core.Interfaces;
 using Blaise.Nuget.Api.Core.Services;
 using Blaise.Nuget.Api.Core.Factories;
 using StatNeth.Blaise.API.DataLink;
+using Blaise.Nuget.Api.Core.Providers;
+using Blaise.Nuget.Api.Core.Interfaces.Services;
+using Blaise.Nuget.Api.Core.Interfaces.Factories;
+using Blaise.Nuget.Api.Core.Interfaces.Providers;
 
 namespace Blaise.Nuget.Api
 { 
@@ -48,6 +51,11 @@ namespace Blaise.Nuget.Api
             unityContainer.RegisterType<IDataManagerService, DataManagerService>();
             unityContainer.RegisterType<IDataLinkService, DataLinkService>();
             unityContainer.RegisterType<IParkService, ParkService>();
+
+            //providers
+            unityContainer.RegisterType<ILocalDataLinkProvider, LocalDataLinkProvider>();
+            unityContainer.RegisterType<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
+
 
             //resolve dependencies
             _dataService = unityContainer.Resolve<IDataService>();
@@ -130,6 +138,14 @@ namespace Blaise.Nuget.Api
             return _dataService.ReadDataRecord(key, instrumentName, serverParkName);
         }
 
+        public IDataRecord ReadDataRecord(IKey key, string filePath)
+        {
+            key.ThrowExceptionIfNull("key");
+            filePath.ThrowExceptionIfNullOrEmpty("filePath");
+
+            return _dataService.ReadDataRecord(key, filePath);
+        }
+
         public void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
             dataRecord.ThrowExceptionIfNull("dataRecord");
@@ -137,6 +153,14 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             _dataService.WriteDataRecord(dataRecord, instrumentName, serverParkName);
+        }
+
+        public void WriteDataRecord(IDataRecord dataRecord, string filePath)
+        {
+            dataRecord.ThrowExceptionIfNull("dataRecord");
+            filePath.ThrowExceptionIfNullOrEmpty("filePath");
+
+            _dataService.WriteDataRecord(dataRecord, filePath);
         }
     }
 }

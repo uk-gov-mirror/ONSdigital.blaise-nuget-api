@@ -1,5 +1,6 @@
 ﻿using Blaise.Nuget.Api.Contracts.Exceptions;
-using Blaise.Nuget.Api.Core.Interfaces;
+using Blaise.Nuget.Api.Core.Interfaces.Factories;
+using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.ServerManager;
 using System;
 using System.Collections.Generic;

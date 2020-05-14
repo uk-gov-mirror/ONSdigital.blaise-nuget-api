@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Core.Interfaces;
+﻿using Blaise.Nuget.Api.Core.Interfaces.Providers;
+using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
@@ -7,71 +8,66 @@ namespace Blaise.Nuget.Api.Core.Services
 {
     public class DataLinkService : IDataLinkService
     {
-        private readonly IRemoteDataServerFactory _connectionFactory;
-        private readonly IParkService _parkService;
+        private readonly IRemoteDataLinkProvider _remoteDataLinkProvider;
+        private readonly ILocalDataLinkProvider _localDataLinkProvider;
 
-        private string _instrumentName;
-        private string _serverParkName;
-        IDataLink4 _dataLink;
 
         public DataLinkService(
-            IRemoteDataServerFactory connectionFactory,
-            IParkService parkService)
+            IRemoteDataLinkProvider remoteDataLinkProvider,
+            ILocalDataLinkProvider localDataLinkProvider)
         {
-            _connectionFactory = connectionFactory;
-            _parkService = parkService;
-
-            _instrumentName = string.Empty;
-            _serverParkName = string.Empty;
+            _remoteDataLinkProvider = remoteDataLinkProvider;
+            _localDataLinkProvider = localDataLinkProvider;
         }
 
         public IDatamodel GetDataModel(string instrumentName, string serverParkName)
         {
-            GetDataLink(instrumentName, serverParkName);
+            var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
 
-            return _dataLink.Datamodel;
+            return dataLink.Datamodel;
         }
 
         public bool KeyExists(IKey key, string instrumentName, string serverParkName)
         {
-            GetDataLink(instrumentName, serverParkName);
+            var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
 
-            return _dataLink.KeyExists(key);
+            return dataLink.KeyExists(key);
         }
 
         public IDataSet ReadData(string instrumentName, string serverParkName)
         {
-            GetDataLink(instrumentName, serverParkName);
+            var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
 
-            return _dataLink.Read(null);
+            return dataLink.Read(null);
         }
 
         public IDataRecord ReadDataRecord(IKey key, string instrumentName, string serverParkName)
         {
-            GetDataLink(instrumentName, serverParkName);
+            var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
 
-            return _dataLink.ReadRecord(key);
+            return dataLink.ReadRecord(key);
+        }
+
+        public IDataRecord ReadDataRecord(IKey key, string filePath)
+        {
+            var dataLink = _localDataLinkProvider.GetDataLink(filePath);
+
+            return dataLink.ReadRecord(key);
         }
 
         public void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
-            GetDataLink(instrumentName, serverParkName);
+            var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
 
-            _dataLink.Write(dataRecord);
+            dataLink.Write(dataRecord);
+
         }
 
-        protected void GetDataLink(string instrumentName, string serverParkName)
+        public void WriteDataRecord(IDataRecord dataRecord, string filePath)
         {
-            if (_dataLink == null | instrumentName != _instrumentName || serverParkName != _serverParkName)
-            {
-                _instrumentName = instrumentName;
-                _serverParkName = serverParkName;
+            var dataLink = _localDataLinkProvider.GetDataLink(filePath);
 
-                var instrumentId = _parkService.GetInstrumentId(instrumentName, serverParkName);
-                var connection = _connectionFactory.GetConnection();
-
-                _dataLink = connection.GetDataLink(instrumentId, serverParkName);
-            }
+            dataLink.Write(dataRecord);
         }
     }
 }
