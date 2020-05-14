@@ -3,6 +3,7 @@ using Blaise.Nuget.Api.Core.Services;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.DataLink;
+using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 using System;
 
@@ -16,6 +17,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<IRemoteDataServer> _remoteDataServerMock;
         private Mock<IDataLink4> _dataLinkMock;
         private Mock<IDatamodel> _dataModelMock;
+        private Mock<IKey> _keyMock;
+        private Mock<IDataSet> _dataSetMock;
+        private Mock<IDataRecord> _dataRecordMock;        
 
         private readonly string _instrumentName;
         private readonly string _serverParkName;
@@ -34,6 +38,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void SetUpTests()
         {
             _dataModelMock = new Mock<IDatamodel>();
+            _keyMock = new Mock<IKey>();
+            _dataSetMock = new Mock<IDataSet>();
+            _dataRecordMock = new Mock<IDataRecord>();
 
             _dataLinkMock = new Mock<IDataLink4>();
             _dataLinkMock.Setup(d => d.Datamodel).Returns(_dataModelMock.Object);
@@ -143,6 +150,151 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _parkServiceMock.Verify(v => v.GetInstrumentId(_instrumentName, _serverParkName), Times.Once);
             _remoteDataServerMock.Verify(v => v.GetDataLink(_instrumentId, _serverParkName), Times.Once);
             _dataLinkMock.Verify(v => v.Datamodel, Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_KeyExists_I_Get_A_Boolean_Back()
+        {
+            //arrange
+            _dataLinkMock.Setup(d => d.KeyExists(_keyMock.Object)).Returns(It.IsAny<bool>());
+
+            //act
+            var result = _sut.KeyExists(_keyMock.Object, _instrumentName, _serverParkName);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.IsInstanceOf<bool>(result);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_I_Call_KeyExists_I_Get_The_Correct_Boolean_Back(bool keyExists)
+        {
+            //arrange
+            _dataLinkMock.Setup(d => d.KeyExists(_keyMock.Object)).Returns(keyExists);
+
+            //act
+            var result = _sut.KeyExists(_keyMock.Object, _instrumentName, _serverParkName);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual(keyExists, result);
+        }
+
+        [Test]
+        public void Given_I_Call_KeyExists_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            _dataLinkMock.Setup(d => d.KeyExists(_keyMock.Object)).Returns(It.IsAny<bool>());
+
+            //act
+            _sut.KeyExists(_keyMock.Object, _instrumentName, _serverParkName);
+
+            //assert
+            _parkServiceMock.Verify(v => v.GetInstrumentId(_instrumentName, _serverParkName), Times.Once);
+            _remoteDataServerMock.Verify(v => v.GetDataLink(_instrumentId, _serverParkName), Times.Once);
+            _dataLinkMock.Verify(v => v.KeyExists(_keyMock.Object), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_ReadData_I_Get_A_DataSet_Back()
+        {
+            //arrange
+            _dataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
+
+            //act
+            var result = _sut.ReadData(_instrumentName, _serverParkName);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.IsInstanceOf<IDataSet>(result);
+        }
+
+        [Test]
+        public void Given_I_Call_ReadData_I_Get_The_Correct_DataSet_Back()
+        {
+            //arrange
+            _dataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
+
+            //act
+            var result = _sut.ReadData(_instrumentName, _serverParkName);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreSame(_dataSetMock.Object, result);
+        }
+
+        [Test]
+        public void Given_I_Call_ReadData_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            _dataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(It.IsAny<IDataSet>());
+
+            //act
+            _sut.ReadData(_instrumentName, _serverParkName);
+
+            //assert
+            _parkServiceMock.Verify(v => v.GetInstrumentId(_instrumentName, _serverParkName), Times.Once);
+            _remoteDataServerMock.Verify(v => v.GetDataLink(_instrumentId, _serverParkName), Times.Once);
+            _dataLinkMock.Verify(v => v.Read(null), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_ReadDataRecord_I_Get_A_DataRecord_Back()
+        {
+            //arrange
+            _dataLinkMock.Setup(d => d.ReadRecord(It.IsAny<IKey>())).Returns(_dataRecordMock.Object);
+
+            //act
+            var result = _sut.ReadDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.IsInstanceOf<IDataRecord>(result);
+        }
+
+        [Test]
+        public void Given_I_Call_ReadDataRecord_I_Get_The_Correct_DataRecord_Back()
+        {
+            //arrange
+            _dataLinkMock.Setup(d => d.ReadRecord(It.IsAny<IKey>())).Returns(_dataRecordMock.Object);
+
+            //act
+            var result = _sut.ReadDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreSame(_dataRecordMock.Object, result);
+        }
+
+        [Test]
+        public void Given_I_Call_ReadDataRecord_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            _dataLinkMock.Setup(d => d.ReadRecord(It.IsAny<IKey>())).Returns(It.IsAny<IDataRecord>());
+
+            //act
+            _sut.ReadDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
+
+            //assert
+            _parkServiceMock.Verify(v => v.GetInstrumentId(_instrumentName, _serverParkName), Times.Once);
+            _remoteDataServerMock.Verify(v => v.GetDataLink(_instrumentId, _serverParkName), Times.Once);
+            _dataLinkMock.Verify(v => v.ReadRecord(_keyMock.Object), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_WriteDataRecord_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            _dataLinkMock.Setup(d => d.Write(It.IsAny<IDataRecord>()));
+
+            //act
+            _sut.WriteDataRecord(_dataRecordMock.Object, _instrumentName, _serverParkName);
+
+            //assert
+            _parkServiceMock.Verify(v => v.GetInstrumentId(_instrumentName, _serverParkName), Times.Once);
+            _remoteDataServerMock.Verify(v => v.GetDataLink(_instrumentId, _serverParkName), Times.Once);
+            _dataLinkMock.Verify(v => v.Write(_dataRecordMock.Object), Times.Once);
         }
     }
 }
