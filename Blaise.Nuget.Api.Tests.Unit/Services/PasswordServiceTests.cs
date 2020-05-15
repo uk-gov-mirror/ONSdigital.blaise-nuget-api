@@ -1,9 +1,8 @@
-﻿
+﻿using System.Security;
 using Blaise.Nuget.Api.Core.Services;
 using NUnit.Framework;
-using System.Security;
 
-namespace BlaiseCaseCreator_UnitTests.Blaise
+namespace Blaise.Nuget.Api.Tests.Unit.Services
 {
     public class PasswordServiceTests
     {

@@ -25,6 +25,13 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
+        public void Given_I_Instantiate_FluentBlaiseApi_No_Exceptions_Are_Thrown()
+        {
+            //act && assert
+            Assert.DoesNotThrow(() => new FluentBlaiseApi());
+        }
+
+        [Test]
         public void When_I_Call_GetServerParkNames_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
