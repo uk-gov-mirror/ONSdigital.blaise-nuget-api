@@ -16,6 +16,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IEnumerable<ISurvey> GetSurveys(string serverParkName);
 
+        IEnumerable<ISurvey> GetAllSurveys();
+
         bool ServerParkExists(string serverParkName);
 
         Guid GetInstrumentId(string instrumentName, string serverParkName);

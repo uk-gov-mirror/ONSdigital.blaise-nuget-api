@@ -68,6 +68,11 @@ namespace Blaise.Nuget.Api
             return _parkService.GetServerParkNames();
         }
 
+        public IEnumerable<ISurvey> GetAllSurveys()
+        {
+            return _parkService.GetAllSurveys();
+        }
+
         public IEnumerable<string> GetSurveyNames(string serverParkName)
         {
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");

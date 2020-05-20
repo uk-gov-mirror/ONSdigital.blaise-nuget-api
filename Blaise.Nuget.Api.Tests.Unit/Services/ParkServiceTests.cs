@@ -194,6 +194,55 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
+        public void Given_I_Call_GetAllSurveys_Then_I_Get_A_Correct_List_Of_Surveys_Returned()
+        {
+            //arrange
+            var serverPark1Name = "ServerPark1";
+            var serverPark2Name = "ServerPark2";
+
+            var survey1Mock = new Mock<ISurvey>();
+            var survey2Mock = new Mock<ISurvey>();
+            var survey3Mock = new Mock<ISurvey>();
+
+            var survey1Items = new List<ISurvey> { survey1Mock.Object, survey2Mock.Object };
+            var survey2Items = new List<ISurvey> { survey3Mock.Object};
+
+            var surveyCollection1Mock = new Mock<ISurveyCollection>();
+            surveyCollection1Mock.Setup(s => s.GetEnumerator()).Returns(() => survey1Items.GetEnumerator());
+
+            var surveyCollection2Mock = new Mock<ISurveyCollection>();
+            surveyCollection2Mock.Setup(s => s.GetEnumerator()).Returns(() => survey2Items.GetEnumerator());
+
+            var serverPark1Mock = new Mock<IServerPark>();
+            serverPark1Mock.Setup(s => s.Name).Returns(serverPark1Name);
+            serverPark1Mock.Setup(s => s.Surveys).Returns(surveyCollection1Mock.Object);
+            
+            var serverPark2Mock = new Mock<IServerPark>();
+            serverPark2Mock.Setup(s => s.Name).Returns(serverPark2Name);
+            serverPark2Mock.Setup(s => s.Surveys).Returns(surveyCollection2Mock.Object);
+
+            var serverParkItems = new List<IServerPark> { serverPark1Mock.Object, serverPark2Mock.Object };
+
+            _serverParkCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => serverParkItems.GetEnumerator());
+
+            _connectedServerMock.Setup(c => c.ServerParks).Returns(_serverParkCollectionMock.Object);
+            _connectedServerMock.Setup(c => c.GetServerPark(serverPark1Name)).Returns(serverPark1Mock.Object);
+            _connectedServerMock.Setup(c => c.GetServerPark(serverPark2Name)).Returns(serverPark2Mock.Object);
+
+            //act
+            var result = _sut.GetAllSurveys().ToList();
+
+            //assert
+            Assert.NotNull(result);
+            Assert.IsNotEmpty(result);
+            Assert.AreEqual(3, result.Count);
+            Assert.True(result.Contains(survey1Mock.Object));
+            Assert.True(result.Contains(survey2Mock.Object));
+            Assert.True(result.Contains(survey3Mock.Object));
+        }
+
+
+        [Test]
         public void Given_I_Call_GetInstrumentId_Then_I_Get_A_Guid_Returned()
         {
             //act

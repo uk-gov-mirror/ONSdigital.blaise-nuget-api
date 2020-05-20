@@ -65,6 +65,43 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
+        public void When_I_Call_GetAllSurveys_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            _parkServiceMock.Setup(p => p.GetAllSurveys()).Returns(It.IsAny<List<ISurvey>>());
+
+            //act
+            _sut.GetAllSurveys();
+
+            //assert
+            _parkServiceMock.Verify(v => v.GetAllSurveys());
+        }
+
+        [Test]
+        public void When_I_Call_GetAllSurveys_Then_The_Expected_Surveys_Are_Returned()
+        {
+            //arrange
+            var survey1Mock = new Mock<ISurvey>();
+            var survey2Mock = new Mock<ISurvey>();
+            var survey3Mock = new Mock<ISurvey>();
+
+            var surveys = new List<ISurvey> { survey1Mock.Object, survey2Mock.Object, survey3Mock.Object };
+
+            _parkServiceMock.Setup(p => p.GetAllSurveys()).Returns(surveys);
+
+            //act
+            var result = _sut.GetAllSurveys().ToList();
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsNotEmpty(result);
+            Assert.AreEqual(3, result.Count);
+            Assert.True(result.Contains(survey1Mock.Object));
+            Assert.True(result.Contains(survey2Mock.Object));
+            Assert.True(result.Contains(survey3Mock.Object));
+        }
+
+        [Test]
         public void Given_Valid_Arguments_When_I_Call_GetSurveyNames_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange

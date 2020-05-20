@@ -56,6 +56,20 @@ namespace Blaise.Nuget.Api.Core.Services
             return serverPark.Surveys;
         }
 
+        public IEnumerable<ISurvey> GetAllSurveys()
+        {
+            var surveyList = new List<ISurvey>();
+            var serverParkNames = GetServerParkNames();
+
+            foreach (var serverParkName in serverParkNames)
+            {
+                var serverPark = GetServerPark(serverParkName);
+                surveyList.AddRange(serverPark.Surveys);
+            }
+
+            return surveyList;
+        }
+
         public Guid GetInstrumentId(string instrumentName, string serverParkName)
         {
             var serverPark = GetServerPark(serverParkName);
