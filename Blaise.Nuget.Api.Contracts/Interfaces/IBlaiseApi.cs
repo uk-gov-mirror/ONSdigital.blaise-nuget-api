@@ -11,7 +11,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
     {
         IEnumerable<string> GetServerParkNames();
 
-        IEnumerable<string> GetSurveys(string serverParkName);
+        IEnumerable<string> GetSurveyNames(string serverParkName);
 
         bool ServerParkExists(string serverParkName);
 

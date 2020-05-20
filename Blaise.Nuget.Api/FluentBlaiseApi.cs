@@ -66,11 +66,11 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IEnumerable<string> GetSurveys()
+        public IEnumerable<string> GetSurveyNames()
         {
             ValidateServerParkIsSet();
 
-            return _blaiseApi.GetSurveys(_serverParkName);
+            return _blaiseApi.GetSurveyNames(_serverParkName);
         }
 
         public IFluentBlaiseRemoteApi ForInstrument(string instrumentName)

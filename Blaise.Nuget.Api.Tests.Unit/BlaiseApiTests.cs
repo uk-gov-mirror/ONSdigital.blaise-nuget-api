@@ -64,22 +64,22 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_GetSurveys_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Valid_Arguments_When_I_Call_GetSurveyNames_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             var serverParkName = "Park1";
 
-            _parkServiceMock.Setup(p => p.GetSurveys(It.IsAny<string>())).Returns(It.IsAny<List<string>>());
+            _parkServiceMock.Setup(p => p.GetSurveyNames(It.IsAny<string>())).Returns(It.IsAny<List<string>>());
 
             //act
-            _sut.GetSurveys(serverParkName);
+            _sut.GetSurveyNames(serverParkName);
 
             //assert
-            _parkServiceMock.Verify(v => v.GetSurveys(serverParkName));
+            _parkServiceMock.Verify(v => v.GetSurveyNames(serverParkName));
         }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_GetSurveys_Then_The_Expected_Result_Is_Returned()
+        public void Given_Valid_Arguments_When_I_Call_GetSurveyNames_Then_The_Expected_Result_Is_Returned()
         {
             //arrange
             const string serverParkName = "Park1";
@@ -89,10 +89,10 @@ namespace Blaise.Nuget.Api.Tests.Unit
                 "Instrument2"
             };
 
-            _parkServiceMock.Setup(p => p.GetSurveys(serverParkName)).Returns(surveyList);
+            _parkServiceMock.Setup(p => p.GetSurveyNames(serverParkName)).Returns(surveyList);
 
             //act            
-            var result = _sut.GetSurveys(serverParkName).ToList();
+            var result = _sut.GetSurveyNames(serverParkName).ToList();
 
             //assert
             Assert.IsNotNull(result);
@@ -102,18 +102,18 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_An_Empty_ServerParkName_When_I_Call_GetSurveys_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_ServerParkName_When_I_Call_GetSurveyNames_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveys(string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyNames(string.Empty));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_Null_ServerParkName_When_I_Call_GetSurveys_Then_An_ArgumentNullException_Is_Thrown()
+        public void Given_A_Null_ServerParkName_When_I_Call_GetSurveyNames_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveys(null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyNames(null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 

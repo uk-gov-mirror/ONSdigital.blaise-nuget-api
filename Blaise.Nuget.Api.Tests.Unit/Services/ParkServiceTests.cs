@@ -118,10 +118,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_GetSurveys_Then_I_Get_A_Correct_List_Of_Surveys_Returned()
+        public void Given_I_Call_GetSurveyNames_Then_I_Get_A_Correct_List_Of_Survey_Names_Returned()
         {
             //act
-            var result = _sut.GetSurveys(_serverParkName).ToList();
+            var result = _sut.GetSurveyNames(_serverParkName).ToList();
 
             //assert
             Assert.NotNull(result);
@@ -131,7 +131,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_No_Surveys_When_I_Call_GetSurveys_Then_A_Data_Not_Found_Exception_Is_Thrown()
+        public void Given_No_Surveys_When_I_Call_GetSurveyNames_Then_A_Data_Not_Found_Exception_Is_Thrown()
         {
             //arrange
             var surveyItems = new List<ISurvey> { };
@@ -140,18 +140,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
 
             //act && assert
-            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetSurveys(_serverParkName));
+            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetSurveyNames(_serverParkName));
             Assert.AreEqual($"No surveys found for server park '{_serverParkName}'", exception.Message);
         }
 
         [Test]
-        public void Given_ServerPark_Not_On_Server_When_I_Call_GetSurveys_Then_A_Data_Not_Found_Exception_Is_Thrown()
+        public void Given_ServerPark_Not_On_Server_When_I_Call_GetSurveyNames_Then_A_Data_Not_Found_Exception_Is_Thrown()
         {
             //arrange
             var serverParkName = "ServerParkDoesntExist";
 
             //act && assert
-            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetSurveys(serverParkName));
+            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetSurveyNames(serverParkName));
             Assert.AreEqual($"Server park '{serverParkName}' not found", exception.Message);
         }
 

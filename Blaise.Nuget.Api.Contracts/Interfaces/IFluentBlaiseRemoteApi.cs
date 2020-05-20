@@ -10,7 +10,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
     {
         IFluentBlaiseRemoteApi WithServerPark(string serverParkName);
 
-        IEnumerable<string> GetSurveys();
+        IEnumerable<string> GetSurveyNames();
 
         IFluentBlaiseRemoteApi ForInstrument(string instrumentName);
 

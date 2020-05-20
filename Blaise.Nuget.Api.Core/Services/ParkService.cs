@@ -37,7 +37,7 @@ namespace Blaise.Nuget.Api.Core.Services
             return serverParkNames.Any(sp => sp == serverParkName);
         }
 
-        public IEnumerable<string> GetSurveys(string serverParkName)
+        public IEnumerable<string> GetSurveyNames(string serverParkName)
         {
             var serverPark = GetServerPark(serverParkName);
 

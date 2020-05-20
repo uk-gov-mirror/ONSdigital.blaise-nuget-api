@@ -9,7 +9,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         bool ServerParkExists(string serverParkName);
 
-        IEnumerable<string> GetSurveys(string serverParkName);
+        IEnumerable<string> GetSurveyNames(string serverParkName);
 
         Guid GetInstrumentId(string instrumentName, string serverParkName);
     }
