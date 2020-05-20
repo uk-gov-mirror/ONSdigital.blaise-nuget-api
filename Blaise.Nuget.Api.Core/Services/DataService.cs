@@ -38,7 +38,7 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataManagerService.GetDataRecord(datamodel);
         }
 
-        public IDataSet ReadData(string instrumentName, string serverParkName)
+        public IDataSet GetDataSet(string instrumentName, string serverParkName)
         {
             return _dataLinkService.GetDataSet(instrumentName, serverParkName);
         }

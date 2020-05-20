@@ -588,13 +588,13 @@ namespace Blaise.Nuget.Api.Tests.Unit
             var instrumentName = "Instrument1";
             var serverParkName = "Park1";
 
-            _dataServiceMock.Setup(d => d.ReadData(It.IsAny<string>(), It.IsAny<string>()));
+            _dataServiceMock.Setup(d => d.GetDataSet(It.IsAny<string>(), It.IsAny<string>()));
 
             //act
             _sut.GetDataSet(instrumentName, serverParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.ReadData(instrumentName, serverParkName));
+            _dataServiceMock.Verify(v => v.GetDataSet(instrumentName, serverParkName));
         }
 
         [Test]

@@ -14,7 +14,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         IDataRecord GetDataRecord(IDatamodel datamodel);
 
-        IDataSet ReadData(string instrumentName, string serverParkName);
+        IDataSet GetDataSet(string instrumentName, string serverParkName);
 
         IDataRecord GetDataRecord(IKey key, string instrumentName, string serverParkName);
 

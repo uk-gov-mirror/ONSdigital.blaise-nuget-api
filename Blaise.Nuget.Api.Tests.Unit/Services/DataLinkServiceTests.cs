@@ -141,7 +141,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_ReadData_I_Get_A_DataSet_Back()
+        public void Given_I_Call_GetDataSet_I_Get_A_DataSet_Back()
         {
             //arrange
             _remoteDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
@@ -155,7 +155,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_ReadData_I_Get_The_Correct_DataSet_Back()
+        public void Given_I_Call_GetDataSet_I_Get_The_Correct_DataSet_Back()
         {
             //arrange
             _remoteDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
@@ -169,7 +169,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_ReadData_Then_The_Correct_Services_Are_Called()
+        public void Given_I_Call_GetDataSet_Then_The_Correct_Services_Are_Called()
         {
             //arrange
             _remoteDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(It.IsAny<IDataSet>());

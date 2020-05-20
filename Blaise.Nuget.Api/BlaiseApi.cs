@@ -134,7 +134,7 @@ namespace Blaise.Nuget.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            return _dataService.ReadData(instrumentName, serverParkName);
+            return _dataService.GetDataSet(instrumentName, serverParkName);
         }
 
         public IDataRecord GetDataRecord(IKey key, string instrumentName, string serverParkName)

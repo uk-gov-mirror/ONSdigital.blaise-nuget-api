@@ -180,10 +180,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_ReadData_Then_The_Correct_Services_Are_Called()
+        public void Given_I_Call_GetDataSet_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.ReadData(_instrumentName, _serverParkName);
+            _sut.GetDataSet(_instrumentName, _serverParkName);
 
             //assert
             _dataLinkServiceMock.Verify(v => v.GetDataSet(_instrumentName, _serverParkName), Times.Once);
