@@ -14,6 +14,7 @@ using Blaise.Nuget.Api.Core.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
+using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api
 { 
@@ -72,6 +73,13 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             return _parkService.GetSurveyNames(serverParkName);
+        }
+
+        public IEnumerable<ISurvey> GetSurveys(string serverParkName)
+        {
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _parkService.GetSurveys(serverParkName);
         }
 
         public bool ServerParkExists(string serverParkName)

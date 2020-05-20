@@ -5,6 +5,7 @@ using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 using System;
 using System.Collections.Generic;
+using StatNeth.Blaise.API.ServerManager;
 using Unity;
 
 namespace Blaise.Nuget.Api
@@ -71,6 +72,13 @@ namespace Blaise.Nuget.Api
             ValidateServerParkIsSet();
 
             return _blaiseApi.GetSurveyNames(_serverParkName);
+        }
+
+        public IEnumerable<ISurvey> GetSurveys()
+        {
+            ValidateServerParkIsSet();
+
+            return _blaiseApi.GetSurveys(_serverParkName);
         }
 
         public IFluentBlaiseRemoteApi ForInstrument(string instrumentName)

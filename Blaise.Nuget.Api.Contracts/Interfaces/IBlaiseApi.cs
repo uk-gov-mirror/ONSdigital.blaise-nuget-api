@@ -3,6 +3,7 @@ using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 using System;
 using System.Collections.Generic;
+using StatNeth.Blaise.API.ServerManager;
 using IDatamodel = StatNeth.Blaise.API.Meta.IDatamodel;
 
 namespace Blaise.Nuget.Api.Contracts.Interfaces
@@ -12,6 +13,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         IEnumerable<string> GetServerParkNames();
 
         IEnumerable<string> GetSurveyNames(string serverParkName);
+
+        IEnumerable<ISurvey> GetSurveys(string serverParkName);
 
         bool ServerParkExists(string serverParkName);
 

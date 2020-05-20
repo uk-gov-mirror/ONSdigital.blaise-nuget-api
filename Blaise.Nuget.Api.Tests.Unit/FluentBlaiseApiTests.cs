@@ -7,6 +7,7 @@ using StatNeth.Blaise.API.Meta;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Tests.Unit
 {
@@ -295,6 +296,62 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
         [Test]
         public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_GetSurveyNames_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetSurveyNames());
+            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this", exception.Message);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetSurveys_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var serverParkName = "Park1";
+            var instrumentName = "Instrument1";
+
+            _blaiseApiMock.Setup(p => p.GetSurveys(It.IsAny<string>())).Returns(It.IsAny<List<ISurvey>>());
+
+            _sut.WithServerPark(serverParkName);
+            _sut.ForInstrument(instrumentName);
+
+            //act
+            _sut.GetSurveys();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.GetSurveys(serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetSurveys_Then_The_Expected_Result_Is_Returned()
+        {
+            //arrange
+            var serverParkName = "Park1";
+            var instrumentName = "Instrument1";
+            var survey1Mock = new Mock<ISurvey>();
+            var survey2Mock = new Mock<ISurvey>();
+            var surveyList = new List<ISurvey>
+            {
+                survey1Mock.Object,
+                survey2Mock.Object
+            };
+
+            _blaiseApiMock.Setup(p => p.GetSurveys(serverParkName)).Returns(surveyList);
+
+            _sut.WithServerPark(serverParkName);
+            _sut.ForInstrument(instrumentName);
+
+            //act            
+            var result = _sut.GetSurveys().ToList();
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.Count());
+            Assert.True(result.Contains(survey1Mock.Object));
+            Assert.True(result.Contains(survey2Mock.Object));
+        }
+
+        [Test]
+        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_GetSurveys_Then_An_NullReferenceException_Is_Thrown()
         {
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetSurveyNames());

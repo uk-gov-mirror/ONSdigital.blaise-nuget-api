@@ -3,6 +3,7 @@ using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 using System;
 using System.Collections.Generic;
+using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
@@ -11,6 +12,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         IFluentBlaiseRemoteApi WithServerPark(string serverParkName);
 
         IEnumerable<string> GetSurveyNames();
+
+        IEnumerable<ISurvey> GetSurveys();
 
         IFluentBlaiseRemoteApi ForInstrument(string instrumentName);
 

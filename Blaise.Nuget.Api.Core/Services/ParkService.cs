@@ -39,14 +39,21 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public IEnumerable<string> GetSurveyNames(string serverParkName)
         {
+            var surveys = GetSurveys(serverParkName);
+
+            return surveys.Select(sp => sp.Name);
+        }
+
+        public IEnumerable<ISurvey> GetSurveys(string serverParkName)
+        {
             var serverPark = GetServerPark(serverParkName);
 
-            if(!serverPark.Surveys.Any())
+            if (!serverPark.Surveys.Any())
             {
                 throw new DataNotFoundException($"No surveys found for server park '{serverParkName}'");
             }
 
-            return serverPark.Surveys.Select(sp => sp.Name);
+            return serverPark.Surveys;
         }
 
         public Guid GetInstrumentId(string instrumentName, string serverParkName)
