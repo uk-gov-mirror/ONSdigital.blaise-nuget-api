@@ -1,5 +1,4 @@
 ﻿using Blaise.Nuget.Api.Contracts.Exceptions;
-using Blaise.Nuget.Api.Core.Interfaces;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Services;
 using Moq;
@@ -95,7 +94,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _serverParkCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => serverParkItems.GetEnumerator());
 
             //act
-            var result = _sut.GetServerParkNames();
+            var result = _sut.GetServerParkNames().ToList();
 
             //assert
             Assert.NotNull(result);
@@ -109,7 +108,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_No_ServerParks_When_I_Call_GetServerParkNames_Then_A_Data_Not_Found_Exception_Is_Thrown()
         {
             //arrange
-            var serverParkItems = new List<IServerPark> { };
+            var serverParkItems = new List<IServerPark> {  };
 
             _serverParkCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => serverParkItems.GetEnumerator());
 
@@ -122,12 +121,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetSurveys_Then_I_Get_A_Correct_List_Of_Surveys_Returned()
         {
             //act
-            var result = _sut.GetSurveys(_serverParkName);
+            var result = _sut.GetSurveys(_serverParkName).ToList();
 
             //assert
             Assert.NotNull(result);
             Assert.IsNotEmpty(result);
-            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(1, result.Count);
             Assert.True(result.Contains(_instrumentName));
         }
 
@@ -149,11 +148,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_ServerPark_Not_On_Server_When_I_Call_GetSurveys_Then_A_Data_Not_Found_Exception_Is_Thrown()
         {
             //arrange
-            var surverParkName = "ServerParkDoesntExist";
+            var serverParkName = "ServerParkDoesntExist";
 
             //act && assert
-            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetSurveys(surverParkName));
-            Assert.AreEqual($"Server park '{surverParkName}' not found", exception.Message);
+            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetSurveys(serverParkName));
+            Assert.AreEqual($"Server park '{serverParkName}' not found", exception.Message);
         }
 
         [Test]

@@ -284,7 +284,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.ForInstrument(instrumentName);
 
             //act            
-            var result = _sut.GetSurveys();
+            var result = _sut.GetSurveys().ToList();
 
             //assert
             Assert.IsNotNull(result);
@@ -767,7 +767,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         public void Given_A_Null_DataRecord_When_I_Call_WriteDataRecord_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.WriteDataRecord((IDataRecord)null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.WriteDataRecord(null));
             Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
         }
 

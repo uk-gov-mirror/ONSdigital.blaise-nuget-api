@@ -33,7 +33,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         {
             _instrumentName = "TestInstrumentName";
             _serverParkName = "TestServerParkName";
-            _filePath = "c:\\filepath";
+            _filePath = "c:\\filePath";
             _instrumentId = Guid.NewGuid();
         }
 

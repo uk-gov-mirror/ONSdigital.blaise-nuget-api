@@ -82,7 +82,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         public void Given_Valid_Arguments_When_I_Call_GetSurveys_Then_The_Expected_Result_Is_Returned()
         {
             //arrange
-            var serverParkName = "Park1";
+            const string serverParkName = "Park1";
             var surveyList = new List<string>
             {
                 "Instrument1",
@@ -92,7 +92,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _parkServiceMock.Setup(p => p.GetSurveys(serverParkName)).Returns(surveyList);
 
             //act            
-            var result = _sut.GetSurveys(serverParkName);
+            var result = _sut.GetSurveys(serverParkName).ToList();
 
             //assert
             Assert.IsNotNull(result);
