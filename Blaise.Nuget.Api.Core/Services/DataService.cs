@@ -10,15 +10,18 @@ namespace Blaise.Nuget.Api.Core.Services
         private readonly IDataModelService _dataModelService;
         private readonly IDataRecordService _dataRecordService;
         private readonly IKeyService _keyService;
+        private readonly IFieldService _fieldService;
 
         public DataService(
             IDataModelService dataModelService, 
             IDataRecordService dataRecordService, 
-            IKeyService keyService)
+            IKeyService keyService, 
+            IFieldService fieldService)
         {
             _dataModelService = dataModelService;
             _dataRecordService = dataRecordService;
             _keyService = keyService;
+            _fieldService = fieldService;
         }
 
         public IDatamodel GetDataModel(string instrumentName, string serverParkName)
@@ -69,6 +72,26 @@ namespace Blaise.Nuget.Api.Core.Services
         public void WriteDataRecord(IDataRecord dataRecord, string filePath)
         {
             _dataRecordService.WriteDataRecord(dataRecord, filePath);
+        }
+
+        public bool CaseHasBeenCompleted(IDataRecord dataRecord)
+        {
+            return _fieldService.CaseHasBeenCompleted(dataRecord);
+        }
+
+        public void MarkCaseAsComplete(IDataRecord dataRecord, string instrumentName, string serverParkName)
+        {
+            _fieldService.MarkCaseAsComplete(dataRecord, instrumentName, serverParkName);
+        }
+
+        public bool CaseHasBeenProcessed(IDataRecord dataRecord)
+        {
+            return _fieldService.CaseHasBeenProcessed(dataRecord);
+        }
+
+        public void MarkCaseAsProcessed(IDataRecord dataRecord, string instrumentName, string serverParkName)
+        {
+            _fieldService.MarkCaseAsProcessed(dataRecord, instrumentName, serverParkName);
         }
     }
 }

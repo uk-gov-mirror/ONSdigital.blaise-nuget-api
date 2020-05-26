@@ -41,5 +41,13 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName);
 
         void WriteDataRecord(IDataRecord dataRecord, string filePath);
+
+        bool CaseHasBeenCompleted(IDataRecord dataRecord);
+
+        void MarkCaseAsComplete(IDataRecord dataRecord, string instrumentName, string serverParkName);
+
+        bool CaseHasBeenProcessed(IDataRecord dataRecord);
+
+        void MarkCaseAsProcessed(IDataRecord dataRecord, string instrumentName, string serverParkName);
     }
 }

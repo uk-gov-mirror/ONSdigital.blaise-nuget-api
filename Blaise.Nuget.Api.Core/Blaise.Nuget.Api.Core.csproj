@@ -54,6 +54,7 @@
     <Compile Include="Interfaces\Services\IDataModelService.cs" />
     <Compile Include="Interfaces\Services\IDataRecordService.cs" />
     <Compile Include="Interfaces\Services\IDataService.cs" />
+    <Compile Include="Interfaces\Services\IFieldService.cs" />
     <Compile Include="Interfaces\Services\IKeyService.cs" />
     <Compile Include="Interfaces\Services\IParkService.cs" />
     <Compile Include="Interfaces\Services\IPasswordService.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Services\DataModelService.cs" />
     <Compile Include="Services\DataRecordService.cs" />
     <Compile Include="Services\DataService.cs" />
+    <Compile Include="Services\FieldService.cs" />
     <Compile Include="Services\KeyService.cs" />
     <Compile Include="Services\ParkService.cs" />
     <Compile Include="Services\PasswordService.cs" />

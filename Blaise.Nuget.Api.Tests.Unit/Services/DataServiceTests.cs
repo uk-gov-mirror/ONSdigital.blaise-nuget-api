@@ -12,6 +12,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<IDataModelService> _dataModelServiceMock;
         private Mock<IKeyService> _keyServiceMock;
         private Mock<IDataRecordService> _dataRecordServiceMock;
+        private Mock<IFieldService> _fieldServiceMock;
 
         private Mock<IDatamodel> _dataModelMock;
         private Mock<IKey> _keyMock;
@@ -47,13 +48,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _keyServiceMock.Setup(d => d.GetKey(_dataModelMock.Object, _keyName)).Returns(_keyMock.Object);
 
             _dataRecordServiceMock = new Mock<IDataRecordService>();
-
             _dataRecordServiceMock.Setup(d => d.GetDataRecord(_dataModelMock.Object)).Returns(_dataRecordMock.Object);
+
+            _fieldServiceMock = new Mock<IFieldService>();
 
             _sut = new DataService(
                 _dataModelServiceMock.Object,
                 _dataRecordServiceMock.Object,
-                _keyServiceMock.Object);
+                _keyServiceMock.Object,
+                _fieldServiceMock.Object);
         }
 
         [Test]
@@ -256,6 +259,74 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _filePath), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_DataRecord_When_I_Call_CaseHasBeenCompleted_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.CaseHasBeenCompleted(_dataRecordMock.Object);
+
+            //assert
+            _fieldServiceMock.Verify(v => v.CaseHasBeenCompleted(_dataRecordMock.Object), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_A_DataRecord_When_I_Call_CaseHasBeenCompleted_Then_The_Correct_Value_Is_Returned(bool caseIsComplete)
+        {
+            //arrange
+            _fieldServiceMock.Setup(f => f.CaseHasBeenCompleted(It.IsAny<IDataRecord>())).Returns(caseIsComplete);
+
+            //act
+            var result =_sut.CaseHasBeenCompleted(_dataRecordMock.Object);
+
+            //assert
+           Assert.AreEqual(caseIsComplete, result);
+        }
+
+        [Test]
+        public void Given_AValid_Parameters_When_I_Call_MarkCaseAsComplete_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.MarkCaseAsComplete(_dataRecordMock.Object, _instrumentName, _serverParkName);
+
+            //assert
+            _fieldServiceMock.Verify(v => v.MarkCaseAsComplete(_dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_DataRecord_When_I_Call_CaseHasBeenProcessed_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.CaseHasBeenProcessed(_dataRecordMock.Object);
+
+            //assert
+            _fieldServiceMock.Verify(v => v.CaseHasBeenProcessed(_dataRecordMock.Object), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_A_DataRecord_When_I_Call_CaseHasBeenProcessed_Then_The_Correct_Value_Is_Returned(bool caseIsProcessed)
+        {
+            //arrange
+            _fieldServiceMock.Setup(f => f.CaseHasBeenProcessed(It.IsAny<IDataRecord>())).Returns(caseIsProcessed);
+
+            //act
+            var result = _sut.CaseHasBeenProcessed(_dataRecordMock.Object);
+
+            //assert
+            Assert.AreEqual(caseIsProcessed, result);
+        }
+
+        [Test]
+        public void Given_AValid_Parameters_When_I_Call_MarkCaseAsProcessed_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.MarkCaseAsProcessed(_dataRecordMock.Object, _instrumentName, _serverParkName);
+
+            //assert
+            _fieldServiceMock.Verify(v => v.MarkCaseAsProcessed(_dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
     }
 }

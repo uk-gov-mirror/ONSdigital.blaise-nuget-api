@@ -164,7 +164,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_A_Valid_DataRecord_When_I_Call_GetDataRecord_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Valid_Arguments_When_I_Call_GetDataRecord_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             var dataModelMock = new Mock<IDatamodel>();
@@ -193,6 +193,70 @@ namespace Blaise.Nuget.Api.Tests.Unit
             //assert
             Assert.IsNotNull(result);
             Assert.AreSame(dataRecordMock.Object, result);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_CaseHasBeenCompleted_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+
+            _blaiseApiMock.Setup(d => d.CaseHasBeenCompleted(It.IsAny<IDataRecord>())).Returns(It.IsAny<bool>());
+
+            //act
+            _sut.CaseHasBeenCompleted(dataRecordMock.Object);
+
+            //assert
+            _blaiseApiMock.Verify(v => v.CaseHasBeenCompleted(dataRecordMock.Object), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_Valid_Arguments_When_I_Call_CaseHasBeenCompleted_Then_The_Expected_Result_Is_Returned(bool caseIsComplete)
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+
+            _blaiseApiMock.Setup(d => d.CaseHasBeenCompleted(dataRecordMock.Object)).Returns(caseIsComplete);
+
+            //act
+            var result = _sut.CaseHasBeenCompleted(dataRecordMock.Object);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(caseIsComplete, result);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_CaseHasBeenProcessed_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+
+            _blaiseApiMock.Setup(d => d.CaseHasBeenProcessed(It.IsAny<IDataRecord>())).Returns(It.IsAny<bool>());
+
+            //act
+            _sut.CaseHasBeenProcessed(dataRecordMock.Object);
+
+            //assert
+            _blaiseApiMock.Verify(v => v.CaseHasBeenProcessed(dataRecordMock.Object), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_Valid_Arguments_When_I_Call_CaseHasBeenProcessed_Then_The_Expected_Result_Is_Returned(bool caseIsProcessed)
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+
+            _blaiseApiMock.Setup(d => d.CaseHasBeenProcessed(dataRecordMock.Object)).Returns(caseIsProcessed);
+
+            //act
+            var result = _sut.CaseHasBeenProcessed(dataRecordMock.Object);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(caseIsProcessed, result);
         }
 
         [Test]
@@ -787,5 +851,100 @@ namespace Blaise.Nuget.Api.Tests.Unit
             Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
         }
 
+        [Test]
+        public void Given_WithServerPark_And_ForInstrument_Has_Been_Called_When_I_Call_MarkCaseAsComplete_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _blaiseApiMock.Setup(d => d.MarkCaseAsComplete(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
+
+            _sut.WithServerPark(serverParkName);
+            _sut.ForInstrument(instrumentName);
+
+            //act
+            _sut.MarkCaseAsComplete(dataRecordMock.Object);
+
+            //assert
+            _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(dataRecordMock.Object, instrumentName, serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_WithFile_Has_Not_Been_Called_And_WithServerPark_Has_Not_Been_Called_When_I_Call_MarkCaseAsComplete_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var instrumentName = "Instrument1";
+
+            _sut.ForInstrument(instrumentName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkCaseAsComplete(dataRecordMock.Object));
+            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this", exception.Message);
+        }
+
+        [Test]
+        public void Given_WithServerPark_Has_Been_Called_And_ForInstrument_Has_Not_Been_Called_When_I_Call_MarkCaseAsComplete_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var serverParkName = "Park1";
+
+            _sut.WithServerPark(serverParkName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkCaseAsComplete(dataRecordMock.Object));
+            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+        }
+
+        [Test]
+        public void Given_WithServerPark_And_ForInstrument_Has_Been_Called_When_I_Call_MarkCaseAsProcessed_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _blaiseApiMock.Setup(d => d.MarkCaseAsProcessed(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
+
+            _sut.WithServerPark(serverParkName);
+            _sut.ForInstrument(instrumentName);
+
+            //act
+            _sut.MarkCaseAsProcessed(dataRecordMock.Object);
+
+            //assert
+            _blaiseApiMock.Verify(v => v.MarkCaseAsProcessed(dataRecordMock.Object, instrumentName, serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_WithFile_Has_Not_Been_Called_And_WithServerPark_Has_Not_Been_Called_When_I_Call_MarkCaseAsProcessed_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var instrumentName = "Instrument1";
+
+            _sut.ForInstrument(instrumentName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkCaseAsProcessed(dataRecordMock.Object));
+            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this", exception.Message);
+        }
+
+        [Test]
+        public void Given_WithServerPark_Has_Been_Called_And_ForInstrument_Has_Not_Been_Called_When_I_Call_MarkCaseAsProcessed_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var serverParkName = "Park1";
+
+            _sut.WithServerPark(serverParkName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkCaseAsProcessed(dataRecordMock.Object));
+            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+        }
     }
 }

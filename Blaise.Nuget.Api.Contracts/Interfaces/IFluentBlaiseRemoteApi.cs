@@ -28,5 +28,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         IDataRecord GetDataRecord(IKey key);
 
         void WriteDataRecord(IDataRecord dataRecord);
+
+        void MarkCaseAsComplete(IDataRecord dataRecord);
+
+        void MarkCaseAsProcessed(IDataRecord dataRecord);
     }
 }
