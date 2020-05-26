@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\CaseRecordType.cs" />
     <Compile Include="Exceptions\DataNotFoundException.cs" />
     <Compile Include="Interfaces\IBlaiseApi.cs" />
     <Compile Include="Interfaces\IFluentBlaiseRemoteApi.cs" />
@@ -57,6 +58,7 @@
     <None Include="Blaise.Nuget.Api.Contracts.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\StatNeth.Blaise.API.x64.5.7.5\build\StatNeth.Blaise.API.x64.targets" Condition="Exists('..\packages\StatNeth.Blaise.API.x64.5.7.5\build\StatNeth.Blaise.API.x64.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

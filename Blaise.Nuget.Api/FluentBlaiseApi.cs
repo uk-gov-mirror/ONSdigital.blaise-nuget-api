@@ -4,6 +4,7 @@ using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 using System;
 using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Enums;
 using StatNeth.Blaise.API.ServerManager;
 using Unity;
 
@@ -113,6 +114,14 @@ namespace Blaise.Nuget.Api
             ValidateInstrumentIsSet();
 
             return _blaiseApi.GetDataModel(_instrumentName, _serverParkName);
+        }
+
+        public CaseRecordType GetCaseRecordType()
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+
+            return _blaiseApi.GetCaseRecordType(_instrumentName, _serverParkName);
         }
 
         public IDataSet GetDataSet()

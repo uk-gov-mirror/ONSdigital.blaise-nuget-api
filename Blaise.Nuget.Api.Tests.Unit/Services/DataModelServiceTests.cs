@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Core.Interfaces.Providers;
+﻿using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Services;
 using Moq;
 using NUnit.Framework;
@@ -67,6 +68,33 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         {
             //act
              _sut.GetDataModel(_instrumentName, _serverParkName);
+
+            //assert
+            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_instrumentName, _serverParkName), Times.Once);
+            _remoteDataLinkMock.Verify(v => v.Datamodel, Times.Once);
+        }
+
+        [TestCase("Appointment", CaseRecordType.Appointment)]
+        [TestCase("CatiDial", CaseRecordType.CatiDial)]
+        [TestCase("",CaseRecordType.NotMapped)]
+        [TestCase("Other", CaseRecordType.NotMapped)]
+        public void Given_I_Call_GetCaseRecordType_I_Get_The_Correct_DataModel_Back(string caseName, CaseRecordType caseRecordType)
+        {
+            //arrange
+            _dataModelMock.Setup(d => d.Name).Returns(caseName);
+
+            //act
+            var result = _sut.GetCaseRecordType(_instrumentName, _serverParkName);
+
+            //assert
+            Assert.AreEqual(caseRecordType, result);
+        }
+
+        [Test]
+        public void Given_I_Call_GetCaseRecordType_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.GetCaseRecordType(_instrumentName, _serverParkName);
 
             //assert
             _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_instrumentName, _serverParkName), Times.Once);

@@ -1,4 +1,5 @@
-﻿using StatNeth.Blaise.API.DataLink;
+﻿using Blaise.Nuget.Api.Contracts.Enums;
+using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 
@@ -7,6 +8,8 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
     public interface IDataService
     {
         IDatamodel GetDataModel(string instrumentName, string serverParkName);
+
+        CaseRecordType GetCaseRecordType(string instrumentName, string serverParkName);
 
         IKey GetKey(IDatamodel datamodel, string keyName);
 
