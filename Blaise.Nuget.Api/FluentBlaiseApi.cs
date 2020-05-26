@@ -168,12 +168,28 @@ namespace Blaise.Nuget.Api
             _blaiseApi.WriteDataRecord(dataRecord, _instrumentName, _serverParkName);            
         }
 
+        public bool CompletedFieldExists()
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+
+            return _blaiseApi.CompletedFieldExists(_instrumentName, _serverParkName);
+        }
+
         public void MarkCaseAsComplete(IDataRecord dataRecord)
         {
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
 
             _blaiseApi.MarkCaseAsComplete(dataRecord, _instrumentName, _serverParkName);
+        }
+
+        public bool ProcessedFieldExists()
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+
+            return _blaiseApi.ProcessedFieldExists(_instrumentName, _serverParkName);
         }
 
         public void MarkCaseAsProcessed(IDataRecord dataRecord)

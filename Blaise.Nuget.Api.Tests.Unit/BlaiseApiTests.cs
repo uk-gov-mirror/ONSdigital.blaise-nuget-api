@@ -800,8 +800,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
-
-
         [Test]
         public void Given_A_Valid_FilePath_When_I_Call_GetDataRecord_Then_The_Correct_Service_Method_Is_Called()
         {
@@ -978,6 +976,84 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
+        public void Given_Valid_Arguments_When_I_Call_CompletedFieldExists_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _dataServiceMock.Setup(d => d.CompletedFieldExists(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
+
+            //act
+            _sut.CompletedFieldExists(instrumentName, serverParkName);
+
+            //CompletedFieldExists
+            _dataServiceMock.Verify(v => v.CompletedFieldExists(instrumentName, serverParkName), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_Valid_Arguments_When_I_Call_CompletedFieldExists_Then_The_Expected_Result_Is_Returned(bool fieldExists)
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _dataServiceMock.Setup(d => d.CompletedFieldExists(It.IsAny<string>(), It.IsAny<string>())).Returns(fieldExists);
+
+            //act
+            var result = _sut.CompletedFieldExists(instrumentName, serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(fieldExists, result);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_CompletedFieldExists_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CompletedFieldExists(string.Empty, serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_CompletedFieldExists_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CompletedFieldExists(null, serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_CompletedFieldExists_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CompletedFieldExists(instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_CompletedFieldExists_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CompletedFieldExists(instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
         public void Given_Valid_Arguments_When_I_Call_CaseHasBeenCompleted_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
@@ -1131,6 +1207,84 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.MarkCaseAsComplete(dataRecordMock.Object, instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_ProcessedFieldExists_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _dataServiceMock.Setup(d => d.ProcessedFieldExists(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
+
+            //act
+            _sut.ProcessedFieldExists(instrumentName, serverParkName);
+
+            //CompletedFieldExists
+            _dataServiceMock.Verify(v => v.ProcessedFieldExists(instrumentName, serverParkName), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_Valid_Arguments_When_I_Call_ProcessedFieldExists_Then_The_Expected_Result_Is_Returned(bool fieldExists)
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _dataServiceMock.Setup(d => d.ProcessedFieldExists(It.IsAny<string>(), It.IsAny<string>())).Returns(fieldExists);
+
+            //act
+            var result = _sut.ProcessedFieldExists(instrumentName, serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(fieldExists, result);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_ProcessedFieldExists_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.ProcessedFieldExists(string.Empty, serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_ProcessedFieldExists_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ProcessedFieldExists(null, serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_ProcessedFieldExists_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.ProcessedFieldExists(instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_ProcessedFieldExists_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ProcessedFieldExists(instrumentName, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 

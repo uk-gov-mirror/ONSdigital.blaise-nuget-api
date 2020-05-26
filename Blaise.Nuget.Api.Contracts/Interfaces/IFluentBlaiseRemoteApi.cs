@@ -29,7 +29,11 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         void WriteDataRecord(IDataRecord dataRecord);
 
+        bool CompletedFieldExists();
+
         void MarkCaseAsComplete(IDataRecord dataRecord);
+
+        bool ProcessedFieldExists();
 
         void MarkCaseAsProcessed(IDataRecord dataRecord);
     }

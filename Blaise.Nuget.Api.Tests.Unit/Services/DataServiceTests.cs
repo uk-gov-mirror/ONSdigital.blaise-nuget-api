@@ -262,6 +262,30 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
+        public void Given_Valid_Arguments_When_I_Call_CompletedFieldExists_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.CompletedFieldExists(_instrumentName, _serverParkName);
+
+            //assert
+            _fieldServiceMock.Verify(v => v.CompletedFieldExists(_instrumentName, _serverParkName), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_Valid_Arguments_When_I_Call_CompletedFieldExists_Then_The_Correct_Value_Is_Returned(bool fieldExists)
+        {
+            //arrange
+            _fieldServiceMock.Setup(f => f.CompletedFieldExists(It.IsAny<string>(), It.IsAny<string>())).Returns(fieldExists);
+
+            //act
+            var result = _sut.CompletedFieldExists(_instrumentName, _serverParkName);
+
+            //assert
+            Assert.AreEqual(fieldExists, result);
+        }
+
+        [Test]
         public void Given_A_DataRecord_When_I_Call_CaseHasBeenCompleted_Then_The_Correct_Services_Are_Called()
         {
             //act
@@ -293,6 +317,30 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _fieldServiceMock.Verify(v => v.MarkCaseAsComplete(_dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_ProcessedFieldExists_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.ProcessedFieldExists(_instrumentName, _serverParkName);
+
+            //assert
+            _fieldServiceMock.Verify(v => v.ProcessedFieldExists(_instrumentName, _serverParkName), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_Valid_Arguments_When_I_Call_ProcessedFieldExists_Then_The_Correct_Value_Is_Returned(bool fieldExists)
+        {
+            //arrange
+            _fieldServiceMock.Setup(f => f.ProcessedFieldExists(It.IsAny<string>(), It.IsAny<string>())).Returns(fieldExists);
+
+            //act
+            var result = _sut.ProcessedFieldExists(_instrumentName, _serverParkName);
+
+            //assert
+            Assert.AreEqual(fieldExists, result);
         }
 
         [Test]
