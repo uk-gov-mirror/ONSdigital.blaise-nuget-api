@@ -47,16 +47,16 @@ namespace Blaise.Nuget.Api
             unityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>(
                 new InjectionConstructor(remoteConnectionModel, unityContainer.Resolve<IPasswordService>()));
 
-            //services
-            unityContainer.RegisterType<IDataService, DataService>();
-            unityContainer.RegisterType<IDataManagerService, DataManagerService>();
-            unityContainer.RegisterType<IDataLinkService, DataLinkService>();
-            unityContainer.RegisterType<IParkService, ParkService>();
-
             //providers
             unityContainer.RegisterType<ILocalDataLinkProvider, LocalDataLinkProvider>();
             unityContainer.RegisterType<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
 
+            //services
+            unityContainer.RegisterType<IDataService, DataService>();
+            unityContainer.RegisterType<IDataRecordService, DataRecordService>();
+            unityContainer.RegisterType<IDataModelService, DataModelService>();
+            unityContainer.RegisterType<IKeyService, KeyService>();
+            unityContainer.RegisterType<IParkService, ParkService>();
 
             //resolve dependencies
             _dataService = unityContainer.Resolve<IDataService>();
@@ -125,6 +125,13 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             return _dataService.KeyExists(key, instrumentName, serverParkName);
+        }
+
+        public string GetPrimaryKey(IDataRecord dataRecord)
+        {
+            dataRecord.ThrowExceptionIfNull("dataRecord");
+
+            return _dataService.GetPrimaryKey(dataRecord);
         }
 
         public IDataRecord GetDataRecord(IDatamodel dataModel)

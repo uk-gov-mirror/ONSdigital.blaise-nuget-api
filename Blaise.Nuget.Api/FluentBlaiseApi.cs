@@ -1,5 +1,4 @@
 ﻿using Blaise.Nuget.Api.Contracts.Interfaces;
-using Blaise.Nuget.Api.Helpers;
 using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
@@ -42,30 +41,26 @@ namespace Blaise.Nuget.Api
 
         public bool ServerParkExists(string serverParkName)
         {
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
-
             return _blaiseApi.ServerParkExists(serverParkName);
         }
 
         public IKey GetKey(IDatamodel dataModel, string keyName)
         {
-            dataModel.ThrowExceptionIfNull("dataModel");
-            keyName.ThrowExceptionIfNullOrEmpty("keyName");
-
             return _blaiseApi.GetKey(dataModel, keyName);
+        }
+
+        public string GetPrimaryKey(IDataRecord dataRecord)
+        {
+            return _blaiseApi.GetPrimaryKey(dataRecord);
         }
 
         public IDataRecord GetDataRecord(IDatamodel dataModel)
         {
-            dataModel.ThrowExceptionIfNull("dataModel");
-
             return _blaiseApi.GetDataRecord(dataModel);
         }
 
         public IFluentBlaiseRemoteApi WithServerPark(string serverParkName)
         {
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
-
             _filePath = null;
             _serverParkName = serverParkName;
 
@@ -88,8 +83,6 @@ namespace Blaise.Nuget.Api
 
         public IFluentBlaiseRemoteApi ForInstrument(string instrumentName)
         {
-            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-
             _filePath = null;
             _instrumentName = instrumentName;
 
@@ -122,8 +115,6 @@ namespace Blaise.Nuget.Api
 
         public bool KeyExists(IKey key)
         {
-            key.ThrowExceptionIfNull("key");
-
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
 
@@ -132,8 +123,6 @@ namespace Blaise.Nuget.Api
 
         public IFluentBlaiseLocalApi WithFile(string filePath)
         {
-            filePath.ThrowExceptionIfNullOrEmpty("filePath");
-
             _serverParkName = null;
             _filePath = filePath;
 
@@ -142,8 +131,6 @@ namespace Blaise.Nuget.Api
 
         public IDataRecord GetDataRecord(IKey key)
         {
-            key.ThrowExceptionIfNull("key");
-
             if (!string.IsNullOrEmpty(_filePath))
             {
                 return _blaiseApi.GetDataRecord(key, _filePath);
@@ -158,8 +145,6 @@ namespace Blaise.Nuget.Api
 
         public void WriteDataRecord(IDataRecord dataRecord)
         {
-            dataRecord.ThrowExceptionIfNull("dataRecord");
-
             if (!string.IsNullOrEmpty(_filePath))
             {
                 _blaiseApi.WriteDataRecord(dataRecord, _filePath);

@@ -6,32 +6,17 @@ using StatNeth.Blaise.API.Meta;
 
 namespace Blaise.Nuget.Api.Core.Services
 {
-    public class DataLinkService : IDataLinkService
+    public class DataRecordService : IDataRecordService
     {
         private readonly IRemoteDataLinkProvider _remoteDataLinkProvider;
         private readonly ILocalDataLinkProvider _localDataLinkProvider;
 
-
-        public DataLinkService(
-            IRemoteDataLinkProvider remoteDataLinkProvider,
+        public DataRecordService(
+            IRemoteDataLinkProvider remoteDataLinkProvider, 
             ILocalDataLinkProvider localDataLinkProvider)
         {
             _remoteDataLinkProvider = remoteDataLinkProvider;
             _localDataLinkProvider = localDataLinkProvider;
-        }
-
-        public IDatamodel GetDataModel(string instrumentName, string serverParkName)
-        {
-            var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
-
-            return dataLink.Datamodel;
-        }
-
-        public bool KeyExists(IKey key, string instrumentName, string serverParkName)
-        {
-            var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
-
-            return dataLink.KeyExists(key);
         }
 
         public IDataSet GetDataSet(string instrumentName, string serverParkName)
@@ -39,6 +24,11 @@ namespace Blaise.Nuget.Api.Core.Services
             var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
 
             return dataLink.Read(null);
+        }
+
+        public IDataRecord GetDataRecord(IDatamodel dataModel)
+        {
+            return DataRecordManager.GetDataRecord(dataModel);
         }
 
         public IDataRecord GetDataRecord(IKey key, string instrumentName, string serverParkName)

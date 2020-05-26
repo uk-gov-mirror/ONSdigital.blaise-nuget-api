@@ -4,13 +4,11 @@ using StatNeth.Blaise.API.Meta;
 
 namespace Blaise.Nuget.Api.Core.Interfaces.Services
 {
-    public interface IDataLinkService
+    public interface IDataRecordService
     {
-        IDatamodel GetDataModel(string instrumentName, string serverParkName);
-
-        bool KeyExists(IKey key, string instrumentName, string serverParkName);
-
         IDataSet GetDataSet(string instrumentName, string serverParkName);
+
+        IDataRecord GetDataRecord(IDatamodel dataModel);
 
         IDataRecord GetDataRecord(IKey key, string instrumentName, string serverParkName);
 

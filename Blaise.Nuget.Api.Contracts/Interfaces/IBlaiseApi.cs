@@ -28,9 +28,11 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         bool KeyExists(IKey key, string instrumentName, string serverParkName);
 
-        IDataRecord GetDataRecord(IDatamodel dataModel);
+        string GetPrimaryKey(IDataRecord dataRecord);
 
         IDataSet GetDataSet(string instrumentName, string serverParkName);
+
+        IDataRecord GetDataRecord(IDatamodel dataModel);
 
         IDataRecord GetDataRecord(IKey key, string instrumentName, string serverParkName);
 
