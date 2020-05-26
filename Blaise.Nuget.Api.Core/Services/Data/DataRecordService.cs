@@ -4,7 +4,7 @@ using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 
-namespace Blaise.Nuget.Api.Core.Services
+namespace Blaise.Nuget.Api.Core.Services.Data
 {
     public class DataRecordService : IDataRecordService
     {

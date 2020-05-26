@@ -14,6 +14,7 @@ using Blaise.Nuget.Api.Core.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
+using Blaise.Nuget.Api.Core.Services.Data;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api
@@ -22,13 +23,16 @@ namespace Blaise.Nuget.Api
     {
         private readonly IDataService _dataService;
         private readonly IParkService _parkService;
+        private readonly ISurveyService _surveyService;
 
         internal BlaiseApi(
             IDataService dataService,
-            IParkService parkService)
+            IParkService parkService, 
+            ISurveyService surveyService)
         {
             _dataService = dataService;
             _parkService = parkService;
+            _surveyService = surveyService;
         }
 
         public BlaiseApi()
@@ -58,7 +62,8 @@ namespace Blaise.Nuget.Api
             unityContainer.RegisterType<IKeyService, KeyService>();
             unityContainer.RegisterType<IFieldService, FieldService>();
             unityContainer.RegisterType<IParkService, ParkService>();
-
+            unityContainer.RegisterType<ISurveyService, SurveyService>();
+            
             //resolve dependencies
             _dataService = unityContainer.Resolve<IDataService>();
             _parkService = unityContainer.Resolve<IParkService>();
@@ -71,21 +76,21 @@ namespace Blaise.Nuget.Api
 
         public IEnumerable<ISurvey> GetAllSurveys()
         {
-            return _parkService.GetAllSurveys();
+            return _surveyService.GetAllSurveys();
         }
 
         public IEnumerable<string> GetSurveyNames(string serverParkName)
         {
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            return _parkService.GetSurveyNames(serverParkName);
+            return _surveyService.GetSurveyNames(serverParkName);
         }
 
         public IEnumerable<ISurvey> GetSurveys(string serverParkName)
         {
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            return _parkService.GetSurveys(serverParkName);
+            return _surveyService.GetSurveys(serverParkName);
         }
 
         public bool ServerParkExists(string serverParkName)
@@ -100,7 +105,7 @@ namespace Blaise.Nuget.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            return _parkService.GetInstrumentId(instrumentName, serverParkName);
+            return _surveyService.GetInstrumentId(instrumentName, serverParkName);
         }
 
         public IDatamodel GetDataModel(string instrumentName, string serverParkName)

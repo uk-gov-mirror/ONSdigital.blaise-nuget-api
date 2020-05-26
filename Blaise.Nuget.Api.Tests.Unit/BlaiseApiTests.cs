@@ -14,6 +14,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
     {
         private Mock<IDataService> _dataServiceMock;
         private Mock<IParkService> _parkServiceMock;
+        private Mock<ISurveyService> _surveyServiceMock;
 
         private BlaiseApi _sut;
 
@@ -22,10 +23,12 @@ namespace Blaise.Nuget.Api.Tests.Unit
         {
             _dataServiceMock = new Mock<IDataService>();
             _parkServiceMock = new Mock<IParkService>();
+            _surveyServiceMock = new Mock<ISurveyService>();
 
             _sut = new BlaiseApi(
                 _dataServiceMock.Object,
-                _parkServiceMock.Object);
+                _parkServiceMock.Object,
+                _surveyServiceMock.Object);
         }
 
         [Test]
@@ -68,13 +71,13 @@ namespace Blaise.Nuget.Api.Tests.Unit
         public void When_I_Call_GetAllSurveys_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            _parkServiceMock.Setup(p => p.GetAllSurveys()).Returns(It.IsAny<List<ISurvey>>());
+            _surveyServiceMock.Setup(p => p.GetAllSurveys()).Returns(It.IsAny<List<ISurvey>>());
 
             //act
             _sut.GetAllSurveys();
 
             //assert
-            _parkServiceMock.Verify(v => v.GetAllSurveys(), Times.Once);
+            _surveyServiceMock.Verify(v => v.GetAllSurveys(), Times.Once);
         }
 
         [Test]
@@ -87,7 +90,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             var surveys = new List<ISurvey> { survey1Mock.Object, survey2Mock.Object, survey3Mock.Object };
 
-            _parkServiceMock.Setup(p => p.GetAllSurveys()).Returns(surveys);
+            _surveyServiceMock.Setup(p => p.GetAllSurveys()).Returns(surveys);
 
             //act
             var result = _sut.GetAllSurveys().ToList();
@@ -107,13 +110,13 @@ namespace Blaise.Nuget.Api.Tests.Unit
             //arrange
             var serverParkName = "Park1";
 
-            _parkServiceMock.Setup(p => p.GetSurveyNames(It.IsAny<string>())).Returns(It.IsAny<List<string>>());
+            _surveyServiceMock.Setup(p => p.GetSurveyNames(It.IsAny<string>())).Returns(It.IsAny<List<string>>());
 
             //act
             _sut.GetSurveyNames(serverParkName);
 
             //assert
-            _parkServiceMock.Verify(v => v.GetSurveyNames(serverParkName), Times.Once);
+            _surveyServiceMock.Verify(v => v.GetSurveyNames(serverParkName), Times.Once);
         }
 
         [Test]
@@ -127,7 +130,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
                 "Instrument2"
             };
 
-            _parkServiceMock.Setup(p => p.GetSurveyNames(serverParkName)).Returns(surveyList);
+            _surveyServiceMock.Setup(p => p.GetSurveyNames(serverParkName)).Returns(surveyList);
 
             //act            
             var result = _sut.GetSurveyNames(serverParkName).ToList();
@@ -161,13 +164,13 @@ namespace Blaise.Nuget.Api.Tests.Unit
             //arrange
             var serverParkName = "Park1";
 
-            _parkServiceMock.Setup(p => p.GetSurveys(It.IsAny<string>())).Returns(It.IsAny<List<ISurvey>>());
+            _surveyServiceMock.Setup(p => p.GetSurveys(It.IsAny<string>())).Returns(It.IsAny<List<ISurvey>>());
 
             //act
             _sut.GetSurveys(serverParkName);
 
             //assert
-            _parkServiceMock.Verify(v => v.GetSurveys(serverParkName), Times.Once);
+            _surveyServiceMock.Verify(v => v.GetSurveys(serverParkName), Times.Once);
         }
 
         [Test]
@@ -183,7 +186,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
                 survey2Mock.Object
             };
 
-            _parkServiceMock.Setup(p => p.GetSurveys(serverParkName)).Returns(surveyList);
+            _surveyServiceMock.Setup(p => p.GetSurveys(serverParkName)).Returns(surveyList);
 
             //act            
             var result = _sut.GetSurveys(serverParkName).ToList();
@@ -266,13 +269,13 @@ namespace Blaise.Nuget.Api.Tests.Unit
             var instrumentName = "Instrument1";
             var serverParkName = "Park1";
 
-            _parkServiceMock.Setup(p => p.GetInstrumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<Guid>());
+            _surveyServiceMock.Setup(p => p.GetInstrumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<Guid>());
 
             //act
             _sut.GetInstrumentId(instrumentName, serverParkName);
 
             //assert
-            _parkServiceMock.Verify(v => v.GetInstrumentId(instrumentName, serverParkName), Times.Once);
+            _surveyServiceMock.Verify(v => v.GetInstrumentId(instrumentName, serverParkName), Times.Once);
         }
 
         [Test]
@@ -283,7 +286,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             var serverParkName = "Park1";
             var instrumentId = Guid.NewGuid();
 
-            _parkServiceMock.Setup(p => p.GetInstrumentId(instrumentName, serverParkName)).Returns(instrumentId);
+            _surveyServiceMock.Setup(p => p.GetInstrumentId(instrumentName, serverParkName)).Returns(instrumentId);
 
             //act
             var result = _sut.GetInstrumentId(instrumentName, serverParkName);

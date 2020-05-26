@@ -2,7 +2,6 @@
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.ServerManager;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,53 +36,7 @@ namespace Blaise.Nuget.Api.Core.Services
             return serverParkNames.Any(sp => sp == serverParkName);
         }
 
-        public IEnumerable<string> GetSurveyNames(string serverParkName)
-        {
-            var surveys = GetSurveys(serverParkName);
-
-            return surveys.Select(sp => sp.Name);
-        }
-
-        public IEnumerable<ISurvey> GetSurveys(string serverParkName)
-        {
-            var serverPark = GetServerPark(serverParkName);
-
-            if (!serverPark.Surveys.Any())
-            {
-                throw new DataNotFoundException($"No surveys found for server park '{serverParkName}'");
-            }
-
-            return serverPark.Surveys;
-        }
-
-        public IEnumerable<ISurvey> GetAllSurveys()
-        {
-            var surveyList = new List<ISurvey>();
-            var serverParkNames = GetServerParkNames();
-
-            foreach (var serverParkName in serverParkNames)
-            {
-                var serverPark = GetServerPark(serverParkName);
-                surveyList.AddRange(serverPark.Surveys);
-            }
-
-            return surveyList;
-        }
-
-        public Guid GetInstrumentId(string instrumentName, string serverParkName)
-        {
-            var serverPark = GetServerPark(serverParkName);
-            var survey = serverPark.Surveys.FirstOrDefault(s => string.Equals(s.Name, instrumentName, StringComparison.OrdinalIgnoreCase));
-
-            if (survey == null)
-            {
-                throw new DataNotFoundException($"Instrument '{instrumentName}' not found on server park '{serverParkName}'");
-            }
-
-            return survey.InstrumentID;
-        }
-
-        private IServerPark GetServerPark(string serverParkName)
+        public IServerPark GetServerPark(string serverParkName)
         {
             var connection = _connectionFactory.GetConnection();
 

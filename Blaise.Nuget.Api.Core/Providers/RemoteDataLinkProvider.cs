@@ -9,7 +9,7 @@ namespace Blaise.Nuget.Api.Core.Providers
     public class RemoteDataLinkProvider : IRemoteDataLinkProvider
     {
         private readonly IRemoteDataServerFactory _connectionFactory;
-        private readonly IParkService _parkService;
+        private readonly ISurveyService _surveyService;
 
         private string _instrumentName;
         private string _serverParkName;
@@ -17,10 +17,10 @@ namespace Blaise.Nuget.Api.Core.Providers
 
         public RemoteDataLinkProvider(
             IRemoteDataServerFactory connectionFactory,
-            IParkService parkService)
+            ISurveyService surveyService)
         {
             _connectionFactory = connectionFactory;
-            _parkService = parkService;
+            _surveyService = surveyService;
 
             _instrumentName = string.Empty;
             _serverParkName = string.Empty;
@@ -33,7 +33,7 @@ namespace Blaise.Nuget.Api.Core.Providers
                 _instrumentName = instrumentName;
                 _serverParkName = serverParkName;
 
-                var instrumentId = _parkService.GetInstrumentId(instrumentName, serverParkName);
+                var instrumentId = _surveyService.GetInstrumentId(instrumentName, serverParkName);
                 var connection = _connectionFactory.GetConnection();
 
                 _dataLink = connection.GetDataLink(instrumentId, serverParkName);
