@@ -188,6 +188,14 @@ namespace Blaise.Nuget.Api
             _dataService.WriteDataRecord(dataRecord, filePath);
         }
 
+        public bool CompletedFieldExists(string instrumentName, string serverParkName)
+        {
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _dataService.CompletedFieldExists(instrumentName, serverParkName);
+        }
+
         public bool CaseHasBeenCompleted(IDataRecord dataRecord)
         {
             dataRecord.ThrowExceptionIfNull("dataRecord");
@@ -202,6 +210,14 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             _dataService.MarkCaseAsComplete(dataRecord, instrumentName, serverParkName);
+        }
+
+        public bool ProcessedFieldExists(string instrumentName, string serverParkName)
+        {
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _dataService.ProcessedFieldExists(instrumentName, serverParkName);
         }
 
         public bool CaseHasBeenProcessed(IDataRecord dataRecord)

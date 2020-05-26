@@ -852,6 +852,51 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
+        public void Given_WithServerPark_And_ForInstrument_Has_Been_Called_When_I_Call_CompletedFieldExists_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _blaiseApiMock.Setup(d => d.CompletedFieldExists(It.IsAny<string>(), It.IsAny<string>()));
+
+            _sut.WithServerPark(serverParkName);
+            _sut.ForInstrument(instrumentName);
+
+            //act
+            _sut.CompletedFieldExists();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.CompletedFieldExists(instrumentName, serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_WithFile_Has_Not_Been_Called_And_WithServerPark_Has_Not_Been_Called_When_I_Call_CompletedFieldExists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+
+            _sut.ForInstrument(instrumentName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.CompletedFieldExists());
+            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this", exception.Message);
+        }
+
+        [Test]
+        public void Given_WithServerPark_Has_Been_Called_And_ForInstrument_Has_Not_Been_Called_When_I_Call_CompletedFieldExists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var serverParkName = "Park1";
+
+            _sut.WithServerPark(serverParkName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.CompletedFieldExists());
+            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+        }
+
+        [Test]
         public void Given_WithServerPark_And_ForInstrument_Has_Been_Called_When_I_Call_MarkCaseAsComplete_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
@@ -896,6 +941,51 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkCaseAsComplete(dataRecordMock.Object));
+            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+        }
+
+        [Test]
+        public void Given_WithServerPark_And_ForInstrument_Has_Been_Called_When_I_Call_ProcessedFieldExists_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _blaiseApiMock.Setup(d => d.ProcessedFieldExists(It.IsAny<string>(), It.IsAny<string>()));
+
+            _sut.WithServerPark(serverParkName);
+            _sut.ForInstrument(instrumentName);
+
+            //act
+            _sut.ProcessedFieldExists();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.ProcessedFieldExists(instrumentName, serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_WithFile_Has_Not_Been_Called_And_WithServerPark_Has_Not_Been_Called_When_I_Call_ProcessedFieldExists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+
+            _sut.ForInstrument(instrumentName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.ProcessedFieldExists());
+            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this", exception.Message);
+        }
+
+        [Test]
+        public void Given_WithServerPark_Has_Been_Called_And_ForInstrument_Has_Not_Been_Called_When_I_Call_ProcessedFieldExists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var serverParkName = "Park1";
+
+            _sut.WithServerPark(serverParkName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.ProcessedFieldExists());
             Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
         }
 
