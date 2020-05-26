@@ -32,7 +32,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
             if (dataModel.Name == "CatiDial")
             {
-                return CaseRecordType.Appointment;
+                return CaseRecordType.CatiDial;
             }
 
             return CaseRecordType.NotMapped;
