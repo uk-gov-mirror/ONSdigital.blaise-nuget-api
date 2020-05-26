@@ -59,6 +59,16 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.GetDataRecord(dataModel);
         }
 
+        public bool CaseHasBeenCompleted(IDataRecord dataRecord)
+        {
+            return _blaiseApi.CaseHasBeenCompleted(dataRecord);
+        }
+
+        public bool CaseHasBeenProcessed(IDataRecord dataRecord)
+        {
+            return _blaiseApi.CaseHasBeenProcessed(dataRecord);
+        }
+
         public IFluentBlaiseRemoteApi WithServerPark(string serverParkName)
         {
             _filePath = null;
@@ -156,6 +166,22 @@ namespace Blaise.Nuget.Api
             ValidateInstrumentIsSet();
 
             _blaiseApi.WriteDataRecord(dataRecord, _instrumentName, _serverParkName);            
+        }
+
+        public void MarkCaseAsComplete(IDataRecord dataRecord)
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+
+            _blaiseApi.MarkCaseAsComplete(dataRecord, _instrumentName, _serverParkName);
+        }
+
+        public void MarkCaseAsProcessed(IDataRecord dataRecord)
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+
+            _blaiseApi.MarkCaseAsProcessed(dataRecord, _instrumentName, _serverParkName);
         }
 
         private void ValidateServerParkIsSet()

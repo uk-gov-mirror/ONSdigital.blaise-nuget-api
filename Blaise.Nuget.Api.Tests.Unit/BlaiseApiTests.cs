@@ -925,10 +925,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
-
-
-
-
         [Test]
         public void Given_A_Valid_FilePath_When_I_Call_WriteDataRecord_Then_The_Correct_Service_Method_Is_Called()
         {
@@ -976,6 +972,240 @@ namespace Blaise.Nuget.Api.Tests.Unit
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.WriteDataRecord(dataRecordMock.Object, null));
             Assert.AreEqual("filePath", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_CaseHasBeenCompleted_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+
+            _dataServiceMock.Setup(d => d.CaseHasBeenCompleted(It.IsAny<IDataRecord>())).Returns(It.IsAny<bool>());
+
+            //act
+            _sut.CaseHasBeenCompleted(dataRecordMock.Object);
+
+            //assert
+            _dataServiceMock.Verify(v => v.CaseHasBeenCompleted(dataRecordMock.Object), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_Valid_Arguments_When_I_Call_CaseHasBeenCompleted_Then_The_Expected_Result_Is_Returned(bool caseIsComplete)
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+
+            _dataServiceMock.Setup(d => d.CaseHasBeenCompleted(It.IsAny<IDataRecord>())).Returns(caseIsComplete);
+
+            //act
+            var result = _sut.CaseHasBeenCompleted(dataRecordMock.Object);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(caseIsComplete, result);
+        }
+
+        [Test]
+        public void Given_A_Null_Key_When_I_Call_CaseHasBeenCompleted_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CaseHasBeenCompleted(null));
+            Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_CaseHasBeenProcessed_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+
+            _dataServiceMock.Setup(d => d.CaseHasBeenProcessed(It.IsAny<IDataRecord>())).Returns(It.IsAny<bool>());
+
+            //act
+            _sut.CaseHasBeenProcessed(dataRecordMock.Object);
+
+            //assert
+            _dataServiceMock.Verify(v => v.CaseHasBeenProcessed(dataRecordMock.Object), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_Valid_Arguments_When_I_Call_CaseHasBeenProcessed_Then_The_Expected_Result_Is_Returned(bool caseIsProcessed)
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+
+            _dataServiceMock.Setup(d => d.CaseHasBeenProcessed(It.IsAny<IDataRecord>())).Returns(caseIsProcessed);
+
+            //act
+            var result = _sut.CaseHasBeenProcessed(dataRecordMock.Object);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(caseIsProcessed, result);
+        }
+
+        [Test]
+        public void Given_A_Null_Key_When_I_Call_CaseHasBeenProcessed_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CaseHasBeenProcessed(null));
+            Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_MarkCaseAsComplete_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _dataServiceMock.Setup(d => d.MarkCaseAsComplete(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
+
+            //act
+            _sut.MarkCaseAsComplete(dataRecordMock.Object, instrumentName, serverParkName);
+
+            //assert
+            _dataServiceMock.Verify(v => v.MarkCaseAsComplete(dataRecordMock.Object, instrumentName, serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_Null_DataRecord_When_I_Call_MarkCaseAsComplete_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MarkCaseAsComplete(null, instrumentName, serverParkName));
+            Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_MarkCaseAsComplete_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.MarkCaseAsComplete(dataRecordMock.Object, string.Empty, serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_MarkCaseAsComplete_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MarkCaseAsComplete(dataRecordMock.Object, null, serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_MarkCaseAsComplete_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.MarkCaseAsComplete(dataRecordMock.Object, instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_MarkCaseAsComplete_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var dataRecordMock = new Mock<IDataRecord>();
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MarkCaseAsComplete(dataRecordMock.Object, instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_MarkCaseAsProcessed_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _dataServiceMock.Setup(d => d.MarkCaseAsProcessed(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
+
+            //act
+            _sut.MarkCaseAsProcessed(dataRecordMock.Object, instrumentName, serverParkName);
+
+            //assert
+            _dataServiceMock.Verify(v => v.MarkCaseAsProcessed(dataRecordMock.Object, instrumentName, serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_Null_DataRecord_When_I_Call_MarkCaseAsProcessed_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MarkCaseAsProcessed(null, instrumentName, serverParkName));
+            Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_MarkCaseAsProcessed_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.MarkCaseAsProcessed(dataRecordMock.Object, string.Empty, serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_MarkCaseAsProcessed_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MarkCaseAsProcessed(dataRecordMock.Object, null, serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_MarkCaseAsProcessed_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.MarkCaseAsProcessed(dataRecordMock.Object, instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_MarkCaseAsProcessed_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var dataRecordMock = new Mock<IDataRecord>();
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MarkCaseAsProcessed(dataRecordMock.Object, instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
         }
     }
 }

@@ -56,6 +56,7 @@ namespace Blaise.Nuget.Api
             unityContainer.RegisterType<IDataRecordService, DataRecordService>();
             unityContainer.RegisterType<IDataModelService, DataModelService>();
             unityContainer.RegisterType<IKeyService, KeyService>();
+            unityContainer.RegisterType<IFieldService, FieldService>();
             unityContainer.RegisterType<IParkService, ParkService>();
 
             //resolve dependencies
@@ -181,6 +182,38 @@ namespace Blaise.Nuget.Api
             filePath.ThrowExceptionIfNullOrEmpty("filePath");
 
             _dataService.WriteDataRecord(dataRecord, filePath);
+        }
+
+        public bool CaseHasBeenCompleted(IDataRecord dataRecord)
+        {
+            dataRecord.ThrowExceptionIfNull("dataRecord");
+
+            return _dataService.CaseHasBeenCompleted(dataRecord);
+        }
+
+        public void MarkCaseAsComplete(IDataRecord dataRecord, string instrumentName, string serverParkName)
+        {
+            dataRecord.ThrowExceptionIfNull("dataRecord");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            _dataService.MarkCaseAsComplete(dataRecord, instrumentName, serverParkName);
+        }
+
+        public bool CaseHasBeenProcessed(IDataRecord dataRecord)
+        {
+            dataRecord.ThrowExceptionIfNull("dataRecord");
+
+            return _dataService.CaseHasBeenProcessed(dataRecord);
+        }
+
+        public void MarkCaseAsProcessed(IDataRecord dataRecord, string instrumentName, string serverParkName)
+        {
+            dataRecord.ThrowExceptionIfNull("dataRecord");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            _dataService.MarkCaseAsProcessed(dataRecord, instrumentName, serverParkName);
         }
     }
 }
