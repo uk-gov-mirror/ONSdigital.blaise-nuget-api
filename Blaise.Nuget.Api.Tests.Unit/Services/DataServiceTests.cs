@@ -9,8 +9,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 {
     public class DataServiceTests
     {
-        private Mock<IDataLinkService> _dataLinkServiceMock;
-        private Mock<IDataManagerService> _dataManagerServiceMock;
+        private Mock<IDataModelService> _dataModelServiceMock;
+        private Mock<IKeyService> _keyServiceMock;
+        private Mock<IDataRecordService> _dataRecordServiceMock;
 
         private Mock<IDatamodel> _dataModelMock;
         private Mock<IKey> _keyMock;
@@ -27,7 +28,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         {
             _instrumentName = "TestInstrumentName";
             _serverParkName = "TestServerParkName";
-            _filePath = "c:\\filepath";
+            _filePath = "c:\\filePath";
             _keyName = "TestKeyName";
         }
 
@@ -38,17 +39,21 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _keyMock = new Mock<IKey>();
             _dataRecordMock = new Mock<IDataRecord>();
 
-            _dataLinkServiceMock = new Mock<IDataLinkService>();
-            _dataLinkServiceMock.Setup(d => d.GetDataModel(_instrumentName, _serverParkName)).Returns(_dataModelMock.Object);
-            _dataLinkServiceMock.Setup(d => d.KeyExists(_keyMock.Object, _instrumentName, _serverParkName)).Returns(true);
+            _dataModelServiceMock = new Mock<IDataModelService>();
+            _dataModelServiceMock.Setup(d => d.GetDataModel(_instrumentName, _serverParkName)).Returns(_dataModelMock.Object);
 
-            _dataManagerServiceMock = new Mock<IDataManagerService>();
-            _dataManagerServiceMock.Setup(d => d.GetKey(_dataModelMock.Object, _keyName)).Returns(_keyMock.Object);
-            _dataManagerServiceMock.Setup(d => d.GetDataRecord(_dataModelMock.Object)).Returns(_dataRecordMock.Object);
+            _keyServiceMock = new Mock<IKeyService>();
+            _keyServiceMock.Setup(d => d.KeyExists(_keyMock.Object, _instrumentName, _serverParkName)).Returns(true);
+            _keyServiceMock.Setup(d => d.GetKey(_dataModelMock.Object, _keyName)).Returns(_keyMock.Object);
+
+            _dataRecordServiceMock = new Mock<IDataRecordService>();
+
+            _dataRecordServiceMock.Setup(d => d.GetDataRecord(_dataModelMock.Object)).Returns(_dataRecordMock.Object);
 
             _sut = new DataService(
-                _dataLinkServiceMock.Object,
-                _dataManagerServiceMock.Object);
+                _dataModelServiceMock.Object,
+                _dataRecordServiceMock.Object,
+                _keyServiceMock.Object);
         }
 
         [Test]
@@ -79,7 +84,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _sut.GetDataModel(_instrumentName, _serverParkName);
 
             //assert
-            _dataLinkServiceMock.Verify(v => v.GetDataModel(_instrumentName, _serverParkName), Times.Once);
+            _dataModelServiceMock.Verify(v => v.GetDataModel(_instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -110,7 +115,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _sut.GetKey(_dataModelMock.Object, _keyName);
 
             //assert
-            _dataManagerServiceMock.Verify(v => v.GetKey(_dataModelMock.Object, _keyName), Times.Once);
+            _keyServiceMock.Verify(v => v.GetKey(_dataModelMock.Object, _keyName), Times.Once);
         }
 
         [Test]
@@ -129,7 +134,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_KeyExists_Then_A_The_Correct_Value_Is_Returned(bool keyExists)
         {
             //arrange 
-            _dataLinkServiceMock.Setup(d => d.KeyExists(_keyMock.Object, _instrumentName, _serverParkName)).Returns(keyExists);
+            _keyServiceMock.Setup(d => d.KeyExists(_keyMock.Object, _instrumentName, _serverParkName)).Returns(keyExists);
 
             //act
             var result = _sut.KeyExists(_keyMock.Object, _instrumentName, _serverParkName);
@@ -145,7 +150,41 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _sut.KeyExists(_keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
-            _dataLinkServiceMock.Verify(v => v.KeyExists(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);
+            _keyServiceMock.Verify(v => v.KeyExists(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_GetPrimaryKey_Then_The_Correct_Key_Is_Returned()
+        {
+            //act
+            var primaryKey = "Key1";
+            _keyServiceMock.Setup(k => k.GetPrimaryKey(It.IsAny<IDataRecord>())).Returns(primaryKey);
+
+            var result = _sut.GetPrimaryKey(_dataRecordMock.Object);
+
+            //assert
+            Assert.AreSame(primaryKey, result);
+        }
+
+        [Test]
+        public void Given_I_Call_GetPrimaryKey_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _keyServiceMock.Setup(k => k.GetPrimaryKey(It.IsAny<IDataRecord>())).Returns(It.IsAny<string>());
+            _sut.GetPrimaryKey(_dataRecordMock.Object);
+
+            //assert
+            _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataRecordMock.Object), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_GetDataSet_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.GetDataSet(_instrumentName, _serverParkName);
+
+            //assert
+            _dataRecordServiceMock.Verify(v => v.GetDataSet(_instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -176,17 +215,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _sut.GetDataRecord(_dataModelMock.Object);
 
             //assert
-            _dataManagerServiceMock.Verify(v => v.GetDataRecord(_dataModelMock.Object), Times.Once);
-        }
-
-        [Test]
-        public void Given_I_Call_GetDataSet_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.GetDataSet(_instrumentName, _serverParkName);
-
-            //assert
-            _dataLinkServiceMock.Verify(v => v.GetDataSet(_instrumentName, _serverParkName), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_dataModelMock.Object), Times.Once);
         }
 
         [Test]
@@ -196,7 +225,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _sut.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
-            _dataLinkServiceMock.Verify(v => v.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -206,7 +235,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _sut.GetDataRecord(_keyMock.Object, _filePath);
 
             //assert
-            _dataLinkServiceMock.Verify(v => v.GetDataRecord(_keyMock.Object, _filePath), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_keyMock.Object, _filePath), Times.Once);
         }
 
         [Test]
@@ -216,7 +245,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _sut.WriteDataRecord(_dataRecordMock.Object, _instrumentName, _serverParkName);
 
             //assert
-            _dataLinkServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -226,7 +255,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _sut.WriteDataRecord(_dataRecordMock.Object, _filePath);
 
             //assert
-            _dataLinkServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _filePath), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _filePath), Times.Once);
         }
     }
 }

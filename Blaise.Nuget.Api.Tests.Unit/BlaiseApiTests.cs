@@ -45,7 +45,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.GetServerParkNames();
 
             //assert
-            _parkServiceMock.Verify(v => v.GetServerParkNames());
+            _parkServiceMock.Verify(v => v.GetServerParkNames(), Times.Once);
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.GetAllSurveys();
 
             //assert
-            _parkServiceMock.Verify(v => v.GetAllSurveys());
+            _parkServiceMock.Verify(v => v.GetAllSurveys(), Times.Once);
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.GetSurveyNames(serverParkName);
 
             //assert
-            _parkServiceMock.Verify(v => v.GetSurveyNames(serverParkName));
+            _parkServiceMock.Verify(v => v.GetSurveyNames(serverParkName), Times.Once);
         }
 
         [Test]
@@ -167,7 +167,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.GetSurveys(serverParkName);
 
             //assert
-            _parkServiceMock.Verify(v => v.GetSurveys(serverParkName));
+            _parkServiceMock.Verify(v => v.GetSurveys(serverParkName), Times.Once);
         }
 
         [Test]
@@ -223,7 +223,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.ServerParkExists(serverParkName);
 
             //assert
-            _parkServiceMock.Verify(v => v.ServerParkExists(serverParkName));
+            _parkServiceMock.Verify(v => v.ServerParkExists(serverParkName), Times.Once);
         }
 
         [TestCase(true)]
@@ -272,7 +272,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.GetInstrumentId(instrumentName, serverParkName);
 
             //assert
-            _parkServiceMock.Verify(v => v.GetInstrumentId(instrumentName, serverParkName));
+            _parkServiceMock.Verify(v => v.GetInstrumentId(instrumentName, serverParkName), Times.Once);
         }
 
         [Test]
@@ -350,7 +350,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.GetDataModel(instrumentName, serverParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.GetDataModel(instrumentName, serverParkName));
+            _dataServiceMock.Verify(v => v.GetDataModel(instrumentName, serverParkName), Times.Once);
         }
 
         [Test]
@@ -428,7 +428,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.GetKey(dataModelMock.Object, keyName);
 
             //assert
-            _dataServiceMock.Verify(v => v.GetKey(dataModelMock.Object, keyName));
+            _dataServiceMock.Verify(v => v.GetKey(dataModelMock.Object, keyName), Times.Once);
         }
 
         [Test]
@@ -496,7 +496,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.KeyExists(keyMock.Object, instrumentName, serverParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.KeyExists(keyMock.Object, instrumentName, serverParkName));
+            _dataServiceMock.Verify(v => v.KeyExists(keyMock.Object, instrumentName, serverParkName), Times.Once);
         }
 
         [TestCase(true)]
@@ -579,6 +579,48 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetPrimaryKey_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+
+            _dataServiceMock.Setup(d => d.GetPrimaryKey(It.IsAny<IDataRecord>())).Returns(It.IsAny<string>());
+
+            //act
+            _sut.GetPrimaryKey(dataRecordMock.Object);
+
+            //assert
+            _dataServiceMock.Verify(v => v.GetPrimaryKey(dataRecordMock.Object), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetPrimaryKey_Then_The_Expected_Result_Is_Returned()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var primaryKey = "Key1";
+
+            _dataServiceMock.Setup(d => d.GetPrimaryKey(It.IsAny<IDataRecord>())).Returns(primaryKey);
+
+            //act
+            var result = _sut.GetPrimaryKey(dataRecordMock.Object);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(primaryKey, result);
+        }
+
+        [Test]
+        public void Given_A_Null_Key_When_I_Call_GetPrimaryKey_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetPrimaryKey(null));
+            Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
+        }
+
+        [Test]
         public void Given_A_Valid_DataRecord_When_I_Call_GetDataRecord_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
@@ -590,7 +632,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.GetDataRecord(dataModelMock.Object);
 
             //assert
-            _dataServiceMock.Verify(v => v.GetDataRecord(dataModelMock.Object));
+            _dataServiceMock.Verify(v => v.GetDataRecord(dataModelMock.Object), Times.Once);
         }
 
         [Test]
@@ -631,7 +673,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.GetDataSet(instrumentName, serverParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.GetDataSet(instrumentName, serverParkName));
+            _dataServiceMock.Verify(v => v.GetDataSet(instrumentName, serverParkName), Times.Once);
         }
 
         [Test]
@@ -692,7 +734,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.GetDataRecord(keyMock.Object, instrumentName, serverParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.GetDataRecord(keyMock.Object, instrumentName, serverParkName));
+            _dataServiceMock.Verify(v => v.GetDataRecord(keyMock.Object, instrumentName, serverParkName), Times.Once);
         }
 
         [Test]
@@ -770,7 +812,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.GetDataRecord(keyMock.Object, filePath);
 
             //assert
-            _dataServiceMock.Verify(v => v.GetDataRecord(keyMock.Object, filePath));
+            _dataServiceMock.Verify(v => v.GetDataRecord(keyMock.Object, filePath), Times.Once);
         }
 
         [Test]
@@ -820,7 +862,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.WriteDataRecord(dataRecordMock.Object, instrumentName, serverParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.WriteDataRecord(dataRecordMock.Object, instrumentName, serverParkName));
+            _dataServiceMock.Verify(v => v.WriteDataRecord(dataRecordMock.Object, instrumentName, serverParkName), Times.Once);
         }
 
         [Test]
@@ -900,7 +942,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.WriteDataRecord(dataRecordMock.Object, filePath);
 
             //assert
-            _dataServiceMock.Verify(v => v.WriteDataRecord(dataRecordMock.Object, filePath));
+            _dataServiceMock.Verify(v => v.WriteDataRecord(dataRecordMock.Object, filePath), Times.Once);
         }
 
         [Test]

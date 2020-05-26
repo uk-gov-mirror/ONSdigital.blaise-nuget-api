@@ -12,9 +12,11 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         bool KeyExists(IKey key, string instrumentName, string serverParkName);
 
-        IDataRecord GetDataRecord(IDatamodel datamodel);
+        string GetPrimaryKey(IDataRecord dataRecord);
 
         IDataSet GetDataSet(string instrumentName, string serverParkName);
+
+        IDataRecord GetDataRecord(IDatamodel datamodel);
 
         IDataRecord GetDataRecord(IKey key, string instrumentName, string serverParkName);
 

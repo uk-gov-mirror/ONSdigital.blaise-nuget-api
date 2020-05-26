@@ -130,22 +130,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_An_Empty_ServerParkName_When_I_Call_ServerParkExists_Then_An_ArgumentException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.ServerParkExists(string.Empty));
-            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_A_Null_ServerParkName_When_I_Call_ServerParkExists_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ServerParkExists(null));
-            Assert.AreEqual("serverParkName", exception.ParamName);
-        }
-
-        [Test]
         public void Given_Valid_Arguments_When_I_Call_GetKey_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
@@ -177,39 +161,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
             //assert
             Assert.IsNotNull(result);
             Assert.AreSame(keyMock.Object, result);
-        }
-
-        [Test]
-        public void Given_A_Null_DataModel_When_I_Call_GetKey_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange 
-            var keyName = "Key1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetKey(null, keyName));
-            Assert.AreEqual("The argument 'dataModel' must be supplied", exception.ParamName);
-        }
-
-        [Test]
-        public void Given_An_Empty_KeyName_When_I_Call_GetKey_Then_An_ArgumentException_Is_Thrown()
-        {
-            //arrange 
-            var dataModelMock = new Mock<IDatamodel>();
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.GetKey(dataModelMock.Object, string.Empty));
-            Assert.AreEqual("A value for the argument 'keyName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_A_Null_KeyName_When_I_Call_GetKey_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange 
-            var dataModelMock = new Mock<IDatamodel>();
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetKey(dataModelMock.Object, null));
-            Assert.AreEqual("keyName", exception.ParamName);
         }
 
         [Test]
@@ -245,14 +196,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_A_Null_DataModel_When_I_Call_GetDataRecord_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetDataRecord((IDatamodel)null));
-            Assert.AreEqual("The argument 'dataModel' must be supplied", exception.ParamName);
-        }
-
-        [Test]
         public void Given_Valid_Arguments_When_I_Call_WithServerPark_Then_It_Returns_Same_Instance_Of_Itself_Back()
         {
             //arrange
@@ -265,22 +208,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<IFluentBlaiseRemoteApi>(result);
             Assert.AreSame(_sut, result);
-        }
-
-        [Test]
-        public void Given_An_Empty_ServerParkName_When_I_Call_WithServerPark_Then_An_ArgumentException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.WithServerPark(string.Empty));
-            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_A_Null_ServerParkName_When_I_Call_WithServerPark_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.WithServerPark(null));
-            Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
         [Test]
@@ -406,22 +333,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<IFluentBlaiseRemoteApi>(result);
             Assert.AreSame(_sut, result);
-        }
-
-        [Test]
-        public void Given_An_Empty_ForInstrument_When_I_Call_ForInstrument_Then_An_ArgumentException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.ForInstrument(string.Empty));
-            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_A_Null_ForInstrument_When_I_Call_ForInstrument_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ForInstrument(null));
-            Assert.AreEqual("instrumentName", exception.ParamName);
         }
 
         [Test]
@@ -666,21 +577,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_A_Null_Key_When_I_Call_KeyExists_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange 
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-
-            _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.KeyExists(null));
-            Assert.AreEqual("The argument 'key' must be supplied", exception.ParamName);
-        }
-
-        [Test]
         public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_KeyExists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
@@ -709,6 +605,38 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetPrimaryKey_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+
+            _blaiseApiMock.Setup(d => d.GetPrimaryKey(It.IsAny<IDataRecord>())).Returns(It.IsAny<string>());
+
+            //act
+            _sut.GetPrimaryKey(dataRecordMock.Object);
+
+            //assert
+            _blaiseApiMock.Verify(v => v.GetPrimaryKey(dataRecordMock.Object), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetPrimaryKey_Then_The_Expected_Result_Is_Returned()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var primaryKey = "Key1";
+
+            _blaiseApiMock.Setup(d => d.GetPrimaryKey(It.IsAny<IDataRecord>())).Returns(primaryKey);
+
+            //act
+            var result = _sut.GetPrimaryKey(dataRecordMock.Object);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(primaryKey, result);
+        }
+
+        [Test]
         public void Given_Valid_Arguments_When_I_Call_WithFile_Then_It_Returns_Same_Instance_Of_Itself_Back()
         {
             //arrange
@@ -721,22 +649,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<IFluentBlaiseLocalApi>(result);
             Assert.AreSame(_sut, result);
-        }
-
-        [Test]
-        public void Given_An_Empty_FilePath_When_I_Call_WithFile_Then_An_ArgumentException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.WithFile(string.Empty));
-            Assert.AreEqual("A value for the argument 'filePath' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_A_Null_FilePath_When_I_Call_WithFile_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.WithFile(null));
-            Assert.AreEqual("filePath", exception.ParamName);
         }
 
         [Test]
@@ -777,14 +689,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
             //assert
             _blaiseApiMock.Verify(v => v.GetDataRecord(keyMock.Object, instrumentName, serverParkName), Times.Once);
             _blaiseApiMock.Verify(v => v.GetDataRecord(It.IsAny<IKey>(), It.IsAny<string>()), Times.Never);
-        }
-
-        [Test]
-        public void Given_A_Null_Key_When_I_Call_GetDataRecord_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetDataRecord((IKey)null));
-            Assert.AreEqual("The argument 'key' must be supplied", exception.ParamName);
         }
 
         [Test]
@@ -853,14 +757,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
             //assert
             _blaiseApiMock.Verify(v => v.WriteDataRecord(dataRecordMock.Object, instrumentName, serverParkName), Times.Once);
             _blaiseApiMock.Verify(v => v.WriteDataRecord(It.IsAny<IDataRecord>(), It.IsAny<string>()), Times.Never);
-        }
-
-        [Test]
-        public void Given_A_Null_DataRecord_When_I_Call_WriteDataRecord_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.WriteDataRecord(null));
-            Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
         }
 
         [Test]
