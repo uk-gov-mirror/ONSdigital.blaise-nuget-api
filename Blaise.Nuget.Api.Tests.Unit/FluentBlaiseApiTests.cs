@@ -7,6 +7,7 @@ using StatNeth.Blaise.API.Meta;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blaise.Nuget.Api.Contracts.Enums;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Tests.Unit
@@ -529,6 +530,72 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataModel());
+            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+        }
+
+        [Test]
+        public void Given_Valid_Instrument_And_ServerPark_When_I_Call_GetCaseRecordType_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _blaiseApiMock.Setup(d => d.GetCaseRecordType(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<CaseRecordType>());
+
+            _sut.WithServerPark(serverParkName);
+            _sut.ForInstrument(instrumentName);
+
+            //act
+            _sut.GetCaseRecordType();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.GetCaseRecordType(instrumentName, serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetCaseRecordType_Then_The_Expected_Result_Is_Returned()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+            var caseRecordType = CaseRecordType.NotMapped;
+
+            _blaiseApiMock.Setup(d => d.GetCaseRecordType(instrumentName, serverParkName)).Returns(caseRecordType);
+
+            _sut.WithServerPark(serverParkName);
+            _sut.ForInstrument(instrumentName);
+
+            //act
+            var result = _sut.GetCaseRecordType();
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(caseRecordType, result);
+        }
+
+        [Test]
+        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_GetCaseRecordType_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+
+            _sut.ForInstrument(instrumentName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetCaseRecordType());
+            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this", exception.Message);
+        }
+
+        [Test]
+        public void Given_ForInstrument_Has_Not_Been_Called_When_I_Call_GetCaseRecordType_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var serverParkName = "Park1";
+
+            _sut.WithServerPark(serverParkName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetCaseRecordType());
             Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
         }
 

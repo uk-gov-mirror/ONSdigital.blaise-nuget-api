@@ -3,6 +3,7 @@ using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 using System;
 using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Enums;
 using StatNeth.Blaise.API.ServerManager;
 using IDatamodel = StatNeth.Blaise.API.Meta.IDatamodel;
 
@@ -23,6 +24,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         Guid GetInstrumentId(string instrumentName, string serverParkName);
 
         IDatamodel GetDataModel(string instrumentName, string serverParkName);
+
+        CaseRecordType GetCaseRecordType(string instrumentName, string serverParkName);
 
         IKey GetKey(IDatamodel dataModel, string keyName);
 

@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Core.Interfaces.Providers;
+﻿using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.Meta;
 
@@ -18,6 +19,23 @@ namespace Blaise.Nuget.Api.Core.Services
             var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
 
             return dataLink.Datamodel;
+        }
+
+        public CaseRecordType GetCaseRecordType(string instrumentName, string serverParkName)
+        {
+            var dataModel = GetDataModel(instrumentName, serverParkName);
+
+            if (dataModel.Name == "Appointment")
+            {
+                return CaseRecordType.Appointment;
+            }
+
+            if (dataModel.Name == "CatiDial")
+            {
+                return CaseRecordType.Appointment;
+            }
+
+            return CaseRecordType.NotMapped;
         }
     }
 }

@@ -4,6 +4,7 @@ using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 using System;
 using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Enums;
 using Unity;
 using Unity.Injection;
 using Blaise.Nuget.Api.Contracts.Interfaces;
@@ -113,6 +114,14 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             return _dataService.GetDataModel(instrumentName, serverParkName);
+        }
+
+        public CaseRecordType GetCaseRecordType(string instrumentName, string serverParkName)
+        {
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _dataService.GetCaseRecordType(instrumentName, serverParkName);
         }
 
         public IKey GetKey(IDatamodel dataModel, string keyName)
