@@ -17,7 +17,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<ISurvey> _surveyMock;
         private Mock<ISurveyCollection> _surveyCollectionMock;
         private Mock<IServerPark> _serverParkMock;
-        private Mock<IServerParkCollection> _serverParkCollectionMock;
 
         private readonly string _instrumentName;
         private readonly string _serverParkName;
@@ -50,15 +49,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _serverParkMock.Setup(s => s.Name).Returns("TestServerParkName");
             _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
 
-            var serverParkItems = new List<IServerPark> { _serverParkMock.Object };
-
-            _serverParkCollectionMock = new Mock<IServerParkCollection>();
-            _serverParkCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => serverParkItems.GetEnumerator());
-
             _parkServiceMock = new Mock<IParkService>();
             _parkServiceMock.Setup(p => p.GetServerPark(_serverParkName)).Returns(_serverParkMock.Object);
             _parkServiceMock.Setup(p => p.GetServerParkNames()).Returns(new List<string> {_serverParkName});
-    
+
             //setup service under test
             _sut = new SurveyService(_parkServiceMock.Object);
         }

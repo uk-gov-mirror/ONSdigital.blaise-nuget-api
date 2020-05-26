@@ -1,7 +1,8 @@
 ﻿using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataRecord;
+using StatNeth.Blaise.API.Meta;
 
-namespace Blaise.Nuget.Api.Core.Services.Data
+namespace Blaise.Nuget.Api.Core.Services
 {
     public class FieldService : IFieldService
     {
@@ -9,10 +10,22 @@ namespace Blaise.Nuget.Api.Core.Services.Data
         private const string ProcessedFieldName = "Processed";
 
         private readonly IDataRecordService _dataRecordService;
+        private readonly IDataModelService _dataModelService;
 
-        public FieldService(IDataRecordService dataRecordService)
+        public FieldService(
+            IDataRecordService dataRecordService, 
+            IDataModelService dataModelService)
         {
             _dataRecordService = dataRecordService;
+            _dataModelService = dataModelService;
+        }
+
+        public bool CompletedFieldExists(string instrumentName, string serverParkName)
+        {
+            var dataModel = _dataModelService.GetDataModel(instrumentName, serverParkName);
+            var definitionScope = (IDefinitionScope2)dataModel;
+
+            return definitionScope.FieldExists(CompletedFieldName);
         }
 
         public bool CaseHasBeenCompleted(IDataRecord dataRecord)
@@ -28,6 +41,14 @@ namespace Blaise.Nuget.Api.Core.Services.Data
             completedField.DataValue.Assign("1");
 
             _dataRecordService.WriteDataRecord(dataRecord, instrumentName, serverParkName);
+        }
+
+        public bool ProcessedFieldExists(string instrumentName, string serverParkName)
+        {
+            var dataModel = _dataModelService.GetDataModel(instrumentName, serverParkName);
+            var definitionScope = (IDefinitionScope2)dataModel;
+
+            return definitionScope.FieldExists(ProcessedFieldName);
         }
 
         public bool CaseHasBeenProcessed(IDataRecord dataRecord)
