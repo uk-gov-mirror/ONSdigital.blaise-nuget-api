@@ -1,6 +1,5 @@
 ﻿using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Services;
-using Blaise.Nuget.Api.Core.Services.Data;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.DataLink;

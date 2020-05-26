@@ -14,7 +14,6 @@ using Blaise.Nuget.Api.Core.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
-using Blaise.Nuget.Api.Core.Services.Data;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api

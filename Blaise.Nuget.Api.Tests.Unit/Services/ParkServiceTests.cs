@@ -4,7 +4,6 @@ using Blaise.Nuget.Api.Core.Services;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.ServerManager;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,42 +13,25 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
     {
         private Mock<IConnectedServerFactory> _connectionFactoryMock;
 
-        private Mock<ISurvey> _surveyMock;
-        private Mock<ISurveyCollection> _surveyCollectionMock;
         private Mock<IServerPark> _serverParkMock;
         private Mock<IConnectedServer> _connectedServerMock;
         private Mock<IServerParkCollection> _serverParkCollectionMock;
 
-        private readonly string _instrumentName;
         private readonly string _serverParkName;
-        private readonly Guid _instrumentId;
 
         private ParkService _sut;
 
         public ParkServiceTests()
         {
-            _instrumentName = "TestInstrumentName";
             _serverParkName = "TestServerParkName";
-            _instrumentId = Guid.NewGuid();
         }
 
         [SetUp]
         public void SetUpTests()
         {
-            //setup surveys
-            _surveyMock = new Mock<ISurvey>();
-            _surveyMock.Setup(s => s.Name).Returns(_instrumentName);
-            _surveyMock.Setup(s => s.InstrumentID).Returns(_instrumentId);
-
-            var surveyItems = new List<ISurvey> { _surveyMock.Object };
-
-            _surveyCollectionMock = new Mock<ISurveyCollection>();
-            _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => surveyItems.GetEnumerator());
-
             //setup server parks
             _serverParkMock = new Mock<IServerPark>();
             _serverParkMock.Setup(s => s.Name).Returns("TestServerParkName");
-            _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
 
             var serverParkItems = new List<IServerPark> { _serverParkMock.Object };
 
@@ -117,6 +99,37 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.AreEqual("No server parks found", exception.Message);
         }
 
+        [Test]
+        public void Given_A_ServerPark_Exists_When_I_Call_GetServerPark_Then_The_Correct_Service_Is_Called()
+        {
+            //act
+            _sut.GetServerPark((_serverParkName));
 
+            //assert
+            _connectedServerMock.Verify(v => v.GetServerPark(_serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_ServerPark_Exists_When_I_Call_GetServerPark_Then_I_Get_A_ServerPark_Returned()
+        {
+            //act
+            var result = _sut.GetServerPark((_serverParkName));
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<IServerPark>(result);
+            Assert.AreSame(_serverParkMock.Object, result);
+        }
+
+        [Test]
+        public void Given_A_ServerPark_Does_Not_Exist_When_I_Call_GetServerPark_Then_A_DataNotFoundException_Is_Thrown()
+        {
+            //arrange
+            var serverParkName = "NotFound";
+
+            //act && assert
+            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetServerPark(serverParkName));
+            Assert.AreEqual($"Server park '{serverParkName}' not found", exception.Message);
+        }
     }
 }
