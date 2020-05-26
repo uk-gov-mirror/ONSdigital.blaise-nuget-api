@@ -3,7 +3,7 @@ using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 
-namespace Blaise.Nuget.Api.Core.Services
+namespace Blaise.Nuget.Api.Core.Services.Data
 {
     public class KeyService : IKeyService
     {

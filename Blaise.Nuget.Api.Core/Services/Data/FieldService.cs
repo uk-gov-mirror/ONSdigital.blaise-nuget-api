@@ -1,7 +1,7 @@
 ﻿using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataRecord;
 
-namespace Blaise.Nuget.Api.Core.Services
+namespace Blaise.Nuget.Api.Core.Services.Data
 {
     public class FieldService : IFieldService
     {

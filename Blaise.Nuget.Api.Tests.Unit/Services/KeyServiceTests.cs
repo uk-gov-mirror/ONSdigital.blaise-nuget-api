@@ -6,6 +6,7 @@ using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 using System;
+using Blaise.Nuget.Api.Core.Services.Data;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Services
 {

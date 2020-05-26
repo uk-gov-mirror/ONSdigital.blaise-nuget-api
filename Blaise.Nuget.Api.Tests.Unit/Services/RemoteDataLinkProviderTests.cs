@@ -12,7 +12,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
     public class RemoteDataLinkProviderTests
     {
         private Mock<IRemoteDataServerFactory> _connectionFactoryMock;
-        private Mock<IParkService> _parkServiceMock;
+        private Mock<ISurveyService> _surveyServiceMock;
 
         private Mock<IRemoteDataServer> _remoteDataServerMock;
         private Mock<IDataLink4> _dataLinkMock;
@@ -45,19 +45,19 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _connectionFactoryMock = new Mock<IRemoteDataServerFactory>();
             _connectionFactoryMock.Setup(c => c.GetConnection()).Returns(_remoteDataServerMock.Object);
 
-            _parkServiceMock = new Mock<IParkService>();
-            _parkServiceMock.Setup(p => p.GetInstrumentId(_instrumentName, _serverParkName)).Returns(_instrumentId);
+            _surveyServiceMock = new Mock<ISurveyService>();
+            _surveyServiceMock.Setup(p => p.GetInstrumentId(_instrumentName, _serverParkName)).Returns(_instrumentId);
 
             _sut = new RemoteDataLinkProvider(
                 _connectionFactoryMock.Object,
-                _parkServiceMock.Object);
+                _surveyServiceMock.Object);
         }
 
         [Test]
         public void Given_I_Call_GetDataLink_With_The_Same_InstrumentName_And_ServerName_More_Than_Once_Then_The_Same_DataLink_Is_Used()
         {
             //arrange
-            _parkServiceMock.Setup(p => p.GetInstrumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<Guid>());
+            _surveyServiceMock.Setup(p => p.GetInstrumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<Guid>());
             _remoteDataServerMock.Setup(r => r.GetDataLink(It.IsAny<Guid>(), It.IsAny<string>())).Returns(_dataLinkMock.Object);
 
             //act
@@ -72,7 +72,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataLink_With_A_Different_InstrumentName_More_Than_Once_Then_A_New_DataLink_Is_Established()
         {
             //arrange
-            _parkServiceMock.Setup(p => p.GetInstrumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<Guid>());
+            _surveyServiceMock.Setup(p => p.GetInstrumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<Guid>());
             _remoteDataServerMock.Setup(r => r.GetDataLink(It.IsAny<Guid>(), It.IsAny<string>())).Returns(_dataLinkMock.Object);
 
             //act
@@ -87,7 +87,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataLink_With_A_Different_ServerParkName_More_Than_Once_Then_A_New_DataLink_Is_Established()
         {
             //arrange
-            _parkServiceMock.Setup(p => p.GetInstrumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<Guid>());
+            _surveyServiceMock.Setup(p => p.GetInstrumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<Guid>());
             _remoteDataServerMock.Setup(r => r.GetDataLink(It.IsAny<Guid>(), It.IsAny<string>())).Returns(_dataLinkMock.Object);
 
             //act
@@ -102,7 +102,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataLink_With_A_Different_InstrumentName_And_ServerParkName_More_Than_Once_Then_A_New_DataLink_Is_Established()
         {
             //arrange
-            _parkServiceMock.Setup(p => p.GetInstrumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<Guid>());
+            _surveyServiceMock.Setup(p => p.GetInstrumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<Guid>());
             _remoteDataServerMock.Setup(r => r.GetDataLink(It.IsAny<Guid>(), It.IsAny<string>())).Returns(_dataLinkMock.Object);
 
             //act
