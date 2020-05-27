@@ -17,6 +17,8 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         string GetPrimaryKey(IDataRecord dataRecord);
 
+        void AssignPrimaryKey(IKey key, string primaryKey);
+
         IDataSet GetDataSet(string instrumentName, string serverParkName);
 
         IDataRecord GetDataRecord(IDatamodel datamodel);

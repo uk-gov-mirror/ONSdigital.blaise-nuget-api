@@ -33,6 +33,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         string GetPrimaryKey(IDataRecord dataRecord);
 
+        void AssignPrimaryKey(IKey key, string primaryKey);
+
         IDataSet GetDataSet(string instrumentName, string serverParkName);
 
         IDataRecord GetDataRecord(IDatamodel dataModel);

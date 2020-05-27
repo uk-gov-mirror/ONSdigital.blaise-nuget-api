@@ -768,6 +768,22 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
+        public void Given_Valid_Arguments_When_I_Call_AssignPrimaryKey_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var keyMock = new Mock<IKey>();
+            var primaryKey = "Key1";
+
+            _blaiseApiMock.Setup(d => d.AssignPrimaryKey(It.IsAny<IKey>(), It.IsAny<string>()));
+
+            //act
+            _sut.AssignPrimaryKey(keyMock.Object, primaryKey);
+
+            //assert
+            _blaiseApiMock.Verify(v => v.AssignPrimaryKey(keyMock.Object, primaryKey), Times.Once);
+        }
+
+        [Test]
         public void Given_Valid_Arguments_When_I_Call_WithFile_Then_It_Returns_Same_Instance_Of_Itself_Back()
         {
             //arrange

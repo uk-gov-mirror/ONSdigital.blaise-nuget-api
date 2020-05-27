@@ -50,6 +50,11 @@ namespace Blaise.Nuget.Api.Core.Services
             return _keyService.GetPrimaryKey(dataRecord);
         }
 
+        public void AssignPrimaryKey(IKey key, string primaryKey)
+        {
+            _keyService.AssignPrimaryKey(key, primaryKey);
+        }
+
         public IDataSet GetDataSet(string instrumentName, string serverParkName)
         {
             return _dataRecordService.GetDataSet(instrumentName, serverParkName);

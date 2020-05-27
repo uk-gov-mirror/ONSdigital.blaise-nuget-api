@@ -148,6 +148,14 @@ namespace Blaise.Nuget.Api
             return _dataService.GetPrimaryKey(dataRecord);
         }
 
+        public void AssignPrimaryKey(IKey key, string primaryKey)
+        {
+            key.ThrowExceptionIfNull("key");
+            primaryKey.ThrowExceptionIfNullOrEmpty("primaryKey");
+
+            _dataService.AssignPrimaryKey(key, primaryKey);
+        }
+
         public IDataRecord GetDataRecord(IDatamodel dataModel)
         {
             dataModel.ThrowExceptionIfNull("dataModel");

@@ -703,6 +703,55 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
+        public void Given_Valid_Arguments_When_I_Call_AssignPrimaryKey_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var keyMock = new Mock<IKey>();
+            var primaryKey = "Key1";
+
+            _dataServiceMock.Setup(d => d.AssignPrimaryKey(It.IsAny<IKey>(), It.IsAny<string>()));
+
+            //act
+            _sut.AssignPrimaryKey(keyMock.Object, primaryKey);
+
+            //assert
+            _dataServiceMock.Verify(v => v.AssignPrimaryKey(keyMock.Object, primaryKey), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_Null_Key_When_I_Call_AssignPrimaryKey_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var primaryKey = "Key1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AssignPrimaryKey(null, primaryKey));
+            Assert.AreEqual("The argument 'key' must be supplied", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_primaryKey_When_I_Call_AssignPrimaryKey_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange 
+            var keyMock = new Mock<IKey>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.AssignPrimaryKey(keyMock.Object, string.Empty));
+            Assert.AreEqual("A value for the argument 'primaryKey' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_primaryKey_When_I_Call_AssignPrimaryKey_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var keyMock = new Mock<IKey>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AssignPrimaryKey(keyMock.Object, null));
+            Assert.AreEqual("primaryKey", exception.ParamName);
+        }
+
+        [Test]
         public void Given_A_Valid_DataRecord_When_I_Call_GetDataRecord_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
