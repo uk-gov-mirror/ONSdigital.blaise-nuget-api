@@ -8,6 +8,7 @@ namespace Blaise.Nuget.Api.Core.Services
     public class KeyService : IKeyService
     {
         private readonly IRemoteDataLinkProvider _remoteDataLinkProvider;
+        private const string PrimaryKeyName = "PRIMARY";
 
         public KeyService(IRemoteDataLinkProvider remoteDataLinkProvider)
         {
@@ -24,6 +25,11 @@ namespace Blaise.Nuget.Api.Core.Services
         public IKey GetKey(IDatamodel dataModel, string keyName)
         {
             return DataRecordManager.GetKey(dataModel, keyName);
+        }
+
+        public IKey GetPrimaryKey(IDatamodel dataModel)
+        {
+            return DataRecordManager.GetKey(dataModel, PrimaryKeyName);
         }
 
         public string GetPrimaryKeyValue(IDataRecord dataRecord)

@@ -50,6 +50,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _keyServiceMock = new Mock<IKeyService>();
             _keyServiceMock.Setup(d => d.KeyExists(_keyMock.Object, _instrumentName, _serverParkName)).Returns(true);
             _keyServiceMock.Setup(d => d.GetKey(_dataModelMock.Object, _keyName)).Returns(_keyMock.Object);
+            _keyServiceMock.Setup(d => d.GetPrimaryKey(_dataModelMock.Object)).Returns(_keyMock.Object);
 
             _dataRecordServiceMock = new Mock<IDataRecordService>();
             _dataRecordServiceMock.Setup(d => d.GetDataRecord(_dataModelMock.Object)).Returns(_dataRecordMock.Object);
@@ -154,6 +155,37 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _keyServiceMock.Verify(v => v.GetKey(_dataModelMock.Object, _keyName), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_GetPrimaryKey_Then_A_Key_Is_Returned()
+        {
+            //act
+            var result = _sut.GetPrimaryKey(_dataModelMock.Object);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.IsInstanceOf<IKey>(result);
+        }
+
+        [Test]
+        public void Given_I_Call_GetPrimaryKey_Then_The_Correct_Key_Is_Returned()
+        {
+            //act
+            var result = _sut.GetPrimaryKey(_dataModelMock.Object);
+
+            //assert
+            Assert.AreSame(_keyMock.Object, result);
+        }
+
+        [Test]
+        public void Given_I_Call_GetPrimaryKey_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.GetPrimaryKey(_dataModelMock.Object);
+
+            //assert
+            _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataModelMock.Object), Times.Once);
         }
 
         [Test]

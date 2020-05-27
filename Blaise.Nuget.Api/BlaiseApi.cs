@@ -40,6 +40,9 @@ namespace Blaise.Nuget.Api
             var unityContainer = new UnityContainer();
             var configurationProvider = new ConfigurationProvider();
 
+            //password service
+            unityContainer.RegisterType<IPasswordService, PasswordService>();
+
             //factories
             var connectionModel = configurationProvider.GetConnectionModel();
             unityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>(
@@ -60,7 +63,6 @@ namespace Blaise.Nuget.Api
             unityContainer.RegisterType<IFieldService, FieldService>();
             unityContainer.RegisterType<IKeyService, KeyService>();
             unityContainer.RegisterType<IParkService, ParkService>();
-            unityContainer.RegisterType<IPasswordService, PasswordService>();
             unityContainer.RegisterType<ISurveyService, SurveyService>();
             
             //resolve dependencies
@@ -130,6 +132,13 @@ namespace Blaise.Nuget.Api
             keyName.ThrowExceptionIfNullOrEmpty("keyName");
 
             return _dataService.GetKey(dataModel, keyName);
+        }
+
+        public IKey GetPrimaryKey(IDatamodel dataModel)
+        {
+            dataModel.ThrowExceptionIfNull("dataModel");
+
+            return _dataService.GetPrimaryKey(dataModel);
         }
 
         public bool KeyExists(IKey key, string instrumentName, string serverParkName)

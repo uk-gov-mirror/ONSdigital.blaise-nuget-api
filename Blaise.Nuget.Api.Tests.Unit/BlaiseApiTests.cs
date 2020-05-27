@@ -36,6 +36,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         public void Given_I_Instantiate_BlaiseApi_No_Exceptions_Are_Thrown()
         {
             //act && assert
+            // ReSharper disable once ObjectCreationAsStatement
             Assert.DoesNotThrow(() => new BlaiseApi());
         }
 
@@ -562,6 +563,46 @@ namespace Blaise.Nuget.Api.Tests.Unit
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetKey(dataModelMock.Object, null));
             Assert.AreEqual("keyName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetPrimaryKey_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataModelMock = new Mock<IDatamodel>();
+
+            _dataServiceMock.Setup(d => d.GetPrimaryKey(It.IsAny<IDatamodel>())).Returns(It.IsAny<IKey>());
+
+            //act
+            _sut.GetPrimaryKey(dataModelMock.Object);
+
+            //assert
+            _dataServiceMock.Verify(v => v.GetPrimaryKey(dataModelMock.Object), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetPrimaryKey_Then_The_Expected_Result_Is_Returned()
+        {
+            //arrange
+            var dataModelMock = new Mock<IDatamodel>();
+            var keyMock = new Mock<IKey>();
+
+            _dataServiceMock.Setup(d => d.GetPrimaryKey(dataModelMock.Object)).Returns(keyMock.Object);
+
+            //act
+            var result = _sut.GetPrimaryKey(dataModelMock.Object);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreSame(keyMock.Object, result);
+        }
+
+        [Test]
+        public void Given_A_Null_DataModel_When_I_Call_GetPrimaryKey_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetPrimaryKey(null));
+            Assert.AreEqual("The argument 'dataModel' must be supplied", exception.ParamName);
         }
 
         [Test]

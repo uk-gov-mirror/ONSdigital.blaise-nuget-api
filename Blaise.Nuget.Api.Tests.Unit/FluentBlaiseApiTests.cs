@@ -165,6 +165,38 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetPrimaryKey_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataModelMock = new Mock<IDatamodel>();
+
+            _blaiseApiMock.Setup(d => d.GetPrimaryKey(It.IsAny<IDatamodel>())).Returns(It.IsAny<IKey>());
+
+            //act
+            _sut.GetPrimaryKey(dataModelMock.Object);
+
+            //assert
+            _blaiseApiMock.Verify(v => v.GetPrimaryKey(dataModelMock.Object), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetPrimaryKey_Then_The_Expected_Result_Is_Returned()
+        {
+            //arrange
+            var dataModelMock = new Mock<IDatamodel>();
+            var keyMock = new Mock<IKey>();
+
+            _blaiseApiMock.Setup(d => d.GetPrimaryKey(dataModelMock.Object)).Returns(keyMock.Object);
+
+            //act
+            var result = _sut.GetPrimaryKey(dataModelMock.Object);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreSame(keyMock.Object, result);
+        }
+
+        [Test]
         public void Given_Valid_Arguments_When_I_Call_GetDataRecord_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
