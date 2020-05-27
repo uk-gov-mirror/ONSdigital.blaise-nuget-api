@@ -67,6 +67,7 @@ namespace Blaise.Nuget.Api
             //resolve dependencies
             _dataService = unityContainer.Resolve<IDataService>();
             _parkService = unityContainer.Resolve<IParkService>();
+            _surveyService = unityContainer.Resolve<ISurveyService>();
         }
 
         public IEnumerable<string> GetServerParkNames()
