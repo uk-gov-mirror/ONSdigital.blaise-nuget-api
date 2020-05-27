@@ -1,4 +1,6 @@
-﻿using Blaise.Nuget.Api.Contracts.Enums;
+﻿using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Core.Interfaces.Mappers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
@@ -12,17 +14,20 @@ namespace Blaise.Nuget.Api.Core.Services
         private readonly IDataRecordService _dataRecordService;
         private readonly IKeyService _keyService;
         private readonly IFieldService _fieldService;
+        private readonly IDataMapperService _mapperService;
 
         public DataService(
             IDataModelService dataModelService, 
             IDataRecordService dataRecordService, 
             IKeyService keyService, 
-            IFieldService fieldService)
+            IFieldService fieldService, 
+            IDataMapperService mapperService)
         {
             _dataModelService = dataModelService;
             _dataRecordService = dataRecordService;
             _keyService = keyService;
             _fieldService = fieldService;
+            _mapperService = mapperService;
         }
 
         public IDatamodel GetDataModel(string instrumentName, string serverParkName)
@@ -128,6 +133,17 @@ namespace Blaise.Nuget.Api.Core.Services
             _keyService.AssignPrimaryKeyValue(primaryKey, primaryKeyValue);
 
             return _keyService.KeyExists(primaryKey, instrumentName, serverParkName);
+        }
+
+        public void CreateNewDataRecord(string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName, string serverParkName)
+        {
+            var dataModel = GetDataModel(instrumentName, serverParkName);
+            var key = GetPrimaryKey(dataModel);
+            var dataRecord = GetDataRecord(dataModel);
+
+            dataRecord = _mapperService.MapDataRecordFields(dataRecord, dataModel, key, primaryKeyValue, fieldData);
+
+            WriteDataRecord(dataRecord, instrumentName, serverParkName);
         }
     }
 }

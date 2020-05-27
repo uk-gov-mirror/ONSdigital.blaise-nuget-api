@@ -195,6 +195,14 @@ namespace Blaise.Nuget.Api
             _blaiseApi.WriteDataRecord(dataRecord, _instrumentName, _serverParkName);            
         }
 
+        public void CreateNewDataRecord(string primaryKeyValue, Dictionary<string, string> fieldData)
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+
+            _blaiseApi.CreateNewDataRecord(primaryKeyValue, fieldData, _instrumentName, _serverParkName);
+        }
+
         public bool CompletedFieldExists()
         {
             ValidateServerParkIsSet();

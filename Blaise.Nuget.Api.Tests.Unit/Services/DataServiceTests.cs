@@ -1,4 +1,6 @@
-﻿using Blaise.Nuget.Api.Contracts.Enums;
+﻿using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Core.Interfaces.Mappers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Core.Services;
 using Moq;
@@ -14,6 +16,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<IKeyService> _keyServiceMock;
         private Mock<IDataRecordService> _dataRecordServiceMock;
         private Mock<IFieldService> _fieldServiceMock;
+        private Mock<IDataMapperService> _mapperServiceMock;
 
         private Mock<IDatamodel> _dataModelMock;
         private Mock<IKey> _keyMock;
@@ -57,11 +60,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             _fieldServiceMock = new Mock<IFieldService>();
 
+            _mapperServiceMock = new Mock<IDataMapperService>();
+
             _sut = new DataService(
                 _dataModelServiceMock.Object,
                 _dataRecordServiceMock.Object,
                 _keyServiceMock.Object,
-                _fieldServiceMock.Object);
+                _fieldServiceMock.Object,
+                _mapperServiceMock.Object);
         }
 
         [Test]
@@ -491,6 +497,23 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //assert
             Assert.NotNull(result);
             Assert.AreEqual(caseExists, result);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_CreateNewDataRecord_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var fieldData = new Dictionary<string, string>();
+
+            //act
+            _sut.CreateNewDataRecord(primaryKeyValue, fieldData, _instrumentName, _serverParkName);
+
+            //assert
+            _dataModelServiceMock.Verify(v => v.GetDataModel(_instrumentName, _serverParkName), Times.Once);
+            _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataModelMock.Object), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_dataModelMock.Object), Times.Once);
+            _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, _dataModelMock.Object, _keyMock.Object, primaryKeyValue, fieldData), Times.Once);
         }
     }
 }

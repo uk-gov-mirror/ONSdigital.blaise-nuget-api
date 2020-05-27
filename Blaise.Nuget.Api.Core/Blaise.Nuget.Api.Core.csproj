@@ -49,6 +49,8 @@
     <Compile Include="Factories\ConnectedServerFactory.cs" />
     <Compile Include="Factories\RemoteDataServerFactory.cs" />
     <Compile Include="Interfaces\Factories\IConnectedServerFactory.cs" />
+    <Compile Include="Mappers\DataMapperService.cs" />
+    <Compile Include="Interfaces\Mappers\IDataMapperService.cs" />
     <Compile Include="Interfaces\Providers\IRemoteDataLinkProvider.cs" />
     <Compile Include="Interfaces\Providers\ILocalDataLinkProvider.cs" />
     <Compile Include="Interfaces\Services\IDataModelService.cs" />

@@ -34,6 +34,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         void WriteDataRecord(IDataRecord dataRecord);
 
+        void CreateNewDataRecord(string primaryKeyValue, Dictionary<string, string> fieldData);
+
         bool CompletedFieldExists();
 
         void MarkCaseAsComplete(IDataRecord dataRecord);
