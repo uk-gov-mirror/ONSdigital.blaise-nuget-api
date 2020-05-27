@@ -14,7 +14,9 @@ using StatNeth.Blaise.API.DataLink;
 using Blaise.Nuget.Api.Core.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
+using Blaise.Nuget.Api.Core.Interfaces.Mappers;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
+using Blaise.Nuget.Api.Core.Mappers;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api
@@ -51,6 +53,9 @@ namespace Blaise.Nuget.Api
             var remoteConnectionModel = configurationProvider.GetRemoteConnectionModel();
             unityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>(
                 new InjectionConstructor(remoteConnectionModel, unityContainer.Resolve<IPasswordService>()));
+
+            //mappers
+            unityContainer.RegisterType<IDataMapperService, DataMapperService>();
 
             //providers
             unityContainer.RegisterType<ILocalDataLinkProvider, LocalDataLinkProvider>();
@@ -221,6 +226,16 @@ namespace Blaise.Nuget.Api
             filePath.ThrowExceptionIfNullOrEmpty("filePath");
 
             _dataService.WriteDataRecord(dataRecord, filePath);
+        }
+
+        public void CreateNewDataRecord(string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName, string serverParkName)
+        {
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
+            fieldData.ThrowExceptionIfNull("fieldData");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            _dataService.CreateNewDataRecord(primaryKeyValue, fieldData, instrumentName, serverParkName);
         }
 
         public bool CompletedFieldExists(string instrumentName, string serverParkName)

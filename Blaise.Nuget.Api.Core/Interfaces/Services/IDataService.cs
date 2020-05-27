@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Contracts.Enums;
+﻿using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Enums;
 using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
@@ -34,6 +35,9 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName);
 
         void WriteDataRecord(IDataRecord dataRecord, string filePath);
+
+        void CreateNewDataRecord(string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName,
+            string serverParkName);
 
         bool CompletedFieldExists(string instrumentName, string serverParkName);
         bool CaseHasBeenCompleted(IDataRecord dataRecord);

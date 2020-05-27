@@ -1254,6 +1254,115 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
+        public void Given_Valid_Arguments_When_I_Call_CreateNewDataRecord_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var fieldData = new Dictionary<string, string>();
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _dataServiceMock.Setup(d => d.CreateNewDataRecord(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<string>(), It.IsAny<string>()));
+
+            //act
+            _sut.CreateNewDataRecord(primaryKeyValue, fieldData, instrumentName, serverParkName);
+
+            //assert
+            _dataServiceMock.Verify(v => v.CreateNewDataRecord(primaryKeyValue, fieldData, instrumentName, serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_primaryKeyValue_When_I_Call_CreateNewDataRecord_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var fieldData = new Dictionary<string, string>();
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateNewDataRecord(string.Empty, fieldData, instrumentName, serverParkName));
+            Assert.AreEqual("A value for the argument 'primaryKeyValue' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_primaryKeyValue_When_I_Call_CreateNewDataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var fieldData = new Dictionary<string, string>();
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateNewDataRecord(null, fieldData, instrumentName, serverParkName));
+            Assert.AreEqual("primaryKeyValue", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_A_Null_Dictionary_Of_FieldData_When_I_Call_CreateNewDataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateNewDataRecord(primaryKeyValue, null, instrumentName, serverParkName));
+            Assert.AreEqual("The argument 'fieldData' must be supplied", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_CreateNewDataRecord_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var fieldData = new Dictionary<string, string>();
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateNewDataRecord(primaryKeyValue, fieldData, string.Empty, serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_CallCreateNewDataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var fieldData = new Dictionary<string, string>();
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateNewDataRecord(primaryKeyValue, fieldData, null, serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_CreateNewDataRecord_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var fieldData = new Dictionary<string, string>();
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateNewDataRecord(primaryKeyValue, fieldData, instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_CreateNewDataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var primaryKeyValue = "Key1";
+            var fieldData = new Dictionary<string, string>();
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateNewDataRecord(primaryKeyValue, fieldData, instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
         public void Given_Valid_Arguments_When_I_Call_CompletedFieldExists_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
