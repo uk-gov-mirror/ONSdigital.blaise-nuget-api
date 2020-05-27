@@ -20,6 +20,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         bool KeyExists(IKey key);
 
+        bool CaseExists(string primaryKeyValue);
+
         Guid GetInstrumentId();
 
         IDatamodel GetDataModel();

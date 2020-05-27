@@ -60,9 +60,9 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.GetPrimaryKeyValue(dataRecord);
         }
 
-        public void AssignPrimaryKeyValue(IKey key, string primaryKey)
+        public void AssignPrimaryKeyValue(IKey key, string primaryKeyValue)
         {
-            _blaiseApi.AssignPrimaryKeyValue(key, primaryKey);
+            _blaiseApi.AssignPrimaryKeyValue(key, primaryKeyValue);
         }
 
         public IDataRecord GetDataRecord(IDatamodel dataModel)
@@ -108,6 +108,14 @@ namespace Blaise.Nuget.Api
             _instrumentName = instrumentName;
 
             return this;
+        }
+
+        public bool CaseExists(string primaryKeyValue)
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+
+            return _blaiseApi.CaseExists(primaryKeyValue, _instrumentName, _serverParkName);
         }
 
         public Guid GetInstrumentId()

@@ -702,6 +702,115 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
+        public void Given_Valid_Arguments_When_I_Call_CaseExists_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _dataServiceMock.Setup(d => d.CaseExists(
+                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
+
+            //act
+            _sut.CaseExists(primaryKeyValue, instrumentName, serverParkName);
+
+            //assert
+            _dataServiceMock.Verify(v => v.CaseExists(primaryKeyValue, instrumentName, serverParkName), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_Valid_Arguments_When_I_Call_CaseExists_Then_The_Expected_Result_Is_Returned(bool caseExists)
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _dataServiceMock.Setup(d => d.CaseExists(primaryKeyValue, instrumentName, serverParkName)).Returns(caseExists);
+
+            //act
+            var result = _sut.CaseExists(primaryKeyValue, instrumentName, serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(caseExists, result);
+        }
+
+        [Test]
+        public void Given_An_Empty_primaryKeyValue_When_I_Call_CaseExists_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange 
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CaseExists(string.Empty, instrumentName, serverParkName));
+            Assert.AreEqual("A value for the argument 'primaryKeyValue' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_primaryKeyValue_When_I_Call_CaseExists_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CaseExists(null, instrumentName, serverParkName));
+            Assert.AreEqual("primaryKeyValue", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_CaseExists_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange 
+            var primaryKeyValue = "Key1";
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CaseExists(primaryKeyValue, string.Empty, serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_CaseExists_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var primaryKeyValue = "Key1";
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CaseExists(primaryKeyValue, null, serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_CaseExists_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange 
+            var primaryKeyValue = "Key1";
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CaseExists(primaryKeyValue, instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_CaseExists_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var primaryKeyValue = "Key1";
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CaseExists(primaryKeyValue, instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
         public void Given_Valid_Arguments_When_I_Call_GetPrimaryKeyValue_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
@@ -721,16 +830,16 @@ namespace Blaise.Nuget.Api.Tests.Unit
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
-            var primaryKey = "Key1";
+            var primaryKeyValue = "Key1";
 
-            _dataServiceMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(primaryKey);
+            _dataServiceMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(primaryKeyValue);
 
             //act
             var result = _sut.GetPrimaryKeyValue(dataRecordMock.Object);
 
             //assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(primaryKey, result);
+            Assert.AreEqual(primaryKeyValue, result);
         }
 
         [Test]
@@ -748,15 +857,15 @@ namespace Blaise.Nuget.Api.Tests.Unit
         {
             //arrange
             var keyMock = new Mock<IKey>();
-            var primaryKey = "Key1";
+            var primaryKeyValue = "Key1";
 
             _dataServiceMock.Setup(d => d.AssignPrimaryKeyValue(It.IsAny<IKey>(), It.IsAny<string>()));
 
             //act
-            _sut.AssignPrimaryKeyValue(keyMock.Object, primaryKey);
+            _sut.AssignPrimaryKeyValue(keyMock.Object, primaryKeyValue);
 
             //assert
-            _dataServiceMock.Verify(v => v.AssignPrimaryKeyValue(keyMock.Object, primaryKey), Times.Once);
+            _dataServiceMock.Verify(v => v.AssignPrimaryKeyValue(keyMock.Object, primaryKeyValue), Times.Once);
         }
 
         [Test]

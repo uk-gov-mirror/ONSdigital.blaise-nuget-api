@@ -13,6 +13,6 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         string GetPrimaryKeyValue(IDataRecord dataRecord);
 
-        void AssignPrimaryKeyValue(IKey key, string primaryKey);
+        void AssignPrimaryKeyValue(IKey key, string primaryKeyValue);
     }
 }
