@@ -15,9 +15,9 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         bool KeyExists(IKey key, string instrumentName, string serverParkName);
 
-        string GetPrimaryKey(IDataRecord dataRecord);
+        string GetPrimaryKeyValue(IDataRecord dataRecord);
 
-        void AssignPrimaryKey(IKey key, string primaryKey);
+        void AssignPrimaryKeyValue(IKey key, string primaryKey);
 
         IDataSet GetDataSet(string instrumentName, string serverParkName);
 

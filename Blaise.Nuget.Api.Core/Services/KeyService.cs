@@ -26,12 +26,12 @@ namespace Blaise.Nuget.Api.Core.Services
             return DataRecordManager.GetKey(dataModel, keyName);
         }
 
-        public string GetPrimaryKey(IDataRecord dataRecord)
+        public string GetPrimaryKeyValue(IDataRecord dataRecord)
         {
             return dataRecord.Keys[0].KeyValue.Trim();
         }
 
-        public void AssignPrimaryKey(IKey key, string primaryKey)
+        public void AssignPrimaryKeyValue(IKey key, string primaryKey)
         {
             key.Fields[0].DataValue.Assign(primaryKey);
         }

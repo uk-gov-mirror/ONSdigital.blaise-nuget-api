@@ -100,13 +100,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         [TestCase(" Key1 ", "Key1")]
         [TestCase("Key1 ", "Key1")]
         [TestCase(" Key1", "Key1")]
-        public void Given_I_Call_GetPrimaryKey_I_Get_The_Correct_Value_Back(string primaryKeyValue, string expectedValue)
+        public void Given_I_Call_GetPrimaryKeyValue_I_Get_The_Correct_Value_Back(string primaryKeyValue, string expectedValue)
         {
             //arrange
             _dataRecordMock.Setup(d => d.Keys[0].KeyValue).Returns(primaryKeyValue);
 
             //act
-            var result = _sut.GetPrimaryKey(_dataRecordMock.Object);
+            var result = _sut.GetPrimaryKeyValue(_dataRecordMock.Object);
 
             //assert
             Assert.NotNull(result);
