@@ -35,9 +35,14 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataModelService.GetCaseRecordType(instrumentName, serverParkName);
         }
 
-        public IKey GetKey(IDatamodel datamodel, string keyName)
+        public IKey GetKey(IDatamodel dataModel, string keyName)
         {
-            return _keyService.GetKey(datamodel, keyName);
+            return _keyService.GetKey(dataModel, keyName);
+        }
+
+        public IKey GetPrimaryKey(IDatamodel dataModel)
+        {
+            return _keyService.GetPrimaryKey(dataModel);
         }
 
         public bool KeyExists(IKey key, string instrumentName, string serverParkName)
@@ -115,11 +120,11 @@ namespace Blaise.Nuget.Api.Core.Services
             _fieldService.MarkCaseAsProcessed(dataRecord, instrumentName, serverParkName);
         }
 
-        public bool CaseExists(string primaryKey, string instrumentName, string serverParkName)
-        {
-            //var dataModel = _dataModelService.GetDataModel(instrumentName, serverParkName);
-            //var key = _keyService.GetPrimaryKeyValue()
-            //_keyService.AssignPrimaryKeyValue();
-        }
+        //public bool CaseExists(string primaryKey, string instrumentName, string serverParkName)
+        //{
+        //    //var dataModel = _dataModelService.GetDataModel(instrumentName, serverParkName);
+        //    //var key = _keyService.GetPrimaryKeyValue()
+        //    //_keyService.AssignPrimaryKeyValue();
+        //}
     }
 }

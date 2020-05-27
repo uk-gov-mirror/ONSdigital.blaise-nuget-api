@@ -11,7 +11,9 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         CaseRecordType GetCaseRecordType(string instrumentName, string serverParkName);
 
-        IKey GetKey(IDatamodel datamodel, string keyName);
+        IKey GetKey(IDatamodel dataModel, string keyName);
+
+        IKey GetPrimaryKey(IDatamodel dataModel);
 
         bool KeyExists(IKey key, string instrumentName, string serverParkName);
 
