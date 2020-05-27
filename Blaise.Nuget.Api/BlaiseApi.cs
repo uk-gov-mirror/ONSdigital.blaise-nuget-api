@@ -150,6 +150,15 @@ namespace Blaise.Nuget.Api
             return _dataService.KeyExists(key, instrumentName, serverParkName);
         }
 
+        public bool CaseExists(string primaryKeyValue, string instrumentName, string serverParkName)
+        {
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _dataService.CaseExists(primaryKeyValue, instrumentName, serverParkName);
+        }
+
         public string GetPrimaryKeyValue(IDataRecord dataRecord)
         {
             dataRecord.ThrowExceptionIfNull("dataRecord");
@@ -157,12 +166,12 @@ namespace Blaise.Nuget.Api
             return _dataService.GetPrimaryKeyValue(dataRecord);
         }
 
-        public void AssignPrimaryKeyValue(IKey key, string primaryKey)
+        public void AssignPrimaryKeyValue(IKey key, string primaryKeyValue)
         {
             key.ThrowExceptionIfNull("key");
-            primaryKey.ThrowExceptionIfNullOrEmpty("primaryKey");
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKey");
 
-            _dataService.AssignPrimaryKeyValue(key, primaryKey);
+            _dataService.AssignPrimaryKeyValue(key, primaryKeyValue);
         }
 
         public IDataRecord GetDataRecord(IDatamodel dataModel)

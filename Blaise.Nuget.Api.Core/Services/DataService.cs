@@ -55,9 +55,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return _keyService.GetPrimaryKeyValue(dataRecord);
         }
 
-        public void AssignPrimaryKeyValue(IKey key, string primaryKey)
+        public void AssignPrimaryKeyValue(IKey key, string primaryKeyValue)
         {
-            _keyService.AssignPrimaryKeyValue(key, primaryKey);
+            _keyService.AssignPrimaryKeyValue(key, primaryKeyValue);
         }
 
         public IDataSet GetDataSet(string instrumentName, string serverParkName)
@@ -120,11 +120,14 @@ namespace Blaise.Nuget.Api.Core.Services
             _fieldService.MarkCaseAsProcessed(dataRecord, instrumentName, serverParkName);
         }
 
-        //public bool CaseExists(string primaryKey, string instrumentName, string serverParkName)
-        //{
-        //    //var dataModel = _dataModelService.GetDataModel(instrumentName, serverParkName);
-        //    //var key = _keyService.GetPrimaryKeyValue()
-        //    //_keyService.AssignPrimaryKeyValue();
-        //}
+        public bool CaseExists(string primaryKeyValue, string instrumentName, string serverParkName)
+        {
+            var dataModel = _dataModelService.GetDataModel(instrumentName, serverParkName);
+            var primaryKey = _keyService.GetPrimaryKey(dataModel);
+
+            _keyService.AssignPrimaryKeyValue(primaryKey, primaryKeyValue);
+
+            return _keyService.KeyExists(primaryKey, instrumentName, serverParkName);
+        }
     }
 }

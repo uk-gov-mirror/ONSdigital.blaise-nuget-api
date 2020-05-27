@@ -37,9 +37,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return dataRecord.Keys[0].KeyValue.Trim();
         }
 
-        public void AssignPrimaryKeyValue(IKey key, string primaryKey)
+        public void AssignPrimaryKeyValue(IKey key, string primaryKeyValue)
         {
-            key.Fields[0].DataValue.Assign(primaryKey);
+            key.Fields[0].DataValue.Assign(primaryKeyValue);
         }
     }
 }

@@ -253,14 +253,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_AssignPrimaryKeyValue_Then_The_Correct_Services_Are_Called()
         {
             //arrange
-            var primaryKey = "Key1";
+            var primaryKeyValue = "Key1";
             _keyServiceMock.Setup(k => k.AssignPrimaryKeyValue(It.IsAny<IKey>(), It.IsAny<string>()));
             //act
 
-            _sut.AssignPrimaryKeyValue(_keyMock.Object, primaryKey);
+            _sut.AssignPrimaryKeyValue(_keyMock.Object, primaryKeyValue);
 
             //assert
-            _keyServiceMock.Verify(v => v.AssignPrimaryKeyValue(_keyMock.Object, primaryKey), Times.Once);
+            _keyServiceMock.Verify(v => v.AssignPrimaryKeyValue(_keyMock.Object, primaryKeyValue), Times.Once);
         }
 
         [Test]
@@ -393,7 +393,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_AValid_Parameters_When_I_Call_MarkCaseAsComplete_Then_The_Correct_Services_Are_Called()
+        public void Given_Valid_Arguments_When_I_Call_MarkCaseAsComplete_Then_The_Correct_Services_Are_Called()
         {
             //act
             _sut.MarkCaseAsComplete(_dataRecordMock.Object, _instrumentName, _serverParkName);
@@ -451,13 +451,46 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_AValid_Parameters_When_I_Call_MarkCaseAsProcessed_Then_The_Correct_Services_Are_Called()
+        public void Given_Valid_Arguments_When_I_Call_MarkCaseAsProcessed_Then_The_Correct_Services_Are_Called()
         {
             //act
             _sut.MarkCaseAsProcessed(_dataRecordMock.Object, _instrumentName, _serverParkName);
 
             //assert
             _fieldServiceMock.Verify(v => v.MarkCaseAsProcessed(_dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_CaseExists_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+
+            //act
+            _sut.CaseExists(primaryKeyValue, _instrumentName, _serverParkName);
+
+            //assert
+            _dataModelServiceMock.Verify(v => v.GetDataModel(_instrumentName, _serverParkName), Times.Once);
+            _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataModelMock.Object), Times.Once);
+            _keyServiceMock.Verify(v => v.AssignPrimaryKeyValue(_keyMock.Object, primaryKeyValue), Times.Once);
+            _keyServiceMock.Verify(v => v.KeyExists(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_Valid_Arguments_When_I_Call_CaseExists_Then_The_Expected_Value_Is_Returned(bool caseExists)
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            _keyServiceMock.Setup(k => k.KeyExists(_keyMock.Object, _instrumentName, _serverParkName))
+                .Returns(caseExists);
+
+            //act
+            var result = _sut.CaseExists(primaryKeyValue, _instrumentName, _serverParkName);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual(caseExists, result);
         }
     }
 }

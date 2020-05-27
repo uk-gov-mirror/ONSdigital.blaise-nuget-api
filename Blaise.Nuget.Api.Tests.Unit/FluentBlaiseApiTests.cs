@@ -433,6 +433,76 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
+        public void Given_Valid_Arguments_When_I_Call_CaseExists_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var serverParkName = "Park1";
+            var instrumentName = "Instrument1";
+
+            _blaiseApiMock.Setup(p => p.CaseExists(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
+
+            _sut.WithServerPark(serverParkName);
+            _sut.ForInstrument(instrumentName);
+
+            //act
+            _sut.CaseExists(primaryKeyValue);
+
+            //assert
+            _blaiseApiMock.Verify(v => v.CaseExists(primaryKeyValue, instrumentName, serverParkName), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_Valid_Arguments_When_I_Call_CaseExists_Then_The_Expected_Result_Is_Returned(bool caseExists)
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var serverParkName = "Park1";
+            var instrumentName = "Instrument1";
+
+            _blaiseApiMock.Setup(p => p.CaseExists(primaryKeyValue,instrumentName, serverParkName)).Returns(caseExists);
+
+            _sut.WithServerPark(serverParkName);
+            _sut.ForInstrument(instrumentName);
+
+            //act
+            var result = _sut.CaseExists(primaryKeyValue);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(caseExists, result);
+        }
+
+        [Test]
+        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_CaseExists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var instrumentName = "Instrument1";
+
+            _sut.ForInstrument(instrumentName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.CaseExists(primaryKeyValue));
+            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this", exception.Message);
+        }
+
+        [Test]
+        public void Given_ForInstrument_Has_Not_Been_Called_When_I_Call_CaseExists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var serverParkName = "Park1";
+
+            _sut.WithServerPark(serverParkName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.CaseExists(primaryKeyValue));
+            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+        }
+
+        [Test]
         public void Given_Valid_Arguments_When_I_Call_GetInstrumentId_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
@@ -787,16 +857,16 @@ namespace Blaise.Nuget.Api.Tests.Unit
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
-            var primaryKey = "Key1";
+            var primaryKeyValue = "Key1";
 
-            _blaiseApiMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(primaryKey);
+            _blaiseApiMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(primaryKeyValue);
 
             //act
             var result = _sut.GetPrimaryKeyValue(dataRecordMock.Object);
 
             //assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(primaryKey, result);
+            Assert.AreEqual(primaryKeyValue, result);
         }
 
         [Test]
@@ -804,15 +874,15 @@ namespace Blaise.Nuget.Api.Tests.Unit
         {
             //arrange
             var keyMock = new Mock<IKey>();
-            var primaryKey = "Key1";
+            var primaryKeyValue = "Key1";
 
             _blaiseApiMock.Setup(d => d.AssignPrimaryKeyValue(It.IsAny<IKey>(), It.IsAny<string>()));
 
             //act
-            _sut.AssignPrimaryKeyValue(keyMock.Object, primaryKey);
+            _sut.AssignPrimaryKeyValue(keyMock.Object, primaryKeyValue);
 
             //assert
-            _blaiseApiMock.Verify(v => v.AssignPrimaryKeyValue(keyMock.Object, primaryKey), Times.Once);
+            _blaiseApiMock.Verify(v => v.AssignPrimaryKeyValue(keyMock.Object, primaryKeyValue), Times.Once);
         }
 
         [Test]
