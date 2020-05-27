@@ -207,12 +207,28 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         [Test]
         public void Given_I_Call_GetPrimaryKey_Then_The_Correct_Services_Are_Called()
         {
-            //act
+            //arrange
             _keyServiceMock.Setup(k => k.GetPrimaryKey(It.IsAny<IDataRecord>())).Returns(It.IsAny<string>());
+
+            //act
             _sut.GetPrimaryKey(_dataRecordMock.Object);
 
             //assert
             _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataRecordMock.Object), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_AssignPrimaryKey_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            var primaryKey = "Key1";
+            _keyServiceMock.Setup(k => k.AssignPrimaryKey(It.IsAny<IKey>(), It.IsAny<string>()));
+            //act
+
+            _sut.AssignPrimaryKey(_keyMock.Object, primaryKey);
+
+            //assert
+            _keyServiceMock.Verify(v => v.AssignPrimaryKey(_keyMock.Object, primaryKey), Times.Once);
         }
 
         [Test]

@@ -17,6 +17,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         string GetPrimaryKey(IDataRecord dataRecord);
 
+        void AssignPrimaryKey(IKey key, string primaryKey);
+
         IDataRecord GetDataRecord(IDatamodel dataModel);
 
         bool CaseHasBeenCompleted(IDataRecord dataRecord);
