@@ -41,8 +41,6 @@ namespace Blaise.Nuget.Api
             var configurationProvider = new ConfigurationProvider();
 
             //factories
-            unityContainer.RegisterType<IPasswordService, PasswordService>();
-
             var connectionModel = configurationProvider.GetConnectionModel();
             unityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>(
                 new InjectionConstructor(connectionModel, unityContainer.Resolve<IPasswordService>()));
@@ -56,12 +54,13 @@ namespace Blaise.Nuget.Api
             unityContainer.RegisterType<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
 
             //services
-            unityContainer.RegisterType<IDataService, DataService>();
-            unityContainer.RegisterType<IDataRecordService, DataRecordService>();
             unityContainer.RegisterType<IDataModelService, DataModelService>();
-            unityContainer.RegisterType<IKeyService, KeyService>();
+            unityContainer.RegisterType<IDataRecordService, DataRecordService>();
+            unityContainer.RegisterType<IDataService, DataService>();
             unityContainer.RegisterType<IFieldService, FieldService>();
+            unityContainer.RegisterType<IKeyService, KeyService>();
             unityContainer.RegisterType<IParkService, ParkService>();
+            unityContainer.RegisterType<IPasswordService, PasswordService>();
             unityContainer.RegisterType<ISurveyService, SurveyService>();
             
             //resolve dependencies
@@ -142,19 +141,19 @@ namespace Blaise.Nuget.Api
             return _dataService.KeyExists(key, instrumentName, serverParkName);
         }
 
-        public string GetPrimaryKey(IDataRecord dataRecord)
+        public string GetPrimaryKeyValue(IDataRecord dataRecord)
         {
             dataRecord.ThrowExceptionIfNull("dataRecord");
 
-            return _dataService.GetPrimaryKey(dataRecord);
+            return _dataService.GetPrimaryKeyValue(dataRecord);
         }
 
-        public void AssignPrimaryKey(IKey key, string primaryKey)
+        public void AssignPrimaryKeyValue(IKey key, string primaryKey)
         {
             key.ThrowExceptionIfNull("key");
             primaryKey.ThrowExceptionIfNullOrEmpty("primaryKey");
 
-            _dataService.AssignPrimaryKey(key, primaryKey);
+            _dataService.AssignPrimaryKeyValue(key, primaryKey);
         }
 
         public IDataRecord GetDataRecord(IDatamodel dataModel)

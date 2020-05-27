@@ -50,14 +50,14 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.GetKey(dataModel, keyName);
         }
 
-        public string GetPrimaryKey(IDataRecord dataRecord)
+        public string GetPrimaryKeyValue(IDataRecord dataRecord)
         {
-            return _blaiseApi.GetPrimaryKey(dataRecord);
+            return _blaiseApi.GetPrimaryKeyValue(dataRecord);
         }
 
-        public void AssignPrimaryKey(IKey key, string primaryKey)
+        public void AssignPrimaryKeyValue(IKey key, string primaryKey)
         {
-            _blaiseApi.AssignPrimaryKey(key, primaryKey);
+            _blaiseApi.AssignPrimaryKeyValue(key, primaryKey);
         }
 
         public IDataRecord GetDataRecord(IDatamodel dataModel)

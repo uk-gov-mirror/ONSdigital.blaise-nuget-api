@@ -15,9 +15,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IKey GetKey(IDatamodel dataModel, string keyName);
 
-        string GetPrimaryKey(IDataRecord dataRecord);
+        string GetPrimaryKeyValue(IDataRecord dataRecord);
 
-        void AssignPrimaryKey(IKey key, string primaryKey);
+        void AssignPrimaryKeyValue(IKey key, string primaryKey);
 
         IDataRecord GetDataRecord(IDatamodel dataModel);
 

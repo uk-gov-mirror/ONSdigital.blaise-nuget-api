@@ -736,31 +736,31 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_GetPrimaryKey_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Valid_Arguments_When_I_Call_GetPrimaryKeyValue_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
 
-            _blaiseApiMock.Setup(d => d.GetPrimaryKey(It.IsAny<IDataRecord>())).Returns(It.IsAny<string>());
+            _blaiseApiMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(It.IsAny<string>());
 
             //act
-            _sut.GetPrimaryKey(dataRecordMock.Object);
+            _sut.GetPrimaryKeyValue(dataRecordMock.Object);
 
             //assert
-            _blaiseApiMock.Verify(v => v.GetPrimaryKey(dataRecordMock.Object), Times.Once);
+            _blaiseApiMock.Verify(v => v.GetPrimaryKeyValue(dataRecordMock.Object), Times.Once);
         }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_GetPrimaryKey_Then_The_Expected_Result_Is_Returned()
+        public void Given_Valid_Arguments_When_I_Call_GetPrimaryKeyValue_Then_The_Expected_Result_Is_Returned()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
             var primaryKey = "Key1";
 
-            _blaiseApiMock.Setup(d => d.GetPrimaryKey(It.IsAny<IDataRecord>())).Returns(primaryKey);
+            _blaiseApiMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(primaryKey);
 
             //act
-            var result = _sut.GetPrimaryKey(dataRecordMock.Object);
+            var result = _sut.GetPrimaryKeyValue(dataRecordMock.Object);
 
             //assert
             Assert.IsNotNull(result);
@@ -768,19 +768,19 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_AssignPrimaryKey_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Valid_Arguments_When_I_Call_AssignPrimaryKeyValue_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             var keyMock = new Mock<IKey>();
             var primaryKey = "Key1";
 
-            _blaiseApiMock.Setup(d => d.AssignPrimaryKey(It.IsAny<IKey>(), It.IsAny<string>()));
+            _blaiseApiMock.Setup(d => d.AssignPrimaryKeyValue(It.IsAny<IKey>(), It.IsAny<string>()));
 
             //act
-            _sut.AssignPrimaryKey(keyMock.Object, primaryKey);
+            _sut.AssignPrimaryKeyValue(keyMock.Object, primaryKey);
 
             //assert
-            _blaiseApiMock.Verify(v => v.AssignPrimaryKey(keyMock.Object, primaryKey), Times.Once);
+            _blaiseApiMock.Verify(v => v.AssignPrimaryKeyValue(keyMock.Object, primaryKey), Times.Once);
         }
 
         [Test]

@@ -9,8 +9,8 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         IKey GetKey(IDatamodel datamodel, string keyName);
 
-        string GetPrimaryKey(IDataRecord dataRecord);
+        string GetPrimaryKeyValue(IDataRecord dataRecord);
 
-        void AssignPrimaryKey(IKey key, string primaryKey);
+        void AssignPrimaryKeyValue(IKey key, string primaryKey);
     }
 }
