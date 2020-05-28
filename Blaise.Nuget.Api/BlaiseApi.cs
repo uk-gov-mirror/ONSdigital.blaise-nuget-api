@@ -238,6 +238,16 @@ namespace Blaise.Nuget.Api
             _dataService.CreateNewDataRecord(primaryKeyValue, fieldData, instrumentName, serverParkName);
         }
 
+        public void UpdateDataRecord(IDataRecord dataRecord, Dictionary<string, string> fieldData, string instrumentName, string serverParkName)
+        {
+            dataRecord.ThrowExceptionIfNull("dataRecord");
+            fieldData.ThrowExceptionIfNull("fieldData");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            _dataService.UpdateDataRecord(dataRecord, fieldData, instrumentName, serverParkName);
+        }
+
         public bool CompletedFieldExists(string instrumentName, string serverParkName)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");

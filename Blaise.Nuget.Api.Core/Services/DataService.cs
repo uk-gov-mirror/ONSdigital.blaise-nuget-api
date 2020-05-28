@@ -145,5 +145,12 @@ namespace Blaise.Nuget.Api.Core.Services
 
             WriteDataRecord(dataRecord, instrumentName, serverParkName);
         }
+
+        public void UpdateDataRecord(IDataRecord dataRecord, Dictionary<string, string> fieldData, string instrumentName, string serverParkName)
+        {
+            dataRecord = _mapperService.MapDataRecordFields(dataRecord, fieldData);
+
+            WriteDataRecord(dataRecord, instrumentName, serverParkName);
+        }
     }
 }

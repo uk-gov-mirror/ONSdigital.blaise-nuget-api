@@ -506,6 +506,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var primaryKeyValue = "Key1";
             var fieldData = new Dictionary<string, string>();
 
+            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(), It.IsAny<IDatamodel>(),
+                    It.IsAny<IKey>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()))
+                .Returns(_dataRecordMock.Object);
+
             //act
             _sut.CreateNewDataRecord(primaryKeyValue, fieldData, _instrumentName, _serverParkName);
 
@@ -514,6 +518,24 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataModelMock.Object), Times.Once);
             _dataRecordServiceMock.Verify(v => v.GetDataRecord(_dataModelMock.Object), Times.Once);
             _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, _dataModelMock.Object, _keyMock.Object, primaryKeyValue, fieldData), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_UpdateDataRecord_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            var fieldData = new Dictionary<string, string>();
+
+            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(), 
+                    It.IsAny<Dictionary<string, string>>())).Returns(_dataRecordMock.Object);
+
+            //act
+            _sut.UpdateDataRecord(_dataRecordMock.Object, fieldData, _instrumentName, _serverParkName);
+
+            //assert
+            _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, fieldData), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
     }
 }
