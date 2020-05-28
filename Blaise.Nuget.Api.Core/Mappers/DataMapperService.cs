@@ -13,7 +13,12 @@ namespace Blaise.Nuget.Api.Core.Mappers
             var idField = dataRecord.GetField(key.Fields[0].FullName);
             idField.DataValue.Assign(primaryKeyValue);
 
-            var definitionScope = (IDefinitionScope2)dataModel;
+            return MapDataRecordFields(dataRecord, fieldData);
+        }
+
+        public IDataRecord MapDataRecordFields(IDataRecord dataRecord, Dictionary<string, string> fieldData)
+        {
+            var definitionScope = (IDefinitionScope2)dataRecord.Datamodel;
 
             foreach (var field in fieldData)
             {

@@ -1088,6 +1088,57 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
+        public void Given_Valid_Arguments_When_I_Call_UpdateDataRecord_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var fieldData = new Dictionary<string, string>();
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _blaiseApiMock.Setup(d => d.UpdateDataRecord(It.IsAny<IDataRecord>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<string>(), It.IsAny<string>()));
+
+            _sut.WithServerPark(serverParkName);
+            _sut.ForInstrument(instrumentName);
+
+            //act
+            _sut.UpdateDataRecord(dataRecordMock.Object, fieldData);
+
+            //assert
+            _blaiseApiMock.Verify(v => v.UpdateDataRecord(dataRecordMock.Object, fieldData, instrumentName, serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_UpdateDataRecord_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var fieldData = new Dictionary<string, string>();
+            var instrumentName = "Instrument1";
+
+            _sut.ForInstrument(instrumentName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.UpdateDataRecord(dataRecordMock.Object, fieldData));
+            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this", exception.Message);
+        }
+
+        [Test]
+        public void Given_ForInstrument_Has_Not_Been_Called_When_I_Call_UpdateDataRecord_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            var fieldData = new Dictionary<string, string>();
+            var serverParkName = "Park1";
+
+            _sut.WithServerPark(serverParkName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.UpdateDataRecord(dataRecordMock.Object, fieldData));
+            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+        }
+
+        [Test]
         public void Given_WithServerPark_And_ForInstrument_Has_Been_Called_When_I_Call_CompletedFieldExists_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
