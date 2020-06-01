@@ -7,6 +7,8 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
     {
         IDatamodel GetDataModel(string instrumentName, string serverParkName);
 
+        IDatamodel GetDataModel(string serverName, string instrumentName, string serverParkName);
+
         CaseRecordType GetCaseRecordType(string instrumentName, string serverParkName);
     }
 }

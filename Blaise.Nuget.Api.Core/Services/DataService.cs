@@ -35,6 +35,11 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataModelService.GetDataModel(instrumentName, serverParkName);
         }
 
+        public IDatamodel GetDataModel(string serverName, string instrumentName, string serverParkName)
+        {
+            return _dataModelService.GetDataModel(serverName, instrumentName, serverParkName);
+        }
+
         public CaseRecordType GetCaseRecordType(string instrumentName, string serverParkName)
         {
             return _dataModelService.GetCaseRecordType(instrumentName, serverParkName);
@@ -128,11 +133,15 @@ namespace Blaise.Nuget.Api.Core.Services
         public bool CaseExists(string primaryKeyValue, string instrumentName, string serverParkName)
         {
             var dataModel = _dataModelService.GetDataModel(instrumentName, serverParkName);
-            var primaryKey = _keyService.GetPrimaryKey(dataModel);
 
-            _keyService.AssignPrimaryKeyValue(primaryKey, primaryKeyValue);
+            return CaseExists(dataModel, primaryKeyValue, instrumentName, serverParkName);
+        }
 
-            return _keyService.KeyExists(primaryKey, instrumentName, serverParkName);
+        public bool CaseExists(string primaryKeyValue, string serverName, string instrumentName, string serverParkName)
+        {
+            var dataModel = _dataModelService.GetDataModel(serverName, instrumentName, serverParkName);
+
+            return CaseExists(dataModel, primaryKeyValue, instrumentName, serverParkName);
         }
 
         public void CreateNewDataRecord(string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName, string serverParkName)
@@ -151,6 +160,15 @@ namespace Blaise.Nuget.Api.Core.Services
             dataRecord = _mapperService.MapDataRecordFields(dataRecord, fieldData);
 
             WriteDataRecord(dataRecord, instrumentName, serverParkName);
+        }
+
+        private bool CaseExists(IDatamodel dataModel, string primaryKeyValue, string instrumentName, string serverParkName)
+        {
+            var primaryKey = _keyService.GetPrimaryKey(dataModel);
+
+            _keyService.AssignPrimaryKeyValue(primaryKey, primaryKeyValue);
+
+            return _keyService.KeyExists(primaryKey, instrumentName, serverParkName);
         }
     }
 }

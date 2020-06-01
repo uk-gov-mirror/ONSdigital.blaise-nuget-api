@@ -21,6 +21,13 @@ namespace Blaise.Nuget.Api.Core.Services
             return dataLink.Datamodel;
         }
 
+        public IDatamodel GetDataModel(string serverName, string instrumentName, string serverParkName)
+        {
+            var dataLink = _remoteDataLinkProvider.GetDataLink(serverName, instrumentName, serverParkName);
+
+            return dataLink.Datamodel;
+        }
+
         public CaseRecordType GetCaseRecordType(string instrumentName, string serverParkName)
         {
             var dataModel = GetDataModel(instrumentName, serverParkName);

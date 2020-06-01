@@ -28,13 +28,18 @@ namespace Blaise.Nuget.Api.Core.Providers
 
         public IDataLink4 GetDataLink(string instrumentName, string serverParkName)
         {
+            return GetDataLink(null, instrumentName, serverParkName);
+        }
+
+        public IDataLink4 GetDataLink(string serverName, string instrumentName, string serverParkName)
+        {
             if (_dataLink == null | instrumentName != _instrumentName || serverParkName != _serverParkName)
             {
                 _instrumentName = instrumentName;
                 _serverParkName = serverParkName;
 
                 var instrumentId = _surveyService.GetInstrumentId(instrumentName, serverParkName);
-                var connection = _connectionFactory.GetConnection();
+                var connection = _connectionFactory.GetConnection(serverName);
 
                 _dataLink = connection.GetDataLink(instrumentId, serverParkName);
             }

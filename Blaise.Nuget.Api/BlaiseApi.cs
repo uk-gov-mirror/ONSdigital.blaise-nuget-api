@@ -116,6 +116,15 @@ namespace Blaise.Nuget.Api
             return _dataService.GetDataModel(instrumentName, serverParkName);
         }
 
+        public IDatamodel GetDataModel(string serverName, string instrumentName, string serverParkName)
+        {
+            serverName.ThrowExceptionIfNullOrEmpty("serverName");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _dataService.GetDataModel(serverName, instrumentName, serverParkName);
+        }
+
         public CaseRecordType GetCaseRecordType(string instrumentName, string serverParkName)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
@@ -155,6 +164,16 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             return _dataService.CaseExists(primaryKeyValue, instrumentName, serverParkName);
+        }
+
+        public bool CaseExists(string primaryKeyValue, string serverName, string instrumentName, string serverParkName)
+        {
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
+            serverName.ThrowExceptionIfNullOrEmpty("serverName");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _dataService.CaseExists(primaryKeyValue, serverName, instrumentName, serverParkName);
         }
 
         public string GetPrimaryKeyValue(IDataRecord dataRecord)
