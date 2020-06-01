@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Contracts.Models;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Tests.Unit
@@ -30,6 +31,17 @@ namespace Blaise.Nuget.Api.Tests.Unit
                 _dataServiceMock.Object,
                 _parkServiceMock.Object,
                 _surveyServiceMock.Object);
+        }
+
+        [Test]
+        public void Given_I_Instantiate_BlaiseApi_With_A_ConnectionModel_No_Exceptions_Are_Thrown()
+        {
+            //arrange
+            var connectionModel = new ConnectionModel();
+
+            //act && assert
+            // ReSharper disable once ObjectCreationAsStatement
+            Assert.DoesNotThrow(() => new BlaiseApi(connectionModel));
         }
 
         [Test]
@@ -421,113 +433,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_I_Provide_A_ServerName_When_I_Call_GetDataModel_Then_The_Correct_Service_Method_Is_Called()
-        {
-            //arrange
-            var serverName = "serverName";
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-
-            _dataServiceMock.Setup(d => d.GetDataModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<IDatamodel>());
-
-            //act
-            _sut.GetDataModel(serverName, instrumentName, serverParkName);
-
-            //assert
-            _dataServiceMock.Verify(v => v.GetDataModel(serverName, instrumentName, serverParkName), Times.Once);
-        }
-
-        [Test]
-        public void Given_I_Provide_A_ServerName_When_I_Call_GetDataModel_Then_The_Expected_Result_Is_Returned()
-        {
-            //arrange
-            var serverName = "serverName";
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-            var dataModelMock = new Mock<IDatamodel>();
-
-            _dataServiceMock.Setup(d => d.GetDataModel(serverName, instrumentName, serverParkName)).Returns(dataModelMock.Object);
-
-            //act
-            var result = _sut.GetDataModel(serverName, instrumentName, serverParkName);
-
-            //assert
-            Assert.IsNotNull(result);
-            Assert.AreSame(dataModelMock.Object, result);
-        }
-
-        [Test]
-        public void Given_I_Provide_An_Empty_serverName_When_I_Call_GetDataModel_Then_An_ArgumentException_Is_Thrown()
-        {
-            //arrange 
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.GetDataModel(String.Empty, instrumentName, serverParkName));
-            Assert.AreEqual("A value for the argument 'serverName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_I_Provide_A_Null_serverName_When_I_Call_GetDataModel_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange 
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetDataModel(null, instrumentName, serverParkName));
-            Assert.AreEqual("serverName", exception.ParamName);
-        }
-        [Test]
-        public void Given_I_Provide_A_ServerName_But_An_Empty_InstrumentName_When_I_Call_GetDataModel_Then_An_ArgumentException_Is_Thrown()
-        {
-            //arrange 
-            var serverName = "serverName";
-            var serverParkName = "Park1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.GetDataModel(serverName,string.Empty, serverParkName));
-            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_I_Provide_A_ServerName_But_A_Null_InstrumentName_When_I_Call_GetDataModel_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange 
-            var serverName = "serverName";
-            var serverParkName = "Park1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetDataModel(serverName, null, serverParkName));
-            Assert.AreEqual("instrumentName", exception.ParamName);
-        }
-
-        [Test]
-        public void Given_I_Provide_A_ServerName_But_An_Empty_ServerParkName_When_I_Call_GetDataModel_Then_An_ArgumentException_Is_Thrown()
-        {
-            //arrange 
-            var serverName = "serverName";
-            var instrumentName = "Instrument1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.GetDataModel(serverName, instrumentName, string.Empty));
-            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_I_Provide_A_ServerName_But_A_Null_ServerParkName_When_I_Call_GetDataModel_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange 
-            var serverName = "serverName";
-            var instrumentName = "Instrument1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetDataModel(serverName, instrumentName, null));
-            Assert.AreEqual("serverParkName", exception.ParamName);
-        }
-
-        [Test]
         public void Given_Valid_Instrument_AndServerPark_When_I_Call_GetCaseRecordType_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
@@ -914,149 +819,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.CaseExists(primaryKeyValue, instrumentName, null));
-            Assert.AreEqual("serverParkName", exception.ParamName);
-        }
-
-        [Test]
-        public void Given_I_Specify_A_ServerName_When_I_Call_CaseExists_Then_The_Correct_Service_Method_Is_Called()
-        {
-            //arrange
-            var primaryKeyValue = "Key1";
-            var serverName = "ServerName1";
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-
-            _dataServiceMock.Setup(d => d.CaseExists(
-                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
-
-            //act
-            _sut.CaseExists(primaryKeyValue, serverName, instrumentName, serverParkName);
-
-            //assert
-            _dataServiceMock.Verify(v => v.CaseExists(primaryKeyValue, serverName, instrumentName, serverParkName), Times.Once);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void Given_I_Specify_A_ServerName_I_Call_CaseExists_Then_The_Expected_Result_Is_Returned(bool caseExists)
-        {
-            //arrange
-            var primaryKeyValue = "Key1";
-            var serverName = "ServerName1";
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-
-            _dataServiceMock.Setup(d => d.CaseExists(primaryKeyValue, serverName, instrumentName, serverParkName)).Returns(caseExists);
-
-            //act
-            var result = _sut.CaseExists(primaryKeyValue, serverName, instrumentName, serverParkName);
-
-            //assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(caseExists, result);
-        }
-
-        [Test]
-        public void Given_I_Specify_An_Empty_ServerName_When_I_Call_CaseExists_Then_An_ArgumentException_Is_Thrown()
-        {
-            //arrange 
-            var primaryKeyValue = "Key1";
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.CaseExists(primaryKeyValue, String.Empty, instrumentName, serverParkName));
-            Assert.AreEqual("A value for the argument 'serverName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_I_Specify_A_Null_ServerName_When_I_Call_CaseExists_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange 
-            var primaryKeyValue = "Key1";
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CaseExists(primaryKeyValue, null, instrumentName, serverParkName));
-            Assert.AreEqual("serverName", exception.ParamName);
-        }
-
-        [Test]
-        public void Given_I_Specify_A_ServerName_But_An_Empty_primaryKeyValue_When_I_Call_CaseExists_Then_An_ArgumentException_Is_Thrown()
-        {
-            //arrange 
-            var serverName = "ServerName1";
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.CaseExists(string.Empty, serverName, instrumentName, serverParkName));
-            Assert.AreEqual("A value for the argument 'primaryKeyValue' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_I_Specify_A_ServerName_But_A_Null_primaryKeyValue_When_I_Call_CaseExists_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange 
-            var serverName = "ServerName1";
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CaseExists(null, serverName, instrumentName, serverParkName));
-            Assert.AreEqual("primaryKeyValue", exception.ParamName);
-        }
-
-        [Test]
-        public void Given_I_Specify_A_ServerName_But_An_Empty_InstrumentName_When_I_Call_CaseExists_Then_An_ArgumentException_Is_Thrown()
-        {
-            //arrange 
-            var serverName = "ServerName1";
-            var primaryKeyValue = "Key1";
-            var serverParkName = "Park1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.CaseExists(primaryKeyValue, serverName, string.Empty, serverParkName));
-            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_I_Specify_A_ServerName_But_A_Null_InstrumentName_When_I_Call_CaseExists_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange 
-            var serverName = "ServerName1";
-            var primaryKeyValue = "Key1";
-            var serverParkName = "Park1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CaseExists(primaryKeyValue, serverName, null, serverParkName));
-            Assert.AreEqual("instrumentName", exception.ParamName);
-        }
-
-        [Test]
-        public void Given_I_Specify_A_ServerName_But_An_Empty_ServerParkName_When_I_Call_CaseExists_Then_An_ArgumentException_Is_Thrown()
-        {
-            //arrange 
-            var serverName = "ServerName1";
-            var primaryKeyValue = "Key1";
-            var instrumentName = "Instrument1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.CaseExists(primaryKeyValue, serverName, instrumentName, string.Empty));
-            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_I_Specify_A_ServerName_But_A_Null_ServerParkName_When_I_Call_CaseExists_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange 
-            var serverName = "ServerName1";
-            var primaryKeyValue = "Key1";
-            var instrumentName = "Instrument1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CaseExists(primaryKeyValue, serverName, instrumentName, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 

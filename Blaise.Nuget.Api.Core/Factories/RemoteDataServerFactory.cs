@@ -1,5 +1,5 @@
-﻿using Blaise.Nuget.Api.Core.Interfaces.Factories;
-using Blaise.Nuget.Api.Core.Interfaces.Providers;
+﻿using Blaise.Nuget.Api.Contracts.Models;
+using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataLink;
 
@@ -8,36 +8,38 @@ namespace Blaise.Nuget.Api.Core.Factories
     public class RemoteDataServerFactory : IRemoteDataServerFactory
     {
         private readonly IPasswordService _passwordService;
-        private readonly IConfigurationProvider _configurationProvider;
+        private readonly ConnectionModel _connectionModel;
 
         private IRemoteDataServer _remoteDataServer;
 
         public RemoteDataServerFactory(
-            IConfigurationProvider configurationProvider,
+            ConnectionModel connectionModel,
             IPasswordService passwordService)
         {
-            _configurationProvider = configurationProvider;
+            _connectionModel = connectionModel;
             _passwordService = passwordService;
         }
 
-        public IRemoteDataServer GetConnection(string serverName = null)
+        public IRemoteDataServer GetConnection()
         {   
             if(_remoteDataServer == null)
             {
-                CreateRemoteConnection(serverName);
+                CreateRemoteConnection(_connectionModel);
             }
 
             return _remoteDataServer;
         }
 
-        private void CreateRemoteConnection(string serverName = null)
+        private void CreateRemoteConnection(ConnectionModel connectionModel)
         {
+            var securePassword = _passwordService.CreateSecurePassword(connectionModel.Password);
+
             _remoteDataServer = DataLinkManager.GetRemoteDataServer(
-                serverName ?? _configurationProvider.ServerName,
-                _configurationProvider.RemoteConnectionPort,
-                _configurationProvider.Binding,
-                _configurationProvider.UserName,
-                _passwordService.CreateSecurePassword(_configurationProvider.Password));
+                connectionModel.ServerName,
+                connectionModel.RemotePort,
+                connectionModel.Binding,
+                connectionModel.UserName,
+                securePassword);
         }
     }
 }

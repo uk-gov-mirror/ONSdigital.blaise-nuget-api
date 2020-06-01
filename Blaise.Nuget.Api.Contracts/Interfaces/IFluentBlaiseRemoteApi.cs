@@ -22,13 +22,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         bool CaseExists(string primaryKeyValue);
 
-        bool CaseExists(string primaryKeyValue, string serverName);
-
         Guid GetInstrumentId();
 
         IDatamodel GetDataModel();
-
-        IDatamodel GetDataModel(string serverName);
 
         CaseRecordType GetCaseRecordType();
 

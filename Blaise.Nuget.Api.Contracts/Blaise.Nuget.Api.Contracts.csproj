@@ -52,6 +52,7 @@
     <Compile Include="Interfaces\IFluentBlaiseRemoteApi.cs" />
     <Compile Include="Interfaces\IFluentBlaiseLocalApi.cs" />
     <Compile Include="Interfaces\IFluentBlaiseApi.cs" />
+    <Compile Include="Models\ConnectionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

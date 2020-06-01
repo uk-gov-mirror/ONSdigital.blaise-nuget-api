@@ -43,7 +43,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataServerMock.Setup(r => r.GetDataLink(_instrumentId, _serverParkName)).Returns(_dataLinkMock.Object);
 
             _connectionFactoryMock = new Mock<IRemoteDataServerFactory>();
-            _connectionFactoryMock.Setup(c => c.GetConnection(null)).Returns(_remoteDataServerMock.Object);
+            _connectionFactoryMock.Setup(c => c.GetConnection()).Returns(_remoteDataServerMock.Object);
 
             _surveyServiceMock = new Mock<ISurveyService>();
             _surveyServiceMock.Setup(p => p.GetInstrumentId(_instrumentName, _serverParkName)).Returns(_instrumentId);
