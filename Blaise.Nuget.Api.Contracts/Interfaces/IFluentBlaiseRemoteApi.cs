@@ -16,7 +16,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IEnumerable<ISurvey> GetSurveys();
 
-        IFluentBlaiseRemoteApi ForInstrument(string instrumentName);
+        IFluentBlaiseRemoteApi WithInstrument(string instrumentName);
 
         bool KeyExists(IKey key);
 

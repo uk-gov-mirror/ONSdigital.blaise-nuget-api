@@ -11,6 +11,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IBlaiseApi
     {
+        void UseServer(string serverName);
+
         IEnumerable<string> GetServerParkNames();
 
         IEnumerable<string> GetSurveyNames(string serverParkName);

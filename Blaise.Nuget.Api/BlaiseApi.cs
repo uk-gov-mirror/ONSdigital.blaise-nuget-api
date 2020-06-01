@@ -38,11 +38,6 @@ namespace Blaise.Nuget.Api
             _surveyService = surveyService;
         }
 
-        public BlaiseApi(ConnectionModel connectionModel)
-        {
-            RegisterAndResolveDependencies(connectionModel);
-        }
-
         public BlaiseApi()
         {
             var configurationProvider = new ConfigurationProvider();
@@ -85,6 +80,14 @@ namespace Blaise.Nuget.Api
             _dataService = unityContainer.Resolve<IDataService>();
             _parkService = unityContainer.Resolve<IParkService>();
             _surveyService = unityContainer.Resolve<ISurveyService>();
+        }
+
+        public void UseServer(string serverName)
+        {
+            var configurationProvider = new ConfigurationProvider();
+            var connectionModel = configurationProvider.GetConnectionModel(serverName);
+
+            RegisterAndResolveDependencies(connectionModel);
         }
 
         public IEnumerable<string> GetServerParkNames()

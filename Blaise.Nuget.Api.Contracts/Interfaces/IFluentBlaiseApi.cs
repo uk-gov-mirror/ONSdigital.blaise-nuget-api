@@ -7,6 +7,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IFluentBlaiseApi : IFluentBlaiseLocalApi, IFluentBlaiseRemoteApi
     {
+        IFluentBlaiseApi WithServer(string serverName);
+
         IEnumerable<string> GetServerParkNames();
 
         IEnumerable<ISurvey> GetAllSurveys();
