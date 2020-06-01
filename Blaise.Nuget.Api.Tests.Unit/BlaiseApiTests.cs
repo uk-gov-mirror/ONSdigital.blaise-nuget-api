@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Enums;
-using Blaise.Nuget.Api.Contracts.Models;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Tests.Unit
@@ -34,22 +33,22 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_I_Instantiate_BlaiseApi_With_A_ConnectionModel_No_Exceptions_Are_Thrown()
-        {
-            //arrange
-            var connectionModel = new ConnectionModel();
-
-            //act && assert
-            // ReSharper disable once ObjectCreationAsStatement
-            Assert.DoesNotThrow(() => new BlaiseApi(connectionModel));
-        }
-
-        [Test]
         public void Given_I_Instantiate_BlaiseApi_No_Exceptions_Are_Thrown()
         {
             //act && assert
             // ReSharper disable once ObjectCreationAsStatement
             Assert.DoesNotThrow(() => new BlaiseApi());
+        }
+
+        [Test]
+        public void Given_I_Call_UseServer_No_Exceptions_Are_Thrown()
+        {
+            //arrange
+            const string serverName = "ServerName1";
+            var sut = new BlaiseApi();
+
+            // ReSharper disable once ObjectCreationAsStatement
+            Assert.DoesNotThrow(() => sut.UseServer(serverName));
         }
 
         [Test]

@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Enums;
-using Blaise.Nuget.Api.Contracts.Models;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Tests.Unit
@@ -28,20 +27,23 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_I_Instantiate_FluentBlaiseApi_With_A_ConnectionModel_No_Exceptions_Are_Thrown()
-        {
-            //arrange
-            var connectionModel = new ConnectionModel();
-
-            //act && assert
-            Assert.DoesNotThrow(() => new FluentBlaiseApi(connectionModel));
-        }
-
-        [Test]
         public void Given_I_Instantiate_FluentBlaiseApi_No_Exceptions_Are_Thrown()
         {
             //act && assert
             Assert.DoesNotThrow(() => new FluentBlaiseApi());
+        }
+
+        [Test]
+        public void Given_I_Call_WithServer_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            const string serverName = "ServerName1";
+
+            //act
+            _sut.WithServer(serverName);
+
+            //assert
+            _blaiseApiMock.Verify(v => v.UseServer(serverName), Times.Once);
         }
 
         [Test]
@@ -328,7 +330,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(p => p.GetSurveyNames(It.IsAny<string>())).Returns(It.IsAny<List<string>>());
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.GetSurveyNames();
@@ -352,14 +354,14 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(p => p.GetSurveyNames(serverParkName)).Returns(surveyList);
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act            
             var result = _sut.GetSurveyNames().ToList();
 
             //assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count());
+            Assert.AreEqual(2, result.Count);
             Assert.True(result.Contains("Instrument1"));
             Assert.True(result.Contains("Instrument2"));
         }
@@ -382,7 +384,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(p => p.GetSurveys(It.IsAny<string>())).Returns(It.IsAny<List<ISurvey>>());
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.GetSurveys();
@@ -408,7 +410,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(p => p.GetSurveys(serverParkName)).Returns(surveyList);
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act            
             var result = _sut.GetSurveys().ToList();
@@ -429,13 +431,13 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_ForInstrument_Then_It_Returns_Same_Instance_Of_Itself_Back()
+        public void Given_Valid_Arguments_When_I_Call_WithInstrument_Then_It_Returns_Same_Instance_Of_Itself_Back()
         {
             //arrange
             var instrumentName = "Instrument1";
 
             //act
-            var result = _sut.ForInstrument(instrumentName);
+            var result = _sut.WithInstrument(instrumentName);
 
             //assert
             Assert.IsNotNull(result);
@@ -454,7 +456,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(p => p.CaseExists(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.CaseExists(primaryKeyValue);
@@ -475,7 +477,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(p => p.CaseExists(primaryKeyValue,instrumentName, serverParkName)).Returns(caseExists);
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             var result = _sut.CaseExists(primaryKeyValue);
@@ -492,7 +494,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             var primaryKeyValue = "Key1";
             var instrumentName = "Instrument1";
 
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.CaseExists(primaryKeyValue));
@@ -500,7 +502,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_ForInstrument_Has_Not_Been_Called_When_I_Call_CaseExists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_CaseExists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var primaryKeyValue = "Key1";
@@ -510,7 +512,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.CaseExists(primaryKeyValue));
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this", exception.Message);
         }
 
         [Test]
@@ -523,7 +525,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(p => p.GetInstrumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<Guid>());
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.GetInstrumentId();
@@ -543,7 +545,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(p => p.GetInstrumentId(instrumentName, serverParkName)).Returns(instrumentId);
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             var result = _sut.GetInstrumentId();
@@ -560,7 +562,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             var instrumentName = "Instrument1";
 
           
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetInstrumentId());
@@ -568,7 +570,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_ForInstrument_Has_Not_Been_Called_When_I_Call_GetInstrumentId_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_GetInstrumentId_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var serverParkName = "Park1";
@@ -577,7 +579,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetInstrumentId());
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this", exception.Message);
         }
 
         [Test]
@@ -590,7 +592,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.GetDataModel(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<IDatamodel>());
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.GetDataModel();
@@ -610,7 +612,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.GetDataModel(instrumentName, serverParkName)).Returns(dataModelMock.Object);
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             var result = _sut.GetDataModel();
@@ -626,7 +628,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             //arrange
             var instrumentName = "Instrument1";
 
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataModel());
@@ -634,7 +636,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_ForInstrument_Has_Not_Been_Called_When_I_Call_GetDataModel_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_GetDataModel_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var serverParkName = "Park1";
@@ -643,7 +645,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataModel());
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this", exception.Message);
         }
 
         [Test]
@@ -656,7 +658,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.GetCaseRecordType(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<CaseRecordType>());
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.GetCaseRecordType();
@@ -676,7 +678,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.GetCaseRecordType(instrumentName, serverParkName)).Returns(caseRecordType);
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             var result = _sut.GetCaseRecordType();
@@ -692,7 +694,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             //arrange
             var instrumentName = "Instrument1";
 
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetCaseRecordType());
@@ -700,7 +702,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_ForInstrument_Has_Not_Been_Called_When_I_Call_GetCaseRecordType_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_GetCaseRecordType_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var serverParkName = "Park1";
@@ -709,7 +711,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetCaseRecordType());
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this", exception.Message);
         }
 
         [Test]
@@ -722,7 +724,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.GetDataSet(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<IDataSet>());
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.GetDataSet();
@@ -742,7 +744,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.GetDataSet(instrumentName, serverParkName)).Returns(dataSetMock.Object);
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             var result = _sut.GetDataSet();
@@ -758,7 +760,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             //arrange
             var instrumentName = "Instrument1";
 
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataSet());
@@ -766,7 +768,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_ForInstrument_Has_Not_Been_Called_When_I_Call_GetDataSet_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_GetDataSet_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var serverParkName = "Park1";
@@ -775,7 +777,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataSet());
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this", exception.Message);
         }
 
         [Test]
@@ -789,7 +791,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.KeyExists(It.IsAny<IKey>(), It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.KeyExists(keyMock.Object);
@@ -810,7 +812,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.KeyExists(keyMock.Object, instrumentName, serverParkName)).Returns(keyExists);
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             var result = _sut.KeyExists(keyMock.Object);
@@ -827,7 +829,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             var keyMock = new Mock<IKey>();
             var instrumentName = "Instrument1";
 
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.KeyExists(keyMock.Object));
@@ -835,7 +837,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_ForInstrument_Has_Not_Been_Called_When_I_Call_KeyExists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_KeyExists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var keyMock = new Mock<IKey>();
@@ -845,7 +847,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.KeyExists(keyMock.Object));
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this", exception.Message);
         }
 
         [Test]
@@ -931,7 +933,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_WithServerPark_And_ForInstrument_Has_Been_Called_When_I_Call_GetDataRecord_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_WithServerPark_And_WithInstrument_Has_Been_Called_When_I_Call_GetDataRecord_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             var keyMock = new Mock<IKey>();
@@ -941,7 +943,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.GetDataRecord(It.IsAny<IKey>(), It.IsAny<string>(), It.IsAny<string>()));
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.GetDataRecord(keyMock.Object);
@@ -958,7 +960,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             var keyMock = new Mock<IKey>();
             var instrumentName = "Instrument1";
 
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataRecord(keyMock.Object));
@@ -966,7 +968,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_WithServerPark_Has_Been_Called_And_ForInstrument_Has_Not_Been_Called_When_I_Call_GetDataRecord_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithServerPark_Has_Been_Called_And_WithInstrument_Has_Not_Been_Called_When_I_Call_GetDataRecord_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var keyMock = new Mock<IKey>();
@@ -976,7 +978,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataRecord(keyMock.Object));
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this", exception.Message);
         }
 
         [Test]
@@ -999,7 +1001,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_WithServerPark_And_ForInstrument_Has_Been_Called_When_I_Call_WriteDataRecord_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_WithServerPark_And_WithInstrument_Has_Been_Called_When_I_Call_WriteDataRecord_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
@@ -1009,7 +1011,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.WriteDataRecord(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.WriteDataRecord(dataRecordMock.Object);
@@ -1026,7 +1028,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             var dataRecordMock = new Mock<IDataRecord>();
             var instrumentName = "Instrument1";
 
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.WriteDataRecord(dataRecordMock.Object));
@@ -1034,7 +1036,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_WithServerPark_Has_Been_Called_And_ForInstrument_Has_Not_Been_Called_When_I_Call_WriteDataRecord_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithServerPark_Has_Been_Called_And_WithInstrument_Has_Not_Been_Called_When_I_Call_WriteDataRecord_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
@@ -1044,7 +1046,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.WriteDataRecord(dataRecordMock.Object));
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this", exception.Message);
         }
 
         [Test]
@@ -1059,7 +1061,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.CreateNewDataRecord(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<string>(), It.IsAny<string>()));
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.CreateNewDataRecord(primaryKeyValue, fieldData);
@@ -1076,7 +1078,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             var fieldData = new Dictionary<string, string>();
             var instrumentName = "Instrument1";
 
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.CreateNewDataRecord(primaryKeyValue, fieldData));
@@ -1084,7 +1086,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_ForInstrument_Has_Not_Been_Called_When_I_Call_CreateNewDataRecord_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_CreateNewDataRecord_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var primaryKeyValue = "Key1";
@@ -1095,7 +1097,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.CreateNewDataRecord(primaryKeyValue, fieldData));
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this", exception.Message);
         }
 
         [Test]
@@ -1110,7 +1112,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.UpdateDataRecord(It.IsAny<IDataRecord>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<string>(), It.IsAny<string>()));
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.UpdateDataRecord(dataRecordMock.Object, fieldData);
@@ -1127,7 +1129,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             var fieldData = new Dictionary<string, string>();
             var instrumentName = "Instrument1";
 
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.UpdateDataRecord(dataRecordMock.Object, fieldData));
@@ -1135,7 +1137,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_ForInstrument_Has_Not_Been_Called_When_I_Call_UpdateDataRecord_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_UpdateDataRecord_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
@@ -1146,11 +1148,11 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.UpdateDataRecord(dataRecordMock.Object, fieldData));
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this", exception.Message);
         }
 
         [Test]
-        public void Given_WithServerPark_And_ForInstrument_Has_Been_Called_When_I_Call_CompletedFieldExists_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_WithServerPark_And_WithInstrument_Has_Been_Called_When_I_Call_CompletedFieldExists_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             var instrumentName = "Instrument1";
@@ -1159,7 +1161,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.CompletedFieldExists(It.IsAny<string>(), It.IsAny<string>()));
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.CompletedFieldExists();
@@ -1174,7 +1176,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             //arrange
             var instrumentName = "Instrument1";
 
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.CompletedFieldExists());
@@ -1182,7 +1184,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_WithServerPark_Has_Been_Called_And_ForInstrument_Has_Not_Been_Called_When_I_Call_CompletedFieldExists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithServerPark_Has_Been_Called_And_WithInstrument_Has_Not_Been_Called_When_I_Call_CompletedFieldExists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var serverParkName = "Park1";
@@ -1191,11 +1193,11 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.CompletedFieldExists());
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this", exception.Message);
         }
 
         [Test]
-        public void Given_WithServerPark_And_ForInstrument_Has_Been_Called_When_I_Call_MarkCaseAsComplete_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_WithServerPark_And_WithInstrument_Has_Been_Called_When_I_Call_MarkCaseAsComplete_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
@@ -1205,7 +1207,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.MarkCaseAsComplete(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.MarkCaseAsComplete(dataRecordMock.Object);
@@ -1221,7 +1223,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             var dataRecordMock = new Mock<IDataRecord>();
             var instrumentName = "Instrument1";
 
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkCaseAsComplete(dataRecordMock.Object));
@@ -1229,7 +1231,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_WithServerPark_Has_Been_Called_And_ForInstrument_Has_Not_Been_Called_When_I_Call_MarkCaseAsComplete_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithServerPark_Has_Been_Called_And_WithInstrument_Has_Not_Been_Called_When_I_Call_MarkCaseAsComplete_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
@@ -1239,11 +1241,11 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkCaseAsComplete(dataRecordMock.Object));
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this", exception.Message);
         }
 
         [Test]
-        public void Given_WithServerPark_And_ForInstrument_Has_Been_Called_When_I_Call_ProcessedFieldExists_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_WithServerPark_And_WithInstrument_Has_Been_Called_When_I_Call_ProcessedFieldExists_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             var instrumentName = "Instrument1";
@@ -1252,7 +1254,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.ProcessedFieldExists(It.IsAny<string>(), It.IsAny<string>()));
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.ProcessedFieldExists();
@@ -1267,7 +1269,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             //arrange
             var instrumentName = "Instrument1";
 
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.ProcessedFieldExists());
@@ -1275,7 +1277,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_WithServerPark_Has_Been_Called_And_ForInstrument_Has_Not_Been_Called_When_I_Call_ProcessedFieldExists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithServerPark_Has_Been_Called_And_WithInstrument_Has_Not_Been_Called_When_I_Call_ProcessedFieldExists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var serverParkName = "Park1";
@@ -1284,11 +1286,11 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.ProcessedFieldExists());
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this", exception.Message);
         }
 
         [Test]
-        public void Given_WithServerPark_And_ForInstrument_Has_Been_Called_When_I_Call_MarkCaseAsProcessed_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_WithServerPark_And_WithInstrument_Has_Been_Called_When_I_Call_MarkCaseAsProcessed_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
@@ -1298,7 +1300,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock.Setup(d => d.MarkCaseAsProcessed(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
 
             _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act
             _sut.MarkCaseAsProcessed(dataRecordMock.Object);
@@ -1314,7 +1316,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             var dataRecordMock = new Mock<IDataRecord>();
             var instrumentName = "Instrument1";
 
-            _sut.ForInstrument(instrumentName);
+            _sut.WithInstrument(instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkCaseAsProcessed(dataRecordMock.Object));
@@ -1322,7 +1324,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_WithServerPark_Has_Been_Called_And_ForInstrument_Has_Not_Been_Called_When_I_Call_MarkCaseAsProcessed_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithServerPark_Has_Been_Called_And_WithInstrument_Has_Not_Been_Called_When_I_Call_MarkCaseAsProcessed_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
@@ -1332,7 +1334,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkCaseAsProcessed(dataRecordMock.Object));
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this", exception.Message);
         }
     }
 }

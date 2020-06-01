@@ -5,10 +5,8 @@ using StatNeth.Blaise.API.Meta;
 using System;
 using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
-using Blaise.Nuget.Api.Contracts.Models;
 using StatNeth.Blaise.API.ServerManager;
 using Unity;
-using Unity.Injection;
 
 namespace Blaise.Nuget.Api
 {
@@ -25,18 +23,18 @@ namespace Blaise.Nuget.Api
             _blaiseApi = blaiseApi;
         }
 
-        public FluentBlaiseApi(ConnectionModel connectionModel)
-        {
-            var unityContainer = new UnityContainer();
-            unityContainer.RegisterType<IBlaiseApi, BlaiseApi>(new InjectionConstructor(connectionModel));
-            _blaiseApi = unityContainer.Resolve<IBlaiseApi>();
-        }
-
         public FluentBlaiseApi()
         {
             var unityContainer = new UnityContainer();
             unityContainer.RegisterType<IBlaiseApi, BlaiseApi>();
             _blaiseApi = unityContainer.Resolve<IBlaiseApi>();
+        }
+
+        public IFluentBlaiseApi WithServer(string serverName)
+        {
+            _blaiseApi.UseServer(serverName);
+
+            return this;
         }
 
         public IEnumerable<string> GetServerParkNames()
@@ -111,7 +109,7 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.GetSurveys(_serverParkName);
         }
 
-        public IFluentBlaiseRemoteApi ForInstrument(string instrumentName)
+        public IFluentBlaiseRemoteApi WithInstrument(string instrumentName)
         {
             _filePath = null;
             _instrumentName = instrumentName;
@@ -263,7 +261,7 @@ namespace Blaise.Nuget.Api
         {
             if (string.IsNullOrWhiteSpace(_instrumentName))
             {
-                throw new NullReferenceException("The 'ForInstrument' step needs to be called prior to this");
+                throw new NullReferenceException("The 'WithInstrument' step needs to be called prior to this");
             }
         }
     }

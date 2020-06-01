@@ -26,5 +26,24 @@ namespace Blaise.Nuget.Api.Tests.Unit.Factories
             Assert.AreEqual(1, result.Count());
             Assert.True(result.Contains("LocalDevelopment"));
         }
+
+
+        [Ignore("Wont run without app settings on build environment")]
+        [Test]
+        public void Given_I_Call_UseServer_To_Specify_A_Server_When_I_Call_GetServerParkNames_I_Get_The_Expected_Values_Back()
+        {
+            //arrange
+            var blaiseApi = new BlaiseApi();
+
+            //act
+            blaiseApi.UseServer("localhost");
+            var result = blaiseApi.GetServerParkNames().ToList();
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<IEnumerable<string>>(result);
+            Assert.AreEqual(1, result.Count());
+            Assert.True(result.Contains("LocalDevelopment"));
+        }
     }
 }
