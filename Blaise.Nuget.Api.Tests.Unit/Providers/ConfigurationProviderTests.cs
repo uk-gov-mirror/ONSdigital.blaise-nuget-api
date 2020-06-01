@@ -1,5 +1,4 @@
-﻿using Blaise.Nuget.Api.Core.Models;
-using Blaise.Nuget.Api.Providers;
+﻿using Blaise.Nuget.Api.Core.Providers;
 using NUnit.Framework;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Providers
@@ -11,41 +10,87 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
         /// </summary>
 
         [Test]
-        public void Given_AppConfig_Values_Are_Set_When_I_Call_GetConnectionModel_I_Get_A_ConnectionModel_Back()
+        public void Given_AppConfig_Values_Are_Set_When_I_Call_ServerName_I_Get_The_Expected_Value_Back()
         {
             //arrange
             var configurationProvider = new ConfigurationProvider();
 
             //act
-            var result = configurationProvider.GetConnectionModel();
+            var result = configurationProvider.ServerName;
 
             //assert
             Assert.NotNull(result);
-            Assert.IsInstanceOf<ConnectionModel>(result);
-            Assert.AreEqual("BlaiseServerHostNameTest", result.ServerName);
-            Assert.AreEqual("BlaiseServerUserNameTest", result.UserName);
-            Assert.AreEqual("BlaiseServerPasswordTest", result.Password);
-            Assert.AreEqual("BlaiseServerBindingTest", result.Binding);
-            Assert.AreEqual(10, result.Port);
+            Assert.AreEqual("BlaiseServerHostNameTest", result);
         }
 
         [Test]
-        public void Given_AppConfig_Values_Are_Set_When_I_Call_GetRemoteConnectionModel_I_Get_A_ConnectionModel_Back()
+        public void Given_AppConfig_Values_Are_Set_When_I_Call_UserName_I_Get_The_Expected_Value_Back()
         {
             //arrange
             var configurationProvider = new ConfigurationProvider();
 
             //act
-            var result = configurationProvider.GetRemoteConnectionModel();
+            var result = configurationProvider.UserName;
 
             //assert
             Assert.NotNull(result);
-            Assert.IsInstanceOf<ConnectionModel>(result);
-            Assert.AreEqual("BlaiseServerHostNameTest", result.ServerName);
-            Assert.AreEqual("BlaiseServerUserNameTest", result.UserName);
-            Assert.AreEqual("BlaiseServerPasswordTest", result.Password);
-            Assert.AreEqual("BlaiseServerBindingTest", result.Binding);
-            Assert.AreEqual(20, result.Port);
+            Assert.AreEqual("BlaiseServerUserNameTest", result);
+        }
+
+        [Test]
+        public void Given_AppConfig_Values_Are_Set_When_I_Call_Password_I_Get_The_Expected_Value_Back()
+        {
+            //arrange
+            var configurationProvider = new ConfigurationProvider();
+
+            //act
+            var result = configurationProvider.Password;
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual("BlaiseServerPasswordTest", result);
+        }
+
+        [Test]
+        public void Given_AppConfig_Values_Are_Set_When_I_Call_Binding_I_Get_The_Expected_Value_Back()
+        {
+            //arrange
+            var configurationProvider = new ConfigurationProvider();
+
+            //act
+            var result = configurationProvider.Binding;
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual("BlaiseServerBindingTest", result);
+        }
+
+        [Test]
+        public void Given_AppConfig_Values_Are_Set_When_I_Call_ConnectionPort_I_Get_The_Expected_Value_Back()
+        {
+            //arrange
+            var configurationProvider = new ConfigurationProvider();
+
+            //act
+            var result = configurationProvider.ConnectionPort;
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual(10, result);
+        }
+
+        [Test]
+        public void Given_AppConfig_Values_Are_Set_When_I_Call_RemoteConnectionPort_I_Get_The_Expected_Value_Back()
+        {
+            //arrange
+            var configurationProvider = new ConfigurationProvider();
+
+            //act
+            var result = configurationProvider.RemoteConnectionPort;
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual(20, result);
         }
     }
 }

@@ -4,6 +4,6 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Factories
 {
     public interface IRemoteDataServerFactory
     {
-        IRemoteDataServer GetConnection();
+        IRemoteDataServer GetConnection(string serverName = null);
     }
 }

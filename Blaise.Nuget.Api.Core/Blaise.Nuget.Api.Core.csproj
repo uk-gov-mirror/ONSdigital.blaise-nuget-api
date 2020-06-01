@@ -37,6 +37,7 @@
       <HintPath>..\packages\StatNeth.Blaise.API.x64.5.7.5\lib\net472\StatNeth.Blaise.API.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -49,6 +50,7 @@
     <Compile Include="Factories\ConnectedServerFactory.cs" />
     <Compile Include="Factories\RemoteDataServerFactory.cs" />
     <Compile Include="Interfaces\Factories\IConnectedServerFactory.cs" />
+    <Compile Include="Interfaces\Providers\IConfigurationProvider.cs" />
     <Compile Include="Mappers\DataMapperService.cs" />
     <Compile Include="Interfaces\Mappers\IDataMapperService.cs" />
     <Compile Include="Interfaces\Providers\IRemoteDataLinkProvider.cs" />
@@ -62,8 +64,8 @@
     <Compile Include="Interfaces\Services\IPasswordService.cs" />
     <Compile Include="Interfaces\Factories\IRemoteDataServerFactory.cs" />
     <Compile Include="Interfaces\Services\ISurveyService.cs" />
-    <Compile Include="Models\ConnectionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\ConfigurationProvider.cs" />
     <Compile Include="Providers\RemoteDataLinkProvider.cs" />
     <Compile Include="Providers\LocalDataLinkProvider.cs" />
     <Compile Include="Services\DataModelService.cs" />
