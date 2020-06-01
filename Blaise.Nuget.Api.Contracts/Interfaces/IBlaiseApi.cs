@@ -25,6 +25,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IDatamodel GetDataModel(string instrumentName, string serverParkName);
 
+        IDatamodel GetDataModel(string serverName, string instrumentName, string serverParkName);
+
         CaseRecordType GetCaseRecordType(string instrumentName, string serverParkName);
 
         IKey GetKey(IDatamodel dataModel, string keyName);
@@ -34,6 +36,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         bool KeyExists(IKey key, string instrumentName, string serverParkName);
 
         bool CaseExists(string primaryKeyValue, string instrumentName, string serverParkName);
+
+        bool CaseExists(string primaryKeyValue, string serverName, string instrumentName, string serverParkName);
 
         string GetPrimaryKeyValue(IDataRecord dataRecord);
 
