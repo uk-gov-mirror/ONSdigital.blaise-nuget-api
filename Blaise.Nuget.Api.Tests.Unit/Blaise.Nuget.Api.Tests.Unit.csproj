@@ -64,6 +64,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factories\ConnectedServerFactoryTests.cs" />
+    <Compile Include="Factories\RemoteDataServerFactoryTests.cs" />
     <Compile Include="FluentBlaiseApiTests.cs" />
     <Compile Include="BlaiseApiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

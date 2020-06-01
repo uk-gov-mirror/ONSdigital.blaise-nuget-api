@@ -1,6 +1,6 @@
 ﻿using Blaise.Nuget.Api.Core.Interfaces.Factories;
+using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
-using Blaise.Nuget.Api.Core.Models;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Core.Factories
@@ -8,36 +8,36 @@ namespace Blaise.Nuget.Api.Core.Factories
     public class ConnectedServerFactory : IConnectedServerFactory
     {
         private readonly IPasswordService _passwordService;
-        private readonly ConnectionModel _connectionModel;
+        private readonly IConfigurationProvider _configurationProvider;
 
         private IConnectedServer _connectedServer;
 
         public ConnectedServerFactory(
-            ConnectionModel connectionModel,
+            IConfigurationProvider configurationProvider,
             IPasswordService passwordService)
         {
-            _connectionModel = connectionModel;
+            _configurationProvider = configurationProvider;
             _passwordService = passwordService;
         }
         
-        public IConnectedServer GetConnection()
+        public IConnectedServer GetConnection(string serverName = null)
         {
             if(_connectedServer == null)
             {
-                CreateServerConnection(_connectionModel);
+                CreateServerConnection(serverName);
             }
 
             return _connectedServer;
         }
 
-        private void CreateServerConnection(ConnectionModel connectionModel)
+        private void CreateServerConnection(string serverName = null)
         {
             _connectedServer = ServerManager.ConnectToServer(
-                connectionModel.ServerName,
-                connectionModel.Port,
-                connectionModel.UserName,
-                _passwordService.CreateSecurePassword(connectionModel.Password),
-                connectionModel.Binding);
+                serverName ?? _configurationProvider.ServerName,
+                _configurationProvider.ConnectionPort,
+                _configurationProvider.UserName,
+                _passwordService.CreateSecurePassword(_configurationProvider.Password),
+                _configurationProvider.Binding);
         }
     }
 }

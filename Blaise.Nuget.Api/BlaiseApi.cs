@@ -1,12 +1,10 @@
 ﻿using Blaise.Nuget.Api.Helpers;
-using Blaise.Nuget.Api.Providers;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 using System;
 using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Unity;
-using Unity.Injection;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Core.Services;
 using Blaise.Nuget.Api.Core.Factories;
@@ -40,26 +38,21 @@ namespace Blaise.Nuget.Api
         public BlaiseApi()
         {
             var unityContainer = new UnityContainer();
-            var configurationProvider = new ConfigurationProvider();
 
             //password service
             unityContainer.RegisterType<IPasswordService, PasswordService>();
 
-            //factories
-            var connectionModel = configurationProvider.GetConnectionModel();
-            unityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>(
-                new InjectionConstructor(connectionModel, unityContainer.Resolve<IPasswordService>()));
+            //providers
+            unityContainer.RegisterType<IConfigurationProvider, ConfigurationProvider>();
+            unityContainer.RegisterType<ILocalDataLinkProvider, LocalDataLinkProvider>();
+            unityContainer.RegisterType<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
 
-            var remoteConnectionModel = configurationProvider.GetRemoteConnectionModel();
-            unityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>(
-                new InjectionConstructor(remoteConnectionModel, unityContainer.Resolve<IPasswordService>()));
+            //factories
+            unityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>();
+            unityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>();
 
             //mappers
             unityContainer.RegisterType<IDataMapperService, DataMapperService>();
-
-            //providers
-            unityContainer.RegisterType<ILocalDataLinkProvider, LocalDataLinkProvider>();
-            unityContainer.RegisterType<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
 
             //services
             unityContainer.RegisterType<IDataModelService, DataModelService>();
