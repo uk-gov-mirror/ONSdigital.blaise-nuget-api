@@ -1,11 +1,14 @@
 ﻿using Blaise.Nuget.Api.Helpers;
+using Blaise.Nuget.Api.Providers;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 using System;
 using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Unity;
+using Unity.Injection;
 using Blaise.Nuget.Api.Contracts.Interfaces;
+using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Services;
 using Blaise.Nuget.Api.Core.Factories;
 using StatNeth.Blaise.API.DataLink;
@@ -21,9 +24,9 @@ namespace Blaise.Nuget.Api
 { 
     public class BlaiseApi : IBlaiseApi
     {
-        private readonly IDataService _dataService;
-        private readonly IParkService _parkService;
-        private readonly ISurveyService _surveyService;
+        private IDataService _dataService;
+        private IParkService _parkService;
+        private ISurveyService _surveyService;
 
         internal BlaiseApi(
             IDataService dataService,
@@ -35,24 +38,39 @@ namespace Blaise.Nuget.Api
             _surveyService = surveyService;
         }
 
+        public BlaiseApi(ConnectionModel connectionModel)
+        {
+            RegisterAndResolveDependencies(connectionModel);
+        }
+
         public BlaiseApi()
         {
-            var unityContainer = new UnityContainer();
+            var configurationProvider = new ConfigurationProvider();
+            var connectionModel = configurationProvider.GetConnectionModel();
 
+            RegisterAndResolveDependencies(connectionModel);
+        }
+
+        private void RegisterAndResolveDependencies(ConnectionModel connectionModel)
+        {
+            var unityContainer = new UnityContainer();
+            
             //password service
             unityContainer.RegisterType<IPasswordService, PasswordService>();
 
-            //providers
-            unityContainer.RegisterType<IConfigurationProvider, ConfigurationProvider>();
-            unityContainer.RegisterType<ILocalDataLinkProvider, LocalDataLinkProvider>();
-            unityContainer.RegisterType<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
-
             //factories
-            unityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>();
-            unityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>();
+            unityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>(
+                new InjectionConstructor(connectionModel, unityContainer.Resolve<IPasswordService>()));
+
+            unityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>(
+                new InjectionConstructor(connectionModel, unityContainer.Resolve<IPasswordService>()));
 
             //mappers
             unityContainer.RegisterType<IDataMapperService, DataMapperService>();
+
+            //providers
+            unityContainer.RegisterType<ILocalDataLinkProvider, LocalDataLinkProvider>();
+            unityContainer.RegisterType<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
 
             //services
             unityContainer.RegisterType<IDataModelService, DataModelService>();
@@ -62,7 +80,7 @@ namespace Blaise.Nuget.Api
             unityContainer.RegisterType<IKeyService, KeyService>();
             unityContainer.RegisterType<IParkService, ParkService>();
             unityContainer.RegisterType<ISurveyService, SurveyService>();
-            
+
             //resolve dependencies
             _dataService = unityContainer.Resolve<IDataService>();
             _parkService = unityContainer.Resolve<IParkService>();
@@ -116,15 +134,6 @@ namespace Blaise.Nuget.Api
             return _dataService.GetDataModel(instrumentName, serverParkName);
         }
 
-        public IDatamodel GetDataModel(string serverName, string instrumentName, string serverParkName)
-        {
-            serverName.ThrowExceptionIfNullOrEmpty("serverName");
-            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
-
-            return _dataService.GetDataModel(serverName, instrumentName, serverParkName);
-        }
-
         public CaseRecordType GetCaseRecordType(string instrumentName, string serverParkName)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
@@ -164,16 +173,6 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             return _dataService.CaseExists(primaryKeyValue, instrumentName, serverParkName);
-        }
-
-        public bool CaseExists(string primaryKeyValue, string serverName, string instrumentName, string serverParkName)
-        {
-            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
-            serverName.ThrowExceptionIfNullOrEmpty("serverName");
-            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
-
-            return _dataService.CaseExists(primaryKeyValue, serverName, instrumentName, serverParkName);
         }
 
         public string GetPrimaryKeyValue(IDataRecord dataRecord)

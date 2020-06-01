@@ -1,5 +1,5 @@
-﻿using Blaise.Nuget.Api.Core.Interfaces.Factories;
-using Blaise.Nuget.Api.Core.Interfaces.Providers;
+﻿using Blaise.Nuget.Api.Contracts.Models;
+using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.ServerManager;
 
@@ -8,36 +8,36 @@ namespace Blaise.Nuget.Api.Core.Factories
     public class ConnectedServerFactory : IConnectedServerFactory
     {
         private readonly IPasswordService _passwordService;
-        private readonly IConfigurationProvider _configurationProvider;
+        private readonly ConnectionModel _connectionModel;
 
         private IConnectedServer _connectedServer;
 
         public ConnectedServerFactory(
-            IConfigurationProvider configurationProvider,
+            ConnectionModel connectionModel,
             IPasswordService passwordService)
         {
-            _configurationProvider = configurationProvider;
+            _connectionModel = connectionModel;
             _passwordService = passwordService;
         }
         
-        public IConnectedServer GetConnection(string serverName = null)
+        public IConnectedServer GetConnection()
         {
             if(_connectedServer == null)
             {
-                CreateServerConnection(serverName);
+                CreateServerConnection(_connectionModel);
             }
 
             return _connectedServer;
         }
 
-        private void CreateServerConnection(string serverName = null)
+        private void CreateServerConnection(ConnectionModel connectionModel)
         {
             _connectedServer = ServerManager.ConnectToServer(
-                serverName ?? _configurationProvider.ServerName,
-                _configurationProvider.ConnectionPort,
-                _configurationProvider.UserName,
-                _passwordService.CreateSecurePassword(_configurationProvider.Password),
-                _configurationProvider.Binding);
+                connectionModel.ServerName,
+                connectionModel.Port,
+                connectionModel.UserName,
+                _passwordService.CreateSecurePassword(connectionModel.Password),
+                connectionModel.Binding);
         }
     }
 }

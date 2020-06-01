@@ -5,8 +5,10 @@ using StatNeth.Blaise.API.Meta;
 using System;
 using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Contracts.Models;
 using StatNeth.Blaise.API.ServerManager;
 using Unity;
+using Unity.Injection;
 
 namespace Blaise.Nuget.Api
 {
@@ -21,6 +23,13 @@ namespace Blaise.Nuget.Api
         internal FluentBlaiseApi(IBlaiseApi blaiseApi)
         {
             _blaiseApi = blaiseApi;
+        }
+
+        public FluentBlaiseApi(ConnectionModel connectionModel)
+        {
+            var unityContainer = new UnityContainer();
+            unityContainer.RegisterType<IBlaiseApi, BlaiseApi>(new InjectionConstructor(connectionModel));
+            _blaiseApi = unityContainer.Resolve<IBlaiseApi>();
         }
 
         public FluentBlaiseApi()
@@ -118,14 +127,6 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.CaseExists(primaryKeyValue, _instrumentName, _serverParkName);
         }
 
-        public bool CaseExists(string primaryKeyValue, string serverName)
-        {
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-
-            return _blaiseApi.CaseExists(primaryKeyValue, serverName, _instrumentName, _serverParkName);
-        }
-
         public Guid GetInstrumentId()
         {
             ValidateServerParkIsSet();
@@ -140,14 +141,6 @@ namespace Blaise.Nuget.Api
             ValidateInstrumentIsSet();
 
             return _blaiseApi.GetDataModel(_instrumentName, _serverParkName);
-        }
-
-        public IDatamodel GetDataModel(string serverName)
-        {
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-
-            return _blaiseApi.GetDataModel(serverName, _instrumentName, _serverParkName);
         }
 
         public CaseRecordType GetCaseRecordType()
@@ -193,7 +186,6 @@ namespace Blaise.Nuget.Api
             ValidateInstrumentIsSet();
 
             return _blaiseApi.GetDataRecord(key, _instrumentName, _serverParkName);
-            
         }
 
         public void WriteDataRecord(IDataRecord dataRecord)

@@ -44,7 +44,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _connectedServerMock.Setup(c => c.GetServerPark(_serverParkName)).Returns(_serverParkMock.Object);
 
             _connectionFactoryMock = new Mock<IConnectedServerFactory>();
-            _connectionFactoryMock.Setup(c => c.GetConnection(null)).Returns(_connectedServerMock.Object);
+            _connectionFactoryMock.Setup(c => c.GetConnection()).Returns(_connectedServerMock.Object);
 
             //setup service under test
             _sut = new ParkService(_connectionFactoryMock.Object);

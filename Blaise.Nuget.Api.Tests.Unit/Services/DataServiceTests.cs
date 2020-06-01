@@ -22,7 +22,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<IKey> _keyMock;
         private Mock<IDataRecord> _dataRecordMock;
 
-        private readonly string _serverName;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
         private readonly string _filePath;
@@ -33,7 +32,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
         public DataServiceTests()
         {
-            _serverName = "ServerName";
             _instrumentName = "TestInstrumentName";
             _serverParkName = "TestServerParkName";
             _filePath = "c:\\filePath";
@@ -50,7 +48,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             _dataModelServiceMock = new Mock<IDataModelService>();
             _dataModelServiceMock.Setup(d => d.GetDataModel(_instrumentName, _serverParkName)).Returns(_dataModelMock.Object);
-            _dataModelServiceMock.Setup(d => d.GetDataModel(_serverName, _instrumentName, _serverParkName)).Returns(_dataModelMock.Object);
             _dataModelServiceMock.Setup(d => d.GetCaseRecordType(_instrumentName, _serverParkName)).Returns(_caseRecordType);
 
             _keyServiceMock = new Mock<IKeyService>();
@@ -102,37 +99,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _dataModelServiceMock.Verify(v => v.GetDataModel(_instrumentName, _serverParkName), Times.Once);
-        }
-
-        [Test]
-        public void Given_I_Provide_A_ServerName_When_I_Call_GetDataModel_Then_A_DataModel_Is_Returned()
-        {
-            //act
-            var result = _sut.GetDataModel(_serverName, _instrumentName, _serverParkName);
-
-            //assert
-            Assert.NotNull(result);
-            Assert.IsInstanceOf<IDatamodel>(result);
-        }
-
-        [Test]
-        public void Given_I_Provide_A_ServerName_When_I_Call_GetDataModel_Then_The_Correct_DataModel_Is_Returned()
-        {
-            //act
-            var result = _sut.GetDataModel(_serverName, _instrumentName, _serverParkName);
-
-            //assert
-            Assert.AreEqual(_dataModelMock.Object, result);
-        }
-
-        [Test]
-        public void Given_I_Provide_A_ServerName_When_I_Call_GetDataModel_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.GetDataModel(_serverName, _instrumentName, _serverParkName);
-
-            //assert
-            _dataModelServiceMock.Verify(v => v.GetDataModel(_serverName, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -527,39 +493,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //act
             var result = _sut.CaseExists(primaryKeyValue, _instrumentName, _serverParkName);
-
-            //assert
-            Assert.NotNull(result);
-            Assert.AreEqual(caseExists, result);
-        }
-
-        [Test]
-        public void Given_A_ServerName_When_I_Call_CaseExists_Then_The_Correct_Services_Are_Called()
-        {
-            //arrange
-            var primaryKeyValue = "Key1";
-
-            //act
-            _sut.CaseExists(primaryKeyValue, _serverName, _instrumentName, _serverParkName);
-
-            //assert
-            _dataModelServiceMock.Verify(v => v.GetDataModel(_serverName, _instrumentName, _serverParkName), Times.Once);
-            _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataModelMock.Object), Times.Once);
-            _keyServiceMock.Verify(v => v.AssignPrimaryKeyValue(_keyMock.Object, primaryKeyValue), Times.Once);
-            _keyServiceMock.Verify(v => v.KeyExists(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void Given_A_ServerName_When_I_Call_CaseExists_Then_The_Expected_Value_Is_Returned(bool caseExists)
-        {
-            //arrange
-            var primaryKeyValue = "Key1";
-            _keyServiceMock.Setup(k => k.KeyExists(_keyMock.Object, _instrumentName, _serverParkName))
-                .Returns(caseExists);
-
-            //act
-            var result = _sut.CaseExists(primaryKeyValue, _serverName, _instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Contracts.Models;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Tests.Unit
@@ -24,6 +25,16 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _blaiseApiMock = new Mock<IBlaiseApi>();
 
             _sut = new FluentBlaiseApi(_blaiseApiMock.Object);
+        }
+
+        [Test]
+        public void Given_I_Instantiate_FluentBlaiseApi_With_A_ConnectionModel_No_Exceptions_Are_Thrown()
+        {
+            //arrange
+            var connectionModel = new ConnectionModel();
+
+            //act && assert
+            Assert.DoesNotThrow(() => new FluentBlaiseApi(connectionModel));
         }
 
         [Test]
@@ -433,79 +444,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_I_Specify_A_ServerName_When_I_Call_CaseExists_Then_The_Correct_Service_Method_Is_Called()
-        {
-            //arrange
-            var serverName = "ServerName1";
-            var primaryKeyValue = "Key1";
-            var serverParkName = "Park1";
-            var instrumentName = "Instrument1";
-
-            _blaiseApiMock.Setup(p => p.CaseExists(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
-
-            _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
-
-            //act
-            _sut.CaseExists(primaryKeyValue, serverName);
-
-            //assert
-            _blaiseApiMock.Verify(v => v.CaseExists(primaryKeyValue, serverName, instrumentName, serverParkName), Times.Once);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void Given_I_Specify_A_ServerName_When_I_Call_CaseExists_Then_The_Expected_Result_Is_Returned(bool caseExists)
-        {
-            //arrange
-            var serverName = "ServerName1";
-            var primaryKeyValue = "Key1";
-            var serverParkName = "Park1";
-            var instrumentName = "Instrument1";
-
-            _blaiseApiMock.Setup(p => p.CaseExists(primaryKeyValue, serverName, instrumentName, serverParkName)).Returns(caseExists);
-
-            _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
-
-            //act
-            var result = _sut.CaseExists(primaryKeyValue, serverName);
-
-            //assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(caseExists, result);
-        }
-
-        [Test]
-        public void Given_I_Specify_A_ServerName_But_WithServerPark_Has_Not_Been_Called_When_I_Call_CaseExists_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            var serverName = "ServerName1";
-            var primaryKeyValue = "Key1";
-            var instrumentName = "Instrument1";
-
-            _sut.ForInstrument(instrumentName);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.CaseExists(primaryKeyValue, serverName));
-            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this", exception.Message);
-        }
-
-        [Test]
-        public void Given_I_Specify_A_ServerName_But_ForInstrument_Has_Not_Been_Called_When_I_Call_CaseExists_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            var serverName = "ServerName1";
-            var primaryKeyValue = "Key1";
-            var serverParkName = "Park1";
-
-            _sut.WithServerPark(serverParkName);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.CaseExists(primaryKeyValue, serverName));
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
-        }
-        [Test]
         public void Given_Valid_Arguments_When_I_Call_CaseExists_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
@@ -705,76 +643,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataModel());
-            Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
-        }
-
-        [Test]
-        public void Given_I_Specify_A_ServerName_When_I_Call_GetDataModel_Then_The_Correct_Service_Method_Is_Called()
-        {
-            //arrange
-            var serverName = "ServerName1";
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-
-            _blaiseApiMock.Setup(d => d.GetDataModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<IDatamodel>());
-
-            _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
-
-            //act
-            _sut.GetDataModel(serverName);
-
-            //assert
-            _blaiseApiMock.Verify(v => v.GetDataModel(serverName, instrumentName, serverParkName), Times.Once);
-        }
-
-        [Test]
-        public void Given_I_Specify_A_ServerName_When_I_Call_GetDataModel_Then_The_Expected_Result_Is_Returned()
-        {
-            //arrange
-            var serverName = "ServerName1";
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-            var dataModelMock = new Mock<IDatamodel>();
-
-            _blaiseApiMock.Setup(d => d.GetDataModel(serverName, instrumentName, serverParkName)).Returns(dataModelMock.Object);
-
-            _sut.WithServerPark(serverParkName);
-            _sut.ForInstrument(instrumentName);
-
-            //act
-            var result = _sut.GetDataModel(serverName);
-
-            //assert
-            Assert.IsNotNull(result);
-            Assert.AreSame(dataModelMock.Object, result);
-        }
-
-        [Test]
-        public void Given_I_Specify_A_ServerName_But_WithServerPark_Has_Not_Been_Called_When_I_Call_GetDataModel_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            var serverName = "ServerName1";
-            var instrumentName = "Instrument1";
-
-            _sut.ForInstrument(instrumentName);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataModel(serverName));
-            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this", exception.Message);
-        }
-
-        [Test]
-        public void Given_I_Specify_A_ServerName_But_ForInstrument_Has_Not_Been_Called_When_I_Call_GetDataModel_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            var serverName = "ServerName1";
-            var serverParkName = "Park1";
-
-            _sut.WithServerPark(serverParkName);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataModel(serverName));
             Assert.AreEqual("The 'ForInstrument' step needs to be called prior to this", exception.Message);
         }
 
