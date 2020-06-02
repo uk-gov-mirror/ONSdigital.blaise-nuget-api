@@ -1,10 +1,8 @@
 ﻿using StatNeth.Blaise.API.DataRecord;
-using StatNeth.Blaise.API.Meta;
-using System.Collections.Generic;
 
 namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
-    public interface IFluentBlaiseApi : IFluentBlaiseLocalApi, IFluentBlaiseRemoteApi, IFluentBlaiseCaseApi, IFluentBlaiseSurveyApi
+    public interface IFluentBlaiseApi : IFluentBlaiseCaseApi, IFluentBlaiseSurveyApi
     {
         IFluentBlaiseApi Server(string serverName);
 
@@ -16,16 +14,6 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseCaseApi Case(IDataRecord caseDataRecord);
 
-        IEnumerable<string> GetServerParkNames();
-
-        bool ServerParkExists(string serverParkName);
-
-        IKey GetKey(IDatamodel dataModel, string keyName);
-
-        IKey GetPrimaryKey(IDatamodel dataModel);
-
-        void AssignPrimaryKeyValue(IKey key, string primaryKeyValue);
-
-        IDataRecord GetDataRecord(IDatamodel dataModel);
+        bool Exists();
     }
 }
