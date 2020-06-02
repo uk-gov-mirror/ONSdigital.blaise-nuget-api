@@ -16,5 +16,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         bool Completed();
 
         bool Processed();
+
+        void MarkAsComplete();
+        
+        void MarkAsProcessed();
     }
 }
