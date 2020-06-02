@@ -24,7 +24,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _instrumentName = "Instrument1";
             _serverParkName = "Park1";
             _primaryKeyValue = "Key1";
-
             _caseDataRecord = new Mock<IDataRecord>().Object;
         }
 

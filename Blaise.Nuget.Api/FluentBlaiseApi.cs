@@ -141,7 +141,7 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.GetDataModel(_instrumentName, _serverParkName);
         }
 
-        public SurveyType GetSurveyType()
+        public SurveyType SurveyType()
         {
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
