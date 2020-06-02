@@ -9,6 +9,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
     {
         IFluentBlaiseApi Server(string serverName);
 
+        IFluentBlaiseCaseApi Case(string primaryKeyValue);
+
         IEnumerable<string> GetServerParkNames();
 
         IEnumerable<ISurvey> GetAllSurveys();
