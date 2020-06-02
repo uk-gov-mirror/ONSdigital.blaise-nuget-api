@@ -76,42 +76,6 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void When_I_Call_GetAllSurveys_Then_The_Correct_Service_Method_Is_Called()
-        {
-            //arrange
-            _blaiseApiMock.Setup(p => p.GetAllSurveys()).Returns(It.IsAny<List<ISurvey>>());
-
-            //act
-            _sut.GetAllSurveys();
-
-            //assert
-            _blaiseApiMock.Verify(v => v.GetAllSurveys(), Times.Once);
-        }
-
-        [Test]
-        public void When_I_Call_GetAllSurveys_Then_The_Expected_Surveys_Are_Returned()
-        {
-            //arrange
-            var survey1Mock = new Mock<ISurvey>();
-            var survey2Mock = new Mock<ISurvey>();
-            var survey3Mock = new Mock<ISurvey>();
-
-            var surveys = new List<ISurvey> { survey1Mock.Object, survey2Mock.Object, survey3Mock.Object };
-
-            _blaiseApiMock.Setup(p => p.GetAllSurveys()).Returns(surveys);
-
-            //act
-            var result = _sut.GetAllSurveys().ToList();
-
-            //assert
-            Assert.IsNotNull(result);
-            Assert.IsNotEmpty(result);
-            Assert.AreEqual(3, result.Count);
-            Assert.True(result.Contains(survey1Mock.Object));
-            Assert.True(result.Contains(survey2Mock.Object));
-            Assert.True(result.Contains(survey3Mock.Object));
-        }
-        [Test]
         public void Given_Valid_Arguments_When_I_Call_ServerParkExists_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
@@ -371,7 +335,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         {
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetSurveyNames());
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -427,7 +391,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         {
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetSurveyNames());
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -496,7 +460,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetInstrumentId());
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -509,7 +473,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetInstrumentId());
-            Assert.AreEqual("The 'Instrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -562,7 +526,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataModel());
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -575,7 +539,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataModel());
-            Assert.AreEqual("The 'Instrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -628,7 +592,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetCaseRecordType());
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -641,74 +605,9 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetCaseRecordType());
-            Assert.AreEqual("The 'Instrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
-        [Test]
-        public void Given_Valid_Arguments_When_I_Call_GetDataSet_Then_The_Correct_Service_Method_Is_Called()
-        {
-            //arrange
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-
-            _blaiseApiMock.Setup(d => d.GetDataSet(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<IDataSet>());
-
-            _sut.ServerPark(serverParkName);
-            _sut.Instrument(instrumentName);
-
-            //act
-            _sut.GetDataSet();
-
-            //assert
-            _blaiseApiMock.Verify(v => v.GetDataSet(instrumentName, serverParkName), Times.Once);
-        }
-
-        [Test]
-        public void Given_Valid_Arguments_When_I_Call_GetDataSet_Then_The_Expected_Result_Is_Returned()
-        {
-            //arrange
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-            var dataSetMock = new Mock<IDataSet>();
-
-            _blaiseApiMock.Setup(d => d.GetDataSet(instrumentName, serverParkName)).Returns(dataSetMock.Object);
-
-            _sut.ServerPark(serverParkName);
-            _sut.Instrument(instrumentName);
-
-            //act
-            var result = _sut.GetDataSet();
-
-            //assert
-            Assert.IsNotNull(result);
-            Assert.AreSame(dataSetMock.Object, result);
-        }
-
-        [Test]
-        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_GetDataSet_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            var instrumentName = "Instrument1";
-
-            _sut.Instrument(instrumentName);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataSet());
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this", exception.Message);
-        }
-
-        [Test]
-        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_GetDataSet_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            var serverParkName = "Park1";
-
-            _sut.ServerPark(serverParkName);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataSet());
-            Assert.AreEqual("The 'Instrument' step needs to be called prior to this", exception.Message);
-        }
 
         [Test]
         public void Given_Valid_Arguments_When_I_Call_KeyExists_Then_The_Correct_Service_Method_Is_Called()
@@ -763,7 +662,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.KeyExists(keyMock.Object));
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -777,39 +676,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.KeyExists(keyMock.Object));
-            Assert.AreEqual("The 'Instrument' step needs to be called prior to this", exception.Message);
-        }
-
-        [Test]
-        public void Given_Valid_Arguments_When_I_Call_GetPrimaryKeyValue_Then_The_Correct_Service_Method_Is_Called()
-        {
-            //arrange
-            var dataRecordMock = new Mock<IDataRecord>();
-
-            _blaiseApiMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(It.IsAny<string>());
-
-            //act
-            _sut.GetPrimaryKeyValue(dataRecordMock.Object);
-
-            //assert
-            _blaiseApiMock.Verify(v => v.GetPrimaryKeyValue(dataRecordMock.Object), Times.Once);
-        }
-
-        [Test]
-        public void Given_Valid_Arguments_When_I_Call_GetPrimaryKeyValue_Then_The_Expected_Result_Is_Returned()
-        {
-            //arrange
-            var dataRecordMock = new Mock<IDataRecord>();
-            var primaryKeyValue = "Key1";
-
-            _blaiseApiMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(primaryKeyValue);
-
-            //act
-            var result = _sut.GetPrimaryKeyValue(dataRecordMock.Object);
-
-            //assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(primaryKeyValue, result);
+            Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -894,7 +761,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataRecord(keyMock.Object));
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -908,7 +775,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataRecord(keyMock.Object));
-            Assert.AreEqual("The 'Instrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -962,7 +829,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.WriteDataRecord(dataRecordMock.Object));
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -976,7 +843,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.WriteDataRecord(dataRecordMock.Object));
-            Assert.AreEqual("The 'Instrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -1012,7 +879,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.UpdateDataRecord(dataRecordMock.Object, fieldData));
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -1027,7 +894,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.UpdateDataRecord(dataRecordMock.Object, fieldData));
-            Assert.AreEqual("The 'Instrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -1059,7 +926,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.CompletedFieldExists());
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -1072,7 +939,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.CompletedFieldExists());
-            Assert.AreEqual("The 'Instrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -1106,7 +973,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkCaseAsComplete(dataRecordMock.Object));
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -1120,7 +987,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkCaseAsComplete(dataRecordMock.Object));
-            Assert.AreEqual("The 'Instrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -1152,7 +1019,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.ProcessedFieldExists());
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -1165,7 +1032,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.ProcessedFieldExists());
-            Assert.AreEqual("The 'Instrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -1199,7 +1066,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkCaseAsProcessed(dataRecordMock.Object));
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -1213,7 +1080,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkCaseAsProcessed(dataRecordMock.Object));
-            Assert.AreEqual("The 'Instrument' step needs to be called prior to this", exception.Message);
+            Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
     }
 }
