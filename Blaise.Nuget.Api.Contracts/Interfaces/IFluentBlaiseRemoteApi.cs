@@ -10,13 +10,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IFluentBlaiseRemoteApi
     {
-        IFluentBlaiseRemoteApi ServerPark(string serverParkName);
-
         IEnumerable<string> GetSurveyNames();
 
         IEnumerable<ISurvey> GetSurveys();
-
-        IFluentBlaiseRemoteApi Instrument(string instrumentName);
 
         bool KeyExists(IKey key);
 
