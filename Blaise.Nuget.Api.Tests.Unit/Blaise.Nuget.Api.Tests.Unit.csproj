@@ -67,9 +67,9 @@
     <Compile Include="Factories\ConnectedServerFactoryTests.cs" />
     <Compile Include="Factories\RemoteDataServerFactoryTests.cs" />
     <Compile Include="FluentApi\SurveyTests.cs" />
-    <Compile Include="FluentBlaiseApiTests.cs" />
     <Compile Include="BlaiseApiTests.cs" />
     <Compile Include="FluentApi\CaseTests.cs" />
+    <Compile Include="FluentBlaiseApiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ConfigurationProviderTests.cs" />
     <Compile Include="Services\DataRecordServiceTests.cs" />
