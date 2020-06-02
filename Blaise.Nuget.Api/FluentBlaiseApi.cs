@@ -65,7 +65,7 @@ namespace Blaise.Nuget.Api
 
             return this;
         }
-        
+
         public SurveyType SurveyType()
         {
             ValidateServerParkIsSet();
@@ -137,28 +137,29 @@ namespace Blaise.Nuget.Api
             _blaiseApi.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName);
         }
 
+        public bool CaseExists()
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+            ValidatePrimaryKeyValueIsSet();
+
+            return _blaiseApi.CaseExists(_primaryKeyValue, _instrumentName, _serverParkName);
+        }
+
         public void Create(Dictionary<string, string> data)
         {
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
-            ValidatePrimaryIsSet();
+            ValidatePrimaryKeyValueIsSet();
 
             _blaiseApi.CreateNewDataRecord(_primaryKeyValue, data, _instrumentName, _serverParkName);
         }
 
-        public bool Exists()
+        public bool ParkExists()
         {
-            if (string.IsNullOrWhiteSpace(_primaryKeyValue))
-            {
-                ValidateInstrumentIsSet();
-
-                return _blaiseApi.ServerParkExists(_serverParkName);
-            }
-
             ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
 
-            return _blaiseApi.CaseExists(_primaryKeyValue, _instrumentName, _serverParkName);
+            return _blaiseApi.ServerParkExists(_serverParkName);
         }
 
         public IEnumerable<ISurvey> Surveys()
@@ -182,7 +183,7 @@ namespace Blaise.Nuget.Api
             }
         }
 
-        private void ValidatePrimaryIsSet()
+        private void ValidatePrimaryKeyValueIsSet()
         {
             if (string.IsNullOrWhiteSpace(_primaryKeyValue))
             {

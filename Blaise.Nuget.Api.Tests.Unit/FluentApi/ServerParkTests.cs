@@ -9,17 +9,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
     {
         private Mock<IBlaiseApi> _blaiseApiMock;
 
-        private readonly string _instrumentName;
         private readonly string _serverParkName;
-        private readonly string _primaryKeyValue;
 
         private FluentBlaiseApi _sut;
 
         public ServerParkTests()
         {
-            _instrumentName = "Instrument1";
             _serverParkName = "Park1";
-            _primaryKeyValue = "Key1";
         }
 
         [SetUp]
@@ -31,17 +27,16 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Is_Not_Called_When_I_Call_Exists_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_ServerPark_Has_Been_Called_When_I_Call_Exists_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
 
             _blaiseApiMock.Setup(p => p.ServerParkExists(It.IsAny<string>())).Returns(It.IsAny<bool>());
 
             _sut.ServerPark(_serverParkName);
-            _sut.Instrument(_instrumentName);
 
             //act
-            _sut.Exists();
+            _sut.ParkExists();
 
             //assert
             _blaiseApiMock.Verify(v => v.ServerParkExists(_serverParkName), Times.Once);
@@ -49,33 +44,30 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_Case_Is_Not_Called_When_I_Call_Exists_Then_The_Expected_Result_Is_Returned(bool serverParkexists)
+        public void Given_ServerPark_Has_Been_Called_When_I_Call_Exists_Then_The_Expected_Result_Is_Returned(bool serverParkExists)
         {
             //arrange
 
-            _blaiseApiMock.Setup(p => p.ServerParkExists(_serverParkName)).Returns(serverParkexists);
+            _blaiseApiMock.Setup(p => p.ServerParkExists(_serverParkName)).Returns(serverParkExists);
 
             _sut.ServerPark(_serverParkName);
-            _sut.Instrument(_instrumentName);
 
             //act
-            var result = _sut.Exists();
+            var result = _sut.ParkExists();
 
             //assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(serverParkexists, result);
+            Assert.AreEqual(serverParkExists, result);
         }
 
         [Test]
-        public void Given_Case_Is_Not_Called_But_Instrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
-            _sut.ServerPark(_serverParkName);
-
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Exists());
-            Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.ParkExists());
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
     }
 }

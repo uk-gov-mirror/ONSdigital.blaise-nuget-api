@@ -23,7 +23,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Factories
             //assert
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<IEnumerable<string>>(result);
-            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(1, result.Count);
             Assert.True(result.Contains("LocalDevelopment"));
         }
 
@@ -42,7 +42,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Factories
             //assert
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<IEnumerable<string>>(result);
-            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(1, result.Count);
             Assert.True(result.Contains("LocalDevelopment"));
         }
     }

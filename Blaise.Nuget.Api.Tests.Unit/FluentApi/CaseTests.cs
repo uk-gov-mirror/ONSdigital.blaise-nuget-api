@@ -423,7 +423,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Case(_primaryKeyValue);
 
             //act
-            _sut.Exists();
+            _sut.CaseExists();
 
             //assert
             _blaiseApiMock.Verify(v => v.CaseExists(_primaryKeyValue, _instrumentName, _serverParkName), Times.Once);
@@ -442,7 +442,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Case(_primaryKeyValue);
 
             //act
-            var result = _sut.Exists();
+            var result = _sut.CaseExists();
 
             //assert
             Assert.IsNotNull(result);
@@ -458,7 +458,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Case(_primaryKeyValue);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Exists());
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.CaseExists());
             Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
@@ -471,8 +471,21 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Case(_primaryKeyValue);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Exists());
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.CaseExists());
             Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
+        }
+
+        [Test]
+        public void Given_Case_Is_Not_Called_But_ServerPark_And_Instrument_Has_Been__Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+
+            _sut.Instrument(_instrumentName); 
+            _sut.ServerPark(_serverParkName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.CaseExists());
+            Assert.AreEqual("The 'Case' step needs to be called prior to this to specify the primary key value of the case", exception.Message);
         }
     }
 }
