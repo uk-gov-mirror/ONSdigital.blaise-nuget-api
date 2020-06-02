@@ -74,27 +74,27 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Verify(v => v.Datamodel, Times.Once);
         }
 
-        [TestCase("Appointment", CaseRecordType.Appointment)]
-        [TestCase("CatiDial", CaseRecordType.CatiDial)]
-        [TestCase("",CaseRecordType.NotMapped)]
-        [TestCase("Other", CaseRecordType.NotMapped)]
-        public void Given_I_Call_GetCaseRecordType_I_Get_The_Correct_DataModel_Back(string caseName, CaseRecordType caseRecordType)
+        [TestCase("Appointment", SurveyType.Appointment)]
+        [TestCase("CatiDial", SurveyType.CatiDial)]
+        [TestCase("",SurveyType.NotMapped)]
+        [TestCase("Other", SurveyType.NotMapped)]
+        public void Given_I_Call_GetSurveyType_I_Get_The_Correct_Type_Back(string caseName, SurveyType surveyType)
         {
             //arrange
             _dataModelMock.Setup(d => d.Name).Returns(caseName);
 
             //act
-            var result = _sut.GetCaseRecordType(_instrumentName, _serverParkName);
+            var result = _sut.GetSurveyType(_instrumentName, _serverParkName);
 
             //assert
-            Assert.AreEqual(caseRecordType, result);
+            Assert.AreEqual(surveyType, result);
         }
 
         [Test]
-        public void Given_I_Call_GetCaseRecordType_Then_The_Correct_Services_Are_Called()
+        public void Given_I_Call_GetSurveyType_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.GetCaseRecordType(_instrumentName, _serverParkName);
+            _sut.GetSurveyType(_instrumentName, _serverParkName);
 
             //assert
             _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_instrumentName, _serverParkName), Times.Once);

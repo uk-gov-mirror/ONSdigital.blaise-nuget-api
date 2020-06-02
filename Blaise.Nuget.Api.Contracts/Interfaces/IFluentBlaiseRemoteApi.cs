@@ -20,7 +20,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IDatamodel GetDataModel();
 
-        CaseRecordType GetCaseRecordType();
+        SurveyType GetSurveyType();
 
         IDataRecord GetDataRecord(IKey key);
 

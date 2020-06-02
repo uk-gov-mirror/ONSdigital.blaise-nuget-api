@@ -35,9 +35,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataModelService.GetDataModel(instrumentName, serverParkName);
         }
 
-        public CaseRecordType GetCaseRecordType(string instrumentName, string serverParkName)
+        public SurveyType GetSurveyType(string instrumentName, string serverParkName)
         {
-            return _dataModelService.GetCaseRecordType(instrumentName, serverParkName);
+            return _dataModelService.GetSurveyType(instrumentName, serverParkName);
         }
 
         public IKey GetKey(IDatamodel dataModel, string keyName)

@@ -137,12 +137,12 @@ namespace Blaise.Nuget.Api
             return _dataService.GetDataModel(instrumentName, serverParkName);
         }
 
-        public CaseRecordType GetCaseRecordType(string instrumentName, string serverParkName)
+        public SurveyType GetSurveyType(string instrumentName, string serverParkName)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            return _dataService.GetCaseRecordType(instrumentName, serverParkName);
+            return _dataService.GetSurveyType(instrumentName, serverParkName);
         }
 
         public IKey GetKey(IDatamodel dataModel, string keyName)

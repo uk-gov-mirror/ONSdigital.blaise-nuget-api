@@ -432,80 +432,80 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_Valid_Instrument_AndServerPark_When_I_Call_GetCaseRecordType_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Valid_Instrument_AndServerPark_When_I_Call_GetSurveyType_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             var instrumentName = "Instrument1";
             var serverParkName = "Park1";
 
-            _dataServiceMock.Setup(d => d.GetCaseRecordType(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<CaseRecordType>());
+            _dataServiceMock.Setup(d => d.GetSurveyType(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<SurveyType>());
 
             //act
-            _sut.GetCaseRecordType(instrumentName, serverParkName);
+            _sut.GetSurveyType(instrumentName, serverParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.GetCaseRecordType(instrumentName, serverParkName), Times.Once);
+            _dataServiceMock.Verify(v => v.GetSurveyType(instrumentName, serverParkName), Times.Once);
         }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_GetCaseRecordType_Then_The_Expected_Result_Is_Returned()
+        public void Given_Valid_Arguments_When_I_Call_GetSurveyType_Then_The_Expected_Result_Is_Returned()
         {
             //arrange
             var instrumentName = "Instrument1";
             var serverParkName = "Park1";
-            var caseRecordType = CaseRecordType.NotMapped;
+            var surveyType = SurveyType.NotMapped;
 
-            _dataServiceMock.Setup(d => d.GetCaseRecordType(instrumentName, serverParkName)).Returns(caseRecordType);
+            _dataServiceMock.Setup(d => d.GetSurveyType(instrumentName, serverParkName)).Returns(surveyType);
 
             //act
-            var result = _sut.GetCaseRecordType(instrumentName, serverParkName);
+            var result = _sut.GetSurveyType(instrumentName, serverParkName);
 
             //assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(caseRecordType, result);
+            Assert.AreEqual(surveyType, result);
         }
 
         [Test]
-        public void Given_An_Empty_InstrumentName_When_I_Call_GetCaseRecordType_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_InstrumentName_When_I_Call_GetSurveyType_Then_An_ArgumentException_Is_Thrown()
         {
             //arrange 
             var serverParkName = "Park1";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.GetCaseRecordType(string.Empty, serverParkName));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyType(string.Empty, serverParkName));
             Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_Null_InstrumentName_When_I_Call_GetCaseRecordType_Then_An_ArgumentNullException_Is_Thrown()
+        public void Given_A_Null_InstrumentName_When_I_Call_GetSurveyType_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange 
             var serverParkName = "Park1";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetCaseRecordType(null, serverParkName));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyType(null, serverParkName));
             Assert.AreEqual("instrumentName", exception.ParamName);
         }
 
         [Test]
-        public void Given_An_Empty_ServerParkName_When_I_Call_GetCaseRecordType_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_ServerParkName_When_I_Call_GetSurveyType_Then_An_ArgumentException_Is_Thrown()
         {
             //arrange 
             var instrumentName = "Instrument1";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.GetCaseRecordType(instrumentName, string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyType(instrumentName, string.Empty));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_Null_ServerParkName_When_I_Call_GetCaseRecordType_Then_An_ArgumentNullException_Is_Thrown()
+        public void Given_A_Null_ServerParkName_When_I_Call_GetSurveyType_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange 
             var instrumentName = "Instrument1";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetCaseRecordType(instrumentName, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyType(instrumentName, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 

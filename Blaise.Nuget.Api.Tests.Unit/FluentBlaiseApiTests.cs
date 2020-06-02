@@ -543,47 +543,47 @@ namespace Blaise.Nuget.Api.Tests.Unit
         }
 
         [Test]
-        public void Given_Valid_Instrument_And_ServerPark_When_I_Call_GetCaseRecordType_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Valid_Instrument_And_ServerPark_When_I_Call_GetSurveyType_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             var instrumentName = "Instrument1";
             var serverParkName = "Park1";
 
-            _blaiseApiMock.Setup(d => d.GetCaseRecordType(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<CaseRecordType>());
+            _blaiseApiMock.Setup(d => d.GetSurveyType(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<SurveyType>());
 
             _sut.ServerPark(serverParkName);
             _sut.Instrument(instrumentName);
 
             //act
-            _sut.GetCaseRecordType();
+            _sut.GetSurveyType();
 
             //assert
-            _blaiseApiMock.Verify(v => v.GetCaseRecordType(instrumentName, serverParkName), Times.Once);
+            _blaiseApiMock.Verify(v => v.GetSurveyType(instrumentName, serverParkName), Times.Once);
         }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_GetCaseRecordType_Then_The_Expected_Result_Is_Returned()
+        public void Given_Valid_Arguments_When_I_Call_GetSurveyType_Then_The_Expected_Result_Is_Returned()
         {
             //arrange
             var instrumentName = "Instrument1";
             var serverParkName = "Park1";
-            var caseRecordType = CaseRecordType.NotMapped;
+            var surveyType = SurveyType.NotMapped;
 
-            _blaiseApiMock.Setup(d => d.GetCaseRecordType(instrumentName, serverParkName)).Returns(caseRecordType);
+            _blaiseApiMock.Setup(d => d.GetSurveyType(instrumentName, serverParkName)).Returns(surveyType);
 
             _sut.ServerPark(serverParkName);
             _sut.Instrument(instrumentName);
 
             //act
-            var result = _sut.GetCaseRecordType();
+            var result = _sut.GetSurveyType();
 
             //assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(caseRecordType, result);
+            Assert.AreEqual(surveyType, result);
         }
 
         [Test]
-        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_GetCaseRecordType_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_GetSurveyType_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var instrumentName = "Instrument1";
@@ -591,12 +591,12 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.Instrument(instrumentName);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetCaseRecordType());
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetSurveyType());
             Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
-        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_GetCaseRecordType_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_GetSurveyType_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var serverParkName = "Park1";
@@ -604,7 +604,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
             _sut.ServerPark(serverParkName);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetCaseRecordType());
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetSurveyType());
             Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 

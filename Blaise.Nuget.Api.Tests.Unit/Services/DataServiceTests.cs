@@ -26,7 +26,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private readonly string _serverParkName;
         private readonly string _filePath;
         private readonly string _keyName;
-        private readonly CaseRecordType _caseRecordType;
+        private readonly SurveyType _surveyType;
 
         private DataService _sut;
 
@@ -36,7 +36,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _serverParkName = "TestServerParkName";
             _filePath = "c:\\filePath";
             _keyName = "TestKeyName";
-            _caseRecordType = CaseRecordType.NotMapped;
+            _surveyType = SurveyType.NotMapped;
         }
 
         [SetUp]
@@ -48,7 +48,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             _dataModelServiceMock = new Mock<IDataModelService>();
             _dataModelServiceMock.Setup(d => d.GetDataModel(_instrumentName, _serverParkName)).Returns(_dataModelMock.Object);
-            _dataModelServiceMock.Setup(d => d.GetCaseRecordType(_instrumentName, _serverParkName)).Returns(_caseRecordType);
+            _dataModelServiceMock.Setup(d => d.GetSurveyType(_instrumentName, _serverParkName)).Returns(_surveyType);
 
             _keyServiceMock = new Mock<IKeyService>();
             _keyServiceMock.Setup(d => d.KeyExists(_keyMock.Object, _instrumentName, _serverParkName)).Returns(true);
@@ -102,34 +102,34 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_GetCaseRecordType_Then_A_CaseRecordType_Is_Returned()
+        public void Given_I_Call_GetSurveyType_Then_A_SurveyType_Is_Returned()
         {
             //act
-            var result = _sut.GetCaseRecordType(_instrumentName, _serverParkName);
+            var result = _sut.GetSurveyType(_instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
-            Assert.IsInstanceOf<CaseRecordType>(result);
+            Assert.IsInstanceOf<SurveyType>(result);
         }
 
         [Test]
-        public void Given_I_Call_GetCaseRecordType_Then_The_Correct_CaseRecordType_Is_Returned()
+        public void Given_I_Call_GetSurveyType_Then_The_Correct_SurveyType_Is_Returned()
         {
             //act
-            var result = _sut.GetCaseRecordType(_instrumentName, _serverParkName);
+            var result = _sut.GetSurveyType(_instrumentName, _serverParkName);
 
             //assert
-            Assert.AreEqual(_caseRecordType, result);
+            Assert.AreEqual(_surveyType, result);
         }
 
         [Test]
-        public void Given_I_Call_GetCaseRecordType_Then_The_Correct_Services_Are_Called()
+        public void Given_I_Call_GetSurveyType_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.GetCaseRecordType(_instrumentName, _serverParkName);
+            _sut.GetSurveyType(_instrumentName, _serverParkName);
 
             //assert
-            _dataModelServiceMock.Verify(v => v.GetCaseRecordType(_instrumentName, _serverParkName), Times.Once);
+            _dataModelServiceMock.Verify(v => v.GetSurveyType(_instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
