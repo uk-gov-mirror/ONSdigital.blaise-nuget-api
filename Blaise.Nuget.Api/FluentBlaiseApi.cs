@@ -85,16 +85,6 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.GetDataRecord(dataModel);
         }
 
-        public bool CaseHasBeenCompleted(IDataRecord dataRecord)
-        {
-            return _blaiseApi.CaseHasBeenCompleted(dataRecord);
-        }
-
-        public bool CaseHasBeenProcessed(IDataRecord dataRecord)
-        {
-            return _blaiseApi.CaseHasBeenProcessed(dataRecord);
-        }
-
         public IFluentBlaiseApi ServerPark(string serverParkName)
         {
             _filePath = null;
@@ -246,6 +236,20 @@ namespace Blaise.Nuget.Api
             ValidateCaseDataRecordIsSet();
 
             return _blaiseApi.GetPrimaryKeyValue(_caseDataRecord);
+        }
+
+        public bool Completed()
+        {
+            ValidateCaseDataRecordIsSet();
+
+            return _blaiseApi.CaseHasBeenCompleted(_caseDataRecord);
+        }
+
+        public bool Processed()
+        {
+            ValidateCaseDataRecordIsSet();
+
+            return _blaiseApi.CaseHasBeenProcessed(_caseDataRecord);
         }
 
         public void Create(Dictionary<string, string> data)
