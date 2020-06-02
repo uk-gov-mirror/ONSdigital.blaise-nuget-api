@@ -2,7 +2,7 @@
 
 namespace Blaise.Nuget.Api.Contracts.Enums
 {
-    public enum CaseRecordType
+    public enum SurveyType
     {
         [Description("Cati Dial record type")]
         CatiDial,

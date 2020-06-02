@@ -27,7 +27,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IDatamodel GetDataModel(string instrumentName, string serverParkName);
 
-        CaseRecordType GetCaseRecordType(string instrumentName, string serverParkName);
+        SurveyType GetSurveyType(string instrumentName, string serverParkName);
 
         IKey GetKey(IDatamodel dataModel, string keyName);
 

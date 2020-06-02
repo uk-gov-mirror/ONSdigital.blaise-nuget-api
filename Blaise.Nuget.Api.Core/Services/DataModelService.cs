@@ -21,21 +21,21 @@ namespace Blaise.Nuget.Api.Core.Services
             return dataLink.Datamodel;
         }
 
-        public CaseRecordType GetCaseRecordType(string instrumentName, string serverParkName)
+        public SurveyType GetSurveyType(string instrumentName, string serverParkName)
         {
             var dataModel = GetDataModel(instrumentName, serverParkName);
 
             if (dataModel.Name == "Appointment")
             {
-                return CaseRecordType.Appointment;
+                return SurveyType.Appointment;
             }
 
             if (dataModel.Name == "CatiDial")
             {
-                return CaseRecordType.CatiDial;
+                return SurveyType.CatiDial;
             }
 
-            return CaseRecordType.NotMapped;
+            return SurveyType.NotMapped;
         }
     }
 }

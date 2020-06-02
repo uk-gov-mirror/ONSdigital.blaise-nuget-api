@@ -141,12 +141,12 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.GetDataModel(_instrumentName, _serverParkName);
         }
 
-        public CaseRecordType GetCaseRecordType()
+        public SurveyType GetSurveyType()
         {
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
 
-            return _blaiseApi.GetCaseRecordType(_instrumentName, _serverParkName);
+            return _blaiseApi.GetSurveyType(_instrumentName, _serverParkName);
         }
 
         public bool KeyExists(IKey key)
