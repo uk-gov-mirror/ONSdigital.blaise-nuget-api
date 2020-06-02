@@ -199,28 +199,12 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.CompletedFieldExists(_instrumentName, _serverParkName);
         }
 
-        public void MarkCaseAsComplete(IDataRecord dataRecord)
-        {
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-
-            _blaiseApi.MarkCaseAsComplete(dataRecord, _instrumentName, _serverParkName);
-        }
-
         public bool ProcessedFieldExists()
         {
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
 
             return _blaiseApi.ProcessedFieldExists(_instrumentName, _serverParkName);
-        }
-
-        public void MarkCaseAsProcessed(IDataRecord dataRecord)
-        {
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-
-            _blaiseApi.MarkCaseAsProcessed(dataRecord, _instrumentName, _serverParkName);
         }
 
         public IDataSet Cases()
@@ -250,6 +234,24 @@ namespace Blaise.Nuget.Api
             ValidateCaseDataRecordIsSet();
 
             return _blaiseApi.CaseHasBeenProcessed(_caseDataRecord);
+        }
+
+        public void MarkAsComplete()
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+            ValidateCaseDataRecordIsSet();
+
+            _blaiseApi.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName);
+        }
+
+        public void MarkAsProcessed()
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+            ValidateCaseDataRecordIsSet();
+
+            _blaiseApi.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName);
         }
 
         public void Create(Dictionary<string, string> data)

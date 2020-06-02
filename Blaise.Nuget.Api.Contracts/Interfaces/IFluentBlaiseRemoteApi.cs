@@ -28,10 +28,6 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         bool CompletedFieldExists();
 
-        void MarkCaseAsComplete(IDataRecord dataRecord);
-
         bool ProcessedFieldExists();
-
-        void MarkCaseAsProcessed(IDataRecord dataRecord);
     }
 }
