@@ -12,5 +12,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         IDataSet Cases();
 
         string PrimaryKeyValue();
+
+        bool Completed();
+
+        bool Processed();
     }
 }

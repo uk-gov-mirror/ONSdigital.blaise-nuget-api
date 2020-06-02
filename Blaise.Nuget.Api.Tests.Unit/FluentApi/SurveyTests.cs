@@ -15,7 +15,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         private readonly string _instrumentName;
         private readonly string _serverParkName;
-        private readonly SurveyType _surveyType;
 
         private FluentBlaiseApi _sut;
 
@@ -23,7 +22,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             _instrumentName = "Instrument1";
             _serverParkName = "Park1";
-            _surveyType = SurveyType.NotMapped;
         }
 
         [SetUp]
