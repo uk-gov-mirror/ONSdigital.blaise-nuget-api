@@ -25,17 +25,15 @@ namespace Blaise.Nuget.Api.Core.Services
         {
             var dataModel = GetDataModel(instrumentName, serverParkName);
 
-            if (dataModel.Name == "Appointment")
+            switch (dataModel.Name)
             {
-                return SurveyType.Appointment;
+                case "Appointment":
+                    return SurveyType.Appointment;
+                case "CatiDial":
+                    return SurveyType.CatiDial;
+                default:
+                    return SurveyType.NotMapped;
             }
-
-            if (dataModel.Name == "CatiDial")
-            {
-                return SurveyType.CatiDial;
-            }
-
-            return SurveyType.NotMapped;
         }
     }
 }
