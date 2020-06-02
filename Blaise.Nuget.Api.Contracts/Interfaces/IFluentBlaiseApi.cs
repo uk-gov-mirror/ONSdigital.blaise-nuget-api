@@ -5,9 +5,9 @@ using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
-    public interface IFluentBlaiseApi : IFluentBlaiseLocalApi, IFluentBlaiseRemoteApi
+    public interface IFluentBlaiseApi : IFluentBlaiseLocalApi, IFluentBlaiseRemoteApi, IFluentBlaiseCaseApi
     {
-        IFluentBlaiseApi WithServer(string serverName);
+        IFluentBlaiseApi Server(string serverName);
 
         IEnumerable<string> GetServerParkNames();
 
