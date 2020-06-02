@@ -9,6 +9,10 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
     {
         IFluentBlaiseApi Server(string serverName);
 
+        IFluentBlaiseApi Instrument(string instrumentName);
+
+        IFluentBlaiseApi ServerPark(string serverParkName);
+
         IFluentBlaiseCaseApi Case(string primaryKeyValue);
 
         IEnumerable<string> GetServerParkNames();

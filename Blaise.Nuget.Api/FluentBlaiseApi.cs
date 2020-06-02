@@ -89,7 +89,7 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.CaseHasBeenProcessed(dataRecord);
         }
 
-        public IFluentBlaiseRemoteApi ServerPark(string serverParkName)
+        public IFluentBlaiseApi ServerPark(string serverParkName)
         {
             _filePath = null;
             _serverParkName = serverParkName;
@@ -111,7 +111,7 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.GetSurveys(_serverParkName);
         }
 
-        public IFluentBlaiseRemoteApi Instrument(string instrumentName)
+        public IFluentBlaiseApi Instrument(string instrumentName)
         {
             _filePath = null;
             _instrumentName = instrumentName;
