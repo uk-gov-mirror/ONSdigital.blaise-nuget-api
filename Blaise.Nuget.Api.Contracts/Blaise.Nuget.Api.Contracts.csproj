@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\CaseRecordType.cs" />
+    <Compile Include="Enums\SurveyType.cs" />
     <Compile Include="Exceptions\DataNotFoundException.cs" />
     <Compile Include="Interfaces\IBlaiseApi.cs" />
     <Compile Include="Interfaces\IFluentBlaiseCaseApi.cs" />
