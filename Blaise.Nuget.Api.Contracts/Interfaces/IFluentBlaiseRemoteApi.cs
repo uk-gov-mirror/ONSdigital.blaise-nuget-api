@@ -10,17 +10,15 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IFluentBlaiseRemoteApi
     {
-        IFluentBlaiseRemoteApi WithServerPark(string serverParkName);
+        IFluentBlaiseRemoteApi ServerPark(string serverParkName);
 
         IEnumerable<string> GetSurveyNames();
 
         IEnumerable<ISurvey> GetSurveys();
 
-        IFluentBlaiseRemoteApi WithInstrument(string instrumentName);
+        IFluentBlaiseRemoteApi Instrument(string instrumentName);
 
         bool KeyExists(IKey key);
-
-        bool CaseExists(string primaryKeyValue);
 
         Guid GetInstrumentId();
 
@@ -33,8 +31,6 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         IDataRecord GetDataRecord(IKey key);
 
         void WriteDataRecord(IDataRecord dataRecord);
-
-        void CreateNewDataRecord(string primaryKeyValue, Dictionary<string, string> fieldData);
 
         void UpdateDataRecord(IDataRecord dataRecord, Dictionary<string, string> fieldData);
 
