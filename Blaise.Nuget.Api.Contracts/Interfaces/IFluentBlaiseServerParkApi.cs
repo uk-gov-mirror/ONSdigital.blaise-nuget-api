@@ -2,6 +2,6 @@
 {
     public interface IFluentBlaiseServerParkApi
     {
-        bool Exists();
+        bool ParkExists();
     }
 }

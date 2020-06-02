@@ -150,7 +150,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count());
+            Assert.AreEqual(2, result.Count);
             Assert.True(result.Contains("Instrument1"));
             Assert.True(result.Contains("Instrument2"));
         }
@@ -206,7 +206,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
 
             //assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count());
+            Assert.AreEqual(2, result.Count);
             Assert.True(result.Contains(survey1Mock.Object));
             Assert.True(result.Contains(survey2Mock.Object));
         }
