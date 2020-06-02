@@ -126,5 +126,82 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             var exception = Assert.Throws<NullReferenceException>(() => _sut.SurveyType());
             Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
+
+        [Test]
+        public void Given_ServerPark_And_Instrument_Has_Been_Called_When_I_Call_CompletedFieldExists_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            _blaiseApiMock.Setup(d => d.CompletedFieldExists(It.IsAny<string>(), It.IsAny<string>()));
+
+            _sut.ServerPark(_serverParkName);
+            _sut.Instrument(_instrumentName);
+
+            //act
+            _sut.CompletedFieldExists();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.CompletedFieldExists(_instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_CompletedFieldExists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.Instrument(_instrumentName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.CompletedFieldExists());
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
+        }
+
+        [Test]
+        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_CompletedFieldExists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+
+            _sut.ServerPark(_serverParkName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.CompletedFieldExists());
+            Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
+        }
+
+        [Test]
+        public void Given_ServerPark_And_Instrument_Has_Been_Called_When_I_Call_ProcessedFieldExists_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            _blaiseApiMock.Setup(d => d.ProcessedFieldExists(It.IsAny<string>(), It.IsAny<string>()));
+
+            _sut.ServerPark(_serverParkName);
+            _sut.Instrument(_instrumentName);
+
+            //act
+            _sut.ProcessedFieldExists();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.ProcessedFieldExists(_instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_ProcessedFieldExists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.Instrument(_instrumentName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.ProcessedFieldExists());
+            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
+        }
+
+        [Test]
+        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_ProcessedFieldExists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.ServerPark(_serverParkName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.ProcessedFieldExists());
+            Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
+        }
     }
 }

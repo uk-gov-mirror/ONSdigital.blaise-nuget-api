@@ -9,5 +9,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         IEnumerable<ISurvey> Surveys();
 
         SurveyType SurveyType();
+
+        bool CompletedFieldExists();
+
+        bool ProcessedFieldExists();
     }
 }

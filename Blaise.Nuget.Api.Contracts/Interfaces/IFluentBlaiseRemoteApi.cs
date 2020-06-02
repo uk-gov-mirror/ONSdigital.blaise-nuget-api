@@ -25,9 +25,5 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         void WriteDataRecord(IDataRecord dataRecord);
 
         void UpdateDataRecord(IDataRecord dataRecord, Dictionary<string, string> fieldData);
-
-        bool CompletedFieldExists();
-
-        bool ProcessedFieldExists();
     }
 }
