@@ -19,6 +19,7 @@ namespace Blaise.Nuget.Api
         private string _instrumentName;
         private string _filePath;
         private string _primaryKeyValue;
+        private IDataRecord _caseDataRecord;
 
         internal FluentBlaiseApi(IBlaiseApi blaiseApi)
         {
@@ -39,14 +40,23 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
+        public IFluentBlaiseCaseApi Case(string primaryKeyValue)
+        {
+            _primaryKeyValue = primaryKeyValue;
+
+            return this;
+        }
+
+        public IFluentBlaiseCaseApi Case(IDataRecord caseDataRecord)
+        {
+            _caseDataRecord = caseDataRecord;
+
+            return this;
+        }
+
         public IEnumerable<string> GetServerParkNames()
         {
             return _blaiseApi.GetServerParkNames();
-        }
-
-        public IEnumerable<ISurvey> GetAllSurveys()
-        {
-            return _blaiseApi.GetAllSurveys();
         }
 
         public bool ServerParkExists(string serverParkName)
@@ -64,10 +74,6 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.GetPrimaryKey(dataModel);
         }
 
-        public string GetPrimaryKeyValue(IDataRecord dataRecord)
-        {
-            return _blaiseApi.GetPrimaryKeyValue(dataRecord);
-        }
 
         public void AssignPrimaryKeyValue(IKey key, string primaryKeyValue)
         {
@@ -141,14 +147,6 @@ namespace Blaise.Nuget.Api
             ValidateInstrumentIsSet();
 
             return _blaiseApi.GetCaseRecordType(_instrumentName, _serverParkName);
-        }
-
-        public IDataSet GetDataSet()
-        {
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-
-            return _blaiseApi.GetDataSet(_instrumentName, _serverParkName);
         }
 
         public bool KeyExists(IKey key)
@@ -235,11 +233,19 @@ namespace Blaise.Nuget.Api
             _blaiseApi.MarkCaseAsProcessed(dataRecord, _instrumentName, _serverParkName);
         }
 
-        public IFluentBlaiseCaseApi Case(string primaryKeyValue)
+        public IDataSet Cases()
         {
-            _primaryKeyValue = primaryKeyValue;
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
 
-            return this;
+            return _blaiseApi.GetDataSet(_instrumentName, _serverParkName);
+        }
+
+        public string PrimaryKeyValue()
+        {
+            ValidateCaseDataRecordIsSet();
+
+            return _blaiseApi.GetPrimaryKeyValue(_caseDataRecord);
         }
 
         public void Create(Dictionary<string, string> data)
@@ -260,11 +266,16 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.CaseExists(_primaryKeyValue, _instrumentName, _serverParkName);
         }
 
+        public IEnumerable<ISurvey> Surveys()
+        {
+            return _blaiseApi.GetAllSurveys();
+        }
+
         private void ValidateServerParkIsSet()
         {
             if (string.IsNullOrWhiteSpace(_serverParkName))
             {
-                throw new NullReferenceException("The 'ServerPark' step needs to be called prior to this");
+                throw new NullReferenceException("The 'ServerPark' step needs to be called prior to this to specify the name of the server park");
             }
         }
 
@@ -272,7 +283,7 @@ namespace Blaise.Nuget.Api
         {
             if (string.IsNullOrWhiteSpace(_instrumentName))
             {
-                throw new NullReferenceException("The 'Instrument' step needs to be called prior to this");
+                throw new NullReferenceException("The 'Instrument' step needs to be called prior to this to specify the name of the instrument");
             }
         }
 
@@ -280,7 +291,15 @@ namespace Blaise.Nuget.Api
         {
             if (string.IsNullOrWhiteSpace(_primaryKeyValue))
             {
-                throw new NullReferenceException("The 'Case' step needs to be called prior to this");
+                throw new NullReferenceException("The 'Case' step needs to be called prior to this to specify the primary key value of the case");
+            }
+        }
+
+        private void ValidateCaseDataRecordIsSet()
+        {
+            if (_caseDataRecord == null)
+            {
+                throw new NullReferenceException("The 'Case' step needs to be called prior to this to specify the data record of the case");
             }
         }
     }

@@ -22,8 +22,6 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         CaseRecordType GetCaseRecordType();
 
-        IDataSet GetDataSet();
-
         IDataRecord GetDataRecord(IKey key);
 
         void WriteDataRecord(IDataRecord dataRecord);
