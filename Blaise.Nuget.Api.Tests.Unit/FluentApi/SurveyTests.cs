@@ -33,20 +33,20 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void When_I_Call_All_Then_The_Correct_Service_Method_Is_Called()
+        public void When_I_Call_Surveys_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(p => p.GetAllSurveys()).Returns(It.IsAny<List<ISurvey>>());
 
             //act
-            _sut.All();
+            _sut.Surveys();
 
             //assert
             _blaiseApiMock.Verify(v => v.GetAllSurveys(), Times.Once);
         }
 
         [Test]
-        public void When_I_Call_All_Then_The_Expected_Surveys_Are_Returned()
+        public void When_I_Call_Surveys_Then_The_Expected_Surveys_Are_Returned()
         {
             //arrange
             var survey1Mock = new Mock<ISurvey>();
@@ -58,7 +58,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _blaiseApiMock.Setup(p => p.GetAllSurveys()).Returns(surveys);
 
             //act
-            var result = _sut.All().ToList();
+            var result = _sut.Surveys().ToList();
 
             //assert
             Assert.IsNotNull(result);

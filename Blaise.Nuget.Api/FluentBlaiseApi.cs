@@ -73,6 +73,11 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
+        public IFluentBlaiseCaseApi Case()
+        {
+            return this;
+        }
+
         public IFluentBlaiseUserApi User(string userName)
         {
             _lastActionType = LastActionType.User;
@@ -101,7 +106,7 @@ namespace Blaise.Nuget.Api
             }
         }
 
-        public IEnumerable<ISurvey> All()
+        public IEnumerable<ISurvey> Surveys()
         {
             return _blaiseApi.GetAllSurveys();
         }
