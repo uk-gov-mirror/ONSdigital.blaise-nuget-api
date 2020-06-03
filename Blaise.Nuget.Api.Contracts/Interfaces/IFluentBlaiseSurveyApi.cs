@@ -13,5 +13,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         bool CompletedFieldExists();
 
         bool ProcessedFieldExists();
+
+        bool Exists();
     }
 }

@@ -19,6 +19,6 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         
         void MarkAsProcessed();
 
-        bool CaseExists();
+        bool Exists();
     }
 }

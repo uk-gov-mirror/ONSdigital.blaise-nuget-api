@@ -1,5 +1,4 @@
-﻿using System;
-using Blaise.Nuget.Api.Contracts.Interfaces;
+﻿using Blaise.Nuget.Api.Contracts.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -36,7 +35,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.ServerPark(_serverParkName);
 
             //act
-            _sut.ParkExists();
+            _sut.Exists();
 
             //assert
             _blaiseApiMock.Verify(v => v.ServerParkExists(_serverParkName), Times.Once);
@@ -53,21 +52,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.ServerPark(_serverParkName);
 
             //act
-            var result = _sut.ParkExists();
+            var result = _sut.Exists();
 
             //assert
             Assert.IsNotNull(result);
             Assert.AreEqual(serverParkExists, result);
-        }
-
-        [Test]
-        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_ParkExists_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.ParkExists());
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
     }
 }
