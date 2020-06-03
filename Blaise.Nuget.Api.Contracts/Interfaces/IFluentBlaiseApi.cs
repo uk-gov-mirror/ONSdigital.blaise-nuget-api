@@ -2,7 +2,7 @@
 
 namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
-    public interface IFluentBlaiseApi : IFluentBlaiseCaseApi, IFluentBlaiseSurveyApi, IFluentBlaiseServerParkApi
+    public interface IFluentBlaiseApi : IFluentBlaiseCaseApi, IFluentBlaiseSurveyApi, IFluentBlaiseServerParkApi, IFluentBlaiseUserApi
     {
         IFluentBlaiseApi Server(string serverName);
 
@@ -13,5 +13,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         IFluentBlaiseCaseApi Case(string primaryKeyValue);
 
         IFluentBlaiseCaseApi Case(IDataRecord caseDataRecord);
+
+        IFluentBlaiseUserApi User(string userName);
     }
 }

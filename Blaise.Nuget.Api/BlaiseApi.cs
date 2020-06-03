@@ -27,15 +27,18 @@ namespace Blaise.Nuget.Api
         private IDataService _dataService;
         private IParkService _parkService;
         private ISurveyService _surveyService;
+        private IUserService _userService;
 
         internal BlaiseApi(
             IDataService dataService,
             IParkService parkService, 
-            ISurveyService surveyService)
+            ISurveyService surveyService, 
+            IUserService userService)
         {
             _dataService = dataService;
             _parkService = parkService;
             _surveyService = surveyService;
+            _userService = userService;
         }
 
         public BlaiseApi()
@@ -75,11 +78,13 @@ namespace Blaise.Nuget.Api
             unityContainer.RegisterType<IKeyService, KeyService>();
             unityContainer.RegisterType<IParkService, ParkService>();
             unityContainer.RegisterType<ISurveyService, SurveyService>();
+            unityContainer.RegisterType<IUserService, UserService>();
 
             //resolve dependencies
             _dataService = unityContainer.Resolve<IDataService>();
             _parkService = unityContainer.Resolve<IParkService>();
             _surveyService = unityContainer.Resolve<ISurveyService>();
+            _userService = unityContainer.Resolve<IUserService>();
         }
 
         public void UseServer(string serverName)
@@ -308,6 +313,24 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             _dataService.MarkCaseAsProcessed(dataRecord, instrumentName, serverParkName);
+        }
+
+        public void AddUser(string userName, string password, string role, IList<string> serverParkNames)
+        {
+            userName.ThrowExceptionIfNullOrEmpty("userName");
+            password.ThrowExceptionIfNullOrEmpty("password");
+            role.ThrowExceptionIfNullOrEmpty("role");
+            serverParkNames.ThrowExceptionIfNullOrEmpty("serverParkNames");
+
+            _userService.AddUser(userName, password, role, serverParkNames);
+        }
+
+        public void ChangePassword(string userName, string password)
+        {
+            userName.ThrowExceptionIfNullOrEmpty("userName");
+            password.ThrowExceptionIfNullOrEmpty("password");
+
+            _userService.ChangePassword(userName, password);
         }
     }
 }

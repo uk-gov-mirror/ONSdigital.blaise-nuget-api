@@ -69,5 +69,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         bool CaseHasBeenProcessed(IDataRecord dataRecord);
 
         void MarkCaseAsProcessed(IDataRecord dataRecord, string instrumentName, string serverParkName);
+
+        void AddUser(string userName, string password, string role, IList<string> serverParkNames);
+
+        void ChangePassword(string userName, string password);
     }
 }
