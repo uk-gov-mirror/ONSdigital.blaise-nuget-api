@@ -33,20 +33,20 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void When_I_Call_Surveys_Then_The_Correct_Service_Method_Is_Called()
+        public void When_I_Call_All_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(p => p.GetAllSurveys()).Returns(It.IsAny<List<ISurvey>>());
 
             //act
-            _sut.Surveys();
+            _sut.All();
 
             //assert
             _blaiseApiMock.Verify(v => v.GetAllSurveys(), Times.Once);
         }
 
         [Test]
-        public void When_I_Call_Surveys_Then_The_Expected_Surveys_Are_Returned()
+        public void When_I_Call_All_Then_The_Expected_Surveys_Are_Returned()
         {
             //arrange
             var survey1Mock = new Mock<ISurvey>();
@@ -58,7 +58,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _blaiseApiMock.Setup(p => p.GetAllSurveys()).Returns(surveys);
 
             //act
-            var result = _sut.Surveys().ToList();
+            var result = _sut.All().ToList();
 
             //assert
             Assert.IsNotNull(result);
@@ -70,7 +70,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Valid_Instrument_And_ServerPark_When_I_Call_SurveyType_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Valid_Instrument_And_ServerPark_When_I_Call_Type_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(d => d.GetSurveyType(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<SurveyType>());
@@ -79,7 +79,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Instrument(_instrumentName);
 
             //act
-            _sut.SurveyType();
+            _sut.Type();
 
             //assert
             _blaiseApiMock.Verify(v => v.GetSurveyType(_instrumentName, _serverParkName), Times.Once);
@@ -88,7 +88,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         [TestCase(SurveyType.Appointment)]
         [TestCase(SurveyType.CatiDial)]
         [TestCase(SurveyType.NotMapped)]
-        public void Given_Valid_Arguments_When_I_Call_SurveyType_Then_The_Expected_Result_Is_Returned(SurveyType surveyType)
+        public void Given_Valid_Arguments_When_I_Call_Type_Then_The_Expected_Result_Is_Returned(SurveyType surveyType)
         {
             //arrange
 
@@ -98,7 +98,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Instrument(_instrumentName);
 
             //act
-            var result = _sut.SurveyType();
+            var result = _sut.Type();
 
             //assert
             Assert.IsNotNull(result);
@@ -106,24 +106,24 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_SurveyType_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_Type_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.Instrument(_instrumentName);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.SurveyType());
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Type());
             Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
-        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_GetSurveyType_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_Type_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.ServerPark(_serverParkName);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.SurveyType());
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Type());
             Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 

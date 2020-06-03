@@ -43,6 +43,21 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
+        public IFluentBlaiseApi ServerPark(string serverParkName)
+        {
+            _lastActionType = LastActionType.ServerPark;
+            _serverParkName = serverParkName;
+
+            return this;
+        }
+
+        public IFluentBlaiseApi Instrument(string instrumentName)
+        {
+            _instrumentName = instrumentName;
+
+            return this;
+        }
+
         public IFluentBlaiseCaseApi Case(string primaryKeyValue)
         {
             _lastActionType = LastActionType.Case;
@@ -66,6 +81,11 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
+        public IFluentBlaiseSurveyApi Survey()
+        {
+            return this;
+        }
+
         public bool Exists()
         {
             switch (_lastActionType)
@@ -81,22 +101,12 @@ namespace Blaise.Nuget.Api
             }
         }
 
-        public IFluentBlaiseApi ServerPark(string serverParkName)
+        public IEnumerable<ISurvey> All()
         {
-            _lastActionType = LastActionType.ServerPark;
-            _serverParkName = serverParkName;
-
-            return this;
+            return _blaiseApi.GetAllSurveys();
         }
 
-        public IFluentBlaiseApi Instrument(string instrumentName)
-        {
-            _instrumentName = instrumentName;
-
-            return this;
-        }
-
-        public SurveyType SurveyType()
+        public SurveyType Type()
         {
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
@@ -174,11 +184,6 @@ namespace Blaise.Nuget.Api
             ValidatePrimaryKeyValueIsSet();
 
             _blaiseApi.CreateNewDataRecord(_primaryKeyValue, data, _instrumentName, _serverParkName);
-        }
-
-        public IEnumerable<ISurvey> Surveys()
-        {
-            return _blaiseApi.GetAllSurveys();
         }
 
         public void Add(string password, string role, IEnumerable<string> serverParkNames)
