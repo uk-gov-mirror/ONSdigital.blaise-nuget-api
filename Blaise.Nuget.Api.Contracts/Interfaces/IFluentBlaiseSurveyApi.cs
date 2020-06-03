@@ -6,7 +6,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IFluentBlaiseSurveyApi
     {
-        IEnumerable<ISurvey> All();
+        IEnumerable<ISurvey> Surveys();
 
         SurveyType Type();
 

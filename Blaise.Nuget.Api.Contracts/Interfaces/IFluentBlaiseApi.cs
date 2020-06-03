@@ -14,6 +14,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseCaseApi Case(IDataRecord caseDataRecord);
 
+        IFluentBlaiseCaseApi Case();
+
         IFluentBlaiseUserApi User(string userName);
 
         IFluentBlaiseSurveyApi Survey();
