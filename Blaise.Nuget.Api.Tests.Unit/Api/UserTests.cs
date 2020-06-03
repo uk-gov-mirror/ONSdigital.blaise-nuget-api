@@ -58,7 +58,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _userServiceMock.Verify(v => v.AddUser(_userName, _password, role, serverParkNameList), Times.Once);
         }
 
-
         [Test]
         public void Given_An_Empty_UserName_When_I_Call_AddUser_Then_An_ArgumentException_Is_Thrown()
         {
@@ -263,6 +262,32 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         {
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.UserExists(null));
+            Assert.AreEqual("userName", exception.ParamName);
+        }
+
+        [Test]
+        public void When_I_Call_RemoveUser_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //act
+            _sut.RemoveUser(_userName);
+
+            //assert
+            _userServiceMock.Verify(v => v.RemoveUser(_userName), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_UserName_When_I_Call_RemoveUser_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.RemoveUser(string.Empty));
+            Assert.AreEqual("A value for the argument 'userName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_null_UserName_When_I_Call_RemoveUser_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveUser(null));
             Assert.AreEqual("userName", exception.ParamName);
         }
     }

@@ -198,6 +198,13 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.UserExists(_userName);
         }
 
+        public void RemoveUser()
+        {
+            ValidateUserIsSet();
+
+            _blaiseApi.RemoveUser(_userName);
+        }
+
         private void ValidateServerParkIsSet()
         {
             if (string.IsNullOrWhiteSpace(_serverParkName))
