@@ -8,8 +8,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         void ChangePassword(string password);
 
-        bool UserExists();
+        void Remove();
 
-        void RemoveUser();
+        bool Exists();
     }
 }

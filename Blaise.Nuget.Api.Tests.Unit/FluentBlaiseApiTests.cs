@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace Blaise.Nuget.Api.Tests.Unit
 {
@@ -9,6 +10,17 @@ namespace Blaise.Nuget.Api.Tests.Unit
         {
             //act && assert
             Assert.DoesNotThrow(() => new FluentBlaiseApi());
+        }
+
+        [Test]
+        public void Given_No_Valid_Step_Taken_When_I_Call_Exists_A_NotSupportedException_Is_Thrown()
+        {
+            //arrange
+            var sut = new FluentBlaiseApi();
+
+            //act && assert
+            var exception = Assert.Throws<NotSupportedException>(() => sut.Exists());
+            Assert.AreEqual("You have not declared a step previously where this action is supported", exception.Message);
         }
     }
 }

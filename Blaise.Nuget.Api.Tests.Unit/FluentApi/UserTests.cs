@@ -88,7 +88,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_User_Has_Been_Called_When_I_Call_UserExists_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_User_Has_Been_Called_When_I_Call_Exists_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
 
@@ -97,7 +97,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.User(_userName);
 
             //act
-            _sut.UserExists();
+            _sut.Exists();
 
             //assert
             _blaiseApiMock.Verify(v => v.UserExists(_userName), Times.Once);
@@ -105,7 +105,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_ServerPark_Has_Been_Called_When_I_Call_UserExists_Then_The_Expected_Result_Is_Returned(bool userExists)
+        public void Given_ServerPark_Has_Been_Called_When_I_Call_Exists_Then_The_Expected_Result_Is_Returned(bool userExists)
         {
             //arrange
 
@@ -114,7 +114,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.User(_userName);
 
             //act
-            var result = _sut.UserExists();
+            var result = _sut.Exists();
 
             //assert
             Assert.IsNotNull(result);
@@ -122,35 +122,23 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Name_Has_Not_Been_Called_When_I_Call_UserExists_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.UserExists());
-            Assert.AreEqual("The 'User' step needs to be called prior to this to specify the name of the user", exception.Message);
-        }
-
-        [Test]
-        public void Given_User_Has_Been_Called_When_I_Call_RemoveUser_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_User_Has_Been_Called_When_I_Call_Remove_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _sut.User(_userName);
 
             //act
-            _sut.RemoveUser();
+            _sut.Remove();
 
             //assert
             _blaiseApiMock.Verify(v => v.RemoveUser(_userName), Times.Once);
         }
 
         [Test]
-        public void Given_Name_Has_Not_Been_Called_When_I_Call_RemoveUser_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Name_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
         {
-            //arrange
-
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.RemoveUser());
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Remove());
             Assert.AreEqual("The 'User' step needs to be called prior to this to specify the name of the user", exception.Message);
         }
     }

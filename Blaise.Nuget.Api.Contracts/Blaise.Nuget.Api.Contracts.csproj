@@ -51,7 +51,6 @@
     <Compile Include="Interfaces\IBlaiseApi.cs" />
     <Compile Include="Interfaces\IFluentBlaiseCaseApi.cs" />
     <Compile Include="Interfaces\IFluentBlaiseApi.cs" />
-    <Compile Include="Interfaces\IFluentBlaiseServerParkApi.cs" />
     <Compile Include="Interfaces\IFluentBlaiseUserApi.cs" />
     <Compile Include="Interfaces\IFluentBlaiseSurveyApi.cs" />
     <Compile Include="Models\ConnectionModel.cs" />

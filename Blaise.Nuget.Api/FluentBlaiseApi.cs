@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Enums;
 using StatNeth.Blaise.API.ServerManager;
 using Unity;
 
 namespace Blaise.Nuget.Api
 {
-    public class FluentBlaiseApi : IFluentBlaiseApi
+    public class FluentBlaiseApi : IFluentBlaiseApi, IFluentBlaiseCaseApi, IFluentBlaiseSurveyApi, IFluentBlaiseUserApi
     {
         private readonly IBlaiseApi _blaiseApi;
 
@@ -19,6 +20,8 @@ namespace Blaise.Nuget.Api
         private string _primaryKeyValue;
         private string _userName;
         private IDataRecord _caseDataRecord;
+
+        private LastActionType _lastActionType;
 
 
         internal FluentBlaiseApi(IBlaiseApi blaiseApi)
@@ -42,6 +45,7 @@ namespace Blaise.Nuget.Api
 
         public IFluentBlaiseCaseApi Case(string primaryKeyValue)
         {
+            _lastActionType = LastActionType.Case;
             _primaryKeyValue = primaryKeyValue;
 
             return this;
@@ -56,14 +60,30 @@ namespace Blaise.Nuget.Api
 
         public IFluentBlaiseUserApi User(string userName)
         {
+            _lastActionType = LastActionType.User;
             _userName = userName;
 
             return this;
         }
 
+        public bool Exists()
+        {
+            switch (_lastActionType)
+            {
+                case LastActionType.Case:
+                    return CaseExists();
+                case LastActionType.ServerPark:
+                    return ParkExists();
+                case LastActionType.User:
+                    return UserExists();
+                default:
+                    throw new NotSupportedException("You have not declared a step previously where this action is supported");
+            }
+        }
 
         public IFluentBlaiseApi ServerPark(string serverParkName)
         {
+            _lastActionType = LastActionType.ServerPark;
             _serverParkName = serverParkName;
 
             return this;
@@ -147,15 +167,6 @@ namespace Blaise.Nuget.Api
             _blaiseApi.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName);
         }
 
-        public bool CaseExists()
-        {
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-            ValidatePrimaryKeyValueIsSet();
-
-            return _blaiseApi.CaseExists(_primaryKeyValue, _instrumentName, _serverParkName);
-        }
-
         public void Create(Dictionary<string, string> data)
         {
             ValidateServerParkIsSet();
@@ -163,13 +174,6 @@ namespace Blaise.Nuget.Api
             ValidatePrimaryKeyValueIsSet();
 
             _blaiseApi.CreateNewDataRecord(_primaryKeyValue, data, _instrumentName, _serverParkName);
-        }
-
-        public bool ParkExists()
-        {
-            ValidateServerParkIsSet();
-
-            return _blaiseApi.ServerParkExists(_serverParkName);
         }
 
         public IEnumerable<ISurvey> Surveys()
@@ -191,18 +195,35 @@ namespace Blaise.Nuget.Api
             _blaiseApi.ChangePassword(_userName, password);
         }
 
-        public bool UserExists()
-        {
-            ValidateUserIsSet();
-
-            return _blaiseApi.UserExists(_userName);
-        }
-
-        public void RemoveUser()
+        public void Remove()
         {
             ValidateUserIsSet();
 
             _blaiseApi.RemoveUser(_userName);
+        }
+
+        private bool CaseExists()
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+            ValidatePrimaryKeyValueIsSet();
+
+            return _blaiseApi.CaseExists(_primaryKeyValue, _instrumentName, _serverParkName);
+        }
+
+        private bool ParkExists()
+        {
+            ValidateServerParkIsSet();
+
+            return _blaiseApi.ServerParkExists(_serverParkName);
+        }
+
+
+        private bool UserExists()
+        {
+            ValidateUserIsSet();
+
+            return _blaiseApi.UserExists(_userName);
         }
 
         private void ValidateServerParkIsSet()
