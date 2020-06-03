@@ -177,6 +177,27 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.GetAllSurveys();
         }
 
+        public void Add(string password, string role, IEnumerable<string> serverParkNames)
+        {
+            ValidateUserIsSet();
+
+            _blaiseApi.AddUser(_userName, password, role, serverParkNames.ToList());
+        }
+
+        public void ChangePassword(string password)
+        {
+            ValidateUserIsSet();
+
+            _blaiseApi.ChangePassword(_userName, password);
+        }
+
+        public bool UserExists()
+        {
+            ValidateUserIsSet();
+
+            return _blaiseApi.UserExists(_userName);
+        }
+
         private void ValidateServerParkIsSet()
         {
             if (string.IsNullOrWhiteSpace(_serverParkName))
@@ -215,20 +236,6 @@ namespace Blaise.Nuget.Api
             {
                 throw new NullReferenceException("The 'User' step needs to be called prior to this to specify the name of the user");
             }
-        }
-
-        public void Add(string password, string role, IEnumerable<string> serverParkNames)
-        {
-            ValidateUserIsSet();
-
-            _blaiseApi.AddUser(_userName, password, role, serverParkNames.ToList());
-        }
-
-        public void ChangePassword(string password)
-        {
-            ValidateUserIsSet();
-
-            _blaiseApi.ChangePassword(_userName, password);
         }
     }
 }

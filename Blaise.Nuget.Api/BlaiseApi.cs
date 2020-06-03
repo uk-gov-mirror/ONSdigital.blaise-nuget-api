@@ -332,5 +332,12 @@ namespace Blaise.Nuget.Api
 
             _userService.ChangePassword(userName, password);
         }
+
+        public bool UserExists(string userName)
+        {
+            userName.ThrowExceptionIfNullOrEmpty("userName");
+
+            return _userService.UserExists(userName);
+        }
     }
 }

@@ -412,7 +412,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Is_Called_When_I_Call_Exists_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Case_Is_Called_When_I_Call_CaseExists_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
 
@@ -431,7 +431,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_Case_Is_Called_When_I_Call_Exists_Then_The_Expected_Result_Is_Returned(bool caseExists)
+        public void Given_Case_Is_Called_When_I_Call_CaseExists_Then_The_Expected_Result_Is_Returned(bool caseExists)
         {
             //arrange
 
@@ -450,7 +450,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Is_Called_But_Instrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Is_Called_But_Instrument_Has_Not_Been_Called_When_I_Call_CaseExists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
@@ -463,7 +463,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Is_Called_But_ServerPark_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Is_Called_But_ServerPark_Has_Not_Been_Called_When_I_Call_CaseExists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
@@ -476,7 +476,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Is_Not_Called_But_ServerPark_And_Instrument_Has_Been__Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Is_Not_Called_But_ServerPark_And_Instrument_Has_Been_Called_When_I_Call_CaseExists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 

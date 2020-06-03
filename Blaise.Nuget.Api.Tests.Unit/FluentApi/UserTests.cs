@@ -86,5 +86,49 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             var exception = Assert.Throws<NullReferenceException>(() => _sut.ChangePassword(_password));
             Assert.AreEqual("The 'User' step needs to be called prior to this to specify the name of the user", exception.Message);
         }
+
+        [Test]
+        public void Given_User_Has_Been_Called_When_I_Call_UserExists_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+
+            _blaiseApiMock.Setup(p => p.UserExists(It.IsAny<string>())).Returns(It.IsAny<bool>());
+
+            _sut.User(_userName);
+
+            //act
+            _sut.UserExists();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.UserExists(_userName), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_ServerPark_Has_Been_Called_When_I_Call_UserExists_Then_The_Expected_Result_Is_Returned(bool userExists)
+        {
+            //arrange
+
+            _blaiseApiMock.Setup(p => p.UserExists(_userName)).Returns(userExists);
+
+            _sut.User(_userName);
+
+            //act
+            var result = _sut.UserExists();
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(userExists, result);
+        }
+
+        [Test]
+        public void Given_Name_Has_Not_Been_Called_When_I_Call_UserExists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.UserExists());
+            Assert.AreEqual("The 'User' step needs to be called prior to this to specify the name of the user", exception.Message);
+        }
     }
 }
