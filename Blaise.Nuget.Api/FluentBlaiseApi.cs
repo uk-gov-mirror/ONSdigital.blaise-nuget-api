@@ -216,7 +216,7 @@ namespace Blaise.Nuget.Api
             }
         }
 
-        public void AddUser(string password, string role, IList<string> serverParkNames)
+        public void Add(string password, string role, IList<string> serverParkNames)
         {
             ValidateUserIsSet();
 
