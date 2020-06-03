@@ -73,5 +73,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         void AddUser(string userName, string password, string role, IList<string> serverParkNames);
 
         void ChangePassword(string userName, string password);
+
+        bool UserExists(string userName);
     }
 }

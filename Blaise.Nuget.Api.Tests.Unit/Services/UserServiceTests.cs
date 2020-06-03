@@ -57,7 +57,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _userMock = new Mock<IUser2>();
             _userMock.Setup(u => u.ServerParks).Returns(_userServerParkCollectionMock.Object);
 
+            var userItems = new List<IUser> { _userMock.Object };
+
             _userCollectionMock = new Mock<IUserCollection>();
+            _userCollectionMock.Setup(u => u.GetEnumerator()).Returns(() => userItems.GetEnumerator());
             _userCollectionMock.Setup(u => u.GetItem(It.IsAny<string>())).Returns(_userMock.Object);
 
             //setup connection
@@ -149,6 +152,32 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _connectedServerMock.Verify(v => v.Users.GetItem(_userName), Times.Once);
             _userMock.Verify(v => v.ChangePassword(_securePassword), Times.Once);
             _userMock.Verify(v => v.Save(), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_User_Exists_When_I_Call_UserExists_Then_True_Is_Returned()
+        {
+            //arrange
+            _userMock.Setup(u => u.Name).Returns(_userName);
+
+            //act
+            var result = _sut.UserExists(_userName);
+
+            //assert
+           Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void Given_A_User_Does_Not_Exist_When_I_Call_UserExists_Then_False_Is_Returned()
+        {
+            //arrange 
+            _userMock.Setup(u => u.Name).Returns("NotFound");
+            
+            //act
+            var result = _sut.UserExists(_userName);
+
+            //assert
+            Assert.IsFalse(result);
         }
     }
 }

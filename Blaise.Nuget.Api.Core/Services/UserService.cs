@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.ServerManager;
@@ -47,6 +48,13 @@ namespace Blaise.Nuget.Api.Core.Services
 
             user.ChangePassword(securePassword);
             user.Save();
+        }
+
+        public bool UserExists(string userName)
+        {
+            var connection = _connectedServerFactory.GetConnection();
+
+            return connection.Users.Any(u => u.Name == userName);
         }
     }
 }

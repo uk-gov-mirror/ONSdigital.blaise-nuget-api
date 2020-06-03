@@ -225,5 +225,45 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.ChangePassword(_userName, null));
             Assert.AreEqual("password", exception.ParamName);
         }
+
+        [Test]
+        public void When_I_Call_UserExists_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //act
+            _sut.UserExists(_userName);
+
+            //assert
+            _userServiceMock.Verify(v => v.UserExists(_userName), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void When_I_Call_UserExists_Then_The_Expected_Result_Is_Returned(bool userExists)
+        {
+            //arrange
+            _userServiceMock.Setup(u => u.UserExists(_userName)).Returns(userExists);
+
+            //act
+            var result = _sut.UserExists(_userName);
+
+            //assert
+           Assert.AreEqual(userExists, result);
+        }
+
+        [Test]
+        public void Given_An_Empty_UserName_When_I_Call_UserExists_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.UserExists(string.Empty));
+            Assert.AreEqual("A value for the argument 'userName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_null_UserName_When_I_Call_UserExists_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UserExists(null));
+            Assert.AreEqual("userName", exception.ParamName);
+        }
     }
 }
