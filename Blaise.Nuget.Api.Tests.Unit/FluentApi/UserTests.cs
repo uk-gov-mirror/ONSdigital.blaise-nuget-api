@@ -30,7 +30,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_User_Has_Been_Called_When_I_Call_AddUser_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_User_Has_Been_Called_When_I_Call_Add_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             var serverParkNameList = new List<string>
@@ -44,14 +44,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.User(_userName);
 
             //act
-            _sut.AddUser(_password, role, serverParkNameList);
+            _sut.Add(_password, role, serverParkNameList);
 
             //assert
             _blaiseApiMock.Verify(v => v.AddUser(_userName, _password, role, serverParkNameList), Times.Once);
         }
 
         [Test]
-        public void Given_User_Has_Not_Been_Called_When_I_Call_AddUser_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_User_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var serverParkNameList = new List<string>
@@ -63,7 +63,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.AddUser(_password, role, serverParkNameList));
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Add(_password, role, serverParkNameList));
             Assert.AreEqual("The 'User' step needs to be called prior to this to specify the name of the user", exception.Message);
         }
 
