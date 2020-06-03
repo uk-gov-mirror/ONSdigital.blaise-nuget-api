@@ -69,10 +69,12 @@
     <Compile Include="Services\DataRecordService.cs" />
     <Compile Include="Services\DataService.cs" />
     <Compile Include="Services\FieldService.cs" />
+    <Compile Include="Interfaces\Services\IUserService.cs" />
     <Compile Include="Services\KeyService.cs" />
     <Compile Include="Services\ParkService.cs" />
     <Compile Include="Services\PasswordService.cs" />
     <Compile Include="Services\SurveyService.cs" />
+    <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

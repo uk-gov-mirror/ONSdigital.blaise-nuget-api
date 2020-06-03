@@ -16,7 +16,9 @@ namespace Blaise.Nuget.Api
         private string _serverParkName;
         private string _instrumentName;
         private string _primaryKeyValue;
+        private string _userName;
         private IDataRecord _caseDataRecord;
+
 
         internal FluentBlaiseApi(IBlaiseApi blaiseApi)
         {
@@ -47,6 +49,13 @@ namespace Blaise.Nuget.Api
         public IFluentBlaiseCaseApi Case(IDataRecord caseDataRecord)
         {
             _caseDataRecord = caseDataRecord;
+
+            return this;
+        }
+
+        public IFluentBlaiseUserApi User(string userName)
+        {
+            _userName = userName;
 
             return this;
         }
@@ -197,6 +206,28 @@ namespace Blaise.Nuget.Api
             {
                 throw new NullReferenceException("The 'Case' step needs to be called prior to this to specify the data record of the case");
             }
+        }
+
+        private void ValidateUserIsSet()
+        {
+            if (_userName == null)
+            {
+                throw new NullReferenceException("The 'User' step needs to be called prior to this to specify the name of the user");
+            }
+        }
+
+        public void AddUser(string password, string role, IList<string> serverParkNames)
+        {
+            ValidateUserIsSet();
+
+            _blaiseApi.AddUser(_userName, password, role, serverParkNames);
+        }
+
+        public void ChangePassword(string password)
+        {
+            ValidateUserIsSet();
+
+            _blaiseApi.ChangePassword(_userName, password);
         }
     }
 }

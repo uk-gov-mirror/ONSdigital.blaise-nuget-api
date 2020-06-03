@@ -35,7 +35,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
         {
             //arrange
             var serverName = "ServerName1";
-;            var configurationProvider = new ConfigurationProvider();
+            var configurationProvider = new ConfigurationProvider();
 
             //act
             var result = configurationProvider.GetConnectionModel(serverName);

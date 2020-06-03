@@ -81,7 +81,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //assert
             Assert.NotNull(result);
             Assert.IsNotEmpty(result);
-            Assert.AreEqual(2, result.Count());
+            Assert.AreEqual(2, result.Count);
             Assert.True(result.Contains("ServerParkName1"));
             Assert.True(result.Contains("ServerParkName2"));
         }

@@ -90,7 +90,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_No_Surveys_Are_On_A_ServerPark_When_I_Call_GetSurveyNames_Then_A_Data_Not_Found_Exception_Is_Thrown()
         {
             //arrange
-            var serverParkName = "ServerParkDoesntExist";
+            var serverParkName = "ServerParkDoesNotExist";
             var surveyItems = new List<ISurvey>();
 
             _surveyCollectionMock = new Mock<ISurveyCollection>();
@@ -135,7 +135,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_No_Surveys_Are_On_A_ServerPark_When_I_Call_GetSurveys_Then_A_Data_Not_Found_Exception_Is_Thrown()
         {
             //arrange
-            var serverParkName = "ServerParkDoesntExist";
+            var serverParkName = "ServerParkDoesNotExist";
             var surveyItems = new List<ISurvey>();
 
             _surveyCollectionMock = new Mock<ISurveyCollection>();
@@ -216,10 +216,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_GetInstrumentId_And_The_Instrument_Doesnt_Exist_Then_An_ArgumentOutOfRangeException_Is_Thrown()
+        public void Given_I_Call_GetInstrumentId_And_The_Instrument_DoesNot_Exist_Then_An_ArgumentOutOfRangeException_Is_Thrown()
         {
             //arrange
-            var instrumentName = "InstrumentThatDoesntExist";
+            var instrumentName = "InstrumentThatDoesNotExist";
 
             //act && assert
            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetInstrumentId(instrumentName, _serverParkName));
