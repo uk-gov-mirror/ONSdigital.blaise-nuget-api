@@ -179,5 +179,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //assert
             Assert.IsFalse(result);
         }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_RemoveUser_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.RemoveUser(_userName);
+
+            //assert
+            _connectedServerMock.Verify(v => v.RemoveUser(_userName), Times.Once);
+        }
     }
 }

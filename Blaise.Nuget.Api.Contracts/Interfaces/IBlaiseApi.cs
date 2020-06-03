@@ -75,5 +75,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         void ChangePassword(string userName, string password);
 
         bool UserExists(string userName);
+
+        void RemoveUser(string userName);
     }
 }

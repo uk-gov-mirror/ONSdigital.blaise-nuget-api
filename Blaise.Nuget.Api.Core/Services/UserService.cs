@@ -56,5 +56,12 @@ namespace Blaise.Nuget.Api.Core.Services
 
             return connection.Users.Any(u => u.Name == userName);
         }
+
+        public void RemoveUser(string userName)
+        {
+            var connection = _connectedServerFactory.GetConnection();
+
+            connection.RemoveUser(userName);
+        }
     }
 }

@@ -339,5 +339,12 @@ namespace Blaise.Nuget.Api
 
             return _userService.UserExists(userName);
         }
+
+        public void RemoveUser(string userName)
+        {
+            userName.ThrowExceptionIfNullOrEmpty("userName");
+
+            _userService.RemoveUser(userName);
+        }
     }
 }

@@ -9,5 +9,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         void ChangePassword(string userName, string password);
 
         bool UserExists(string userName);
+
+        void RemoveUser(string userName);
     }
 }

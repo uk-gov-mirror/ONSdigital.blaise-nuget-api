@@ -130,5 +130,28 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             var exception = Assert.Throws<NullReferenceException>(() => _sut.UserExists());
             Assert.AreEqual("The 'User' step needs to be called prior to this to specify the name of the user", exception.Message);
         }
+
+        [Test]
+        public void Given_User_Has_Been_Called_When_I_Call_RemoveUser_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            _sut.User(_userName);
+
+            //act
+            _sut.RemoveUser();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.RemoveUser(_userName), Times.Once);
+        }
+
+        [Test]
+        public void Given_Name_Has_Not_Been_Called_When_I_Call_RemoveUser_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.RemoveUser());
+            Assert.AreEqual("The 'User' step needs to be called prior to this to specify the name of the user", exception.Message);
+        }
     }
 }
