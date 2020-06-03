@@ -16,6 +16,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseUserApi User(string userName);
 
+        IFluentBlaiseSurveyApi Survey();
+
         bool Exists();
     }
 }

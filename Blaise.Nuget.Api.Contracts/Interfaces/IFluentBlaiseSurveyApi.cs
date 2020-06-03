@@ -6,9 +6,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IFluentBlaiseSurveyApi
     {
-        IEnumerable<ISurvey> Surveys();
+        IEnumerable<ISurvey> All();
 
-        SurveyType SurveyType();
+        SurveyType Type();
 
         bool CompletedFieldExists();
 

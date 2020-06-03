@@ -1,4 +1,5 @@
 ﻿using System;
+using Blaise.Nuget.Api.Contracts.Interfaces;
 using NUnit.Framework;
 
 namespace Blaise.Nuget.Api.Tests.Unit
@@ -16,7 +17,7 @@ namespace Blaise.Nuget.Api.Tests.Unit
         public void Given_No_Valid_Step_Taken_When_I_Call_Exists_A_NotSupportedException_Is_Thrown()
         {
             //arrange
-            var sut = new FluentBlaiseApi();
+            IFluentBlaiseApi sut = new FluentBlaiseApi();
 
             //act && assert
             var exception = Assert.Throws<NotSupportedException>(() => sut.Exists());
