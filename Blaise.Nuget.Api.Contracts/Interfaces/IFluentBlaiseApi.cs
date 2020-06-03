@@ -1,4 +1,7 @@
-﻿using StatNeth.Blaise.API.DataRecord;
+﻿using System.Collections.Generic;
+using StatNeth.Blaise.API.DataLink;
+using StatNeth.Blaise.API.DataRecord;
+using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
@@ -14,11 +17,13 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseCaseApi Case(IDataRecord caseDataRecord);
 
-        IFluentBlaiseCaseApi Case();
+        IDataSet Cases();
 
         IFluentBlaiseUserApi User(string userName);
 
         IFluentBlaiseSurveyApi Survey();
+
+        IEnumerable<ISurvey> Surveys();
 
         bool Exists();
     }
