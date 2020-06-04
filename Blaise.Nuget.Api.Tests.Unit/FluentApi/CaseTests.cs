@@ -321,6 +321,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //assert
             _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName), Times.Once);
+            _blaiseApiMock.Verify(v => v.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName), Times.Never);
         }
 
         [Test]
@@ -338,6 +339,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //assert
             _blaiseApiMock.Verify(v => v.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName), Times.Once);
+            _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName), Times.Never);
         }
 
         [TestCase(StatusType.Completed)]
