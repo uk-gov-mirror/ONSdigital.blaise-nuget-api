@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Moq;
 using NUnit.Framework;
@@ -16,7 +17,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         private Mock<ISurveyService> _surveyServiceMock;
         private Mock<IUserService> _userServiceMock;
 
-        private BlaiseApi _sut;
+        private IBlaiseApi _sut;
 
         [SetUp]
         public void SetUpTests()
