@@ -76,11 +76,6 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IFluentBlaiseCaseApi Case()
-        {
-            return this;
-        }
-
         public IFluentBlaiseUserApi User(string userName)
         {
             _lastActionType = LastActionType.User;
