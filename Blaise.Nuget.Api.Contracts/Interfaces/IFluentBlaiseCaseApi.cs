@@ -7,7 +7,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
     {
         IFluentBlaiseCaseApi WithData(Dictionary<string, string> data);
 
-        void Add();
+        IFluentBlaiseCaseApi WithStatus(StatusType statusType);
 
         string PrimaryKeyValue();
 
@@ -15,7 +15,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         bool HasBeenProcessed();
 
-        IFluentBlaiseCaseApi WithStatus(StatusType statusType);
+        void Add();
 
         void Update();
 

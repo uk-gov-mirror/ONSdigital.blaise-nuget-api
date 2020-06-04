@@ -21,11 +21,11 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IDataSet Cases();
 
+        IFluentBlaiseUserApi WithUser(string userName);
+
         IFluentBlaiseSurveyApi Survey { get; }
 
         IEnumerable<ISurvey> Surveys();
-
-        IFluentBlaiseUserApi WithUser(string userName);
 
         bool Exists();
     }
