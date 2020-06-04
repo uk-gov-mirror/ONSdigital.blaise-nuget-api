@@ -22,8 +22,10 @@ namespace Blaise.Nuget.Api
         private string _password;
         private string _role;
         private IList<string> _serverParkNames;
-        private Dictionary<string, string> _data;
+        private Dictionary<string, string> _caseData;
         private IDataRecord _caseDataRecord;
+        private StatusType _statusType = StatusType.NotSpecified;
+        private FieldNameType _fieldNameType = FieldNameType.NotSpecified;
 
         private LastActionType _lastActionType;
 
@@ -31,7 +33,7 @@ namespace Blaise.Nuget.Api
         {
             _blaiseApi = blaiseApi;
             _serverParkNames = new List<string>();
-            _data = new Dictionary<string, string>();
+            _caseData = new Dictionary<string, string>();
         }
 
         public FluentBlaiseApi()
@@ -119,7 +121,7 @@ namespace Blaise.Nuget.Api
         {
             _lastActionType = LastActionType.Case;
 
-            _data = data;
+            _caseData = data;
 
             return this;
         }
@@ -143,9 +145,9 @@ namespace Blaise.Nuget.Api
 
         public IFluentBlaiseCaseApi WithStatus(StatusType statusType)
         {
-            _lastActionType = statusType == StatusType.Completed
-                ? LastActionType.Completed
-                : LastActionType.Processed;
+            _lastActionType = LastActionType.Case;
+
+            _statusType = statusType;
 
             return this;
         }
@@ -154,11 +156,8 @@ namespace Blaise.Nuget.Api
         {
             switch (_lastActionType)
             {
-                case LastActionType.Completed:
-                    SetStatusAsComplete();
-                    break;
-                case LastActionType.Processed:
-                    SetStatusAsProcessed();
+                case LastActionType.Case:
+                    UpdateCase();
                     break;
                 case LastActionType.User:
                     UpdateUser();
@@ -178,10 +177,8 @@ namespace Blaise.Nuget.Api
                     return ParkExists();
                 case LastActionType.User:
                     return UserExists();
-                case LastActionType.Completed:
-                    return CompletedFieldExists();
-                case LastActionType.Processed:
-                    return ProcessedFieldExists();
+                case LastActionType.Field:
+                    return FieldExists();
                 default:
                     throw new NotSupportedException("You have not declared a step previously where this action is supported");
             }
@@ -203,9 +200,9 @@ namespace Blaise.Nuget.Api
 
         IFluentBlaiseSurveyApi IFluentBlaiseSurveyApi.WithField(FieldNameType fieldType)
         {
-            _lastActionType = fieldType == FieldNameType.Completed
-                ? LastActionType.Completed
-                : LastActionType.Processed;
+            _lastActionType = LastActionType.Field;
+
+            _fieldNameType = fieldType;
 
             return this;
         }
@@ -256,6 +253,28 @@ namespace Blaise.Nuget.Api
             _blaiseApi.AddUser(_userName, _password, _role, _serverParkNames);
         }
 
+        private void UpdateCase()
+        {
+            if(_caseData.Any())
+            {
+                ValidateInstrumentIsSet();
+                ValidateServerParkIsSet();
+                ValidateCaseDataRecordIsSet();
+
+                _blaiseApi.UpdateDataRecord(_caseDataRecord, _caseData, _instrumentName, _serverParkName);
+            }
+
+            if (_statusType == StatusType.Completed)
+            {
+                SetStatusAsComplete();
+            }
+
+            if (_statusType == StatusType.Processed)
+            {
+                SetStatusAsProcessed();
+            }
+        }
+
         private void UpdateUser()
         {
             ValidateUserIsSet();
@@ -297,20 +316,20 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.UserExists(_userName);
         }
 
-        private bool CompletedFieldExists()
+        private bool FieldExists()
         {
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
 
-            return _blaiseApi.CompletedFieldExists(_instrumentName, _serverParkName);
-        }
-
-        private bool ProcessedFieldExists()
-        {
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-
-            return _blaiseApi.ProcessedFieldExists(_instrumentName, _serverParkName);
+            switch (_fieldNameType)
+            {
+                case FieldNameType.Completed:
+                    return _blaiseApi.CompletedFieldExists(_instrumentName, _serverParkName);
+                case FieldNameType.Processed:
+                    return _blaiseApi.ProcessedFieldExists(_instrumentName, _serverParkName);
+                default:
+                    throw new NotSupportedException("You have not declared a field previously where this action is supported");
+            }
         }
 
         private void SetStatusAsComplete()
@@ -338,7 +357,7 @@ namespace Blaise.Nuget.Api
             ValidatePrimaryKeyValueIsSet();
             ValidateDataIsSet();
 
-            _blaiseApi.CreateNewDataRecord(_primaryKeyValue, _data, _instrumentName, _serverParkName);
+            _blaiseApi.CreateNewDataRecord(_primaryKeyValue, _caseData, _instrumentName, _serverParkName);
         }
 
         private void ValidateServerParkIsSet()
@@ -407,7 +426,7 @@ namespace Blaise.Nuget.Api
 
         private void ValidateDataIsSet()
         {
-            if (!_data.Any())
+            if (!_caseData.Any())
             {
                 throw new NullReferenceException("The 'WithData' step needs to be called prior to this to specify the data fields of the case");
             }
