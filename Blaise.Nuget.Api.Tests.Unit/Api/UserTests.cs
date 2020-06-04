@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Moq;
 using NUnit.Framework;
@@ -17,7 +18,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         private readonly string _userName;
         private readonly string _password;
 
-        private BlaiseApi _sut;
+        private IBlaiseApi _sut;
 
         public UserTests()
         {
@@ -160,9 +161,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_ServerParkList_When_I_Call_AddUser_Then_An_ArgumentException_Is_Thrown()
         {
             //arrange
-            var serverParkNameList = new List<string>
-            {
-            };
+            var serverParkNameList = new List<string>();
 
             const string role = "King";
 
@@ -269,9 +268,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_ServerParkList_When_I_Call_EditUser_Then_An_ArgumentException_Is_Thrown()
         {
             //arrange
-            var serverParkNameList = new List<string>
-            {
-            };
+            var serverParkNameList = new List<string>();
 
             const string role = "King";
 
