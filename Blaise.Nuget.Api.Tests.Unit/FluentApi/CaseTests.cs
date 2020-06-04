@@ -38,6 +38,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
+        public void Given_I_Call_Case_Then_It_Returns_Same_Instance_Of_Itself_Back()
+        {
+            //act
+            var result = _sut.Case();
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<IFluentBlaiseCaseApi>(result);
+            Assert.AreSame(_sut, result);
+        }
+
+        [Test]
         public void Given_A_Primary_Key_Value_When_I_Call_Case_Then_It_Returns_Same_Instance_Of_Itself_Back()
         {
             //act
