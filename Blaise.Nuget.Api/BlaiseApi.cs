@@ -325,6 +325,15 @@ namespace Blaise.Nuget.Api
             _userService.AddUser(userName, password, role, serverParkNames);
         }
 
+        public void EditUser(string userName, string role, IList<string> serverParkNames)
+        {
+            userName.ThrowExceptionIfNullOrEmpty("userName");
+            role.ThrowExceptionIfNullOrEmpty("role");
+            serverParkNames.ThrowExceptionIfNullOrEmpty("serverParkNames");
+
+            _userService.EditUser(userName, role, serverParkNames);
+        }
+
         public void ChangePassword(string userName, string password)
         {
             userName.ThrowExceptionIfNullOrEmpty("userName");

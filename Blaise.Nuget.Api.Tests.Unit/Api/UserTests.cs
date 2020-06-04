@@ -183,6 +183,114 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         }
 
         [Test]
+        public void When_I_Call_EditUser_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var serverParkNameList = new List<string>
+            {
+                "ServerPark1",
+                "ServerPark2",
+            };
+
+            const string role = "King";
+
+            //act
+            _sut.EditUser(_userName, role, serverParkNameList);
+
+            //assert
+            _userServiceMock.Verify(v => v.EditUser(_userName, role, serverParkNameList), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_UserName_When_I_Call_EditUser_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var serverParkNameList = new List<string>
+            {
+                "ServerPark1",
+                "ServerPark2",
+            };
+
+            const string role = "King";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.EditUser(string.Empty, role, serverParkNameList));
+            Assert.AreEqual("A value for the argument 'userName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_null_UserName_When_I_Call_EditUser_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var serverParkNameList = new List<string>
+            {
+                "ServerPark1",
+                "ServerPark2",
+            };
+
+            const string role = "King";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.EditUser(null, role, serverParkNameList));
+            Assert.AreEqual("userName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_Role_When_I_Call_EditUser_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var serverParkNameList = new List<string>
+            {
+                "ServerPark1",
+                "ServerPark2",
+            };
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.EditUser(_userName, string.Empty, serverParkNameList));
+            Assert.AreEqual("A value for the argument 'role' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_null_Role_When_I_Call_EditUser_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var serverParkNameList = new List<string>
+            {
+                "ServerPark1",
+                "ServerPark2",
+            };
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.EditUser(_userName, null, serverParkNameList));
+            Assert.AreEqual("role", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkList_When_I_Call_EditUser_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var serverParkNameList = new List<string>
+            {
+            };
+
+            const string role = "King";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.EditUser(_userName, role, serverParkNameList));
+            Assert.AreEqual("A value for the argument 'serverParkNames' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_null_ServerParkList_When_I_Call_EditUser_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            const string role = "King";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.EditUser(_userName, role, null));
+            Assert.AreEqual("serverParkNames", exception.ParamName);
+        }
+        [Test]
         public void When_I_Call_ChangePassword_Then_The_Correct_Service_Method_Is_Called()
         {
             //act

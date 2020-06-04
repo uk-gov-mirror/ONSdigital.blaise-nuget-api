@@ -68,6 +68,44 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
+        public void Given_User_Has_Been_Called_When_I_Call_Update_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var serverParkNameList = new List<string>
+            {
+                "ServerPark1",
+                "ServerPark2",
+            };
+
+            const string role = "King";
+
+            _sut.User(_userName);
+
+            //act
+            _sut.Update(role, serverParkNameList);
+
+            //assert
+            _blaiseApiMock.Verify(v => v.EditUser(_userName, role, serverParkNameList), Times.Once);
+        }
+
+        [Test]
+        public void Given_User_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var serverParkNameList = new List<string>
+            {
+                "ServerPark1",
+                "ServerPark2",
+            };
+
+            const string role = "King";
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Update(role, serverParkNameList));
+            Assert.AreEqual("The 'User' step needs to be called prior to this to specify the name of the user", exception.Message);
+        }
+
+        [Test]
         public void Given_User_Has_Been_Called_When_I_Call_ChangePassword_Then_The_Correct_Service_Method_Is_Called()
         {
             _sut.User(_userName);
