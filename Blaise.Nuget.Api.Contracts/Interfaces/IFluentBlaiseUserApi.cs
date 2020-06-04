@@ -5,12 +5,15 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
     public interface IFluentBlaiseUserApi
     {
 
+        IFluentBlaiseUserApi WithPassword(string password);
 
-        void Add(string password, string role, IList<string> serverParkNames);
+        IFluentBlaiseUserApi WithRole(string role);
 
-        void Update(string role, IList<string> serverParkNames);
+        IFluentBlaiseUserApi WithServerParks(IList<string> serverParkNames);
 
-        void ChangePassword(string password);
+        void Add();
+
+        void Update();
 
         void Remove();
 

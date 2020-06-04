@@ -3,6 +3,7 @@ using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Enums;
 using StatNeth.Blaise.API.ServerManager;
@@ -18,6 +19,9 @@ namespace Blaise.Nuget.Api
         private string _instrumentName;
         private string _primaryKeyValue;
         private string _userName;
+        private string _password;
+        private string _role;
+        private IList<string> _serverParkNames;
         private IDataRecord _caseDataRecord;
 
         private LastActionType _lastActionType;
@@ -25,6 +29,7 @@ namespace Blaise.Nuget.Api
         internal FluentBlaiseApi(IBlaiseApi blaiseApi)
         {
             _blaiseApi = blaiseApi;
+            _serverParkNames = new List<string>();
         }
 
         public FluentBlaiseApi()
@@ -84,6 +89,42 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
+        public IFluentBlaiseUserApi WithPassword(string password)
+        {
+            _lastActionType = LastActionType.User;
+            _password = password;
+
+            return this;
+        }
+
+        public IFluentBlaiseUserApi WithRole(string role)
+        {
+            _lastActionType = LastActionType.User;
+            _role = role;
+
+            return this;
+        }
+
+        public IFluentBlaiseUserApi WithServerParks(IList<string> serverParkNames)
+        {
+            _lastActionType = LastActionType.User;
+            _serverParkNames = serverParkNames;
+
+            return this;
+        }
+
+        public void Add()
+        {
+            switch (_lastActionType)
+            {
+                case LastActionType.User:
+                    AddUser();
+                    break;
+                default:
+                    throw new NotSupportedException("You have not declared a step previously where this action is supported");
+            }
+        }
+
         public IFluentBlaiseSurveyApi Survey => this;
 
         public IFluentBlaiseCaseApi WithStatus(StatusType statusType)
@@ -100,10 +141,13 @@ namespace Blaise.Nuget.Api
             switch (_lastActionType)
             {
                 case LastActionType.Completed:
-                     SetStatusAsComplete();
+                    SetStatusAsComplete();
                     break;
                 case LastActionType.Processed:
                     SetStatusAsProcessed();
+                    break;
+                case LastActionType.User:
+                    UpdateUser();
                     break;
                 default:
                     throw new NotSupportedException("You have not declared a step previously where this action is supported");
@@ -190,32 +234,38 @@ namespace Blaise.Nuget.Api
             _blaiseApi.CreateNewDataRecord(_primaryKeyValue, data, _instrumentName, _serverParkName);
         }
 
-        public void Add(string password, string role, IList<string> serverParkNames)
-        {
-            ValidateUserIsSet();
-
-            _blaiseApi.AddUser(_userName, password, role, serverParkNames);
-        }
-
-        public void Update(string role, IList<string> serverParkNames)
-        {
-            ValidateUserIsSet();
-
-            _blaiseApi.EditUser(_userName, role, serverParkNames);
-        }
-
-        public void ChangePassword(string password)
-        {
-            ValidateUserIsSet();
-
-            _blaiseApi.ChangePassword(_userName, password);
-        }
-
         public void Remove()
         {
             ValidateUserIsSet();
 
             _blaiseApi.RemoveUser(_userName);
+        }
+
+        private void AddUser()
+        {
+            ValidateUserIsSet();
+            ValidatePasswordIsSet();
+            ValidateRoleIsSet();
+            ValidateServerParksAreSet();
+
+            _blaiseApi.AddUser(_userName, _password, _role, _serverParkNames);
+        }
+
+        private void UpdateUser()
+        {
+            ValidateUserIsSet();
+
+            if (!string.IsNullOrWhiteSpace(_password))
+            {
+                _blaiseApi.ChangePassword(_userName, _password);
+            }
+
+            if (!string.IsNullOrWhiteSpace(_role) || _serverParkNames.Any())
+            {
+                ValidateRoleIsSet();
+                ValidateServerParksAreSet();
+                _blaiseApi.EditUser(_userName, _role, _serverParkNames);
+            }
         }
 
         private bool CaseExists()
@@ -280,7 +330,7 @@ namespace Blaise.Nuget.Api
         {
             if (string.IsNullOrWhiteSpace(_serverParkName))
             {
-                throw new NullReferenceException("The 'ServerPark' step needs to be called prior to this to specify the name of the server park");
+                throw new NullReferenceException("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park");
             }
         }
 
@@ -288,7 +338,7 @@ namespace Blaise.Nuget.Api
         {
             if (string.IsNullOrWhiteSpace(_instrumentName))
             {
-                throw new NullReferenceException("The 'Instrument' step needs to be called prior to this to specify the name of the instrument");
+                throw new NullReferenceException("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument");
             }
         }
 
@@ -296,7 +346,7 @@ namespace Blaise.Nuget.Api
         {
             if (string.IsNullOrWhiteSpace(_primaryKeyValue))
             {
-                throw new NullReferenceException("The 'Case' step needs to be called prior to this to specify the primary key value of the case");
+                throw new NullReferenceException("The 'WithCase' step needs to be called prior to this to specify the primary key value of the case");
             }
         }
 
@@ -304,7 +354,7 @@ namespace Blaise.Nuget.Api
         {
             if (_caseDataRecord == null)
             {
-                throw new NullReferenceException("The 'Case' step needs to be called prior to this to specify the data record of the case");
+                throw new NullReferenceException("The 'WithCase' step needs to be called prior to this to specify the data record of the case");
             }
         }
 
@@ -312,7 +362,31 @@ namespace Blaise.Nuget.Api
         {
             if (_userName == null)
             {
-                throw new NullReferenceException("The 'User' step needs to be called prior to this to specify the name of the user");
+                throw new NullReferenceException("The 'WithUser' step needs to be called prior to this to specify the name of the user");
+            }
+        }
+
+        private void ValidatePasswordIsSet()
+        {
+            if (_password == null)
+            {
+                throw new NullReferenceException("The 'WithPassword' step needs to be called prior to this to specify the password of the user");
+            }
+        }
+
+        private void ValidateRoleIsSet()
+        {
+            if (_role == null)
+            {
+                throw new NullReferenceException("The 'WithRole' step needs to be called prior to this to specify the role of the user");
+            }
+        }
+
+        private void ValidateServerParksAreSet()
+        {
+            if (!_serverParkNames.Any())
+            {
+                throw new NullReferenceException("The 'WithServerParks' step needs to be called prior to this to specify the server parks of the user");
             }
         }
     }
