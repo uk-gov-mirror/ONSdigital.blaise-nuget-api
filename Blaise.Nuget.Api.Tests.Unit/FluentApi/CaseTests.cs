@@ -61,7 +61,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_Create_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Valid_Arguments_When_I_Call_Add_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             var fieldData = new Dictionary<string, string>();
@@ -73,14 +73,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Case(_primaryKeyValue);
 
             //act
-            _sut.Create(fieldData);
+            _sut.Add(fieldData);
 
             //assert
             _blaiseApiMock.Verify(v => v.CreateNewDataRecord(_primaryKeyValue, fieldData, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
-        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_Create_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>();
@@ -89,12 +89,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Case(_primaryKeyValue);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Create(fieldData));
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Add(fieldData));
             Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
-        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_Create_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>();
@@ -103,12 +103,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Case(_instrumentName);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Create(fieldData));
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Add(fieldData));
             Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
-        public void Given_Case_Has_Not_Been_Called_When_I_Call_Create_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>();
@@ -117,7 +117,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Instrument(_instrumentName);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Create(fieldData));
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Add(fieldData));
             Assert.AreEqual("The 'Case' step needs to be called prior to this to specify the primary key value of the case", exception.Message);
         }
 

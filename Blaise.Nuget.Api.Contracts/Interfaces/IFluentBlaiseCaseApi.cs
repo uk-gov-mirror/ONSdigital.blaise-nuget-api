@@ -4,7 +4,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IFluentBlaiseCaseApi
     {
-        void Create(Dictionary<string, string> data);
+        void Add(Dictionary<string, string> data);
 
         string PrimaryKeyValue();
 
