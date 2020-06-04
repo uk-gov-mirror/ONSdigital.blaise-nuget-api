@@ -41,7 +41,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             const string role = "King";
 
-            _sut.User(_userName);
+            _sut.WithUser(_userName);
 
             //act
             _sut.Add(_password, role, serverParkNameList);
@@ -79,7 +79,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             const string role = "King";
 
-            _sut.User(_userName);
+            _sut.WithUser(_userName);
 
             //act
             _sut.Update(role, serverParkNameList);
@@ -108,7 +108,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         [Test]
         public void Given_User_Has_Been_Called_When_I_Call_ChangePassword_Then_The_Correct_Service_Method_Is_Called()
         {
-            _sut.User(_userName);
+            _sut.WithUser(_userName);
 
             //act
             _sut.ChangePassword(_password);
@@ -132,7 +132,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _blaiseApiMock.Setup(p => p.UserExists(It.IsAny<string>())).Returns(It.IsAny<bool>());
 
-            _sut.User(_userName);
+            _sut.WithUser(_userName);
 
             //act
             _sut.Exists();
@@ -143,13 +143,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_ServerPark_Has_Been_Called_When_I_Call_Exists_Then_The_Expected_Result_Is_Returned(bool userExists)
+        public void Given_WithServerPark_Has_Been_Called_When_I_Call_Exists_Then_The_Expected_Result_Is_Returned(bool userExists)
         {
             //arrange
 
             _blaiseApiMock.Setup(p => p.UserExists(_userName)).Returns(userExists);
 
-            _sut.User(_userName);
+            _sut.WithUser(_userName);
 
             //act
             var result = _sut.Exists();
@@ -163,7 +163,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_User_Has_Been_Called_When_I_Call_Remove_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            _sut.User(_userName);
+            _sut.WithUser(_userName);
 
             //act
             _sut.Remove();

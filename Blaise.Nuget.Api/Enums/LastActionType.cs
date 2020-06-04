@@ -5,7 +5,8 @@
         NotSupported = 0,
         Case,
         ServerPark,
-        User
-
+        User,
+        CompletedField,
+        ProcessedField
     }
 }
