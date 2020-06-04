@@ -2,6 +2,7 @@
 {
     public enum FieldNameType
     {
+        NotSpecified = 0,
         Completed,
         Processed
     }

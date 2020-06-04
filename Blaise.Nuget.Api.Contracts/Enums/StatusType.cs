@@ -2,6 +2,7 @@
 {
     public enum StatusType
     {
+        NotSpecified = 0,
         Completed,
         Processed
     }
