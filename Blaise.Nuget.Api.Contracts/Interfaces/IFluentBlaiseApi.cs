@@ -13,17 +13,19 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseApi ServerPark(string serverParkName);
 
+        IEnumerable<string> ServerParks();
+
         IFluentBlaiseCaseApi Case(string primaryKeyValue);
 
         IFluentBlaiseCaseApi Case(IDataRecord caseDataRecord);
 
         IDataSet Cases();
 
-        IFluentBlaiseUserApi User(string userName);
-
         IFluentBlaiseSurveyApi Survey();
 
         IEnumerable<ISurvey> Surveys();
+
+        IFluentBlaiseUserApi User(string userName);
 
         bool Exists();
     }

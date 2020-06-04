@@ -51,6 +51,11 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
+        public IEnumerable<string> ServerParks()
+        {
+            return _blaiseApi.GetServerParkNames();
+        }
+
         public IFluentBlaiseApi Instrument(string instrumentName)
         {
             _instrumentName = instrumentName;
@@ -182,7 +187,7 @@ namespace Blaise.Nuget.Api
             _blaiseApi.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName);
         }
 
-        public void Create(Dictionary<string, string> data)
+        public void Add(Dictionary<string, string> data)
         {
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();

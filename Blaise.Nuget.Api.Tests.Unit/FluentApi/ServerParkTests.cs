@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Contracts.Interfaces;
+﻿using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -26,10 +27,37 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
+        public void Given_I_Call_ServerParks_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            _blaiseApiMock.Setup(p => p.GetServerParkNames()).Returns(It.IsAny<List<string>>());
+
+            //act
+            _sut.ServerParks();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.GetServerParkNames(), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_ServerParks_Then_The_Expected_Result_Is_Returned()
+        {
+            //arrange
+            var serverParksNames = new List<string> { "Park1", "Park2" };
+            _blaiseApiMock.Setup(p => p.GetServerParkNames()).Returns(serverParksNames);
+
+            //act
+            var result = _sut.ServerParks();
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreSame(serverParksNames, result);
+        }
+
+        [Test]
         public void Given_ServerPark_Has_Been_Called_When_I_Call_ParkExists_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-
             _blaiseApiMock.Setup(p => p.ServerParkExists(It.IsAny<string>())).Returns(It.IsAny<bool>());
 
             _sut.ServerPark(_serverParkName);
