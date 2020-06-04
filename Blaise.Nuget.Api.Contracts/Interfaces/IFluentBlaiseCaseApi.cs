@@ -13,7 +13,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         bool HasBeenProcessed();
 
-        void SetStatusAs(StatusType statusType);
+        IFluentBlaiseCaseApi WithStatus(StatusType statusType);
+
+        void Update();
 
         bool Exists();
     }

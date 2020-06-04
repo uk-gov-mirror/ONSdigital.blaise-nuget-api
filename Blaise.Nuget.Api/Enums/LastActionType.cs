@@ -6,7 +6,7 @@
         Case,
         ServerPark,
         User,
-        CompletedField,
-        ProcessedField
+        Completed,
+        Processed
     }
 }

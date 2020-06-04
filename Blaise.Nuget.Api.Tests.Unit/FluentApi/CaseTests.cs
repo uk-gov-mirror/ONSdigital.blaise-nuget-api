@@ -307,7 +307,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_A_CompleteStatus_When_I_Call_SetStatusAs_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_A_CompleteStatus_When_I_Call_Update_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(d => d.MarkCaseAsComplete(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
@@ -315,9 +315,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.WithCase(_caseDataRecord);
+            _sut.WithStatus(StatusType.Completed);
 
             //act
-            _sut.SetStatusAs(StatusType.Completed);
+            _sut.Update();
 
             //assert
             _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName), Times.Once);
@@ -325,7 +326,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_A_ProcessedStatus_When_I_Call_SetStatusAs_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_A_ProcessedStatus_When_I_Call_Update_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(d => d.MarkCaseAsProcessed(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
@@ -333,9 +334,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.WithCase(_caseDataRecord);
+            _sut.WithStatus(StatusType.Processed);
 
             //act
-            _sut.SetStatusAs(StatusType.Processed);
+            _sut.Update();
 
             //assert
             _blaiseApiMock.Verify(v => v.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName), Times.Once);
@@ -344,40 +346,43 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(StatusType.Completed)]
         [TestCase(StatusType.Processed)]
-        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_SetStatusAs_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
+        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
         {
             //arrange
             _sut.WithInstrument(_instrumentName);
             _sut.WithCase(_caseDataRecord);
+            _sut.WithStatus(statusType);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.SetStatusAs(statusType));
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
             Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
         [TestCase(StatusType.Completed)]
         [TestCase(StatusType.Processed)]
-        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_SetStatusAs_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
+        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
         {
             //arrange
             _sut.WithServerPark(_serverParkName);
             _sut.WithCase(_caseDataRecord);
+            _sut.WithStatus(statusType);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.SetStatusAs(statusType));
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
             Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
         [TestCase(StatusType.Completed)]
         [TestCase(StatusType.Processed)]
-        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_SetStatusAs_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
+        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
         {
             //arrange
             _sut.WithInstrument(_instrumentName);
             _sut.WithServerPark(_serverParkName);
+            _sut.WithStatus(statusType);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.SetStatusAs(statusType));
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
             Assert.AreEqual("The 'Case' step needs to be called prior to this to specify the data record of the case", exception.Message);
         }
 
