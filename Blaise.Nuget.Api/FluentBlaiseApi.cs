@@ -22,6 +22,7 @@ namespace Blaise.Nuget.Api
         private string _password;
         private string _role;
         private IList<string> _serverParkNames;
+        private Dictionary<string, string> _data;
         private IDataRecord _caseDataRecord;
 
         private LastActionType _lastActionType;
@@ -30,6 +31,7 @@ namespace Blaise.Nuget.Api
         {
             _blaiseApi = blaiseApi;
             _serverParkNames = new List<string>();
+            _data = new Dictionary<string, string>();
         }
 
         public FluentBlaiseApi()
@@ -113,10 +115,22 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
+        public IFluentBlaiseCaseApi WithData(Dictionary<string, string> data)
+        {
+            _lastActionType = LastActionType.Case;
+
+            _data = data;
+
+            return this;
+        }
+
         public void Add()
         {
             switch (_lastActionType)
             {
+                case LastActionType.Case:
+                    AddCase();
+                    break;
                 case LastActionType.User:
                     AddUser();
                     break;
@@ -225,15 +239,6 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.CaseHasBeenProcessed(_caseDataRecord);
         }
 
-        public void Add(Dictionary<string, string> data)
-        {
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-            ValidatePrimaryKeyValueIsSet();
-
-            _blaiseApi.CreateNewDataRecord(_primaryKeyValue, data, _instrumentName, _serverParkName);
-        }
-
         public void Remove()
         {
             ValidateUserIsSet();
@@ -326,6 +331,16 @@ namespace Blaise.Nuget.Api
             _blaiseApi.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName);
         }
 
+        private void AddCase()
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+            ValidatePrimaryKeyValueIsSet();
+            ValidateDataIsSet();
+
+            _blaiseApi.CreateNewDataRecord(_primaryKeyValue, _data, _instrumentName, _serverParkName);
+        }
+
         private void ValidateServerParkIsSet()
         {
             if (string.IsNullOrWhiteSpace(_serverParkName))
@@ -387,6 +402,14 @@ namespace Blaise.Nuget.Api
             if (!_serverParkNames.Any())
             {
                 throw new NullReferenceException("The 'WithServerParks' step needs to be called prior to this to specify the server parks of the user");
+            }
+        }
+
+        private void ValidateDataIsSet()
+        {
+            if (!_data.Any())
+            {
+                throw new NullReferenceException("The 'WithData' step needs to be called prior to this to specify the data fields of the case");
             }
         }
     }

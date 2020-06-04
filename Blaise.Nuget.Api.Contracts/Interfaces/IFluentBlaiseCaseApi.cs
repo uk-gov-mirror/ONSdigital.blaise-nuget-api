@@ -5,7 +5,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IFluentBlaiseCaseApi
     {
-        void Add(Dictionary<string, string> data);
+        IFluentBlaiseCaseApi WithData(Dictionary<string, string> data);
+
+        void Add();
 
         string PrimaryKeyValue();
 
