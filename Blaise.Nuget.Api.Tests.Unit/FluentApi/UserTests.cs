@@ -12,6 +12,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         private readonly string _userName;
         private readonly string _password;
+        private readonly string _role;
+        private readonly List<string> _serverParkNameList;
 
         private FluentBlaiseApi _sut;
 
@@ -19,6 +21,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             _userName = "User1";
             _password = "Password1";
+            _role = "King";
+            _serverParkNameList = new List<string>
+            {
+                "ServerPark1",
+                "ServerPark2",
+            };
         }
 
         [SetUp]
@@ -30,99 +38,174 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_User_Has_Been_Called_When_I_Call_Add_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_All_Steps_Have_Been_Called_When_I_Call_Add_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            var serverParkNameList = new List<string>
-            {
-                "ServerPark1",
-                "ServerPark2",
-            };
-
-            const string role = "King";
-
             _sut.WithUser(_userName);
+            _sut.WithPassword(_password);
+            _sut.WithRole(_role);
+            _sut.WithServerParks(_serverParkNameList);
 
             //act
-            _sut.Add(_password, role, serverParkNameList);
+            _sut.Add();
 
             //assert
-            _blaiseApiMock.Verify(v => v.AddUser(_userName, _password, role, serverParkNameList), Times.Once);
+            _blaiseApiMock.Verify(v => v.AddUser(_userName, _password, _role, _serverParkNameList), Times.Once);
         }
 
         [Test]
-        public void Given_User_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithUser_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-            var serverParkNameList = new List<string>
-            {
-                "ServerPark1",
-                "ServerPark2",
-            };
-
-            const string role = "King";
+            _sut.WithPassword(_password);
+            _sut.WithRole(_role);
+            _sut.WithServerParks(_serverParkNameList);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Add(_password, role, serverParkNameList));
-            Assert.AreEqual("The 'User' step needs to be called prior to this to specify the name of the user", exception.Message);
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
+            Assert.AreEqual("The 'WithUser' step needs to be called prior to this to specify the name of the user", exception.Message);
         }
 
         [Test]
-        public void Given_User_Has_Been_Called_When_I_Call_Update_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_WithPassword_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-            var serverParkNameList = new List<string>
-            {
-                "ServerPark1",
-                "ServerPark2",
-            };
-
-            const string role = "King";
-
             _sut.WithUser(_userName);
-
-            //act
-            _sut.Update(role, serverParkNameList);
-
-            //assert
-            _blaiseApiMock.Verify(v => v.EditUser(_userName, role, serverParkNameList), Times.Once);
-        }
-
-        [Test]
-        public void Given_User_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            var serverParkNameList = new List<string>
-            {
-                "ServerPark1",
-                "ServerPark2",
-            };
-
-            const string role = "King";
+            _sut.WithRole(_role);
+            _sut.WithServerParks(_serverParkNameList);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Update(role, serverParkNameList));
-            Assert.AreEqual("The 'User' step needs to be called prior to this to specify the name of the user", exception.Message);
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
+            Assert.AreEqual("The 'WithPassword' step needs to be called prior to this to specify the password of the user", exception.Message);
         }
 
         [Test]
-        public void Given_User_Has_Been_Called_When_I_Call_ChangePassword_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_WithRole_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
         {
+            //arrange
             _sut.WithUser(_userName);
+            _sut.WithPassword(_password);
+            _sut.WithServerParks(_serverParkNameList);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
+            Assert.AreEqual("The 'WithRole' step needs to be called prior to this to specify the role of the user", exception.Message);
+        }
+
+        [Test]
+        public void Given_WithServerParks_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithUser(_userName);
+            _sut.WithPassword(_password);
+            _sut.WithRole(_role);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
+            Assert.AreEqual("The 'WithServerParks' step needs to be called prior to this to specify the server parks of the user", exception.Message);
+        }
+
+        [Test]
+        public void Given_All_Steps_Have_Been_Called_When_I_Call_Update_Then_The_Correct_Service_Methods_Are_Called()
+        {
+            //arrange
+            _sut.WithUser(_userName);
+            _sut.WithPassword(_password);
+            _sut.WithRole(_role);
+            _sut.WithServerParks(_serverParkNameList);
 
             //act
-            _sut.ChangePassword(_password);
+            _sut.Update();
 
             //assert
             _blaiseApiMock.Verify(v => v.ChangePassword(_userName, _password), Times.Once);
+            _blaiseApiMock.Verify(v => v.EditUser(_userName, _role, _serverParkNameList), Times.Once);
         }
 
         [Test]
-        public void Given_User_Has_Not_Been_Called_When_I_Call_AddUserChangePassword_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Only_WithPassword_Step_Has_Been_Called_When_I_Call_Update_Then_The_Correct_Service_Methods_Are_Called()
         {
+            //arrange
+            _sut.WithUser(_userName);
+            _sut.WithPassword(_password);
+
+            //act
+            _sut.Update();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.ChangePassword(_userName, _password), Times.Once);
+            _blaiseApiMock.Verify(v => v.EditUser(_userName, _role, _serverParkNameList), Times.Never);
+        }
+
+        [Test]
+        public void Given_Only_WithRole_And_WithServerParks_Steps_Have_Been_Called_When_I_Call_Update_Then_The_Correct_Service_Methods_Are_Called()
+        {
+            //arrange
+            _sut.WithUser(_userName);
+            _sut.WithRole(_role);
+            _sut.WithServerParks(_serverParkNameList);
+
+            //act
+            _sut.Update();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.ChangePassword(_userName, _password), Times.Never);
+            _blaiseApiMock.Verify(v => v.EditUser(_userName, _role, _serverParkNameList), Times.Once);
+        }
+
+        [Test]
+        public void Given_WithUser_Has_Not_Been_Called_But_WithPassword_Has_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithPassword(_password);
+
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.ChangePassword(_password));
-            Assert.AreEqual("The 'User' step needs to be called prior to this to specify the name of the user", exception.Message);
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
+            Assert.AreEqual("The 'WithUser' step needs to be called prior to this to specify the name of the user", exception.Message);
+        }
+
+        [Test]
+        public void Given_WithUser_Has_Not_Been_Called_But_WithRole_Has_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithRole(_role);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
+            Assert.AreEqual("The 'WithUser' step needs to be called prior to this to specify the name of the user", exception.Message);
+        }
+
+        [Test]
+        public void Given_WithUser_Has_Not_Been_Called_But_WithServerParks_Has_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithServerParks(_serverParkNameList);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
+            Assert.AreEqual("The 'WithUser' step needs to be called prior to this to specify the name of the user", exception.Message);
+        }
+
+        [Test]
+        public void Given_WithRole_Has_Not_Been_Called_But_WithServerParks_Has_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+        {
+            _sut.WithUser(_userName);
+            _sut.WithServerParks(_serverParkNameList);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
+            Assert.AreEqual("The 'WithRole' step needs to be called prior to this to specify the role of the user", exception.Message);
+        }
+
+        [Test]
+        public void Given_WithServerParks_Has_Not_Been_Called_But_WithRole_Has_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+        {
+            _sut.WithUser(_userName);
+            _sut.WithRole(_role);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
+            Assert.AreEqual("The 'WithServerParks' step needs to be called prior to this to specify the server parks of the user", exception.Message);
         }
 
         [Test]
@@ -177,7 +260,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Remove());
-            Assert.AreEqual("The 'User' step needs to be called prior to this to specify the name of the user", exception.Message);
+            Assert.AreEqual("The 'WithUser' step needs to be called prior to this to specify the name of the user", exception.Message);
         }
     }
 }
