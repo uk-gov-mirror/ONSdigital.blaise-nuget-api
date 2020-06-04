@@ -140,6 +140,65 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
+        public void Given_Valid_Arguments_When_I_Call_EditUser_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            var serverParkNameList = new List<string>
+            {
+                "ServerPark1",
+                "ServerPark2",
+            };
+
+            const string role = "King";
+
+            //act
+            _sut.EditUser(_userName, role, serverParkNameList);
+
+            //assert
+            _connectedServerMock.Verify(v => v.Users.GetItem(_userName), Times.Once);
+
+            _userMock.Verify(u => u.ServerParks.Clear(), Times.Once);
+
+            foreach (var serverParkName in serverParkNameList)
+            {
+                _userServerParkCollectionMock.Verify(v => v.Add(serverParkName), Times.Once);
+            }
+
+            _userMock.VerifySet(u => u.Role = role, Times.Once);
+            _userMock.Verify(v => v.Save(), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Error_Occurs_In_Setting_The_User_Role_When_I_Call_EditUser_Then_The_User_Is_Still_Added()
+        {
+            //arrange
+            var serverParkNameList = new List<string>
+            {
+                "ServerPark1",
+                "ServerPark2",
+            };
+
+            const string role = "King";
+
+            _userMock.Setup(u => u.Role).Throws(new Exception());
+
+            //act
+            _sut.EditUser(_userName, role, serverParkNameList);
+
+            //assert
+            _connectedServerMock.Verify(v => v.Users.GetItem(_userName), Times.Once);
+
+            _userMock.Verify(u => u.ServerParks.Clear(), Times.Once);
+
+            foreach (var serverParkName in serverParkNameList)
+            {
+                _userServerParkCollectionMock.Verify(v => v.Add(serverParkName), Times.Once);
+            }
+
+            _userMock.Verify(v => v.Save(), Times.Once);
+        }
+
+        [Test]
         public void Give_Valid_Parameters_When_I_Call_ChangePassword_Then_The_Correct_Services_Are_Called()
         {
             //arrange

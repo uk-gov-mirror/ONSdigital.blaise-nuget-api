@@ -25,16 +25,21 @@ namespace Blaise.Nuget.Api.Core.Services
             var securePassword = _passwordService.CreateSecurePassword(password);
             var user = (IUser2)connection.AddUser(userName, securePassword);
 
-            foreach (var serverParkName in serverParkNames)
-            {
-                user.ServerParks.Add(serverParkName);
-            }
+            AddServerParksToUser(user, serverParkNames);
+            AssignRoleToUser(user, role);
 
-            try
-            {
-                user.Role = role; // Try to update the user's role. If an error is thrown leave it blank.
-            }
-            catch {}
+            user.Save();
+        }
+
+        public void EditUser(string userName, string role, IEnumerable<string> serverParkNames)
+        {
+            var connection = _connectedServerFactory.GetConnection();
+            var user = (IUser2)connection.Users.GetItem(userName);
+
+            user.ServerParks.Clear();
+
+            AddServerParksToUser(user, serverParkNames);
+            AssignRoleToUser(user, role);
 
             user.Save();
         }
@@ -62,6 +67,23 @@ namespace Blaise.Nuget.Api.Core.Services
             var connection = _connectedServerFactory.GetConnection();
 
             connection.RemoveUser(userName);
+        }
+
+        private static void AddServerParksToUser(IUser user, IEnumerable<string> serverParkNames)
+        {
+            foreach (var serverParkName in serverParkNames)
+            {
+                user.ServerParks.Add(serverParkName);
+            }
+        }
+
+        private void AssignRoleToUser(IUser2 user, string role)
+        {
+            try
+            {
+                user.Role = role; // Try to update the user's role. If an error is thrown leave it blank.
+            }
+            catch { }
         }
     }
 }

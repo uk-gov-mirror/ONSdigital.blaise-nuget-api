@@ -3,7 +3,6 @@ using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Enums;
 using StatNeth.Blaise.API.ServerManager;
@@ -189,11 +188,18 @@ namespace Blaise.Nuget.Api
             _blaiseApi.CreateNewDataRecord(_primaryKeyValue, data, _instrumentName, _serverParkName);
         }
 
-        public void Add(string password, string role, IEnumerable<string> serverParkNames)
+        public void Add(string password, string role, IList<string> serverParkNames)
         {
             ValidateUserIsSet();
 
-            _blaiseApi.AddUser(_userName, password, role, serverParkNames.ToList());
+            _blaiseApi.AddUser(_userName, password, role, serverParkNames);
+        }
+
+        public void Update(string role, IList<string> serverParkNames)
+        {
+            ValidateUserIsSet();
+
+            _blaiseApi.EditUser(_userName, role, serverParkNames);
         }
 
         public void ChangePassword(string password)
