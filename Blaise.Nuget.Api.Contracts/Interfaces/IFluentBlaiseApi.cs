@@ -7,25 +7,25 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IFluentBlaiseApi
     {
-        IFluentBlaiseApi Server(string serverName);
+        IFluentBlaiseApi WithServer(string serverName);
 
-        IFluentBlaiseApi Instrument(string instrumentName);
+        IFluentBlaiseApi WithInstrument(string instrumentName);
 
-        IFluentBlaiseApi ServerPark(string serverParkName);
+        IFluentBlaiseApi WithServerPark(string serverParkName);
 
         IEnumerable<string> ServerParks();
 
-        IFluentBlaiseCaseApi Case(string primaryKeyValue);
+        IFluentBlaiseCaseApi WithCase(string primaryKeyValue);
 
-        IFluentBlaiseCaseApi Case(IDataRecord caseDataRecord);
+        IFluentBlaiseCaseApi WithCase(IDataRecord caseDataRecord);
 
         IDataSet Cases();
 
-        IFluentBlaiseSurveyApi Survey();
+        IFluentBlaiseSurveyApi Survey { get; }
 
         IEnumerable<ISurvey> Surveys();
 
-        IFluentBlaiseUserApi User(string userName);
+        IFluentBlaiseUserApi WithUser(string userName);
 
         bool Exists();
     }

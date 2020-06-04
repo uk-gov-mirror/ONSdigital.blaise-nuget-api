@@ -55,12 +55,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_ServerPark_Has_Been_Called_When_I_Call_ParkExists_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_WithServerPark_Has_Been_Called_When_I_Call_ParkExists_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(p => p.ServerParkExists(It.IsAny<string>())).Returns(It.IsAny<bool>());
 
-            _sut.ServerPark(_serverParkName);
+            _sut.WithServerPark(_serverParkName);
 
             //act
             _sut.Exists();
@@ -71,13 +71,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_ServerPark_Has_Been_Called_When_I_Call_ParkExists_Then_The_Expected_Result_Is_Returned(bool serverParkExists)
+        public void Given_WithServerPark_Has_Been_Called_When_I_Call_ParkExists_Then_The_Expected_Result_Is_Returned(bool serverParkExists)
         {
             //arrange
 
             _blaiseApiMock.Setup(p => p.ServerParkExists(_serverParkName)).Returns(serverParkExists);
 
-            _sut.ServerPark(_serverParkName);
+            _sut.WithServerPark(_serverParkName);
 
             //act
             var result = _sut.Exists();

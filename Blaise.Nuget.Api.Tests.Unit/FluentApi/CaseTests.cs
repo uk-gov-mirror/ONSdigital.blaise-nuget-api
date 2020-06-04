@@ -38,10 +38,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_A_Primary_Key_Value_When_I_Call_Case_Then_It_Returns_Same_Instance_Of_Itself_Back()
+        public void Given_A_Primary_Key_Value_When_I_Call_WithCase_Then_It_Returns_Same_Instance_Of_Itself_Back()
         {
             //act
-            var result = _sut.Case(_primaryKeyValue);
+            var result = _sut.WithCase(_primaryKeyValue);
 
             //assert
             Assert.IsNotNull(result);
@@ -50,10 +50,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_A_Case_Data_Record_When_I_Call_Case_Then_It_Returns_Same_Instance_Of_Itself_Back()
+        public void Given_A_Case_Data_Record_When_I_Call_WithCase_Then_It_Returns_Same_Instance_Of_Itself_Back()
         {
             //act
-            var result = _sut.Case(_caseDataRecord);
+            var result = _sut.WithCase(_caseDataRecord);
 
             //assert
             Assert.IsNotNull(result);
@@ -69,9 +69,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _blaiseApiMock.Setup(d => d.CreateNewDataRecord(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<string>(), It.IsAny<string>()));
 
-            _sut.ServerPark(_serverParkName);
-            _sut.Instrument(_instrumentName);
-            _sut.Case(_primaryKeyValue);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithCase(_primaryKeyValue);
 
             //act
             _sut.Add(fieldData);
@@ -81,13 +81,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>();
 
-            _sut.Instrument(_instrumentName);
-            _sut.Case(_primaryKeyValue);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithCase(_primaryKeyValue);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add(fieldData));
@@ -95,13 +95,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>();
 
-            _sut.ServerPark(_serverParkName);
-            _sut.Case(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithCase(_instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add(fieldData));
@@ -109,13 +109,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>();
 
-            _sut.ServerPark(_serverParkName);
-            _sut.Instrument(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add(fieldData));
@@ -130,8 +130,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _blaiseApiMock.Setup(d => d.GetDataSet(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<IDataSet>());
 
-            _sut.ServerPark(_serverParkName);
-            _sut.Instrument(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
 
             //act
             _sut.Cases();
@@ -148,8 +148,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _blaiseApiMock.Setup(d => d.GetDataSet(_instrumentName, _serverParkName)).Returns(dataSetMock.Object);
 
-            _sut.ServerPark(_serverParkName);
-            _sut.Instrument(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
 
             //act
             var result = _sut.Cases();
@@ -160,10 +160,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-            _sut.Instrument(_instrumentName);
+            _sut.WithInstrument(_instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Cases());
@@ -171,10 +171,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-            _sut.ServerPark(_serverParkName);
+            _sut.WithServerPark(_serverParkName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Cases());
@@ -189,7 +189,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _blaiseApiMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(It.IsAny<string>());
 
-            _sut.Case(_caseDataRecord);
+            _sut.WithCase(_caseDataRecord);
 
             //act
             _sut.PrimaryKeyValue();
@@ -204,7 +204,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _blaiseApiMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(_primaryKeyValue);
 
-            _sut.Case(_caseDataRecord);
+            _sut.WithCase(_caseDataRecord);
 
             //act
             var result = _sut.PrimaryKeyValue();
@@ -215,7 +215,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Has_Not_Been_Called_When_I_Call_PrimaryKeyValue_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_PrimaryKeyValue_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
@@ -225,12 +225,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Has_Been_Called_When_I_Call_IsComplete_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_WithCase_Has_Been_Called_When_I_Call_IsComplete_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenCompleted(It.IsAny<IDataRecord>())).Returns(It.IsAny<bool>());
 
-            _sut.Case(_caseDataRecord);
+            _sut.WithCase(_caseDataRecord);
 
             //act
             _sut.IsComplete();
@@ -241,12 +241,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_Case_Has_Been_Called_When_I_Call_IsComplete_Then_The_Expected_Result_Is_Returned(bool caseIsComplete)
+        public void Given_WithCase_Has_Been_Called_When_I_Call_IsComplete_Then_The_Expected_Result_Is_Returned(bool caseIsComplete)
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenCompleted(_caseDataRecord)).Returns(caseIsComplete);
 
-            _sut.Case(_caseDataRecord);
+            _sut.WithCase(_caseDataRecord);
             //act
             var result = _sut.IsComplete();
 
@@ -256,7 +256,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Has_Not_Been_Called_When_I_Call_IsComplete_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_IsComplete_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
@@ -266,12 +266,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Has_Been_Called_When_I_Call_HasBeenProcessed_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_WithCase_Has_Been_Called_When_I_Call_HasBeenProcessed_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenProcessed(It.IsAny<IDataRecord>())).Returns(It.IsAny<bool>());
 
-            _sut.Case(_caseDataRecord);
+            _sut.WithCase(_caseDataRecord);
 
             //act
             _sut.HasBeenProcessed();
@@ -282,12 +282,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_Case_Has_Been_Called_When_I_Call_HasBeenProcessed_Then_The_Expected_Result_Is_Returned(bool caseHasBeenProcessed)
+        public void Given_WithCase_Has_Been_Called_When_I_Call_HasBeenProcessed_Then_The_Expected_Result_Is_Returned(bool caseHasBeenProcessed)
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenProcessed(_caseDataRecord)).Returns(caseHasBeenProcessed);
 
-            _sut.Case(_caseDataRecord);
+            _sut.WithCase(_caseDataRecord);
             //act
             var result = _sut.HasBeenProcessed();
 
@@ -297,7 +297,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Has_Not_Been_Called_When_I_Call_HasBeenProcessed_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_HasBeenProcessed_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
@@ -312,9 +312,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _blaiseApiMock.Setup(d => d.MarkCaseAsComplete(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
 
-            _sut.ServerPark(_serverParkName);
-            _sut.Instrument(_instrumentName);
-            _sut.Case(_caseDataRecord);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithCase(_caseDataRecord);
 
             //act
             _sut.SetStatusAs(StatusType.Completed);
@@ -330,9 +330,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _blaiseApiMock.Setup(d => d.MarkCaseAsProcessed(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
 
-            _sut.ServerPark(_serverParkName);
-            _sut.Instrument(_instrumentName);
-            _sut.Case(_caseDataRecord);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithCase(_caseDataRecord);
 
             //act
             _sut.SetStatusAs(StatusType.Processed);
@@ -344,11 +344,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(StatusType.Completed)]
         [TestCase(StatusType.Processed)]
-        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_SetStatusAs_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
+        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_SetStatusAs_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
         {
             //arrange
-            _sut.Instrument(_instrumentName);
-            _sut.Case(_caseDataRecord);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithCase(_caseDataRecord);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.SetStatusAs(statusType));
@@ -357,11 +357,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(StatusType.Completed)]
         [TestCase(StatusType.Processed)]
-        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_SetStatusAs_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
+        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_SetStatusAs_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
         {
             //arrange
-            _sut.ServerPark(_serverParkName);
-            _sut.Case(_caseDataRecord);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithCase(_caseDataRecord);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.SetStatusAs(statusType));
@@ -370,11 +370,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(StatusType.Completed)]
         [TestCase(StatusType.Processed)]
-        public void Given_Case_Has_Not_Been_Called_When_I_Call_SetStatusAs_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
+        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_SetStatusAs_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
         {
             //arrange
-            _sut.Instrument(_instrumentName);
-            _sut.ServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.SetStatusAs(statusType));
@@ -388,9 +388,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _blaiseApiMock.Setup(p => p.CaseExists(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
 
-            _sut.ServerPark(_serverParkName);
-            _sut.Instrument(_instrumentName);
-            _sut.Case(_primaryKeyValue);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithCase(_primaryKeyValue);
 
             //act
             _sut.Exists();
@@ -407,9 +407,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _blaiseApiMock.Setup(p => p.CaseExists(_primaryKeyValue, _instrumentName, _serverParkName)).Returns(caseExists);
 
-            _sut.ServerPark(_serverParkName);
-            _sut.Instrument(_instrumentName);
-            _sut.Case(_primaryKeyValue);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithCase(_primaryKeyValue);
 
             //act
             var result = _sut.Exists();
@@ -424,8 +424,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             //arrange
 
-            _sut.ServerPark(_serverParkName);
-            _sut.Case(_primaryKeyValue);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithCase(_primaryKeyValue);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Exists());
@@ -437,8 +437,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             //arrange
 
-            _sut.Instrument(_instrumentName);
-            _sut.Case(_primaryKeyValue);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithCase(_primaryKeyValue);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Exists());

@@ -34,14 +34,14 @@ namespace Blaise.Nuget.Api
             _blaiseApi = unityContainer.Resolve<IBlaiseApi>();
         }
 
-        public IFluentBlaiseApi Server(string serverName)
+        public IFluentBlaiseApi WithServer(string serverName)
         {
             _blaiseApi.UseServer(serverName);
 
             return this;
         }
 
-        public IFluentBlaiseApi ServerPark(string serverParkName)
+        public IFluentBlaiseApi WithServerPark(string serverParkName)
         {
             _lastActionType = LastActionType.ServerPark;
             _serverParkName = serverParkName;
@@ -54,14 +54,14 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.GetServerParkNames();
         }
 
-        public IFluentBlaiseApi Instrument(string instrumentName)
+        public IFluentBlaiseApi WithInstrument(string instrumentName)
         {
             _instrumentName = instrumentName;
 
             return this;
         }
 
-        public IFluentBlaiseCaseApi Case(string primaryKeyValue)
+        public IFluentBlaiseCaseApi WithCase(string primaryKeyValue)
         {
             _lastActionType = LastActionType.Case;
             _primaryKeyValue = primaryKeyValue;
@@ -69,14 +69,14 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IFluentBlaiseCaseApi Case(IDataRecord caseDataRecord)
+        public IFluentBlaiseCaseApi WithCase(IDataRecord caseDataRecord)
         {
             _caseDataRecord = caseDataRecord;
 
             return this;
         }
 
-        public IFluentBlaiseUserApi User(string userName)
+        public IFluentBlaiseUserApi WithUser(string userName)
         {
             _lastActionType = LastActionType.User;
             _userName = userName;
@@ -84,10 +84,7 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IFluentBlaiseSurveyApi Survey()
-        {
-            return this;
-        }
+        public IFluentBlaiseSurveyApi Survey => this;
 
         public void SetStatusAs(StatusType statusType)
         {
@@ -116,6 +113,10 @@ namespace Blaise.Nuget.Api
                     return ParkExists();
                 case LastActionType.User:
                     return UserExists();
+                case LastActionType.CompletedField:
+                    return CompletedFieldExists();
+                case LastActionType.ProcessedField:
+                    return ProcessedFieldExists();
                 default:
                     throw new NotSupportedException("You have not declared a step previously where this action is supported");
             }
@@ -134,14 +135,14 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.GetSurveyType(_instrumentName, _serverParkName);
         }
 
-        public bool HasField(FieldNameType fieldNameType)
-        {
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
 
-            return fieldNameType == FieldNameType.Completed 
-                ? _blaiseApi.CompletedFieldExists(_instrumentName, _serverParkName) 
-                : _blaiseApi.ProcessedFieldExists(_instrumentName, _serverParkName);
+        IFluentBlaiseSurveyApi IFluentBlaiseSurveyApi.WithField(FieldNameType fieldType)
+        {
+            _lastActionType = fieldType == FieldNameType.Completed
+                ? LastActionType.CompletedField
+                : LastActionType.ProcessedField;
+
+            return this;
         }
 
         public IDataSet Cases()
@@ -233,6 +234,22 @@ namespace Blaise.Nuget.Api
             ValidateUserIsSet();
 
             return _blaiseApi.UserExists(_userName);
+        }
+
+        private bool CompletedFieldExists()
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+
+            return _blaiseApi.CompletedFieldExists(_instrumentName, _serverParkName);
+        }
+
+        private bool ProcessedFieldExists()
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+
+            return _blaiseApi.ProcessedFieldExists(_instrumentName, _serverParkName);
         }
 
         private void ValidateServerParkIsSet()
