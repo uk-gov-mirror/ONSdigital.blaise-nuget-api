@@ -86,20 +86,27 @@ namespace Blaise.Nuget.Api
 
         public IFluentBlaiseSurveyApi Survey => this;
 
-        public void SetStatusAs(StatusType statusType)
+        public IFluentBlaiseCaseApi WithStatus(StatusType statusType)
         {
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-            ValidateCaseDataRecordIsSet();
+            _lastActionType = statusType == StatusType.Completed
+                ? LastActionType.Completed
+                : LastActionType.Processed;
 
-            switch (statusType)
+            return this;
+        }
+
+        public void Update()
+        {
+            switch (_lastActionType)
             {
-                case StatusType.Completed:
-                    _blaiseApi.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName);
+                case LastActionType.Completed:
+                     SetStatusAsComplete();
                     break;
-                case StatusType.Processed:
-                    _blaiseApi.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName);
+                case LastActionType.Processed:
+                    SetStatusAsProcessed();
                     break;
+                default:
+                    throw new NotSupportedException("You have not declared a step previously where this action is supported");
             }
         }
 
@@ -113,9 +120,9 @@ namespace Blaise.Nuget.Api
                     return ParkExists();
                 case LastActionType.User:
                     return UserExists();
-                case LastActionType.CompletedField:
+                case LastActionType.Completed:
                     return CompletedFieldExists();
-                case LastActionType.ProcessedField:
+                case LastActionType.Processed:
                     return ProcessedFieldExists();
                 default:
                     throw new NotSupportedException("You have not declared a step previously where this action is supported");
@@ -139,8 +146,8 @@ namespace Blaise.Nuget.Api
         IFluentBlaiseSurveyApi IFluentBlaiseSurveyApi.WithField(FieldNameType fieldType)
         {
             _lastActionType = fieldType == FieldNameType.Completed
-                ? LastActionType.CompletedField
-                : LastActionType.ProcessedField;
+                ? LastActionType.Completed
+                : LastActionType.Processed;
 
             return this;
         }
@@ -173,7 +180,6 @@ namespace Blaise.Nuget.Api
 
             return _blaiseApi.CaseHasBeenProcessed(_caseDataRecord);
         }
-
 
         public void Add(Dictionary<string, string> data)
         {
@@ -250,6 +256,24 @@ namespace Blaise.Nuget.Api
             ValidateInstrumentIsSet();
 
             return _blaiseApi.ProcessedFieldExists(_instrumentName, _serverParkName);
+        }
+
+        private void SetStatusAsComplete()
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+            ValidateCaseDataRecordIsSet();
+
+            _blaiseApi.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName);
+        }
+
+        private void SetStatusAsProcessed()
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+            ValidateCaseDataRecordIsSet();
+
+            _blaiseApi.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName);
         }
 
         private void ValidateServerParkIsSet()
