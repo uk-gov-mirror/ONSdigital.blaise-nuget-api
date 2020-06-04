@@ -23,7 +23,6 @@ namespace Blaise.Nuget.Api
 
         private LastActionType _lastActionType;
 
-
         internal FluentBlaiseApi(IBlaiseApi blaiseApi)
         {
             _blaiseApi = blaiseApi;
@@ -96,6 +95,23 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
+        public void SetStatusAs(StatusType statusType)
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+            ValidateCaseDataRecordIsSet();
+
+            switch (statusType)
+            {
+                case StatusType.Completed:
+                    _blaiseApi.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName);
+                    break;
+                case StatusType.Processed:
+                    _blaiseApi.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName);
+                    break;
+            }
+        }
+
         public bool Exists()
         {
             switch (_lastActionType)
@@ -124,20 +140,14 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.GetSurveyType(_instrumentName, _serverParkName);
         }
 
-        public bool CompletedFieldExists()
+        public bool HasField(FieldNameType fieldNameType)
         {
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
 
-            return _blaiseApi.CompletedFieldExists(_instrumentName, _serverParkName);
-        }
-
-        public bool ProcessedFieldExists()
-        {
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-
-            return _blaiseApi.ProcessedFieldExists(_instrumentName, _serverParkName);
+            return fieldNameType == FieldNameType.Completed 
+                ? _blaiseApi.CompletedFieldExists(_instrumentName, _serverParkName) 
+                : _blaiseApi.ProcessedFieldExists(_instrumentName, _serverParkName);
         }
 
         public IDataSet Cases()
@@ -155,37 +165,20 @@ namespace Blaise.Nuget.Api
             return _blaiseApi.GetPrimaryKeyValue(_caseDataRecord);
         }
 
-        public bool Completed()
+        public bool IsComplete()
         {
             ValidateCaseDataRecordIsSet();
 
             return _blaiseApi.CaseHasBeenCompleted(_caseDataRecord);
         }
 
-        public bool Processed()
+        public bool HasBeenProcessed()
         {
             ValidateCaseDataRecordIsSet();
 
             return _blaiseApi.CaseHasBeenProcessed(_caseDataRecord);
         }
 
-        public void MarkAsComplete()
-        {
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-            ValidateCaseDataRecordIsSet();
-
-            _blaiseApi.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName);
-        }
-
-        public void MarkAsProcessed()
-        {
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-            ValidateCaseDataRecordIsSet();
-
-            _blaiseApi.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName);
-        }
 
         public void Add(Dictionary<string, string> data)
         {

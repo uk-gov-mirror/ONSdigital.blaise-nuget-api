@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\FieldNameType.cs" />
+    <Compile Include="Enums\StatusType.cs" />
     <Compile Include="Enums\SurveyType.cs" />
     <Compile Include="Exceptions\DataNotFoundException.cs" />
     <Compile Include="Interfaces\IBlaiseApi.cs" />
