@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Enums;
 
 namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
@@ -8,13 +9,11 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         string PrimaryKeyValue();
 
-        bool Completed();
+        bool IsComplete();
 
-        bool Processed();
+        bool HasBeenProcessed();
 
-        void MarkAsComplete();
-        
-        void MarkAsProcessed();
+        void SetStatusAs(StatusType statusType);
 
         bool Exists();
     }

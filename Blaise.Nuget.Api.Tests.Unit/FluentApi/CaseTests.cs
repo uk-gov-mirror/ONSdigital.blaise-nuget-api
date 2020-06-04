@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -224,7 +225,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Has_Been_Called_When_I_Call_Completed_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Case_Has_Been_Called_When_I_Call_IsComplete_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenCompleted(It.IsAny<IDataRecord>())).Returns(It.IsAny<bool>());
@@ -232,7 +233,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Case(_caseDataRecord);
 
             //act
-            _sut.Completed();
+            _sut.IsComplete();
 
             //assert
             _blaiseApiMock.Verify(v => v.CaseHasBeenCompleted(_caseDataRecord), Times.Once);
@@ -240,14 +241,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_Case_Has_Been_Called_When_I_Call_Completed_Then_The_Expected_Result_Is_Returned(bool caseIsComplete)
+        public void Given_Case_Has_Been_Called_When_I_Call_IsComplete_Then_The_Expected_Result_Is_Returned(bool caseIsComplete)
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenCompleted(_caseDataRecord)).Returns(caseIsComplete);
 
             _sut.Case(_caseDataRecord);
             //act
-            var result = _sut.Completed();
+            var result = _sut.IsComplete();
 
             //assert
             Assert.IsNotNull(result);
@@ -255,17 +256,17 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Has_Not_Been_Called_When_I_Call_Completed_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Has_Not_Been_Called_When_I_Call_IsComplete_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Completed());
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.IsComplete());
             Assert.AreEqual("The 'Case' step needs to be called prior to this to specify the data record of the case", exception.Message);
         }
 
         [Test]
-        public void Given_Case_Has_Been_Called_When_I_Call_Processed_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Case_Has_Been_Called_When_I_Call_HasBeenProcessed_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenProcessed(It.IsAny<IDataRecord>())).Returns(It.IsAny<bool>());
@@ -273,7 +274,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Case(_caseDataRecord);
 
             //act
-            _sut.Processed();
+            _sut.HasBeenProcessed();
 
             //assert
             _blaiseApiMock.Verify(v => v.CaseHasBeenProcessed(_caseDataRecord), Times.Once);
@@ -281,14 +282,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_Case_Has_Been_Called_When_I_Call_Processed_Then_The_Expected_Result_Is_Returned(bool caseHasBeenProcessed)
+        public void Given_Case_Has_Been_Called_When_I_Call_HasBeenProcessed_Then_The_Expected_Result_Is_Returned(bool caseHasBeenProcessed)
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenProcessed(_caseDataRecord)).Returns(caseHasBeenProcessed);
 
             _sut.Case(_caseDataRecord);
             //act
-            var result = _sut.Processed();
+            var result = _sut.HasBeenProcessed();
 
             //assert
             Assert.IsNotNull(result);
@@ -296,17 +297,17 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Has_Not_Been_Called_When_I_Call_Processed_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Has_Not_Been_Called_When_I_Call_HasBeenProcessed_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Processed());
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.HasBeenProcessed());
             Assert.AreEqual("The 'Case' step needs to be called prior to this to specify the data record of the case", exception.Message);
         }
 
         [Test]
-        public void Given_The_Necessary_Steps_Has_Been_Called_When_I_Call_MarkAsComplete_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_A_CompleteStatus_When_I_Call_SetStatusAs_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(d => d.MarkCaseAsComplete(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
@@ -316,50 +317,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Case(_caseDataRecord);
 
             //act
-            _sut.MarkAsComplete();
+            _sut.SetStatusAs(StatusType.Completed);
 
             //assert
             _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
-        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_MarkAsComplete_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            _sut.Instrument(_instrumentName);
-            _sut.Case(_caseDataRecord);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkAsComplete());
-            Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
-        }
-
-        [Test]
-        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_MarkAsComplete_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            _sut.ServerPark(_serverParkName);
-            _sut.Case(_caseDataRecord);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkAsComplete());
-            Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
-        }
-
-        [Test]
-        public void Given_Case_Has_Not_Been_Called_When_I_Call_MarkAsComplete_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            _sut.Instrument(_instrumentName);
-            _sut.ServerPark(_serverParkName);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkAsComplete());
-            Assert.AreEqual("The 'Case' step needs to be called prior to this to specify the data record of the case", exception.Message);
-        }
-
-        [Test]
-        public void Given_The_Necessary_Steps_Has_Been_Called_When_I_Call_MarkAsProcessed_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_A_ProcessedStatus_When_I_Call_SetStatusAs_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(d => d.MarkCaseAsProcessed(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
@@ -369,45 +334,48 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Case(_caseDataRecord);
 
             //act
-            _sut.MarkAsProcessed();
+            _sut.SetStatusAs(StatusType.Processed);
 
             //assert
             _blaiseApiMock.Verify(v => v.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName), Times.Once);
         }
 
-        [Test]
-        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_MarkAsProcessed_Then_An_NullReferenceException_Is_Thrown()
+        [TestCase(StatusType.Completed)]
+        [TestCase(StatusType.Processed)]
+        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_SetStatusAs_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
         {
             //arrange
             _sut.Instrument(_instrumentName);
             _sut.Case(_caseDataRecord);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkAsProcessed());
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.SetStatusAs(statusType));
             Assert.AreEqual("The 'ServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
-        [Test]
-        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_MarkAsProcessed_Then_An_NullReferenceException_Is_Thrown()
+        [TestCase(StatusType.Completed)]
+        [TestCase(StatusType.Processed)]
+        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_SetStatusAs_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
         {
             //arrange
             _sut.ServerPark(_serverParkName);
             _sut.Case(_caseDataRecord);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkAsProcessed());
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.SetStatusAs(statusType));
             Assert.AreEqual("The 'Instrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
-        [Test]
-        public void Given_Case_Has_Not_Been_Called_When_I_Call_MarkAsProcessed_Then_An_NullReferenceException_Is_Thrown()
+        [TestCase(StatusType.Completed)]
+        [TestCase(StatusType.Processed)]
+        public void Given_Case_Has_Not_Been_Called_When_I_Call_SetStatusAs_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
         {
             //arrange
             _sut.Instrument(_instrumentName);
             _sut.ServerPark(_serverParkName);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.MarkAsProcessed());
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.SetStatusAs(statusType));
             Assert.AreEqual("The 'Case' step needs to be called prior to this to specify the data record of the case", exception.Message);
         }
 
