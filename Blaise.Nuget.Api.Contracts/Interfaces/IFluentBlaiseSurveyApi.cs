@@ -7,8 +7,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
     {
         IFluentBlaiseSurveyApi WithField(FieldNameType fieldType);
 
-        SurveyType Type();
+        SurveyType Type { get; }
 
-        bool Exists();
+        bool Exists { get; }
     }
 }

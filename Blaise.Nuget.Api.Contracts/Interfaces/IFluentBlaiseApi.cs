@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using StatNeth.Blaise.API.DataLink;
-using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Contracts.Interfaces
@@ -13,20 +12,18 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseApi WithServerPark(string serverParkName);
 
-        IEnumerable<string> ServerParks();
+        IEnumerable<string> ServerParks { get; }
 
-        IFluentBlaiseCaseApi WithCase(string primaryKeyValue);
+        IDataSet Cases { get; }
 
-        IFluentBlaiseCaseApi WithCase(IDataRecord caseDataRecord);
+        IFluentBlaiseUserApi User { get; }
 
-        IDataSet Cases();
-
-        IFluentBlaiseUserApi WithUser(string userName);
+        IFluentBlaiseCaseApi Case { get; }
 
         IFluentBlaiseSurveyApi Survey { get; }
 
-        IEnumerable<ISurvey> Surveys();
+        IEnumerable<ISurvey> Surveys { get; }
 
-        bool Exists();
+        bool Exists { get; }
     }
 }

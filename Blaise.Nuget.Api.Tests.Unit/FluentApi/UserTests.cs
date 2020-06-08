@@ -41,7 +41,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_All_Steps_Have_Been_Called_When_I_Call_Add_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            _sut.WithUser(_userName);
+            _sut.WithUserName(_userName);
             _sut.WithPassword(_password);
             _sut.WithRole(_role);
             _sut.WithServerParks(_serverParkNameList);
@@ -70,7 +70,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_WithPassword_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-            _sut.WithUser(_userName);
+            _sut.WithUserName(_userName);
             _sut.WithRole(_role);
             _sut.WithServerParks(_serverParkNameList);
 
@@ -83,7 +83,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_WithRole_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-            _sut.WithUser(_userName);
+            _sut.WithUserName(_userName);
             _sut.WithPassword(_password);
             _sut.WithServerParks(_serverParkNameList);
 
@@ -96,7 +96,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_WithServerParks_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-            _sut.WithUser(_userName);
+            _sut.WithUserName(_userName);
             _sut.WithPassword(_password);
             _sut.WithRole(_role);
 
@@ -109,7 +109,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_All_Steps_Have_Been_Called_When_I_Call_Update_Then_The_Correct_Service_Methods_Are_Called()
         {
             //arrange
-            _sut.WithUser(_userName);
+            _sut.WithUserName(_userName);
             _sut.WithPassword(_password);
             _sut.WithRole(_role);
             _sut.WithServerParks(_serverParkNameList);
@@ -126,7 +126,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_Only_WithPassword_Step_Has_Been_Called_When_I_Call_Update_Then_The_Correct_Service_Methods_Are_Called()
         {
             //arrange
-            _sut.WithUser(_userName);
+            _sut.WithUserName(_userName);
             _sut.WithPassword(_password);
 
             //act
@@ -141,7 +141,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_Only_WithRole_And_WithServerParks_Steps_Have_Been_Called_When_I_Call_Update_Then_The_Correct_Service_Methods_Are_Called()
         {
             //arrange
-            _sut.WithUser(_userName);
+            _sut.WithUserName(_userName);
             _sut.WithRole(_role);
             _sut.WithServerParks(_serverParkNameList);
 
@@ -189,7 +189,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         [Test]
         public void Given_WithRole_Has_Not_Been_Called_But_WithServerParks_Has_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
         {
-            _sut.WithUser(_userName);
+            _sut.WithUserName(_userName);
             _sut.WithServerParks(_serverParkNameList);
 
             //act && assert
@@ -200,7 +200,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         [Test]
         public void Given_WithServerParks_Has_Not_Been_Called_But_WithRole_Has_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
         {
-            _sut.WithUser(_userName);
+            _sut.WithUserName(_userName);
             _sut.WithRole(_role);
 
             //act && assert
@@ -215,10 +215,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _blaiseApiMock.Setup(p => p.UserExists(It.IsAny<string>())).Returns(It.IsAny<bool>());
 
-            _sut.WithUser(_userName);
+            _sut.WithUserName(_userName);
 
             //act
-            _sut.Exists();
+            var sutExists = _sut.Exists;
 
             //assert
             _blaiseApiMock.Verify(v => v.UserExists(_userName), Times.Once);
@@ -232,10 +232,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _blaiseApiMock.Setup(p => p.UserExists(_userName)).Returns(userExists);
 
-            _sut.WithUser(_userName);
+            _sut.WithUserName(_userName);
 
             //act
-            var result = _sut.Exists();
+            var result = _sut.Exists;
 
             //assert
             Assert.IsNotNull(result);
@@ -246,7 +246,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_User_Has_Been_Called_When_I_Call_Remove_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            _sut.WithUser(_userName);
+            _sut.WithUserName(_userName);
 
             //act
             _sut.Remove();

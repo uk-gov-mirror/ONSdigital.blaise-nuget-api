@@ -58,10 +58,22 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IEnumerable<string> ServerParks()
+        public IEnumerable<string> ServerParks =>  _blaiseApi.GetServerParkNames();
+
+        public IDataSet Cases
         {
-            return _blaiseApi.GetServerParkNames();
+            get
+            {
+                ValidateServerParkIsSet();
+                ValidateInstrumentIsSet();
+
+                return _blaiseApi.GetDataSet(_instrumentName, _serverParkName);
+            }
         }
+
+        public IFluentBlaiseUserApi User { get; }
+
+        public IFluentBlaiseCaseApi Case { get; }
 
         public IFluentBlaiseApi WithInstrument(string instrumentName)
         {
@@ -70,7 +82,7 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IFluentBlaiseCaseApi WithCase(string primaryKeyValue)
+        public IFluentBlaiseCaseApi WithPrimaryKey(string primaryKeyValue)
         {
             _lastActionType = LastActionType.Case;
             _primaryKeyValue = primaryKeyValue;
@@ -78,14 +90,14 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IFluentBlaiseCaseApi WithCase(IDataRecord caseDataRecord)
+        public IFluentBlaiseCaseApi WithDataRecord(IDataRecord caseDataRecord)
         {
             _caseDataRecord = caseDataRecord;
 
             return this;
         }
 
-        public IFluentBlaiseUserApi WithUser(string userName)
+        public IFluentBlaiseUserApi WithUserName(string userName)
         {
             _lastActionType = LastActionType.User;
             _userName = userName;
@@ -143,6 +155,29 @@ namespace Blaise.Nuget.Api
 
         public IFluentBlaiseSurveyApi Survey => this;
 
+        public IEnumerable<ISurvey> Surveys => _blaiseApi.GetAllSurveys();
+
+        public bool Exists
+        {
+            get
+            {
+                switch (_lastActionType)
+                {
+                    case LastActionType.Case:
+                        return CaseExists();
+                    case LastActionType.ServerPark:
+                        return ParkExists();
+                    case LastActionType.User:
+                        return UserExists();
+                    case LastActionType.Field:
+                        return FieldExists();
+                    default:
+                        throw new NotSupportedException("You have not declared a step previously where this action is supported");
+                }
+            }
+        }
+
+
         public IFluentBlaiseCaseApi WithStatus(StatusType statusType)
         {
             _lastActionType = LastActionType.Case;
@@ -167,37 +202,6 @@ namespace Blaise.Nuget.Api
             }
         }
 
-        public bool Exists()
-        {
-            switch (_lastActionType)
-            {
-                case LastActionType.Case:
-                    return CaseExists();
-                case LastActionType.ServerPark:
-                    return ParkExists();
-                case LastActionType.User:
-                    return UserExists();
-                case LastActionType.Field:
-                    return FieldExists();
-                default:
-                    throw new NotSupportedException("You have not declared a step previously where this action is supported");
-            }
-        }
-
-        public IEnumerable<ISurvey> Surveys()
-        {
-            return _blaiseApi.GetAllSurveys();
-        }
-
-        public SurveyType Type()
-        {
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-
-            return _blaiseApi.GetSurveyType(_instrumentName, _serverParkName);
-        }
-
-
         IFluentBlaiseSurveyApi IFluentBlaiseSurveyApi.WithField(FieldNameType fieldType)
         {
             _lastActionType = LastActionType.Field;
@@ -207,12 +211,15 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IDataSet Cases()
+        public SurveyType Type
         {
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
+            get
+            {
+                ValidateServerParkIsSet();
+                ValidateInstrumentIsSet();
 
-            return _blaiseApi.GetDataSet(_instrumentName, _serverParkName);
+                return _blaiseApi.GetSurveyType(_instrumentName, _serverParkName);
+            }
         }
 
         public string PrimaryKeyValue()

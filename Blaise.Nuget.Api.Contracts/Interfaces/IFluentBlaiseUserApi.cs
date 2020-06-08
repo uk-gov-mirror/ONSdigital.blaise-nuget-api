@@ -4,6 +4,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IFluentBlaiseUserApi
     {
+        IFluentBlaiseUserApi WithUserName(string userName);
 
         IFluentBlaiseUserApi WithPassword(string password);
 
@@ -17,6 +18,6 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         void Remove();
 
-        bool Exists();
+        bool Exists { get; }
     }
 }

@@ -33,7 +33,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _blaiseApiMock.Setup(p => p.GetServerParkNames()).Returns(It.IsAny<List<string>>());
 
             //act
-            _sut.ServerParks();
+            var sutServerParks = _sut.ServerParks;
 
             //assert
             _blaiseApiMock.Verify(v => v.GetServerParkNames(), Times.Once);
@@ -47,7 +47,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _blaiseApiMock.Setup(p => p.GetServerParkNames()).Returns(serverParksNames);
 
             //act
-            var result = _sut.ServerParks();
+            var result = _sut.ServerParks;
 
             //assert
             Assert.IsNotNull(result);
@@ -63,7 +63,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_serverParkName);
 
             //act
-            _sut.Exists();
+            var sutExists = _sut.Exists;
 
             //assert
             _blaiseApiMock.Verify(v => v.ServerParkExists(_serverParkName), Times.Once);
@@ -80,7 +80,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_serverParkName);
 
             //act
-            var result = _sut.Exists();
+            var result = _sut.Exists;
 
             //assert
             Assert.IsNotNull(result);
