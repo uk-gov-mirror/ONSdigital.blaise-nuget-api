@@ -41,7 +41,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_A_Primary_Key_Value_When_I_Call_WithCase_Then_It_Returns_Same_Instance_Of_Itself_Back()
         {
             //act
-            var result = _sut.WithCase(_primaryKeyValue);
+            var result = _sut.WithPrimaryKey(_primaryKeyValue);
 
             //assert
             Assert.IsNotNull(result);
@@ -50,10 +50,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_A_Case_Data_Record_When_I_Call_WithCase_Then_It_Returns_Same_Instance_Of_Itself_Back()
+        public void Given_A_Case_Data_Record_When_I_Call_WithDataRecord_Then_It_Returns_Same_Instance_Of_Itself_Back()
         {
             //act
-            var result = _sut.WithCase(_caseDataRecord);
+            var result = _sut.WithDataRecord(_caseDataRecord);
 
             //assert
             Assert.IsNotNull(result);
@@ -74,7 +74,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.WithCase(_primaryKeyValue);
+            _sut.WithPrimaryKey(_primaryKeyValue);
             _sut.WithData(fieldData);
 
             //act
@@ -91,7 +91,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             var fieldData = new Dictionary<string, string>();
 
             _sut.WithInstrument(_instrumentName);
-            _sut.WithCase(_primaryKeyValue);
+            _sut.WithPrimaryKey(_primaryKeyValue);
             _sut.WithData(fieldData);
 
             //act && assert
@@ -106,7 +106,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             var fieldData = new Dictionary<string, string>();
 
             _sut.WithServerPark(_serverParkName);
-            _sut.WithCase(_instrumentName);
+            _sut.WithPrimaryKey(_instrumentName);
             _sut.WithData(fieldData);
 
             //act && assert
@@ -135,7 +135,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.WithCase(_instrumentName);
+            _sut.WithPrimaryKey(_instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
@@ -154,7 +154,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithInstrument(_instrumentName);
 
             //act
-            _sut.Cases();
+            var sutCases = _sut.Cases;
 
             //assert
             _blaiseApiMock.Verify(v => v.GetDataSet(_instrumentName, _serverParkName), Times.Once);
@@ -172,7 +172,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithInstrument(_instrumentName);
 
             //act
-            var result = _sut.Cases();
+            var result = _sut.Cases;
 
             //assert
             Assert.IsNotNull(result);
@@ -186,7 +186,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithInstrument(_instrumentName);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Cases());
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutCases = _sut.Cases;
+            });
             Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
@@ -197,7 +200,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_serverParkName);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Cases());
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutCases = _sut.Cases;
+            });
             Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
@@ -209,7 +215,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _blaiseApiMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(It.IsAny<string>());
 
-            _sut.WithCase(_caseDataRecord);
+            _sut.WithDataRecord(_caseDataRecord);
 
             //act
             _sut.PrimaryKeyValue();
@@ -224,7 +230,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _blaiseApiMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(_primaryKeyValue);
 
-            _sut.WithCase(_caseDataRecord);
+            _sut.WithDataRecord(_caseDataRecord);
 
             //act
             var result = _sut.PrimaryKeyValue();
@@ -250,7 +256,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenCompleted(It.IsAny<IDataRecord>())).Returns(It.IsAny<bool>());
 
-            _sut.WithCase(_caseDataRecord);
+            _sut.WithDataRecord(_caseDataRecord);
 
             //act
             _sut.IsComplete();
@@ -266,7 +272,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenCompleted(_caseDataRecord)).Returns(caseIsComplete);
 
-            _sut.WithCase(_caseDataRecord);
+            _sut.WithDataRecord(_caseDataRecord);
             //act
             var result = _sut.IsComplete();
 
@@ -291,7 +297,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenProcessed(It.IsAny<IDataRecord>())).Returns(It.IsAny<bool>());
 
-            _sut.WithCase(_caseDataRecord);
+            _sut.WithDataRecord(_caseDataRecord);
 
             //act
             _sut.HasBeenProcessed();
@@ -307,7 +313,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenProcessed(_caseDataRecord)).Returns(caseHasBeenProcessed);
 
-            _sut.WithCase(_caseDataRecord);
+            _sut.WithDataRecord(_caseDataRecord);
             //act
             var result = _sut.HasBeenProcessed();
 
@@ -339,7 +345,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.WithCase(_caseDataRecord);
+            _sut.WithDataRecord(_caseDataRecord);
             _sut.WithData(fieldData);
 
             //act
@@ -359,7 +365,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             };
 
             _sut.WithInstrument(_instrumentName);
-            _sut.WithCase(_caseDataRecord);
+            _sut.WithDataRecord(_caseDataRecord);
             _sut.WithData(fieldData);
 
             //act && assert
@@ -377,7 +383,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             };
 
             _sut.WithServerPark(_serverParkName);
-            _sut.WithCase(_caseDataRecord);
+            _sut.WithDataRecord(_caseDataRecord);
             _sut.WithData(fieldData);
 
             //act && assert
@@ -411,7 +417,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.WithCase(_caseDataRecord);
+            _sut.WithDataRecord(_caseDataRecord);
             _sut.WithStatus(StatusType.Completed);
 
             //act
@@ -433,7 +439,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.WithCase(_caseDataRecord);
+            _sut.WithDataRecord(_caseDataRecord);
             _sut.WithStatus(StatusType.Processed);
 
             //act
@@ -452,7 +458,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             //arrange
             _sut.WithInstrument(_instrumentName);
-            _sut.WithCase(_caseDataRecord);
+            _sut.WithDataRecord(_caseDataRecord);
             _sut.WithStatus(statusType);
 
             //act && assert
@@ -466,7 +472,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             //arrange
             _sut.WithServerPark(_serverParkName);
-            _sut.WithCase(_caseDataRecord);
+            _sut.WithDataRecord(_caseDataRecord);
             _sut.WithStatus(statusType);
 
             //act && assert
@@ -497,10 +503,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.WithCase(_primaryKeyValue);
+            _sut.WithPrimaryKey(_primaryKeyValue);
 
             //act
-            _sut.Exists();
+            var sutExists = _sut.Exists;
 
             //assert
             _blaiseApiMock.Verify(v => v.CaseExists(_primaryKeyValue, _instrumentName, _serverParkName), Times.Once);
@@ -516,10 +522,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.WithCase(_primaryKeyValue);
+            _sut.WithPrimaryKey(_primaryKeyValue);
 
             //act
-            var result = _sut.Exists();
+            var result = _sut.Exists;
 
             //assert
             Assert.IsNotNull(result);
@@ -532,10 +538,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
 
             _sut.WithServerPark(_serverParkName);
-            _sut.WithCase(_primaryKeyValue);
+            _sut.WithPrimaryKey(_primaryKeyValue);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Exists());
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Exists;
+            });
             Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
@@ -545,10 +554,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
 
             _sut.WithInstrument(_instrumentName);
-            _sut.WithCase(_primaryKeyValue);
+            _sut.WithPrimaryKey(_primaryKeyValue);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Exists());
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Exists;
+            });
             Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
     }

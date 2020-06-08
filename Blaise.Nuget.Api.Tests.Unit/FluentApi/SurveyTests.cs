@@ -52,7 +52,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _blaiseApiMock.Setup(p => p.GetAllSurveys()).Returns(It.IsAny<List<ISurvey>>());
 
             //act
-            _sut.Surveys();
+            var sutSurveys = _sut.Surveys;
 
             //assert
             _blaiseApiMock.Verify(v => v.GetAllSurveys(), Times.Once);
@@ -71,7 +71,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _blaiseApiMock.Setup(p => p.GetAllSurveys()).Returns(surveys);
 
             //act
-            var result = _sut.Surveys().ToList();
+            var result = _sut.Surveys.ToList();
 
             //assert
             Assert.IsNotNull(result);
@@ -92,7 +92,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithInstrument(_instrumentName);
 
             //act
-            _sut.Type();
+            var surveyType = _sut.Type;
 
             //assert
             _blaiseApiMock.Verify(v => v.GetSurveyType(_instrumentName, _serverParkName), Times.Once);
@@ -111,7 +111,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithInstrument(_instrumentName);
 
             //act
-            var result = _sut.Type();
+            var result = _sut.Type;
 
             //assert
             Assert.IsNotNull(result);
@@ -125,7 +125,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithInstrument(_instrumentName);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Type());
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var surveyType = _sut.Type;
+            });
             Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
@@ -136,7 +139,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_serverParkName);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Type());
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var surveyType = _sut.Type;
+            });
             Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
@@ -152,7 +158,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Survey.WithField(FieldNameType.Completed);
 
             //act
-            _sut.Exists();
+            var sutExists = _sut.Exists;
 
             //assert
             _blaiseApiMock.Verify(v => v.CompletedFieldExists(_instrumentName, _serverParkName), Times.Once);
@@ -171,7 +177,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Survey.WithField(FieldNameType.Completed);
 
             //act
-            var result = _sut.Exists();
+            var result = _sut.Exists;
 
             //assert
             Assert.IsNotNull(result);
@@ -187,7 +193,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Survey.WithField(FieldNameType.Completed);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Exists());
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Exists;
+            });
             Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
@@ -200,7 +209,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Survey.WithField(FieldNameType.Completed);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Exists());
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Exists;
+            });
             Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
 
@@ -216,7 +228,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Survey.WithField(FieldNameType.Processed);
 
             //act
-            _sut.Exists();
+            var sutExists = _sut.Exists;
 
             //assert
             _blaiseApiMock.Verify(v => v.ProcessedFieldExists(_instrumentName, _serverParkName), Times.Once);
@@ -235,7 +247,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Survey.WithField(FieldNameType.Processed);
 
             //act
-            var result = _sut.Exists();
+            var result = _sut.Exists;
 
             //assert
             Assert.IsNotNull(result);
@@ -251,7 +263,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Survey.WithField(FieldNameType.Processed);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Exists());
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Exists;
+            });
             Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
         }
 
@@ -264,7 +279,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Survey.WithField(FieldNameType.Processed);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Exists());
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Exists;
+            });
             Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
     }

@@ -20,7 +20,10 @@ namespace Blaise.Nuget.Api.Tests.Unit
             IFluentBlaiseApi sut = new FluentBlaiseApi();
 
             //act && assert
-            var exception = Assert.Throws<NotSupportedException>(() => sut.Exists());
+            var exception = Assert.Throws<NotSupportedException>(() =>
+            {
+                var sutExists = sut.Exists;
+            });
             Assert.AreEqual("You have not declared a step previously where this action is supported", exception.Message);
         }
     }
