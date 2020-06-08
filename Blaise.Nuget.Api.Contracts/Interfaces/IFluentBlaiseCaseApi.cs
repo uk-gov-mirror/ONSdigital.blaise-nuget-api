@@ -14,11 +14,11 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseCaseApi WithStatus(StatusType statusType);
 
-        string PrimaryKeyValue();
+        string PrimaryKey { get; }
 
-        bool IsComplete();
+        bool Completed { get; }
 
-        bool HasBeenProcessed();
+        bool Processed { get; }
 
         void Add();
 
