@@ -209,7 +209,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_PrimaryKeyValue_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Valid_Arguments_When_I_Call_PrimaryKey_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
 
@@ -218,14 +218,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithDataRecord(_caseDataRecord);
 
             //act
-            _sut.PrimaryKeyValue();
+            var primaryKey = _sut.PrimaryKey;
 
             //assert
             _blaiseApiMock.Verify(v => v.GetPrimaryKeyValue(_caseDataRecord), Times.Once);
         }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_PrimaryKeyValue_Then_The_Expected_Result_Is_Returned()
+        public void Given_Valid_Arguments_When_I_Call_PrimaryKey_Then_The_Expected_Result_Is_Returned()
         {
             //arrange
             _blaiseApiMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(_primaryKeyValue);
@@ -233,7 +233,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithDataRecord(_caseDataRecord);
 
             //act
-            var result = _sut.PrimaryKeyValue();
+            var result = _sut.PrimaryKey;
 
             //assert
             Assert.IsNotNull(result);
@@ -241,17 +241,20 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_PrimaryKeyValue_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_PrimaryKey_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.PrimaryKeyValue());
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutPrimaryKey = _sut.PrimaryKey;
+            });
             Assert.AreEqual("The 'WithCase' step needs to be called prior to this to specify the data record of the case", exception.Message);
         }
 
         [Test]
-        public void Given_WithCase_Has_Been_Called_When_I_Call_IsComplete_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_WithCase_Has_Been_Called_When_I_Call_Completed_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenCompleted(It.IsAny<IDataRecord>())).Returns(It.IsAny<bool>());
@@ -259,7 +262,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithDataRecord(_caseDataRecord);
 
             //act
-            _sut.IsComplete();
+            var sutCompleted = _sut.Completed;
 
             //assert
             _blaiseApiMock.Verify(v => v.CaseHasBeenCompleted(_caseDataRecord), Times.Once);
@@ -267,14 +270,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_WithCase_Has_Been_Called_When_I_Call_IsComplete_Then_The_Expected_Result_Is_Returned(bool caseIsComplete)
+        public void Given_WithCase_Has_Been_Called_When_I_Call_Completed_Then_The_Expected_Result_Is_Returned(bool caseIsComplete)
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenCompleted(_caseDataRecord)).Returns(caseIsComplete);
 
             _sut.WithDataRecord(_caseDataRecord);
             //act
-            var result = _sut.IsComplete();
+            var result = _sut.Completed;
 
             //assert
             Assert.IsNotNull(result);
@@ -282,17 +285,20 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_IsComplete_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_Completed_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.IsComplete());
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutCompleted = _sut.Completed;
+            });
             Assert.AreEqual("The 'WithCase' step needs to be called prior to this to specify the data record of the case", exception.Message);
         }
 
         [Test]
-        public void Given_WithCase_Has_Been_Called_When_I_Call_HasBeenProcessed_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_WithCase_Has_Been_Called_When_I_Call_Processed_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenProcessed(It.IsAny<IDataRecord>())).Returns(It.IsAny<bool>());
@@ -300,7 +306,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithDataRecord(_caseDataRecord);
 
             //act
-            _sut.HasBeenProcessed();
+            var sutProcessed = _sut.Processed;
 
             //assert
             _blaiseApiMock.Verify(v => v.CaseHasBeenProcessed(_caseDataRecord), Times.Once);
@@ -308,14 +314,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_WithCase_Has_Been_Called_When_I_Call_HasBeenProcessed_Then_The_Expected_Result_Is_Returned(bool caseHasBeenProcessed)
+        public void Given_WithCase_Has_Been_Called_When_I_Call_Processed_Then_The_Expected_Result_Is_Returned(bool caseHasBeenProcessed)
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenProcessed(_caseDataRecord)).Returns(caseHasBeenProcessed);
 
             _sut.WithDataRecord(_caseDataRecord);
             //act
-            var result = _sut.HasBeenProcessed();
+            var result = _sut.Processed;
 
             //assert
             Assert.IsNotNull(result);
@@ -323,12 +329,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_HasBeenProcessed_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_Processed_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.HasBeenProcessed());
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutProcessed = _sut.Processed;
+            });
             Assert.AreEqual("The 'WithCase' step needs to be called prior to this to specify the data record of the case", exception.Message);
         }
 

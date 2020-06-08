@@ -138,6 +138,16 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
+        public bool Processed
+        {
+            get
+            {
+                ValidateCaseDataRecordIsSet();
+
+                return _blaiseApi.CaseHasBeenProcessed(_caseDataRecord);
+            }
+        }
+
         public void Add()
         {
             switch (_lastActionType)
@@ -187,6 +197,26 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
+        public string PrimaryKey
+        {
+            get
+            {
+                ValidateCaseDataRecordIsSet();
+
+                return _blaiseApi.GetPrimaryKeyValue(_caseDataRecord);
+            }
+        }
+
+        public bool Completed
+        {
+            get
+            {
+                ValidateCaseDataRecordIsSet();
+
+                return _blaiseApi.CaseHasBeenCompleted(_caseDataRecord);
+            }
+        }
+
         public void Update()
         {
             switch (_lastActionType)
@@ -220,27 +250,6 @@ namespace Blaise.Nuget.Api
 
                 return _blaiseApi.GetSurveyType(_instrumentName, _serverParkName);
             }
-        }
-
-        public string PrimaryKeyValue()
-        {
-            ValidateCaseDataRecordIsSet();
-
-            return _blaiseApi.GetPrimaryKeyValue(_caseDataRecord);
-        }
-
-        public bool IsComplete()
-        {
-            ValidateCaseDataRecordIsSet();
-
-            return _blaiseApi.CaseHasBeenCompleted(_caseDataRecord);
-        }
-
-        public bool HasBeenProcessed()
-        {
-            ValidateCaseDataRecordIsSet();
-
-            return _blaiseApi.CaseHasBeenProcessed(_caseDataRecord);
         }
 
         public void Remove()
