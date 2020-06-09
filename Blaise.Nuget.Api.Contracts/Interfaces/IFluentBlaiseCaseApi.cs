@@ -20,10 +20,14 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         bool Processed { get; }
 
+        bool Exists { get; }
+
         void Add();
 
         void Update();
 
-        bool Exists { get; }
+        IFluentBlaiseHandler Copy { get; }
+
+        IFluentBlaiseHandler Move { get; }
     }
 }

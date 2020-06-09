@@ -280,7 +280,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_GetDataRecord_Then_A_DataRecord_Is_Returned()
+        public void Given_A_DataModel_When_I_Call_GetDataRecord_Then_A_DataRecord_Is_Returned()
         {
             //act
             var result = _sut.GetDataRecord(_dataModelMock.Object);
@@ -291,7 +291,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_GetDataRecord_Then_The_Correct_DataRecord_Is_Returned()
+        public void Given_A_DataModel_When_I_Call_GetDataRecord_Then_The_Correct_DataRecord_Is_Returned()
         {
             //act
             var result = _sut.GetDataRecord(_dataModelMock.Object);
@@ -301,7 +301,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
+        public void Given_A_DataModel_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act
             _sut.GetDataRecord(_dataModelMock.Object);
@@ -311,10 +311,20 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_An_InstrumentName_And_ServerParkName_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
+        public void Given_A_Key_And_An_InstrumentName_And_ServerParkName_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act
             _sut.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
+
+            //assert
+            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_KeyValue_And_An_InstrumentName_And_ServerParkName_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.GetDataRecord(_keyName, _instrumentName, _serverParkName);
 
             //assert
             _dataRecordServiceMock.Verify(v => v.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);

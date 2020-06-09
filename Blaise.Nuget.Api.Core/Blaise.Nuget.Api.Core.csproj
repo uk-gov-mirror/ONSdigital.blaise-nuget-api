@@ -49,6 +49,7 @@
     <Compile Include="Factories\ConnectedServerFactory.cs" />
     <Compile Include="Factories\RemoteDataServerFactory.cs" />
     <Compile Include="Interfaces\Factories\IConnectedServerFactory.cs" />
+    <Compile Include="Interfaces\Providers\IConfigurationProvider.cs" />
     <Compile Include="Mappers\DataMapperService.cs" />
     <Compile Include="Interfaces\Mappers\IDataMapperService.cs" />
     <Compile Include="Interfaces\Providers\IRemoteDataLinkProvider.cs" />
@@ -70,6 +71,8 @@
     <Compile Include="Services\DataService.cs" />
     <Compile Include="Services\FieldService.cs" />
     <Compile Include="Interfaces\Services\IUserService.cs" />
+    <Compile Include="Services\FileService.cs" />
+    <Compile Include="Interfaces\Services\IFileService.cs" />
     <Compile Include="Services\KeyService.cs" />
     <Compile Include="Services\ParkService.cs" />
     <Compile Include="Services\PasswordService.cs" />

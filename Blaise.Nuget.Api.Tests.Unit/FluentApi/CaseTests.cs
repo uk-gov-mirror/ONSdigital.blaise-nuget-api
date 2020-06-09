@@ -126,7 +126,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithCase' step needs to be called prior to this to specify the primary key value of the case", exception.Message);
+            Assert.AreEqual("The 'WithPrimaryKey' step needs to be called prior to this to specify the primary key value of the case", exception.Message);
         }
 
         [Test]
@@ -250,7 +250,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutPrimaryKey = _sut.PrimaryKey;
             });
-            Assert.AreEqual("The 'WithCase' step needs to be called prior to this to specify the data record of the case", exception.Message);
+            Assert.AreEqual("The 'WithDataRecord' step needs to be called prior to this to specify the data record of the case", exception.Message);
         }
 
         [Test]
@@ -294,7 +294,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutCompleted = _sut.Completed;
             });
-            Assert.AreEqual("The 'WithCase' step needs to be called prior to this to specify the data record of the case", exception.Message);
+            Assert.AreEqual("The 'WithDataRecord' step needs to be called prior to this to specify the data record of the case", exception.Message);
         }
 
         [Test]
@@ -338,7 +338,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutProcessed = _sut.Processed;
             });
-            Assert.AreEqual("The 'WithCase' step needs to be called prior to this to specify the data record of the case", exception.Message);
+            Assert.AreEqual("The 'WithDataRecord' step needs to be called prior to this to specify the data record of the case", exception.Message);
         }
 
         [Test]
@@ -415,7 +415,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithCase' step needs to be called prior to this to specify the data record of the case", exception.Message);
+            Assert.AreEqual("The 'WithDataRecord' step needs to be called prior to this to specify the data record of the case", exception.Message);
         }
 
         [Test]
@@ -500,7 +500,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithCase' step needs to be called prior to this to specify the data record of the case", exception.Message);
+            Assert.AreEqual("The 'WithDataRecord' step needs to be called prior to this to specify the data record of the case", exception.Message);
         }
 
         [Test]

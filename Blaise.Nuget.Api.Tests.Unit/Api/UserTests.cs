@@ -13,7 +13,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         private Mock<IParkService> _parkServiceMock;
         private Mock<ISurveyService> _surveyServiceMock;
         private Mock<IUserService> _userServiceMock;
-
+        private Mock<IFileService> _fileServiceMock;
 
         private readonly string _userName;
         private readonly string _password;
@@ -32,12 +32,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _parkServiceMock = new Mock<IParkService>();
             _surveyServiceMock = new Mock<ISurveyService>();
             _userServiceMock = new Mock<IUserService>();
+            _fileServiceMock = new Mock<IFileService>();
 
             _sut = new BlaiseApi(
                 _dataServiceMock.Object,
                 _parkServiceMock.Object,
                 _surveyServiceMock.Object,
-                _userServiceMock.Object);
+                _userServiceMock.Object,
+                _fileServiceMock.Object);
         }
 
         [Test]

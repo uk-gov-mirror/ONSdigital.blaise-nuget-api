@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlaiseApi.cs" />
+    <Compile Include="Enums\HandleType.cs" />
     <Compile Include="Enums\LastActionType.cs" />
     <Compile Include="FluentBlaiseApi.cs" />
     <Compile Include="Helpers\ParameterValidationHelper.cs" />

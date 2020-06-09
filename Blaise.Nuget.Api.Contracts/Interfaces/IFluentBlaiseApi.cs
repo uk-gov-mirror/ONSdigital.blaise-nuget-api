@@ -12,6 +12,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseApi WithServerPark(string serverParkName);
 
+        IFluentBlaiseApi WithFile(string filePath);
+
         IEnumerable<string> ServerParks { get; }
 
         IDataSet Cases { get; }

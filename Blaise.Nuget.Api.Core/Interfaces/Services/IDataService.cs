@@ -30,6 +30,8 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         IDataRecord GetDataRecord(IKey key, string instrumentName, string serverParkName);
 
+        IDataRecord GetDataRecord(string primaryKeyValue, string instrumentName, string serverParkName);
+
         IDataRecord GetDataRecord(IKey key, string filePath);
 
         void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName);

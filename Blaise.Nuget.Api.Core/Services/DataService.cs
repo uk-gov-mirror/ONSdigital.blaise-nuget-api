@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Core.Interfaces.Mappers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
@@ -78,6 +79,16 @@ namespace Blaise.Nuget.Api.Core.Services
         public IDataRecord GetDataRecord(IKey key, string instrumentName, string serverParkName)
         {
             return _dataRecordService.GetDataRecord(key, instrumentName, serverParkName);
+        }
+
+        public IDataRecord GetDataRecord(string primaryKeyValue, string instrumentName, string serverParkName)
+        {
+            var dataModel = _dataModelService.GetDataModel(instrumentName, serverParkName);
+            var primaryKey = _keyService.GetPrimaryKey(dataModel);
+
+            _keyService.AssignPrimaryKeyValue(primaryKey, primaryKeyValue);
+
+            return GetDataRecord(primaryKey, instrumentName, serverParkName);
         }
 
         public IDataRecord GetDataRecord(IKey key, string filePath)

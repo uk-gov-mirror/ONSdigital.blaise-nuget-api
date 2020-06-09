@@ -79,5 +79,11 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         bool UserExists(string userName);
 
         void RemoveUser(string userName);
+
+        void CopyCase(string primaryKeyValue, string sourceInstrumentName,
+            string sourceServerParkName, string destinationFilePath, string destinationInstrumentName);
+
+        void MoveCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
+            string destinationFilePath, string destinationInstrumentName);
     }
 }

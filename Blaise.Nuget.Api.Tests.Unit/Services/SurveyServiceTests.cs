@@ -150,6 +150,29 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
+        public void Given_A_Survey_Exists_When_I_Call_GetSurvey_Then_I_Get_The_Expected_Survey_Back()
+        {
+            //act
+            var result = _sut.GetSurvey(_instrumentName, _serverParkName);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.IsInstanceOf<ISurvey>(result);
+            Assert.AreEqual(_surveyMock.Object, result);
+        }
+
+        [Test]
+        public void Given_A_Survey_Does_Not_Exist_When_I_Call_GetSurveys_Then_A_Data_Not_Found_Exception_Is_Thrown()
+        {
+            //arrange
+            _surveyMock.Setup(s => s.Name).Returns("DoesNotExist");
+
+            //act && assert
+            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetSurvey(_instrumentName, _serverParkName));
+            Assert.AreEqual($"No survey found for instrument name '{_instrumentName}'", exception.Message);
+        }
+
+        [Test]
         public void Given_I_Call_GetAllSurveys_Then_I_Get_A_Correct_List_Of_Surveys_Returned()
         {
             //arrange
