@@ -1,9 +1,10 @@
 ﻿using System.Configuration;
 using Blaise.Nuget.Api.Contracts.Models;
+using Blaise.Nuget.Api.Core.Interfaces.Providers;
 
 namespace Blaise.Nuget.Api.Providers
 {
-    public class ConfigurationProvider
+    public class ConfigurationProvider : IConfigurationProvider
     {
         public ConnectionModel GetConnectionModel(string serverName = null)
         {
@@ -18,6 +19,8 @@ namespace Blaise.Nuget.Api.Providers
             };
             return connectionModel;
         }
+
+        public string LibraryDirectory => ConfigurationManager.AppSettings["LibraryDirectory"];
 
         private static int ConvertToInt(string integer)
         {

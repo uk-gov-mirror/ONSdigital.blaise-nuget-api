@@ -70,6 +70,7 @@
     <Compile Include="Api\ServerParkTests.cs" />
     <Compile Include="Factories\ConnectedServerFactoryTests.cs" />
     <Compile Include="Factories\RemoteDataServerFactoryTests.cs" />
+    <Compile Include="FluentApi\HandlerTests.cs" />
     <Compile Include="FluentApi\ServerParkTests.cs" />
     <Compile Include="FluentApi\SurveyTests.cs" />
     <Compile Include="BlaiseApiTests.cs" />

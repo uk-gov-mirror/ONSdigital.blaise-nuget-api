@@ -36,6 +36,19 @@ namespace Blaise.Nuget.Api.Core.Services
             return serverPark.Surveys;
         }
 
+        public ISurvey GetSurvey(string instrumentName, string serverParkName)
+        {
+            var surveys = GetSurveys(serverParkName);
+            var survey = surveys.FirstOrDefault(s => s.Name == instrumentName);
+
+            if (survey == null)
+            {
+                throw new DataNotFoundException($"No survey found for instrument name '{instrumentName}'");
+            }
+
+            return survey;
+        }
+
         public IEnumerable<ISurvey> GetAllSurveys()
         {
             var surveyList = new List<ISurvey>();

@@ -11,13 +11,17 @@ using Unity;
 
 namespace Blaise.Nuget.Api
 {
-    public class FluentBlaiseApi : IFluentBlaiseApi, IFluentBlaiseCaseApi, IFluentBlaiseSurveyApi, IFluentBlaiseUserApi
+    public class FluentBlaiseApi : IFluentBlaiseApi, IFluentBlaiseCaseApi, IFluentBlaiseSurveyApi, IFluentBlaiseUserApi, IFluentBlaiseHandler
     {
         private readonly IBlaiseApi _blaiseApi;
 
         private string _serverParkName;
+        private string _toServerParkName;
         private string _instrumentName;
+        private string _toInstrumentName;
         private string _primaryKeyValue;
+        private string _filePath;
+        private string _toFilePath;
         private string _userName;
         private string _password;
         private string _role;
@@ -28,6 +32,7 @@ namespace Blaise.Nuget.Api
         private FieldNameType _fieldNameType = FieldNameType.NotSpecified;
 
         private LastActionType _lastActionType;
+        private HandleType _handleType;
 
         internal FluentBlaiseApi(IBlaiseApi blaiseApi)
         {
@@ -50,10 +55,38 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
+        public IFluentBlaiseHandler ToServer(string serverName)
+        {
+            _blaiseApi.UseServer(serverName);
+
+            return this;
+        }
+
         public IFluentBlaiseApi WithServerPark(string serverParkName)
         {
             _lastActionType = LastActionType.ServerPark;
             _serverParkName = serverParkName;
+
+            return this;
+        }
+
+        public IFluentBlaiseHandler ToServerPark(string serverParkName)
+        {
+            _toServerParkName = serverParkName;
+
+            return this;
+        }
+
+        public IFluentBlaiseApi WithFile(string filePath)
+        {
+            _filePath = filePath;
+
+            return this;
+        }
+
+        public IFluentBlaiseHandler ToFile(string filePath)
+        {
+            _toFilePath = filePath;
 
             return this;
         }
@@ -71,13 +104,20 @@ namespace Blaise.Nuget.Api
             }
         }
 
-        public IFluentBlaiseUserApi User { get; }
+        public IFluentBlaiseUserApi User => this;
 
-        public IFluentBlaiseCaseApi Case { get; }
+        public IFluentBlaiseCaseApi Case => this;
 
         public IFluentBlaiseApi WithInstrument(string instrumentName)
         {
             _instrumentName = instrumentName;
+
+            return this;
+        }
+
+        public IFluentBlaiseHandler ToInstrument(string instrumentName)
+        {
+            _toInstrumentName = instrumentName;
 
             return this;
         }
@@ -232,6 +272,26 @@ namespace Blaise.Nuget.Api
             }
         }
 
+        public IFluentBlaiseHandler Copy
+        {
+            get
+            {
+                _handleType = HandleType.Copy;
+
+                return this;
+            }
+        }
+
+        public IFluentBlaiseHandler Move
+        {
+            get
+            {
+                _handleType = HandleType.Move;
+
+                return this;
+            }
+        }
+
         IFluentBlaiseSurveyApi IFluentBlaiseSurveyApi.WithField(FieldNameType fieldType)
         {
             _lastActionType = LastActionType.Field;
@@ -257,6 +317,18 @@ namespace Blaise.Nuget.Api
             ValidateUserIsSet();
 
             _blaiseApi.RemoveUser(_userName);
+        }
+
+        public void Handle()
+        {
+            switch (_lastActionType)
+            {
+                case LastActionType.Case:
+                    HandleCase();
+                    break;
+                default:
+                    throw new NotSupportedException("You have not declared a step previously where this action is supported");
+            }
         }
 
         private void AddUser()
@@ -288,6 +360,48 @@ namespace Blaise.Nuget.Api
             if (_statusType == StatusType.Processed)
             {
                 SetStatusAsProcessed();
+            }
+        }
+
+        private void HandleCase()
+        {
+            if (!string.IsNullOrWhiteSpace(_toFilePath))
+            {
+                HandleFile();
+                return;
+            }
+
+            HandleDatabase();
+        }
+
+        private void HandleDatabase()
+        {
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private void HandleFile()
+        {
+            ValidateInstrumentIsSet();
+            ValidateServerParkIsSet();
+            ValidatePrimaryKeyValueIsSet();
+
+            ValidateToInstrumentIsSet();
+
+            switch (_handleType)
+            {
+                case HandleType.Copy:
+                    _blaiseApi.CopyCase(_primaryKeyValue, _instrumentName, _serverParkName, _toFilePath,
+                        _toInstrumentName);
+                    break;
+                case HandleType.Move:
+                    _blaiseApi.MoveCase(_primaryKeyValue, _instrumentName, _serverParkName, _toFilePath,
+                        _toInstrumentName);
+                    break;
+                default:
+                    throw new NotSupportedException(
+                        "You have not declared a step previously where this action is supported");
             }
         }
 
@@ -392,11 +506,19 @@ namespace Blaise.Nuget.Api
             }
         }
 
+        private void ValidateToInstrumentIsSet()
+        {
+            if (string.IsNullOrWhiteSpace(_toInstrumentName))
+            {
+                throw new NullReferenceException("The 'ToInstrument' step needs to be called prior to this to specify the destination name of the instrument");
+            }
+        }
+
         private void ValidatePrimaryKeyValueIsSet()
         {
             if (string.IsNullOrWhiteSpace(_primaryKeyValue))
             {
-                throw new NullReferenceException("The 'WithCase' step needs to be called prior to this to specify the primary key value of the case");
+                throw new NullReferenceException("The 'WithPrimaryKey' step needs to be called prior to this to specify the primary key value of the case");
             }
         }
 
@@ -404,7 +526,7 @@ namespace Blaise.Nuget.Api
         {
             if (_caseDataRecord == null)
             {
-                throw new NullReferenceException("The 'WithCase' step needs to be called prior to this to specify the data record of the case");
+                throw new NullReferenceException("The 'WithDataRecord' step needs to be called prior to this to specify the data record of the case");
             }
         }
 

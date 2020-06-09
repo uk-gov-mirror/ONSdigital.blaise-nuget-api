@@ -4,6 +4,7 @@ using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Unity;
 using Unity.Injection;
@@ -28,17 +29,21 @@ namespace Blaise.Nuget.Api
         private IParkService _parkService;
         private ISurveyService _surveyService;
         private IUserService _userService;
+        private IFileService _fileService;
+
 
         internal BlaiseApi(
             IDataService dataService,
             IParkService parkService, 
             ISurveyService surveyService, 
-            IUserService userService)
+            IUserService userService, 
+            IFileService fileService)
         {
             _dataService = dataService;
             _parkService = parkService;
             _surveyService = surveyService;
             _userService = userService;
+            _fileService = fileService;
         }
 
         public BlaiseApi()
@@ -69,6 +74,7 @@ namespace Blaise.Nuget.Api
             //providers
             unityContainer.RegisterType<ILocalDataLinkProvider, LocalDataLinkProvider>();
             unityContainer.RegisterType<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
+            unityContainer.RegisterType<IConfigurationProvider, ConfigurationProvider>();
 
             //services
             unityContainer.RegisterType<IDataModelService, DataModelService>();
@@ -79,12 +85,14 @@ namespace Blaise.Nuget.Api
             unityContainer.RegisterType<IParkService, ParkService>();
             unityContainer.RegisterType<ISurveyService, SurveyService>();
             unityContainer.RegisterType<IUserService, UserService>();
+            unityContainer.RegisterType<IFileService, FileService>();
 
             //resolve dependencies
             _dataService = unityContainer.Resolve<IDataService>();
             _parkService = unityContainer.Resolve<IParkService>();
             _surveyService = unityContainer.Resolve<ISurveyService>();
             _userService = unityContainer.Resolve<IUserService>();
+            _fileService = unityContainer.Resolve<IFileService>();
         }
 
         public void UseServer(string serverName)
@@ -354,6 +362,56 @@ namespace Blaise.Nuget.Api
             userName.ThrowExceptionIfNullOrEmpty("userName");
 
             _userService.RemoveUser(userName);
+        }
+
+        public void CopyCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
+            string destinationServerName, string destinationInstrumentName, string destinationServerParkName)
+        {
+            var caseRecord = _dataService.GetDataRecord(primaryKeyValue, sourceInstrumentName, sourceServerParkName);
+
+            UseServer(destinationServerName);
+            _dataService.WriteDataRecord(caseRecord, destinationInstrumentName, destinationServerParkName);
+        }
+
+        public void CopyCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
+            string destinationFilePath, string destinationInstrumentName)
+        {
+            if (!_fileService.DatabaseFileExists(destinationFilePath, destinationInstrumentName))
+            {
+                var survey = _surveyService.GetSurvey(sourceInstrumentName, sourceServerParkName);
+                var metaFileName = survey.Configuration.Configurations.First().MetaFileName;
+                _fileService.CreateDatabaseFile(metaFileName, destinationFilePath,destinationInstrumentName);
+            }
+
+            var caseRecord = _dataService.GetDataRecord(primaryKeyValue, sourceInstrumentName, sourceServerParkName);
+            var fullFilePath = _fileService.GetDatabaseFileName(destinationFilePath, destinationInstrumentName);
+
+            _dataService.WriteDataRecord(caseRecord, fullFilePath);
+        }
+
+        public void MoveCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
+            string destinationServerName, string destinationInstrumentName, string destinationServerParkName)
+        {
+            var caseRecord = _dataService.GetDataRecord(primaryKeyValue, sourceInstrumentName, sourceServerParkName);
+
+            UseServer(destinationServerName);
+            _dataService.WriteDataRecord(caseRecord, destinationInstrumentName, destinationServerParkName);
+
+            RemoveCase(primaryKeyValue, sourceInstrumentName, sourceServerParkName);
+        }
+
+        public void MoveCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
+            string destinationFilePath, string destinationInstrumentName)
+        {
+            CopyCase(primaryKeyValue,  sourceInstrumentName, sourceServerParkName, destinationFilePath,
+                destinationInstrumentName);
+
+            RemoveCase(primaryKeyValue, sourceInstrumentName, sourceServerParkName);
+        }
+
+        public void RemoveCase(string primaryKeyValue,  string instrumentName, string serverParkName)
+        {
+            //delete
         }
     }
 }

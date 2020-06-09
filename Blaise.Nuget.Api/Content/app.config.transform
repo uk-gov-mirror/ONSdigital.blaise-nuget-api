@@ -7,5 +7,6 @@
     <add key="BlaiseServerBinding" value="#{BlaiseServerBinding}#" />
     <add key="BlaiseConnectionPort" value="#{BlaiseConnectionPort}#" />
     <add key="BlaiseRemoteConnectionPort" value="#{BlaiseRemoteConnectionPort}#" />
+    <add key="LibraryDirectory" value="#{LibraryDirectory}#" />
   </appSettings>  
 </configuration>
