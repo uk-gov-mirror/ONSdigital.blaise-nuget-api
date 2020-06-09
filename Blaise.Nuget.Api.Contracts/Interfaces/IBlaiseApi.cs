@@ -83,7 +83,13 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         void CopyCase(string primaryKeyValue, string sourceInstrumentName,
             string sourceServerParkName, string destinationFilePath, string destinationInstrumentName);
 
+        void CopyCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
+            string destinationServerName, string destinationInstrumentName, string destinationServerParkName);
+
         void MoveCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
             string destinationFilePath, string destinationInstrumentName);
+
+        void MoveCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
+            string destinationServerName, string destinationInstrumentName, string destinationServerParkName);
     }
 }

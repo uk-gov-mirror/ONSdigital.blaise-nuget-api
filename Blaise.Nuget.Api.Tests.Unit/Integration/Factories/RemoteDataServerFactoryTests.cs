@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using StatNeth.Blaise.API.DataLink;
 
-namespace Blaise.Nuget.Api.Tests.Unit.Factories
+namespace Blaise.Nuget.Api.Tests.Unit.Integration.Factories
 {
     public class RemoteDataServerFactoryTests
     {

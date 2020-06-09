@@ -2,7 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 
-namespace Blaise.Nuget.Api.Tests.Unit.Factories
+namespace Blaise.Nuget.Api.Tests.Unit.Integration.Factories
 {
     public class ConnectedServerFactoryTests
     {

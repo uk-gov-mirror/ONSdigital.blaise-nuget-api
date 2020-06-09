@@ -203,5 +203,19 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _localDataLinkProviderMock.Verify(v => v.GetDataLink(_filePath), Times.Once);
             _localDataLinkMock.Verify(v => v.Write(_dataRecordMock.Object), Times.Once);
         }
+
+        [Test]
+        public void Given_A_PrimaryKeyValue_When_I_Call_RemoveDataRecord_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            _remoteDataLinkMock.Setup(d => d.Delete(It.IsAny<IKey>()));
+
+            //act
+            _sut.DeleteDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
+
+            //assert
+            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_instrumentName, _serverParkName), Times.Once);
+            _remoteDataLinkMock.Verify(v => v.Delete(_keyMock.Object), Times.Once);
+        }
     }
 }

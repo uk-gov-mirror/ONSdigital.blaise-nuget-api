@@ -411,7 +411,7 @@ namespace Blaise.Nuget.Api
 
         public void RemoveCase(string primaryKeyValue,  string instrumentName, string serverParkName)
         {
-            //delete
+            _dataService.RemoveDataRecord(primaryKeyValue, instrumentName, serverParkName);
         }
     }
 }

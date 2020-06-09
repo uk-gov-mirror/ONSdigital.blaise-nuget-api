@@ -13,10 +13,10 @@ namespace Blaise.Nuget.Api.Core.Services
     {
         private readonly IConfigurationProvider _configurationProvider;
 
-        private readonly string DatabaseFileNameExt = "bdix";
-        private readonly string DatabaseSourceExt = "bdbx";
-        private readonly string DatabaseModelExt = "bmix";
-        private readonly string LibraryFileExt = "blix";
+        private const string DatabaseFileNameExt = "bdix";
+        private const string DatabaseSourceExt = "bdbx";
+        private const string DatabaseModelExt = "bmix";
+        private const string LibraryFileExt = "blix";
 
         public FileService(IConfigurationProvider configurationProvider)
         {
@@ -98,7 +98,7 @@ namespace Blaise.Nuget.Api.Core.Services
             {
                 var file = new FileInfo(filePath);
 
-                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                using (var stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
                 {
                     stream.Close();
                 }

@@ -53,5 +53,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         bool CaseHasBeenProcessed(IDataRecord dataRecord);
 
         void MarkCaseAsProcessed(IDataRecord dataRecord, string instrumentName, string serverParkName);
+
+        void RemoveDataRecord(string primaryKeyValue, string instrumentName, string serverParkName);
     }
 }
