@@ -547,5 +547,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, fieldData), Times.Once);
             _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
+
+        [Test]
+        public void Given_A_KeyValue_And_An_InstrumentName_And_ServerParkName_When_I_Call_RemoveDataRecord_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.RemoveDataRecord(_keyName, _instrumentName, _serverParkName);
+
+            //assert
+            _dataRecordServiceMock.Verify(v => v.DeleteDataRecord(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);
+        }
     }
 }

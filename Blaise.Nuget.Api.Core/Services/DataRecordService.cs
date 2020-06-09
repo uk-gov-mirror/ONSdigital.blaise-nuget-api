@@ -50,7 +50,6 @@ namespace Blaise.Nuget.Api.Core.Services
             var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
 
             dataLink.Write(dataRecord);
-
         }
 
         public void WriteDataRecord(IDataRecord dataRecord, string filePath)
@@ -58,6 +57,13 @@ namespace Blaise.Nuget.Api.Core.Services
             var dataLink = _localDataLinkProvider.GetDataLink(filePath);
 
             dataLink.Write(dataRecord);
+        }
+
+        public void DeleteDataRecord(IKey primaryKey, string instrumentName, string serverParkName)
+        {
+            var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
+
+            dataLink.Delete(primaryKey);
         }
     }
 }

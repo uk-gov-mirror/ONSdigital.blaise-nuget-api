@@ -20,6 +20,7 @@ namespace Blaise.Nuget.Api
         private string _instrumentName;
         private string _toInstrumentName;
         private string _primaryKeyValue;
+        private string _toServerName;
         private string _filePath;
         private string _toFilePath;
         private string _userName;
@@ -57,7 +58,7 @@ namespace Blaise.Nuget.Api
 
         public IFluentBlaiseHandler ToServer(string serverName)
         {
-            _blaiseApi.UseServer(serverName);
+            _toServerName = serverName;
 
             return this;
         }
@@ -371,13 +372,37 @@ namespace Blaise.Nuget.Api
                 return;
             }
 
-            HandleDatabase();
+            if (!string.IsNullOrWhiteSpace(_toServerName))
+            {
+                HandleDatabase();
+                return;
+            }
+
+            throw new ArgumentException("You must specify a file with the 'ToFile' step, or a server with the 'ToServer' step before calling handle");
         }
 
         private void HandleDatabase()
         {
+            ValidateInstrumentIsSet();
+            ValidateServerParkIsSet();
+            ValidatePrimaryKeyValueIsSet();
+
+            ValidateToInstrumentIsSet();
+            ValidateToServerParkIsSet();
+
+            switch (_handleType)
             {
-                throw new NotImplementedException();
+                case HandleType.Copy:
+                    _blaiseApi.CopyCase(_primaryKeyValue, _instrumentName, _serverParkName, _toServerName,
+                        _toInstrumentName, _toServerParkName);
+                    break;
+                case HandleType.Move:
+                    _blaiseApi.MoveCase(_primaryKeyValue, _instrumentName, _serverParkName, _toServerName,
+                        _toInstrumentName, _toServerParkName);
+                    break;
+                default:
+                    throw new NotSupportedException(
+                        "You have not declared a step previously where this action is supported");
             }
         }
 
@@ -495,6 +520,14 @@ namespace Blaise.Nuget.Api
             if (string.IsNullOrWhiteSpace(_serverParkName))
             {
                 throw new NullReferenceException("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park");
+            }
+        }
+
+        private void ValidateToServerParkIsSet()
+        {
+            if (string.IsNullOrWhiteSpace(_toServerParkName))
+            {
+                throw new NullReferenceException("The 'ToServerPark' step needs to be called prior to this to specify the destination name of the server park");
             }
         }
 

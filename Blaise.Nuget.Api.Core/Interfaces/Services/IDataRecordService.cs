@@ -17,5 +17,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName);
 
         void WriteDataRecord(IDataRecord dataRecord, string filePath);
+
+        void DeleteDataRecord(IKey primaryKey, string instrumentName, string serverParkName);
     }
 }

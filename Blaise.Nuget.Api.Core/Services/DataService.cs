@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Core.Interfaces.Mappers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
@@ -134,6 +133,16 @@ namespace Blaise.Nuget.Api.Core.Services
         public void MarkCaseAsProcessed(IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
             _fieldService.MarkCaseAsProcessed(dataRecord, instrumentName, serverParkName);
+        }
+
+        public void RemoveDataRecord(string primaryKeyValue, string instrumentName, string serverParkName)
+        {
+            var dataModel = _dataModelService.GetDataModel(instrumentName, serverParkName);
+            var primaryKey = _keyService.GetPrimaryKey(dataModel);
+
+            _keyService.AssignPrimaryKeyValue(primaryKey, primaryKeyValue);
+
+            _dataRecordService.DeleteDataRecord(primaryKey, instrumentName, serverParkName);
         }
 
         public bool CaseExists(string primaryKeyValue, string instrumentName, string serverParkName)
