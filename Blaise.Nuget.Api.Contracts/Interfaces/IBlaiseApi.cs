@@ -91,5 +91,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         void MoveCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
             string destinationServerName, string destinationInstrumentName, string destinationServerParkName);
+
+        void RemoveCase(string primaryKeyValue, string instrumentName, string serverParkName);
     }
 }
