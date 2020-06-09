@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Interfaces;
+using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
+using Blaise.Nuget.Api.Providers;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.DataRecord;
@@ -16,6 +18,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         private Mock<ISurveyService> _surveyServiceMock;
         private Mock<IUserService> _userServiceMock;
         private Mock<IFileService> _fileServiceMock;
+        private Mock<IUnityProvider> _unityProviderMock;
+        private Mock<IConfigurationProvider> _configurationProviderMock;
 
         private IBlaiseApi _sut;
 
@@ -27,13 +31,17 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _surveyServiceMock = new Mock<ISurveyService>();
             _userServiceMock = new Mock<IUserService>();
             _fileServiceMock = new Mock<IFileService>();
+            _unityProviderMock = new Mock<IUnityProvider>();
+            _configurationProviderMock = new Mock<IConfigurationProvider>();
 
             _sut = new BlaiseApi(
                 _dataServiceMock.Object,
                 _parkServiceMock.Object,
                 _surveyServiceMock.Object,
                 _userServiceMock.Object,
-                _fileServiceMock.Object);
+                _fileServiceMock.Object,
+                _unityProviderMock.Object,
+                _configurationProviderMock.Object);
         }
 
         [Test]

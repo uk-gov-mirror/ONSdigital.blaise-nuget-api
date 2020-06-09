@@ -6,19 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Enums;
-using Unity;
-using Unity.Injection;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
-using Blaise.Nuget.Api.Core.Services;
-using Blaise.Nuget.Api.Core.Factories;
-using StatNeth.Blaise.API.DataLink;
-using Blaise.Nuget.Api.Core.Providers;
-using Blaise.Nuget.Api.Core.Interfaces.Services;
-using Blaise.Nuget.Api.Core.Interfaces.Factories;
-using Blaise.Nuget.Api.Core.Interfaces.Mappers;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
-using Blaise.Nuget.Api.Core.Mappers;
+using StatNeth.Blaise.API.DataLink;
+using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api
@@ -30,75 +22,52 @@ namespace Blaise.Nuget.Api
         private ISurveyService _surveyService;
         private IUserService _userService;
         private IFileService _fileService;
-
+        private IUnityProvider _unityProvider;
+        private IConfigurationProvider _configurationProvider;
 
         internal BlaiseApi(
             IDataService dataService,
             IParkService parkService, 
             ISurveyService surveyService, 
             IUserService userService, 
-            IFileService fileService)
+            IFileService fileService,
+            IUnityProvider unityProvider,
+            IConfigurationProvider configurationProvider)
         {
             _dataService = dataService;
             _parkService = parkService;
             _surveyService = surveyService;
             _userService = userService;
             _fileService = fileService;
+            _unityProvider = unityProvider;
+            _configurationProvider = configurationProvider;
         }
 
         public BlaiseApi()
         {
-            var configurationProvider = new ConfigurationProvider();
-            var connectionModel = configurationProvider.GetConnectionModel();
+            _configurationProvider = new ConfigurationProvider();
+            var connectionModel = _configurationProvider.GetConnectionModel();
 
+            _unityProvider = new UnityProvider();
             RegisterAndResolveDependencies(connectionModel);
         }
 
         private void RegisterAndResolveDependencies(ConnectionModel connectionModel)
         {
-            var unityContainer = new UnityContainer();
-            
-            //password service
-            unityContainer.RegisterType<IPasswordService, PasswordService>();
-
-            //factories
-            unityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>(
-                new InjectionConstructor(connectionModel, unityContainer.Resolve<IPasswordService>()));
-
-            unityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>(
-                new InjectionConstructor(connectionModel, unityContainer.Resolve<IPasswordService>()));
-
-            //mappers
-            unityContainer.RegisterType<IDataMapperService, DataMapperService>();
-
-            //providers
-            unityContainer.RegisterType<ILocalDataLinkProvider, LocalDataLinkProvider>();
-            unityContainer.RegisterType<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
-            unityContainer.RegisterType<IConfigurationProvider, ConfigurationProvider>();
-
-            //services
-            unityContainer.RegisterType<IDataModelService, DataModelService>();
-            unityContainer.RegisterType<IDataRecordService, DataRecordService>();
-            unityContainer.RegisterType<IDataService, DataService>();
-            unityContainer.RegisterType<IFieldService, FieldService>();
-            unityContainer.RegisterType<IKeyService, KeyService>();
-            unityContainer.RegisterType<IParkService, ParkService>();
-            unityContainer.RegisterType<ISurveyService, SurveyService>();
-            unityContainer.RegisterType<IUserService, UserService>();
-            unityContainer.RegisterType<IFileService, FileService>();
+            _unityProvider.RegisterDependencies(connectionModel);
 
             //resolve dependencies
-            _dataService = unityContainer.Resolve<IDataService>();
-            _parkService = unityContainer.Resolve<IParkService>();
-            _surveyService = unityContainer.Resolve<ISurveyService>();
-            _userService = unityContainer.Resolve<IUserService>();
-            _fileService = unityContainer.Resolve<IFileService>();
+            _dataService = _unityProvider.Resolve<IDataService>();
+            _parkService = _unityProvider.Resolve<IParkService>();
+            _surveyService = _unityProvider.Resolve<ISurveyService>();
+            _userService = _unityProvider.Resolve<IUserService>();
+            _fileService = _unityProvider.Resolve<IFileService>();
+            _configurationProvider = _unityProvider.Resolve<IConfigurationProvider>();
         }
 
         public void UseServer(string serverName)
         {
-            var configurationProvider = new ConfigurationProvider();
-            var connectionModel = configurationProvider.GetConnectionModel(serverName);
+            var connectionModel = _configurationProvider.GetConnectionModel(serverName);
 
             RegisterAndResolveDependencies(connectionModel);
         }
@@ -367,6 +336,13 @@ namespace Blaise.Nuget.Api
         public void CopyCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
             string destinationServerName, string destinationInstrumentName, string destinationServerParkName)
         {
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
+            sourceInstrumentName.ThrowExceptionIfNullOrEmpty("sourceInstrumentName");
+            sourceServerParkName.ThrowExceptionIfNullOrEmpty("sourceServerParkName");
+            destinationServerName.ThrowExceptionIfNullOrEmpty("destinationServerName");
+            destinationInstrumentName.ThrowExceptionIfNullOrEmpty("destinationInstrumentName");
+            destinationServerParkName.ThrowExceptionIfNullOrEmpty("destinationServerParkName");
+
             var caseRecord = _dataService.GetDataRecord(primaryKeyValue, sourceInstrumentName, sourceServerParkName);
 
             UseServer(destinationServerName);
@@ -376,11 +352,17 @@ namespace Blaise.Nuget.Api
         public void CopyCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
             string destinationFilePath, string destinationInstrumentName)
         {
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
+            sourceInstrumentName.ThrowExceptionIfNullOrEmpty("sourceInstrumentName");
+            sourceServerParkName.ThrowExceptionIfNullOrEmpty("sourceServerParkName");
+            destinationFilePath.ThrowExceptionIfNullOrEmpty("destinationFilePath");
+            destinationInstrumentName.ThrowExceptionIfNullOrEmpty("destinationInstrumentName");
+
             if (!_fileService.DatabaseFileExists(destinationFilePath, destinationInstrumentName))
             {
                 var survey = _surveyService.GetSurvey(sourceInstrumentName, sourceServerParkName);
                 var metaFileName = survey.Configuration.Configurations.First().MetaFileName;
-                _fileService.CreateDatabaseFile(metaFileName, destinationFilePath,destinationInstrumentName);
+                _fileService.CreateDatabaseFile(metaFileName, destinationFilePath, destinationInstrumentName);
             }
 
             var caseRecord = _dataService.GetDataRecord(primaryKeyValue, sourceInstrumentName, sourceServerParkName);
@@ -392,6 +374,13 @@ namespace Blaise.Nuget.Api
         public void MoveCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
             string destinationServerName, string destinationInstrumentName, string destinationServerParkName)
         {
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
+            sourceInstrumentName.ThrowExceptionIfNullOrEmpty("sourceInstrumentName");
+            sourceServerParkName.ThrowExceptionIfNullOrEmpty("sourceServerParkName");
+            destinationServerName.ThrowExceptionIfNullOrEmpty("destinationServerName");
+            destinationInstrumentName.ThrowExceptionIfNullOrEmpty("destinationInstrumentName");
+            destinationServerParkName.ThrowExceptionIfNullOrEmpty("destinationServerParkName");
+
             var caseRecord = _dataService.GetDataRecord(primaryKeyValue, sourceInstrumentName, sourceServerParkName);
 
             UseServer(destinationServerName);
@@ -403,6 +392,12 @@ namespace Blaise.Nuget.Api
         public void MoveCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
             string destinationFilePath, string destinationInstrumentName)
         {
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
+            sourceInstrumentName.ThrowExceptionIfNullOrEmpty("sourceInstrumentName");
+            sourceServerParkName.ThrowExceptionIfNullOrEmpty("sourceServerParkName");
+            destinationFilePath.ThrowExceptionIfNullOrEmpty("destinationFilePath");
+            destinationInstrumentName.ThrowExceptionIfNullOrEmpty("destinationInstrumentName");
+
             CopyCase(primaryKeyValue,  sourceInstrumentName, sourceServerParkName, destinationFilePath,
                 destinationInstrumentName);
 
@@ -411,6 +406,10 @@ namespace Blaise.Nuget.Api
 
         public void RemoveCase(string primaryKeyValue,  string instrumentName, string serverParkName)
         {
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
             _dataService.RemoveDataRecord(primaryKeyValue, instrumentName, serverParkName);
         }
     }

@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Integration.Handler
 {
-    public class FluentApiHandlerTests
+    public class FluentApiToFileHandlerTests
     {
         [Ignore("Wont run without app settings on build environment")]
         [Test]
