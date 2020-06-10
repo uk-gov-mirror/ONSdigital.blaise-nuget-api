@@ -26,6 +26,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         void Update();
 
+        void Remove();
+
         IFluentBlaiseHandler Copy { get; }
 
         IFluentBlaiseHandler Move { get; }

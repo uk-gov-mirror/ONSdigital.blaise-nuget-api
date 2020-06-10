@@ -57,7 +57,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithInstrument(_sourceInstrumentName);
             _sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToFile(_destinationFilePath);
             _sut.ToInstrument(_destinationInstrumentName);
@@ -76,7 +76,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             //_sut.WithInstrument(_sourceInstrumentName);
             _sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToFile(_destinationFilePath);
             _sut.ToInstrument(_destinationInstrumentName);
@@ -96,7 +96,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithInstrument(_sourceInstrumentName);
             //_sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToFile(_destinationFilePath);
             _sut.ToInstrument(_destinationInstrumentName);
@@ -136,7 +136,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithInstrument(_sourceInstrumentName);
             _sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToFile(_destinationFilePath);
             //_sut.ToInstrument(_destinationInstrumentName);
@@ -156,11 +156,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithInstrument(_sourceInstrumentName);
             _sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToFile(_destinationFilePath);
             _sut.ToInstrument(_destinationInstrumentName);
-
 
             //act
             _sut.Move.Handle();
@@ -176,7 +175,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             //_sut.WithInstrument(_sourceInstrumentName);
             _sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToFile(_destinationFilePath);
             _sut.ToInstrument(_destinationInstrumentName);
@@ -196,7 +195,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithInstrument(_sourceInstrumentName);
             //_sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToFile(_destinationFilePath);
             _sut.ToInstrument(_destinationInstrumentName);
@@ -236,7 +235,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithInstrument(_sourceInstrumentName);
             _sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToFile(_destinationFilePath);
             //_sut.ToInstrument(_destinationInstrumentName);
@@ -256,7 +255,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithInstrument(_sourceInstrumentName);
             _sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToServer(_destinationServerName);
             _sut.ToInstrument(_destinationInstrumentName);
@@ -277,7 +276,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             //_sut.WithInstrument(_sourceInstrumentName);
             _sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToServer(_destinationServerName);
             _sut.ToInstrument(_destinationInstrumentName);
@@ -298,7 +297,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithInstrument(_sourceInstrumentName);
             //_sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToServer(_destinationServerName);
             _sut.ToInstrument(_destinationInstrumentName);
@@ -340,7 +339,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithInstrument(_sourceInstrumentName);
             _sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToServer(_destinationServerName);
             //_sut.ToInstrument(_destinationInstrumentName);
@@ -361,7 +360,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithInstrument(_sourceInstrumentName);
             _sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToServer(_destinationServerName);
             _sut.ToInstrument(_destinationInstrumentName);
@@ -382,7 +381,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithInstrument(_sourceInstrumentName);
             _sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToServer(_destinationServerName);
             _sut.ToInstrument(_destinationInstrumentName);
@@ -403,7 +402,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             //_sut.WithInstrument(_sourceInstrumentName);
             _sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToServer(_destinationServerName);
             _sut.ToInstrument(_destinationInstrumentName);
@@ -424,7 +423,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithInstrument(_sourceInstrumentName);
             //_sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToServer(_destinationServerName);
             _sut.ToInstrument(_destinationInstrumentName);
@@ -466,7 +465,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithInstrument(_sourceInstrumentName);
             _sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToServer(_destinationServerName);
             //_sut.ToInstrument(_destinationInstrumentName);
@@ -487,7 +486,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithInstrument(_sourceInstrumentName);
             _sut.WithServerPark(_sourceServerParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             _sut.ToServer(_destinationServerName);
             _sut.ToInstrument(_destinationInstrumentName);
@@ -503,30 +502,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Handle_Has_Been_Called_But_No_Action_Is_Set_When_I_Call_Handle_Then_A_NotSupportedException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<NotSupportedException>(() =>
-            {
-                _sut.Copy.Handle();
-            });
-
-            Assert.AreEqual("You have not declared a step previously where this action is supported", exception.Message);
-        }
-
-        [Test]
-        public void Given_Case_Has_Been_Called_But_No_HandleAction_Is_Set_When_I_Call_Handle_Then_A_NotSupportedException_Is_Thrown()
+        public void Given_Handle_Has_Been_Called_But_No_HandleType_Is_Set_When_I_Call_Handle_Then_A_NotSupportedException_Is_Thrown()
         {
             //arrange
             _sut.WithPrimaryKey(_primaryKeyValue);
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() =>
+            var exception = Assert.Throws<NotSupportedException>(() =>
             {
-                _sut.Copy.Handle();
+                _sut.Handle();
             });
 
-            Assert.AreEqual("You must specify a file with the 'ToFile' step, or a server with the 'ToServer' step before calling handle", exception.Message);
+            Assert.AreEqual("You have not declared a step previously where this action is supported", exception.Message);
         }
     }
 }
