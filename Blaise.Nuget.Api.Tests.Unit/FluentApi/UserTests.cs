@@ -256,10 +256,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Name_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithUser_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
         {
+            //arrange
+            var setup = _sut.User;
+
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Remove());
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.User.Remove());
             Assert.AreEqual("The 'WithUser' step needs to be called prior to this to specify the name of the user", exception.Message);
         }
     }

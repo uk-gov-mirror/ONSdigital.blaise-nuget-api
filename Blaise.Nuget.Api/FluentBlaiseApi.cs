@@ -92,7 +92,7 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IEnumerable<string> ServerParks =>  _blaiseApi.GetServerParkNames();
+        public IEnumerable<string> ServerParks => _blaiseApi.GetServerParkNames();
 
         public IDataSet Cases
         {
@@ -105,9 +105,25 @@ namespace Blaise.Nuget.Api
             }
         }
 
-        public IFluentBlaiseUserApi User => this;
+        public IFluentBlaiseUserApi User
+        {
+            get
+            {
+                _lastActionType = LastActionType.User;
 
-        public IFluentBlaiseCaseApi Case => this;
+                return this;
+            }
+        }
+
+        public IFluentBlaiseCaseApi Case
+        {
+            get
+            {
+                _lastActionType = LastActionType.Case;
+
+                return this;
+            }
+        }
 
         public IFluentBlaiseApi WithInstrument(string instrumentName)
         {
@@ -125,7 +141,6 @@ namespace Blaise.Nuget.Api
 
         public IFluentBlaiseCaseApi WithPrimaryKey(string primaryKeyValue)
         {
-            _lastActionType = LastActionType.Case;
             _primaryKeyValue = primaryKeyValue;
 
             return this;
@@ -315,9 +330,17 @@ namespace Blaise.Nuget.Api
 
         public void Remove()
         {
-            ValidateUserIsSet();
-
-            _blaiseApi.RemoveUser(_userName);
+            switch (_lastActionType)
+            {
+                case LastActionType.Case:
+                    RemoveCase();
+                    break;
+                case LastActionType.User:
+                    RemoveUser();
+                    break;
+                default:
+                    throw new NotSupportedException("You have not declared a step previously where this action is supported");
+            }
         }
 
         public void Handle()
@@ -344,7 +367,7 @@ namespace Blaise.Nuget.Api
 
         private void UpdateCase()
         {
-            if(_caseData.Any())
+            if (_caseData.Any())
             {
                 ValidateInstrumentIsSet();
                 ValidateServerParkIsSet();
@@ -364,72 +387,6 @@ namespace Blaise.Nuget.Api
             }
         }
 
-        private void HandleCase()
-        {
-            if (!string.IsNullOrWhiteSpace(_toFilePath))
-            {
-                HandleFile();
-                return;
-            }
-
-            if (!string.IsNullOrWhiteSpace(_toServerName))
-            {
-                HandleDatabase();
-                return;
-            }
-
-            throw new ArgumentException("You must specify a file with the 'ToFile' step, or a server with the 'ToServer' step before calling handle");
-        }
-
-        private void HandleDatabase()
-        {
-            ValidateInstrumentIsSet();
-            ValidateServerParkIsSet();
-            ValidatePrimaryKeyValueIsSet();
-
-            ValidateToInstrumentIsSet();
-            ValidateToServerParkIsSet();
-
-            switch (_handleType)
-            {
-                case HandleType.Copy:
-                    _blaiseApi.CopyCase(_primaryKeyValue, _instrumentName, _serverParkName, _toServerName,
-                        _toInstrumentName, _toServerParkName);
-                    break;
-                case HandleType.Move:
-                    _blaiseApi.MoveCase(_primaryKeyValue, _instrumentName, _serverParkName, _toServerName,
-                        _toInstrumentName, _toServerParkName);
-                    break;
-                default:
-                    throw new NotSupportedException(
-                        "You have not declared a step previously where this action is supported");
-            }
-        }
-
-        private void HandleFile()
-        {
-            ValidateInstrumentIsSet();
-            ValidateServerParkIsSet();
-            ValidatePrimaryKeyValueIsSet();
-
-            ValidateToInstrumentIsSet();
-
-            switch (_handleType)
-            {
-                case HandleType.Copy:
-                    _blaiseApi.CopyCase(_primaryKeyValue, _instrumentName, _serverParkName, _toFilePath,
-                        _toInstrumentName);
-                    break;
-                case HandleType.Move:
-                    _blaiseApi.MoveCase(_primaryKeyValue, _instrumentName, _serverParkName, _toFilePath,
-                        _toInstrumentName);
-                    break;
-                default:
-                    throw new NotSupportedException(
-                        "You have not declared a step previously where this action is supported");
-            }
-        }
-
         private void UpdateUser()
         {
             ValidateUserIsSet();
@@ -445,6 +402,96 @@ namespace Blaise.Nuget.Api
                 ValidateServerParksAreSet();
                 _blaiseApi.EditUser(_userName, _role, _serverParkNames);
             }
+        }
+
+        private void RemoveCase()
+        {
+            ValidateInstrumentIsSet();
+            ValidateServerParkIsSet();
+            ValidatePrimaryKeyValueIsSet();
+
+            _blaiseApi.RemoveCase(_primaryKeyValue, _instrumentName, _serverParkName);
+        }
+
+        private void RemoveUser()
+        {
+            ValidateUserIsSet();
+
+            _blaiseApi.RemoveUser(_userName);
+        }
+
+        private void HandleCase()
+        {
+            switch (_handleType)
+            {
+                case HandleType.Copy:
+                    HandleCopy();
+                    break;
+                case HandleType.Move:
+                    HandleMove();
+                    break;
+                default:
+                    throw new NotSupportedException(
+                        "You have not declared a step previously where this action is supported");
+            }
+        }
+
+        private void HandleCopy()
+        {
+            ValidateInstrumentIsSet();
+            ValidateServerParkIsSet();
+            ValidatePrimaryKeyValueIsSet();
+
+            if (!string.IsNullOrWhiteSpace(_toFilePath))
+            {
+                ValidateToInstrumentIsSet();
+                _blaiseApi.CopyCase(_primaryKeyValue, _instrumentName, _serverParkName, _toFilePath,
+                    _toInstrumentName);
+
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(_toServerName))
+            {
+                ValidateToInstrumentIsSet();
+                ValidateToServerParkIsSet();
+
+                _blaiseApi.CopyCase(_primaryKeyValue, _instrumentName, _serverParkName, _toServerName,
+                    _toInstrumentName, _toServerParkName);
+
+                return;
+            }
+
+            throw new ArgumentException("You must specify a file with the 'ToFile' step, or a server with the 'ToServer' step before calling handle");
+        }
+
+        private void HandleMove()
+        {
+            ValidateInstrumentIsSet();
+            ValidateServerParkIsSet();
+            ValidatePrimaryKeyValueIsSet();
+
+            if (!string.IsNullOrWhiteSpace(_toFilePath))
+            {
+                ValidateToInstrumentIsSet();
+                _blaiseApi.MoveCase(_primaryKeyValue, _instrumentName, _serverParkName, _toFilePath,
+                    _toInstrumentName);
+
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(_toServerName))
+            {
+                ValidateToInstrumentIsSet();
+                ValidateToServerParkIsSet();
+
+                _blaiseApi.MoveCase(_primaryKeyValue, _instrumentName, _serverParkName, _toServerName,
+                    _toInstrumentName, _toServerParkName);
+
+                return;
+            }
+
+            throw new ArgumentException("You must specify a file with the 'ToFile' step, or a server with the 'ToServer' step before calling handle");
         }
 
         private bool CaseExists()

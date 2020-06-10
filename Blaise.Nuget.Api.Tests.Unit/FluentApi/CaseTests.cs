@@ -135,7 +135,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.WithPrimaryKey(_instrumentName);
+            _sut.Case.WithPrimaryKey(_instrumentName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
@@ -512,7 +512,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             //act
             var sutExists = _sut.Exists;
@@ -531,7 +531,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             //act
             var result = _sut.Exists;
@@ -547,7 +547,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
 
             _sut.WithServerPark(_serverParkName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() =>
@@ -563,13 +563,67 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
 
             _sut.WithInstrument(_instrumentName);
-            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() =>
             {
                 var sutExists = _sut.Exists;
             });
+            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
+        }
+
+        [Test]
+        public void Given_Case_Has_Been_Called_When_I_Call_Remove_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
+
+            //act
+            _sut.Remove();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.RemoveCase(_primaryKeyValue, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_WithPrimaryKey_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            //_sut.Case.WithPrimaryKey(_primaryKeyValue);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Case.Remove());
+            Assert.AreEqual("The 'WithPrimaryKey' step needs to be called prior to this to specify the primary key value of the case", exception.Message);
+        }
+
+        [Test]
+        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithServerPark(_serverParkName);
+            //_sut.WithInstrument(_instrumentName);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Case.Remove());
+            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
+        }
+
+        [Test]
+        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            //_sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Case.Remove());
             Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
         }
     }
