@@ -78,14 +78,14 @@ namespace Blaise.Nuget.Api.Core.Services
             {
                 if (FileIsLocked(libraryFile))
                 {
-                    return;
+                   throw new AccessViolationException($"Could not copy file {libraryFile} as it is locked");
                 }
 
                 var destinationFile = Path.Combine(destinationPath, Path.GetFileName(libraryFile));
 
                 if (File.Exists(destinationFile) && FileIsLocked(destinationFile))
                 {
-                    return;
+                    throw new AccessViolationException($"Could not write to file {destinationFile} as it is locked");
                 }
 
                 File.Copy(libraryFile, destinationFile, true);
