@@ -6,11 +6,11 @@ namespace Blaise.Nuget.Api.Providers
 {
     public class ConfigurationProvider : IConfigurationProvider
     {
-        public ConnectionModel GetConnectionModel(string serverName = null)
+        public ConnectionModel GetConnectionModel()
         {
             var connectionModel = new ConnectionModel
             {
-                ServerName = serverName ?? ConfigurationManager.AppSettings["BlaiseServerHostName"],
+                ServerName = ConfigurationManager.AppSettings["BlaiseServerHostName"],
                 UserName = ConfigurationManager.AppSettings["BlaiseServerUserName"],
                 Password = ConfigurationManager.AppSettings["BlaiseServerPassword"],
                 Binding = ConfigurationManager.AppSettings["BlaiseServerBinding"],

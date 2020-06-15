@@ -65,11 +65,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\DataTests.cs" />
+    <Compile Include="Api\ConfigurationModelTests.cs" />
     <Compile Include="Api\FileHandlerTests.cs" />
     <Compile Include="Api\ServerHandlerTests.cs" />
     <Compile Include="Api\UserTests.cs" />
     <Compile Include="Api\SurveyTests.cs" />
     <Compile Include="Api\ServerParkTests.cs" />
+    <Compile Include="FluentApi\ConfigurationModelTests.cs" />
     <Compile Include="Integration\Factories\ConnectedServerFactoryTests.cs" />
     <Compile Include="Integration\Factories\RemoteDataServerFactoryTests.cs" />
     <Compile Include="FluentApi\HandlerTests.cs" />

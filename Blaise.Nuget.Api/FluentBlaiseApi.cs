@@ -8,6 +8,7 @@ using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Enums;
 using StatNeth.Blaise.API.ServerManager;
 using Unity;
+using Blaise.Nuget.Api.Contracts.Models;
 
 namespace Blaise.Nuget.Api
 {
@@ -15,28 +16,56 @@ namespace Blaise.Nuget.Api
     {
         private readonly IBlaiseApi _blaiseApi;
 
+        private string _toServerName;
         private string _serverParkName;
         private string _toServerParkName;
         private string _instrumentName;
         private string _toInstrumentName;
         private string _primaryKeyValue;
-        private string _toServerName;
         private string _filePath;
         private string _toFilePath;
         private string _userName;
         private string _password;
         private string _role;
-        private IList<string> _serverParkNames;
-        private Dictionary<string, string> _caseData;
-        private IDataRecord _caseDataRecord;
-        private StatusType _statusType = StatusType.NotSpecified;
-        private FieldNameType _fieldNameType = FieldNameType.NotSpecified;
 
+        private Dictionary<string, string> _caseData;
+        private IList<string> _serverParkNames;
+        private IDataRecord _caseDataRecord;
+
+        private StatusType _statusType;
+        private FieldNameType _fieldNameType;
         private LastActionType _lastActionType;
         private HandleType _handleType;
 
+
+        private void InitialiseSettings()
+        {
+            _toServerName = null;
+            _serverParkName = null;
+            _toServerParkName = null;
+            _toServerParkName = null;
+            _instrumentName = null;
+            _toInstrumentName = null;
+            _primaryKeyValue = null;
+            _filePath = null;
+            _toFilePath = null;
+            _userName = null;
+            _password = null;
+            _role = null;
+            _serverParkNames = new List<string>();
+            _caseData = new Dictionary<string, string>();
+            _caseDataRecord = null;
+            _statusType = StatusType.NotSpecified;
+            _fieldNameType = FieldNameType.NotSpecified;
+            _lastActionType = LastActionType.NotSupported;
+            _handleType = HandleType.NotSupported;
+        }
+
+
         internal FluentBlaiseApi(IBlaiseApi blaiseApi)
         {
+            InitialiseSettings();
+
             _blaiseApi = blaiseApi;
             _serverParkNames = new List<string>();
             _caseData = new Dictionary<string, string>();
@@ -44,14 +73,16 @@ namespace Blaise.Nuget.Api
 
         public FluentBlaiseApi()
         {
+            InitialiseSettings();
+
             var unityContainer = new UnityContainer();
             unityContainer.RegisterType<IBlaiseApi, BlaiseApi>();
             _blaiseApi = unityContainer.Resolve<IBlaiseApi>();
         }
 
-        public IFluentBlaiseApi WithServer(string serverName)
+        public IFluentBlaiseApi WithConnection(ConnectionModel connectionModel)
         {
-            _blaiseApi.UseServer(serverName);
+            _blaiseApi.UseConnection(connectionModel);
 
             return this;
         }
@@ -328,6 +359,14 @@ namespace Blaise.Nuget.Api
             }
         }
 
+        public ConnectionModel DefaultConnection
+        {
+            get
+            {
+                return _blaiseApi.GetDefaultConnectionModel();
+            }
+        }
+
         public void Remove()
         {
             switch (_lastActionType)
@@ -363,6 +402,7 @@ namespace Blaise.Nuget.Api
             ValidateServerParksAreSet();
 
             _blaiseApi.AddUser(_userName, _password, _role, _serverParkNames);
+            InitialiseSettings();
         }
 
         private void UpdateCase()
@@ -385,6 +425,8 @@ namespace Blaise.Nuget.Api
             {
                 SetStatusAsProcessed();
             }
+
+            InitialiseSettings();
         }
 
         private void UpdateUser()
@@ -402,6 +444,8 @@ namespace Blaise.Nuget.Api
                 ValidateServerParksAreSet();
                 _blaiseApi.EditUser(_userName, _role, _serverParkNames);
             }
+
+            InitialiseSettings();
         }
 
         private void RemoveCase()
@@ -411,6 +455,8 @@ namespace Blaise.Nuget.Api
             ValidatePrimaryKeyValueIsSet();
 
             _blaiseApi.RemoveCase(_primaryKeyValue, _instrumentName, _serverParkName);
+
+            InitialiseSettings();
         }
 
         private void RemoveUser()
@@ -418,6 +464,8 @@ namespace Blaise.Nuget.Api
             ValidateUserIsSet();
 
             _blaiseApi.RemoveUser(_userName);
+
+            InitialiseSettings();
         }
 
         private void HandleCase()
@@ -448,6 +496,7 @@ namespace Blaise.Nuget.Api
                 _blaiseApi.CopyCase(_primaryKeyValue, _instrumentName, _serverParkName, _toFilePath,
                     _toInstrumentName);
 
+                InitialiseSettings();
                 return;
             }
 
@@ -459,9 +508,10 @@ namespace Blaise.Nuget.Api
                 _blaiseApi.CopyCase(_primaryKeyValue, _instrumentName, _serverParkName, _toServerName,
                     _toInstrumentName, _toServerParkName);
 
+                InitialiseSettings();
                 return;
             }
-
+            InitialiseSettings();
             throw new ArgumentException("You must specify a file with the 'ToFile' step, or a server with the 'ToServer' step before calling handle");
         }
 
@@ -477,6 +527,7 @@ namespace Blaise.Nuget.Api
                 _blaiseApi.MoveCase(_primaryKeyValue, _instrumentName, _serverParkName, _toFilePath,
                     _toInstrumentName);
 
+                InitialiseSettings();
                 return;
             }
 
@@ -488,9 +539,11 @@ namespace Blaise.Nuget.Api
                 _blaiseApi.MoveCase(_primaryKeyValue, _instrumentName, _serverParkName, _toServerName,
                     _toInstrumentName, _toServerParkName);
 
+                InitialiseSettings();
                 return;
             }
 
+            InitialiseSettings();
             throw new ArgumentException("You must specify a file with the 'ToFile' step, or a server with the 'ToServer' step before calling handle");
         }
 
@@ -500,14 +553,20 @@ namespace Blaise.Nuget.Api
             ValidateInstrumentIsSet();
             ValidatePrimaryKeyValueIsSet();
 
-            return _blaiseApi.CaseExists(_primaryKeyValue, _instrumentName, _serverParkName);
+            var caseExists = _blaiseApi.CaseExists(_primaryKeyValue, _instrumentName, _serverParkName);
+            InitialiseSettings();
+
+            return caseExists;
         }
 
         private bool ParkExists()
         {
             ValidateServerParkIsSet();
 
-            return _blaiseApi.ServerParkExists(_serverParkName);
+            var parkExists = _blaiseApi.ServerParkExists(_serverParkName);
+            InitialiseSettings();
+
+            return parkExists;
         }
 
 
@@ -515,7 +574,10 @@ namespace Blaise.Nuget.Api
         {
             ValidateUserIsSet();
 
-            return _blaiseApi.UserExists(_userName);
+            var userExists = _blaiseApi.UserExists(_userName);
+            InitialiseSettings();
+
+            return userExists;
         }
 
         private bool FieldExists()
@@ -526,10 +588,15 @@ namespace Blaise.Nuget.Api
             switch (_fieldNameType)
             {
                 case FieldNameType.Completed:
-                    return _blaiseApi.CompletedFieldExists(_instrumentName, _serverParkName);
+                    var completedFieldExists = _blaiseApi.CompletedFieldExists(_instrumentName, _serverParkName);
+                    InitialiseSettings();
+                    return completedFieldExists;
                 case FieldNameType.Processed:
-                    return _blaiseApi.ProcessedFieldExists(_instrumentName, _serverParkName);
+                    var processedFieldExists = _blaiseApi.ProcessedFieldExists(_instrumentName, _serverParkName);
+                    InitialiseSettings();
+                    return processedFieldExists;
                 default:
+                    InitialiseSettings();
                     throw new NotSupportedException("You have not declared a field previously where this action is supported");
             }
         }
@@ -541,6 +608,7 @@ namespace Blaise.Nuget.Api
             ValidateCaseDataRecordIsSet();
 
             _blaiseApi.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName);
+            InitialiseSettings();
         }
 
         private void SetStatusAsProcessed()
@@ -550,6 +618,7 @@ namespace Blaise.Nuget.Api
             ValidateCaseDataRecordIsSet();
 
             _blaiseApi.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName);
+            InitialiseSettings();
         }
 
         private void AddCase()
@@ -560,6 +629,7 @@ namespace Blaise.Nuget.Api
             ValidateDataIsSet();
 
             _blaiseApi.CreateNewDataRecord(_primaryKeyValue, _caseData, _instrumentName, _serverParkName);
+            InitialiseSettings();
         }
 
         private void ValidateServerParkIsSet()
