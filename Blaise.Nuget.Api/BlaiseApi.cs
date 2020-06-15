@@ -332,18 +332,18 @@ namespace Blaise.Nuget.Api
         }
 
         public void CopyCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
-            string destinationServerName, string destinationInstrumentName, string destinationServerParkName)
+            ConnectionModel destinationConnectionModel, string destinationInstrumentName, string destinationServerParkName)
         {
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
             sourceInstrumentName.ThrowExceptionIfNullOrEmpty("sourceInstrumentName");
             sourceServerParkName.ThrowExceptionIfNullOrEmpty("sourceServerParkName");
-            destinationServerName.ThrowExceptionIfNullOrEmpty("destinationServerName");
+            destinationConnectionModel.ThrowExceptionIfNull("destinationConnectionModel");
             destinationInstrumentName.ThrowExceptionIfNullOrEmpty("destinationInstrumentName");
             destinationServerParkName.ThrowExceptionIfNullOrEmpty("destinationServerParkName");
 
             var caseRecord = _dataService.GetDataRecord(primaryKeyValue, sourceInstrumentName, sourceServerParkName);
 
-            UseServer(destinationServerName);
+            UseConnection(destinationConnectionModel);
             _dataService.WriteDataRecord(caseRecord, destinationInstrumentName, destinationServerParkName);
         }
 
@@ -370,18 +370,18 @@ namespace Blaise.Nuget.Api
         }
 
         public void MoveCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
-            string destinationServerName, string destinationInstrumentName, string destinationServerParkName)
+            ConnectionModel destinationConnectionModel, string destinationInstrumentName, string destinationServerParkName)
         {
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
             sourceInstrumentName.ThrowExceptionIfNullOrEmpty("sourceInstrumentName");
             sourceServerParkName.ThrowExceptionIfNullOrEmpty("sourceServerParkName");
-            destinationServerName.ThrowExceptionIfNullOrEmpty("destinationServerName");
+            destinationConnectionModel.ThrowExceptionIfNull("destinationConnectionModel");
             destinationInstrumentName.ThrowExceptionIfNullOrEmpty("destinationInstrumentName");
             destinationServerParkName.ThrowExceptionIfNullOrEmpty("destinationServerParkName");
 
             var caseRecord = _dataService.GetDataRecord(primaryKeyValue, sourceInstrumentName, sourceServerParkName);
 
-            UseServer(destinationServerName);
+            UseConnection(destinationConnectionModel);
             _dataService.WriteDataRecord(caseRecord, destinationInstrumentName, destinationServerParkName);
 
             RemoveCase(primaryKeyValue, sourceInstrumentName, sourceServerParkName);
@@ -409,14 +409,6 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             _dataService.RemoveDataRecord(primaryKeyValue, instrumentName, serverParkName);
-        }
-
-        public void UseServer(string serverName)
-        {
-            var connectionModel = _configurationProvider.GetConnectionModel();
-            connectionModel.ServerName = serverName;
-
-            RegisterAndResolveDependencies(connectionModel);
         }
 
         public ConnectionModel GetDefaultConnectionModel()

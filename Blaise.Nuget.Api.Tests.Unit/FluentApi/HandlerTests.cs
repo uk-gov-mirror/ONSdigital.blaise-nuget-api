@@ -1,5 +1,6 @@
 ﻿using System;
 using Blaise.Nuget.Api.Contracts.Interfaces;
+using Blaise.Nuget.Api.Contracts.Models;
 using Moq;
 using NUnit.Framework;
 
@@ -12,10 +13,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         private readonly string _sourceInstrumentName;
         private readonly string _sourceServerParkName;
         private readonly string _primaryKeyValue;
-        private readonly string _destinationServerName;
         private readonly string _destinationInstrumentName;
         private readonly string _destinationServerParkName;
         private readonly string _destinationFilePath;
+
+        private readonly ConnectionModel _destinationConnectionModel;
 
         private FluentBlaiseApi _sut;
 
@@ -25,7 +27,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sourceServerParkName = "Park1";
             _primaryKeyValue = "Key1";
 
-            _destinationServerName = "Server2";
+            _destinationConnectionModel = new ConnectionModel();
             _destinationInstrumentName = "Instrument2";
             _destinationServerParkName = "Park2";
             _destinationFilePath = "FilePath";
@@ -245,7 +247,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_sourceServerParkName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
-            _sut.ToServer(_destinationServerName);
+            _sut.ToConnection(_destinationConnectionModel);
             _sut.ToInstrument(_destinationInstrumentName);
             _sut.ToServerPark(_destinationServerParkName);
 
@@ -254,7 +256,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //assert
             _blaiseApiMock.Verify(v => v.CopyCase(_primaryKeyValue, _sourceInstrumentName, 
-                    _sourceServerParkName, _destinationServerName, _destinationInstrumentName, 
+                    _sourceServerParkName, _destinationConnectionModel, _destinationInstrumentName, 
                     _destinationServerParkName), Times.Once);
         }
 
@@ -266,7 +268,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_sourceServerParkName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
-            _sut.ToServer(_destinationServerName);
+            _sut.ToConnection(_destinationConnectionModel);
             _sut.ToInstrument(_destinationInstrumentName);
             _sut.ToServerPark(_destinationServerParkName);
 
@@ -287,7 +289,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //_sut.WithServerPark(_sourceServerParkName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
-            _sut.ToServer(_destinationServerName);
+            _sut.ToConnection(_destinationConnectionModel);
             _sut.ToInstrument(_destinationInstrumentName);
             _sut.ToServerPark(_destinationServerParkName);
 
@@ -308,7 +310,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_sourceServerParkName);
             //_sut.WithPrimaryKey(_primaryKeyValue);
 
-            _sut.ToServer(_destinationServerName);
+            _sut.ToConnection(_destinationConnectionModel);
             _sut.ToInstrument(_destinationInstrumentName);
             _sut.ToServerPark(_destinationServerParkName);
 
@@ -329,7 +331,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_sourceServerParkName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
-            _sut.ToServer(_destinationServerName);
+            _sut.ToConnection(_destinationConnectionModel);
             //_sut.ToInstrument(_destinationInstrumentName);
             _sut.ToServerPark(_destinationServerParkName);
 
@@ -350,7 +352,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_sourceServerParkName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
-            _sut.ToServer(_destinationServerName);
+            _sut.ToConnection(_destinationConnectionModel);
             _sut.ToInstrument(_destinationInstrumentName);
             //_sut.ToServerPark(_destinationServerParkName);
 
@@ -371,7 +373,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_sourceServerParkName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
-            _sut.ToServer(_destinationServerName);
+            _sut.ToConnection(_destinationConnectionModel);
             _sut.ToInstrument(_destinationInstrumentName);
             _sut.ToServerPark(_destinationServerParkName);
 
@@ -380,7 +382,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //assert
             _blaiseApiMock.Verify(v => v.MoveCase(_primaryKeyValue, _sourceInstrumentName,
-                _sourceServerParkName, _destinationServerName, _destinationInstrumentName,
+                _sourceServerParkName, _destinationConnectionModel, _destinationInstrumentName,
                 _destinationServerParkName), Times.Once);
         }
 
@@ -392,7 +394,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_sourceServerParkName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
-            _sut.ToServer(_destinationServerName);
+            _sut.ToConnection(_destinationConnectionModel);
             _sut.ToInstrument(_destinationInstrumentName);
             _sut.ToServerPark(_destinationServerParkName);
 
@@ -413,7 +415,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //_sut.WithServerPark(_sourceServerParkName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
-            _sut.ToServer(_destinationServerName);
+            _sut.ToConnection(_destinationConnectionModel);
             _sut.ToInstrument(_destinationInstrumentName);
             _sut.ToServerPark(_destinationServerParkName);
 
@@ -434,7 +436,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_sourceServerParkName);
             //_sut.WithPrimaryKey(_primaryKeyValue);
 
-            _sut.ToServer(_destinationServerName);
+            _sut.ToConnection(_destinationConnectionModel);
             _sut.ToInstrument(_destinationInstrumentName);
             _sut.ToServerPark(_destinationServerParkName);
 
@@ -455,7 +457,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_sourceServerParkName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
-            _sut.ToServer(_destinationServerName);
+            _sut.ToConnection(_destinationConnectionModel);
             //_sut.ToInstrument(_destinationInstrumentName);
             _sut.ToServerPark(_destinationServerParkName);
 
@@ -476,7 +478,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_sourceServerParkName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
-            _sut.ToServer(_destinationServerName);
+            _sut.ToConnection(_destinationConnectionModel);
             _sut.ToInstrument(_destinationInstrumentName);
             //_sut.ToServerPark(_destinationServerParkName);
 

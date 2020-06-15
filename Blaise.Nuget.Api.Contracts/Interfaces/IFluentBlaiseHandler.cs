@@ -1,8 +1,10 @@
-﻿namespace Blaise.Nuget.Api.Contracts.Interfaces
+﻿using Blaise.Nuget.Api.Contracts.Models;
+
+namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IFluentBlaiseHandler
     {
-        IFluentBlaiseHandler ToServer(string serverName);
+        IFluentBlaiseHandler ToConnection(ConnectionModel connectionModel);
 
         IFluentBlaiseHandler ToServerPark(string serverParkName);
 

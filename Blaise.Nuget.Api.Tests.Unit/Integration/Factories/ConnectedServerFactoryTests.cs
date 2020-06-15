@@ -30,13 +30,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Factories
 
         [Ignore("Wont run without app settings on build environment")]
         [Test]
-        public void Given_I_Call_UseServer_To_Specify_A_Server_When_I_Call_GetServerParkNames_I_Get_The_Expected_Values_Back()
+        public void Given_I_Call_UseConnection_To_Specify_A_Server_When_I_Call_GetServerParkNames_I_Get_The_Expected_Values_Back()
         {
             //arrange
             var blaiseApi = new BlaiseApi();
+            var connectionModel = blaiseApi.GetDefaultConnectionModel();
+            connectionModel.ServerName = "localhost";
 
             //act
-            blaiseApi.UseServer("localhost");
+            blaiseApi.UseConnection(connectionModel);
             var result = blaiseApi.GetServerParkNames().ToList();
 
             //assert
