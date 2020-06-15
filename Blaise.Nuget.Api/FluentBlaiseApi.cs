@@ -359,13 +359,7 @@ namespace Blaise.Nuget.Api
             }
         }
 
-        public ConnectionModel DefaultConnection
-        {
-            get
-            {
-                return _blaiseApi.GetDefaultConnectionModel();
-            }
-        }
+        public ConnectionModel DefaultConnection => _blaiseApi.GetDefaultConnectionModel();
 
         public void Remove()
         {
