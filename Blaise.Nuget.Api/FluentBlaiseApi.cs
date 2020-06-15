@@ -16,12 +16,12 @@ namespace Blaise.Nuget.Api
     {
         private readonly IBlaiseApi _blaiseApi;
 
-        private string _toServerName;
         private string _serverParkName;
         private string _toServerParkName;
         private string _instrumentName;
         private string _toInstrumentName;
         private string _primaryKeyValue;
+        private ConnectionModel _toConnectionModel;
         private string _filePath;
         private string _toFilePath;
         private string _userName;
@@ -40,7 +40,6 @@ namespace Blaise.Nuget.Api
 
         private void InitialiseSettings()
         {
-            _toServerName = null;
             _serverParkName = null;
             _toServerParkName = null;
             _toServerParkName = null;
@@ -54,6 +53,7 @@ namespace Blaise.Nuget.Api
             _role = null;
             _serverParkNames = new List<string>();
             _caseData = new Dictionary<string, string>();
+            _toConnectionModel = null;
             _caseDataRecord = null;
             _statusType = StatusType.NotSpecified;
             _fieldNameType = FieldNameType.NotSpecified;
@@ -87,9 +87,9 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IFluentBlaiseHandler ToServer(string serverName)
+        public IFluentBlaiseHandler ToConnection(ConnectionModel connectionModel)
         {
-            _toServerName = serverName;
+            _toConnectionModel = connectionModel;
 
             return this;
         }
@@ -494,12 +494,12 @@ namespace Blaise.Nuget.Api
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(_toServerName))
+            if (_toConnectionModel != null)
             {
                 ValidateToInstrumentIsSet();
                 ValidateToServerParkIsSet();
 
-                _blaiseApi.CopyCase(_primaryKeyValue, _instrumentName, _serverParkName, _toServerName,
+                _blaiseApi.CopyCase(_primaryKeyValue, _instrumentName, _serverParkName, _toConnectionModel,
                     _toInstrumentName, _toServerParkName);
 
                 InitialiseSettings();
@@ -525,12 +525,12 @@ namespace Blaise.Nuget.Api
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(_toServerName))
+            if (_toConnectionModel != null)
             {
                 ValidateToInstrumentIsSet();
                 ValidateToServerParkIsSet();
 
-                _blaiseApi.MoveCase(_primaryKeyValue, _instrumentName, _serverParkName, _toServerName,
+                _blaiseApi.MoveCase(_primaryKeyValue, _instrumentName, _serverParkName, _toConnectionModel,
                     _toInstrumentName, _toServerParkName);
 
                 InitialiseSettings();
