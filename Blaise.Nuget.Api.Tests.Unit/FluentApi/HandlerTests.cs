@@ -9,7 +9,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
     {
         private Mock<IBlaiseApi> _blaiseApiMock;
 
-        private readonly string _sourceServerName;
         private readonly string _sourceInstrumentName;
         private readonly string _sourceServerParkName;
         private readonly string _primaryKeyValue;
@@ -22,7 +21,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         public HandlerTests()
         {
-            _sourceServerName = "Server1";
             _sourceInstrumentName = "Instrument1";
             _sourceServerParkName = "Park1";
             _primaryKeyValue = "Key1";
@@ -39,16 +37,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _blaiseApiMock = new Mock<IBlaiseApi>();
 
             _sut = new FluentBlaiseApi(_blaiseApiMock.Object);
-        }
-
-        [Test]
-        public void Given_A_ServerName_When_I_Call_WithServer_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.WithServer(_sourceServerName);
-
-            //assert
-            _blaiseApiMock.Verify(v => v.UseServer(_sourceServerName), Times.Once);
         }
 
         [Test]

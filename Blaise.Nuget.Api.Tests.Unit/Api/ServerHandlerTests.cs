@@ -54,7 +54,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _unityProviderMock = new Mock<IUnityProvider>();
 
             _configurationProviderMock = new Mock<IConfigurationProvider>();
-            _configurationProviderMock.Setup(c => c.GetConnectionModel(It.IsAny<string>()))
+            _configurationProviderMock.Setup(c => c.GetConnectionModel())
                 .Returns(_connectionModel);
 
             _unityProviderMock.Setup(u => u.Resolve<IDataService>()).Returns(_dataServiceMock.Object);
@@ -83,8 +83,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
 
             //assert
             _dataServiceMock.Verify(v => v.GetDataRecord(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);
-            _configurationProviderMock.Verify(v => v.GetConnectionModel(_destinationServerName));
             _unityProviderMock.Verify(v => v.RegisterDependencies(_connectionModel));
+            Assert.AreEqual(_destinationServerName, _connectionModel.ServerName);
             _dataServiceMock.Verify(v => v.WriteDataRecord(dataRecordMock.Object, _destinationInstrumentName, _destinationServerParkName));
         }
 
@@ -210,7 +210,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
 
             //assert
             _dataServiceMock.Verify(v => v.GetDataRecord(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);
-            _configurationProviderMock.Verify(v => v.GetConnectionModel(_destinationServerName));
+            Assert.AreEqual(_destinationServerName, _connectionModel.ServerName);
             _unityProviderMock.Verify(v => v.RegisterDependencies(_connectionModel));
             _dataServiceMock.Verify(v => v.WriteDataRecord(dataRecordMock.Object, _destinationInstrumentName, _destinationServerParkName));
             _dataServiceMock.Verify(v => v.RemoveDataRecord(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);

@@ -22,8 +22,8 @@ namespace Blaise.Nuget.Api
         private ISurveyService _surveyService;
         private IUserService _userService;
         private IFileService _fileService;
-        private IUnityProvider _unityProvider;
         private IConfigurationProvider _configurationProvider;
+        private readonly IUnityProvider _unityProvider;
 
         internal BlaiseApi(
             IDataService dataService,
@@ -65,10 +65,8 @@ namespace Blaise.Nuget.Api
             _configurationProvider = _unityProvider.Resolve<IConfigurationProvider>();
         }
 
-        public void UseServer(string serverName)
+        public void UseConnection(ConnectionModel connectionModel)
         {
-            var connectionModel = _configurationProvider.GetConnectionModel(serverName);
-
             RegisterAndResolveDependencies(connectionModel);
         }
 
@@ -411,6 +409,19 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             _dataService.RemoveDataRecord(primaryKeyValue, instrumentName, serverParkName);
+        }
+
+        public void UseServer(string serverName)
+        {
+            var connectionModel = _configurationProvider.GetConnectionModel();
+            connectionModel.ServerName = serverName;
+
+            RegisterAndResolveDependencies(connectionModel);
+        }
+
+        public ConnectionModel GetDefaultConnectionModel()
+        {
+            return _configurationProvider.GetConnectionModel();
         }
     }
 }

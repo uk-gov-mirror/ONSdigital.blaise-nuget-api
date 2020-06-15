@@ -55,7 +55,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _unityProviderMock = new Mock<IUnityProvider>();
 
             _configurationProviderMock = new Mock<IConfigurationProvider>();
-            _configurationProviderMock.Setup(c => c.GetConnectionModel(It.IsAny<string>()))
+            _configurationProviderMock.Setup(c => c.GetConnectionModel())
                 .Returns(_connectionModel);
 
             _unityProviderMock.Setup(u => u.Resolve<IDataService>()).Returns(_dataServiceMock.Object);

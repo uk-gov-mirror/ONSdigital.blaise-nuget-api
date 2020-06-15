@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Models;
 using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.ServerManager;
 
@@ -6,7 +7,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IFluentBlaiseApi
     {
-        IFluentBlaiseApi WithServer(string serverName);
+        IFluentBlaiseApi WithConnection(ConnectionModel connectionModel);
 
         IFluentBlaiseApi WithInstrument(string instrumentName);
 
@@ -27,5 +28,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         IEnumerable<ISurvey> Surveys { get; }
 
         bool Exists { get; }
+
+        ConnectionModel DefaultConnection { get; }
     }
 }

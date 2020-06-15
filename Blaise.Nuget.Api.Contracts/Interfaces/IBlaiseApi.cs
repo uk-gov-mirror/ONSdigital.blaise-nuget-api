@@ -6,12 +6,15 @@ using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
 using StatNeth.Blaise.API.ServerManager;
 using IDatamodel = StatNeth.Blaise.API.Meta.IDatamodel;
+using Blaise.Nuget.Api.Contracts.Models;
 
 namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IBlaiseApi
     {
-        void UseServer(string serverName);
+        ConnectionModel GetDefaultConnectionModel();
+
+        void UseConnection(ConnectionModel connectionModel);
 
         IEnumerable<string> GetServerParkNames();
 

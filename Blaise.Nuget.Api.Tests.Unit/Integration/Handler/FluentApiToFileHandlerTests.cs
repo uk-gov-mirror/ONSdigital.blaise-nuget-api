@@ -14,7 +14,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Handler
 
             //act
             sut
-                .WithServer("localhost")
                 .WithServerPark("LocalDevelopment")
                 .WithInstrument("OPN2004A")
                 .Case
@@ -36,7 +35,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Handler
 
             //act
             sut
-                .WithServer("localhost")
                 .WithServerPark("LocalDevelopment")
                 .WithInstrument("OPN2004A")
                 .Case

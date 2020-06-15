@@ -4,7 +4,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Providers
 {
     public interface IConfigurationProvider
     {
-        ConnectionModel GetConnectionModel(string serverName = null);
+        ConnectionModel GetConnectionModel();
 
         string LibraryDirectory { get; }
     }
