@@ -129,7 +129,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var surveyType = _sut.Type;
             });
-            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -143,7 +143,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var surveyType = _sut.Type;
             });
-            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -197,7 +197,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutExists = _sut.Exists;
             });
-            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -213,7 +213,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutExists = _sut.Exists;
             });
-            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -267,7 +267,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutExists = _sut.Exists;
             });
-            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -283,7 +283,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutExists = _sut.Exists;
             });
-            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
         }
     }
 }
