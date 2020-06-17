@@ -72,6 +72,7 @@
     <Compile Include="Api\SurveyTests.cs" />
     <Compile Include="Api\ServerParkTests.cs" />
     <Compile Include="FluentApi\ConfigurationModelTests.cs" />
+    <Compile Include="Integration\Case\FluentApiCaseTests.cs" />
     <Compile Include="Integration\Factories\ConnectedServerFactoryTests.cs" />
     <Compile Include="Integration\Factories\RemoteDataServerFactoryTests.cs" />
     <Compile Include="FluentApi\HandlerTests.cs" />
