@@ -626,6 +626,37 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         }
 
         [Test]
+        public void Given_A_File_When_I_Call_GetDataSet_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var filePath = "File1.bdix";
+
+            _dataServiceMock.Setup(d => d.GetDataSet(It.IsAny<string>()));
+
+            //act
+            _sut.GetDataSet(filePath);
+
+            //assert
+            _dataServiceMock.Verify(v => v.GetDataSet(filePath), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_FilePath_When_I_Call_GetDataSet_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetDataSet(string.Empty));
+            Assert.AreEqual("A value for the argument 'filePath' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_FilePath_When_I_Call_GetDataSet_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetDataSet(null));
+            Assert.AreEqual("filePath", exception.ParamName);
+        }
+
+        [Test]
         public void Given_Valid_Arguments_When_I_Call_GetDataRecord_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
