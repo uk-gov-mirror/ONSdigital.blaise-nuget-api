@@ -5,7 +5,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
 {
     public class FluentApiCaseTests
     {
-        //[Ignore("Wont run without app settings on build environment")]
+        [Ignore("Wont run without app settings on build environment")]
         [Test]
         public void Given_A_Case_That_Exists_When_I_Call_Exists_True_Is_Returned()
         {
