@@ -96,7 +96,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -126,7 +126,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithPrimaryKey' step needs to be called prior to this to specify the primary key value of the case", exception.Message);
+            Assert.AreEqual("The 'WithPrimaryKey' step needs to be called with a valid value prior to this to specify the primary key value of the case", exception.Message);
         }
 
         [Test]
@@ -139,7 +139,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithData' step needs to be called prior to this to specify the data fields of the case", exception.Message);
+            Assert.AreEqual("The 'WithData' step needs to be called with a valid value prior to this to specify the data fields of the case", exception.Message);
         }
 
 
@@ -190,7 +190,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutCases = _sut.Cases;
             });
-            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -204,7 +204,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutCases = _sut.Cases;
             });
-            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
         }
 
 
@@ -250,7 +250,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutPrimaryKey = _sut.PrimaryKey;
             });
-            Assert.AreEqual("The 'WithDataRecord' step needs to be called prior to this to specify the data record of the case", exception.Message);
+            Assert.AreEqual("The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case", exception.Message);
         }
 
         [Test]
@@ -294,7 +294,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutCompleted = _sut.Completed;
             });
-            Assert.AreEqual("The 'WithDataRecord' step needs to be called prior to this to specify the data record of the case", exception.Message);
+            Assert.AreEqual("The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case", exception.Message);
         }
 
         [Test]
@@ -338,7 +338,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutProcessed = _sut.Processed;
             });
-            Assert.AreEqual("The 'WithDataRecord' step needs to be called prior to this to specify the data record of the case", exception.Message);
+            Assert.AreEqual("The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case", exception.Message);
         }
 
         [Test]
@@ -379,7 +379,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -397,7 +397,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -415,7 +415,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithDataRecord' step needs to be called prior to this to specify the data record of the case", exception.Message);
+            Assert.AreEqual("The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case", exception.Message);
         }
 
         [Test]
@@ -472,7 +472,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
         }
 
         [TestCase(StatusType.Completed)]
@@ -486,7 +486,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
         }
 
         [TestCase(StatusType.Completed)]
@@ -500,7 +500,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithDataRecord' step needs to be called prior to this to specify the data record of the case", exception.Message);
+            Assert.AreEqual("The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case", exception.Message);
         }
 
         [Test]
@@ -554,7 +554,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutExists = _sut.Exists;
             });
-            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -570,7 +570,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutExists = _sut.Exists;
             });
-            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
         }
 
         [Test]
@@ -598,7 +598,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Case.Remove());
-            Assert.AreEqual("The 'WithPrimaryKey' step needs to be called prior to this to specify the primary key value of the case", exception.Message);
+            Assert.AreEqual("The 'WithPrimaryKey' step needs to be called with a valid value prior to this to specify the primary key value of the case", exception.Message);
         }
 
         [Test]
@@ -611,7 +611,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Case.Remove());
-            Assert.AreEqual("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
@@ -624,7 +624,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Case.Remove());
-            Assert.AreEqual("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
         }
     }
 }

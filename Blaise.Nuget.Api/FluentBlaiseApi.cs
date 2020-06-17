@@ -630,7 +630,7 @@ namespace Blaise.Nuget.Api
         {
             if (string.IsNullOrWhiteSpace(_serverParkName))
             {
-                throw new NullReferenceException("The 'WithServerPark' step needs to be called prior to this to specify the name of the server park");
+                throw new NullReferenceException("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park");
             }
         }
 
@@ -638,7 +638,7 @@ namespace Blaise.Nuget.Api
         {
             if (string.IsNullOrWhiteSpace(_toServerParkName))
             {
-                throw new NullReferenceException("The 'ToServerPark' step needs to be called prior to this to specify the destination name of the server park");
+                throw new NullReferenceException("The 'ToServerPark' step needs to be called with a valid value prior to this to specify the destination name of the server park");
             }
         }
 
@@ -646,7 +646,7 @@ namespace Blaise.Nuget.Api
         {
             if (string.IsNullOrWhiteSpace(_instrumentName))
             {
-                throw new NullReferenceException("The 'WithInstrument' step needs to be called prior to this to specify the name of the instrument");
+                throw new NullReferenceException("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument");
             }
         }
 
@@ -654,7 +654,7 @@ namespace Blaise.Nuget.Api
         {
             if (string.IsNullOrWhiteSpace(_toInstrumentName))
             {
-                throw new NullReferenceException("The 'ToInstrument' step needs to be called prior to this to specify the destination name of the instrument");
+                throw new NullReferenceException("The 'ToInstrument' step needs to be called with a valid value prior to this to specify the destination name of the instrument");
             }
         }
 
@@ -662,7 +662,7 @@ namespace Blaise.Nuget.Api
         {
             if (string.IsNullOrWhiteSpace(_primaryKeyValue))
             {
-                throw new NullReferenceException("The 'WithPrimaryKey' step needs to be called prior to this to specify the primary key value of the case");
+                throw new NullReferenceException("The 'WithPrimaryKey' step needs to be called with a valid value prior to this to specify the primary key value of the case");
             }
         }
 
@@ -670,7 +670,7 @@ namespace Blaise.Nuget.Api
         {
             if (_caseDataRecord == null)
             {
-                throw new NullReferenceException("The 'WithDataRecord' step needs to be called prior to this to specify the data record of the case");
+                throw new NullReferenceException("The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case");
             }
         }
 
@@ -678,7 +678,7 @@ namespace Blaise.Nuget.Api
         {
             if (_userName == null)
             {
-                throw new NullReferenceException("The 'WithUser' step needs to be called prior to this to specify the name of the user");
+                throw new NullReferenceException("The 'WithUser' step needs to be called with a valid value prior to this to specify the name of the user");
             }
         }
 
@@ -686,7 +686,7 @@ namespace Blaise.Nuget.Api
         {
             if (_password == null)
             {
-                throw new NullReferenceException("The 'WithPassword' step needs to be called prior to this to specify the password of the user");
+                throw new NullReferenceException("The 'WithPassword' step needs to be called with a valid value prior to this to specify the password of the user");
             }
         }
 
@@ -694,7 +694,7 @@ namespace Blaise.Nuget.Api
         {
             if (_role == null)
             {
-                throw new NullReferenceException("The 'WithRole' step needs to be called prior to this to specify the role of the user");
+                throw new NullReferenceException("The 'WithRole' step needs to be called with a valid value prior to this to specify the role of the user");
             }
         }
 
@@ -702,7 +702,7 @@ namespace Blaise.Nuget.Api
         {
             if (!_serverParkNames.Any())
             {
-                throw new NullReferenceException("The 'WithServerParks' step needs to be called prior to this to specify the server parks of the user");
+                throw new NullReferenceException("The 'WithServerParks' step needs to be called with a valid value prior to this to specify the server parks of the user");
             }
         }
 
@@ -710,7 +710,7 @@ namespace Blaise.Nuget.Api
         {
             if (!_caseData.Any())
             {
-                throw new NullReferenceException("The 'WithData' step needs to be called prior to this to specify the data fields of the case");
+                throw new NullReferenceException("The 'WithData' step needs to be called with a valid value prior to this to specify the data fields of the case");
             }
         }
     }
