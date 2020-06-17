@@ -26,6 +26,13 @@ namespace Blaise.Nuget.Api.Core.Services
             return dataLink.Read(null);
         }
 
+        public IDataSet GetDataSet(string filePath)
+        {
+            var dataLink = _localDataLinkProvider.GetDataLink(filePath);
+
+            return dataLink.Read(null);
+        }
+
         public IDataRecord GetDataRecord(IDatamodel dataModel)
         {
             return DataRecordManager.GetDataRecord(dataModel);

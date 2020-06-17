@@ -70,6 +70,11 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataRecordService.GetDataSet(instrumentName, serverParkName);
         }
 
+        public IDataSet GetDataSet(string filePath)
+        {
+            return _dataRecordService.GetDataSet(filePath);
+        }
+
         public IDataRecord GetDataRecord(IDatamodel datamodel)
         {
             return _dataRecordService.GetDataRecord(datamodel);

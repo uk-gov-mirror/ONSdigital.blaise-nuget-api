@@ -280,6 +280,16 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
+        public void Given_A_File_I_Call_GetDataSet_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.GetDataSet(_filePath);
+
+            //assert
+            _dataRecordServiceMock.Verify(v => v.GetDataSet(_filePath), Times.Once);
+        }
+
+        [Test]
         public void Given_A_DataModel_When_I_Call_GetDataRecord_Then_A_DataRecord_Is_Returned()
         {
             //act

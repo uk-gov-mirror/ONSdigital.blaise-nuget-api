@@ -107,6 +107,48 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
+        public void Given_A_File_When_I_Call_GetDataSet_I_Get_A_DataSet_Back()
+        {
+            //arrange
+            _localDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
+
+            //act
+            var result = _sut.GetDataSet(_filePath);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.IsInstanceOf<IDataSet>(result);
+        }
+
+        [Test]
+        public void Given_A_File_When_I_Call_GetDataSet_I_Get_The_Correct_DataSet_Back()
+        {
+            //arrange
+            _localDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
+
+            //act
+            var result = _sut.GetDataSet(_filePath);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreSame(_dataSetMock.Object, result);
+        }
+
+        [Test]
+        public void Given_A_File_When_I_Call_GetDataSet_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            _localDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
+
+            //act
+            _sut.GetDataSet(_filePath);
+
+            //assert
+            _localDataLinkProviderMock.Verify(v => v.GetDataLink(_filePath), Times.Once);
+            _localDataLinkMock.Verify(v => v.Read(null), Times.Once);
+        }
+
+        [Test]
         public void Given_I_Call_GetDataRecord_I_Get_A_DataRecord_Back()
         {
             //arrange

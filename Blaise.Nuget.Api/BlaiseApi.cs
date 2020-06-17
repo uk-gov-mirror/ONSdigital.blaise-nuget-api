@@ -173,6 +173,13 @@ namespace Blaise.Nuget.Api
             _dataService.AssignPrimaryKeyValue(key, primaryKeyValue);
         }
 
+        public IDataSet GetDataSet(string filePath)
+        {
+            filePath.ThrowExceptionIfNullOrEmpty("filePath");
+
+            return _dataService.GetDataSet(filePath);
+        }
+
         public IDataRecord GetDataRecord(IDatamodel dataModel)
         {
             dataModel.ThrowExceptionIfNull("dataModel");
