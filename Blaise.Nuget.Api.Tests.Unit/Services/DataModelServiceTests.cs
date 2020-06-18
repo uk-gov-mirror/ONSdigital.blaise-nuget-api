@@ -83,7 +83,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_instrumentName, _serverParkName), Times.Once);
-            _remoteDataLinkMock.Verify(v => v.Datamodel, Times.Once);
+            _remoteDataLinkMock.Verify(v => v.Datamodel, Times.AtLeastOnce);
         }
 
         [TestCase("Appointment", SurveyType.Appointment)]
@@ -110,7 +110,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_instrumentName, _serverParkName), Times.Once);
-            _remoteDataLinkMock.Verify(v => v.Datamodel, Times.Once);
+            _remoteDataLinkMock.Verify(v => v.Datamodel, Times.AtLeastOnce);
         }
     }
 }
