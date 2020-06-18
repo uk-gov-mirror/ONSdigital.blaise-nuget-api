@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Contracts.Enums;
+﻿using System;
+using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Services;
 using Moq;
@@ -61,6 +62,17 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             Assert.AreEqual(_dataModelMock.Object, result);
+        }
+
+        [Test]
+        public void Given_No_DataModel_Available_When_I_Call_GetDataModel_A_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _remoteDataLinkMock.Setup(d => d.Datamodel).Returns(null as IDatamodel);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataModel(_instrumentName, _serverParkName));
+            Assert.AreEqual($"No datamodel was found for instrument '{_instrumentName}' on server park '{_serverParkName}'", exception.Message);
         }
 
         [Test]

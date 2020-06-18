@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Contracts.Enums;
+﻿using System;
+using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.Meta;
@@ -17,6 +18,11 @@ namespace Blaise.Nuget.Api.Core.Services
         public IDatamodel GetDataModel(string instrumentName, string serverParkName)
         {
             var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
+
+            if (dataLink?.Datamodel == null)
+            {
+                throw new NullReferenceException($"No datamodel was found for instrument '{instrumentName}' on server park '{serverParkName}'");
+            }
 
             return dataLink.Datamodel;
         }
