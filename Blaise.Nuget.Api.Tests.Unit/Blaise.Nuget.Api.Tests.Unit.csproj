@@ -92,7 +92,7 @@
     <Compile Include="Services\KeyServiceTests.cs" />
     <Compile Include="Services\DataModelServiceTests.cs" />
     <Compile Include="Services\SurveyServiceTests.cs" />
-    <Compile Include="Services\RemoteDataLinkProviderTests.cs" />
+    <Compile Include="Providers\RemoteDataLinkProviderTests.cs" />
     <Compile Include="Services\DataServiceTests.cs" />
     <Compile Include="Services\ParkServiceTests.cs" />
     <Compile Include="Services\PasswordServiceTests.cs" />

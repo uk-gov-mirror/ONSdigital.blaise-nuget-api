@@ -13,7 +13,7 @@ namespace Blaise.Nuget.Api.Core.Providers
 
         private string _instrumentName;
         private string _serverParkName;
-        IDataLink4 _dataLink;
+        private IDataLink4 _dataLink;
 
         public RemoteDataLinkProvider(
             IRemoteDataServerFactory connectionFactory,
@@ -28,7 +28,7 @@ namespace Blaise.Nuget.Api.Core.Providers
 
         public IDataLink4 GetDataLink(string instrumentName, string serverParkName)
         {
-            if (_dataLink == null | instrumentName != _instrumentName || serverParkName != _serverParkName)
+            if (_dataLink == null || instrumentName != _instrumentName || serverParkName != _serverParkName)
             {
                 _instrumentName = instrumentName;
                 _serverParkName = serverParkName;

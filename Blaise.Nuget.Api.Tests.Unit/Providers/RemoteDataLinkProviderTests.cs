@@ -1,13 +1,13 @@
-﻿using Blaise.Nuget.Api.Core.Interfaces.Factories;
+﻿using System;
+using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Core.Providers;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.Meta;
-using System;
 
-namespace Blaise.Nuget.Api.Tests.Unit.Services
+namespace Blaise.Nuget.Api.Tests.Unit.Providers
 {
     public class RemoteDataLinkProviderTests
     {
