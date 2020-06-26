@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
@@ -59,7 +60,7 @@ namespace Blaise.Nuget.Api.Core.Services
         {
             var connection = _connectedServerFactory.GetConnection();
 
-            return connection.Users.Any(u => u.Name == userName);
+            return connection.Users.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
         }
 
         public void RemoveUser(string userName)

@@ -213,14 +213,17 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _userMock.Verify(v => v.Save(), Times.Once);
         }
 
-        [Test]
-        public void Given_A_User_Exists_When_I_Call_UserExists_Then_True_Is_Returned()
+        [TestCase("User1")]
+        [TestCase("USER1")]
+        [TestCase("user1")]
+        [TestCase("uSeR1")]
+        public void Given_A_User_Exists_When_I_Call_UserExists_Then_True_Is_Returned(string userName)
         {
             //arrange
             _userMock.Setup(u => u.Name).Returns(_userName);
 
             //act
-            var result = _sut.UserExists(_userName);
+            var result = _sut.UserExists(userName);
 
             //assert
            Assert.IsTrue(result);
