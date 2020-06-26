@@ -131,7 +131,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             Assert.IsNotNull(result);
-            Assert.IsTrue(result);
+            Assert.IsFalse(result);
         }
 
 
