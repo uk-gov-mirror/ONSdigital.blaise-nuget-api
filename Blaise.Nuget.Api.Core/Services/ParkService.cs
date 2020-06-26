@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Contracts.Exceptions;
+﻿using System;
+using Blaise.Nuget.Api.Contracts.Exceptions;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.ServerManager;
@@ -33,7 +34,7 @@ namespace Blaise.Nuget.Api.Core.Services
         {
             var serverParkNames = GetServerParkNames();
 
-            return serverParkNames.Any(sp => sp == serverParkName);
+            return serverParkNames.Any(sp => sp.Equals(serverParkName, StringComparison.OrdinalIgnoreCase));
         }
 
         public IServerPark GetServerPark(string serverParkName)
