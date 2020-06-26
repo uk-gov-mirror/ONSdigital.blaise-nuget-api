@@ -17,21 +17,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<IConnectedServer> _connectedServerMock;
         private Mock<IServerParkCollection> _serverParkCollectionMock;
 
-        private readonly string _serverParkName;
+        private string _serverParkName;
 
         private ParkService _sut;
-
-        public ParkServiceTests()
-        {
-            _serverParkName = "TestServerParkName";
-        }
 
         [SetUp]
         public void SetUpTests()
         {
             //setup server parks
+            _serverParkName = "tel";
+
             _serverParkMock = new Mock<IServerPark>();
-            _serverParkMock.Setup(s => s.Name).Returns("TestServerParkName");
+            _serverParkMock.Setup(s => s.Name).Returns(_serverParkName);
 
             var serverParkItems = new List<IServerPark> { _serverParkMock.Object };
 
@@ -109,11 +106,40 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _connectedServerMock.Verify(v => v.GetServerPark(_serverParkName), Times.Once);
         }
 
+        [TestCase("TEL")]
+        [TestCase("tel")]
+        [TestCase("TEl")]
+        [TestCase("tEl")]
+        public void Given_A_ServerPark_Exists_When_I_Call_ServerParkExists_Then_True_Is_Returned(string serverParkName)
+        {
+            //act
+            var result = _sut.ServerParkExists(serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void Given_A_ServerPark_Does_Not_Exist_When_I_Call_ServerParkExists_Then_False_Is_Returned()
+        {
+            //arrange
+            var serverParkName = "NotFound";
+
+            //act
+            var result = _sut.ServerParkExists(serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result);
+        }
+
+
         [Test]
         public void Given_A_ServerPark_Exists_When_I_Call_GetServerPark_Then_I_Get_A_ServerPark_Returned()
         {
             //act
-            var result = _sut.GetServerPark((_serverParkName));
+            var result = _sut.GetServerPark(_serverParkName);
 
             //assert
             Assert.IsNotNull(result);
