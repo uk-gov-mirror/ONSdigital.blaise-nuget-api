@@ -76,7 +76,7 @@ namespace Blaise.Nuget.Api
             InitialiseSettings();
 
             var unityContainer = new UnityContainer();
-            unityContainer.RegisterType<IBlaiseApi, BlaiseApi>();
+            unityContainer.RegisterSingleton<IBlaiseApi, BlaiseApi>();
             _blaiseApi = unityContainer.Resolve<IBlaiseApi>();
         }
 
