@@ -22,13 +22,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         private Mock<IUnityProvider> _unityProviderMock;
         private Mock<IConfigurationProvider> _configurationProviderMock;
 
+        private readonly string _sourceServerName;
         private readonly string _sourceInstrumentName;
         private readonly string _sourceServerParkName;
         private readonly string _primaryKeyValue;
         private readonly string _destinationFilePath;
         private readonly string _destinationInstrumentName;
 
-        private readonly ConnectionModel _connectionModel;
+        private readonly ConnectionModel _sourceConnectionModel;
 
         private IBlaiseApi _sut;
 
@@ -41,7 +42,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _destinationFilePath = "FilePath";
             _destinationInstrumentName = "Instrument2";
 
-            _connectionModel = new ConnectionModel();
+            _sourceConnectionModel = new ConnectionModel
+            {
+                ServerName = _sourceServerName
+            };
         }
         [SetUp]
         public void SetUpTests()
@@ -55,9 +59,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
 
             _configurationProviderMock = new Mock<IConfigurationProvider>();
             _configurationProviderMock.Setup(c => c.GetConnectionModel())
-                .Returns(_connectionModel);
+                .Returns(_sourceConnectionModel);
 
             _unityProviderMock.Setup(u => u.Resolve<IDataService>()).Returns(_dataServiceMock.Object);
+            _unityProviderMock.Setup(u => u.Resolve<IFileService>()).Returns(_fileServiceMock.Object);
+            _unityProviderMock.Setup(u => u.Resolve<ISurveyService>()).Returns(_surveyServiceMock.Object);
 
             _sut = new BlaiseApi(
                 _dataServiceMock.Object,
@@ -86,7 +92,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 .Returns(databaseFilePath);
 
             //act
-            _sut.CopyCase(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName, _destinationFilePath, 
+            _sut.CopyCase(_sourceConnectionModel,_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName, _destinationFilePath, 
                 _destinationInstrumentName);
 
             //assert
@@ -127,19 +133,30 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 .Returns(databaseFilePath);
 
             //act
-            _sut.CopyCase(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName, _destinationFilePath,
+            _sut.CopyCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName, _destinationFilePath,
                 _destinationInstrumentName);
 
             //assert
+            Assert.AreEqual(_sourceServerName, _sourceConnectionModel.ServerName);
+            _unityProviderMock.Verify(v => v.RegisterDependencies(_sourceConnectionModel), Times.Once);
             _fileServiceMock.Verify(v => v.CreateDatabaseFile(metaFileName, databaseFilePath, _destinationInstrumentName), Times.Once);
             _dataServiceMock.Verify(v => v.WriteDataRecord(dataRecordMock.Object, databaseFilePath), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_Null_SourceConnectionModel_When_I_Call_CopyCase_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CopyCase(null, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
+                _destinationFilePath, _destinationInstrumentName));
+            Assert.AreEqual("The argument 'sourceConnectionModel' must be supplied", exception.ParamName);
         }
 
         [Test]
         public void Given_An_Empty_PrimaryKeyValue_ForFile_When_I_Call_CopyCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.CopyCase(string.Empty, _sourceInstrumentName, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CopyCase(_sourceConnectionModel, string.Empty, _sourceInstrumentName, _sourceServerParkName,
                 _destinationFilePath, _destinationInstrumentName));
             Assert.AreEqual("A value for the argument 'primaryKeyValue' must be supplied", exception.Message);
         }
@@ -148,7 +165,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_PrimaryKeyValue_ForFile_When_I_Call_CopyCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CopyCase(null, _sourceInstrumentName, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CopyCase(_sourceConnectionModel, null, _sourceInstrumentName, _sourceServerParkName,
                 _destinationFilePath, _destinationInstrumentName));
             Assert.AreEqual("primaryKeyValue", exception.ParamName);
         }
@@ -157,7 +174,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_SourceInstrumentName_ForFile_When_I_Call_CopyCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.CopyCase(_primaryKeyValue, string.Empty, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CopyCase(_sourceConnectionModel, _primaryKeyValue, string.Empty, _sourceServerParkName,
                 _destinationFilePath, _destinationInstrumentName));
             Assert.AreEqual("A value for the argument 'sourceInstrumentName' must be supplied", exception.Message);
         }
@@ -166,7 +183,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_SourceInstrumentName_ForFile_When_I_Call_CopyCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CopyCase(_primaryKeyValue, null, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CopyCase(_sourceConnectionModel, _primaryKeyValue, null, _sourceServerParkName,
                 _destinationFilePath, _destinationInstrumentName));
             Assert.AreEqual("sourceInstrumentName", exception.ParamName);
         }
@@ -175,7 +192,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_SourceServerParkName_ForFile_When_I_Call_CopyCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.CopyCase(_primaryKeyValue, _sourceInstrumentName, string.Empty,
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CopyCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, string.Empty,
                 _destinationFilePath, _destinationInstrumentName));
             Assert.AreEqual("A value for the argument 'sourceServerParkName' must be supplied", exception.Message);
         }
@@ -184,7 +201,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_SourceServerParkName_ForFile__When_I_Call_CopyCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CopyCase(_primaryKeyValue, _sourceInstrumentName, null,
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CopyCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, null,
                 _destinationFilePath, _destinationInstrumentName));
             Assert.AreEqual("sourceServerParkName", exception.ParamName);
         }
@@ -193,7 +210,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_DestinationFilePath_ForFile_When_I_Call_CopyCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.CopyCase(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CopyCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
                 string.Empty, _destinationInstrumentName));
             Assert.AreEqual("A value for the argument 'destinationFilePath' must be supplied", exception.Message);
         }
@@ -202,7 +219,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_DestinationFilePath_ForFile__When_I_Call_CopyCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CopyCase(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CopyCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
                 null, _destinationInstrumentName));
             Assert.AreEqual("destinationFilePath", exception.ParamName);
         }
@@ -211,7 +228,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_DestinationInstrumentName_ForFile_When_I_Call_CopyCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.CopyCase(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CopyCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
                 _destinationFilePath, string.Empty));
             Assert.AreEqual("A value for the argument 'destinationInstrumentName' must be supplied", exception.Message);
         }
@@ -220,7 +237,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_DestinationInstrumentName_ForFile__When_I_Call_CopyCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CopyCase(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CopyCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
                 _destinationFilePath, null));
             Assert.AreEqual("destinationInstrumentName", exception.ParamName);
         }
@@ -241,7 +258,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 .Returns(databaseFilePath);
 
             //act
-            _sut.MoveCase(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName, _destinationFilePath,
+            _sut.MoveCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName, _destinationFilePath,
                 _destinationInstrumentName);
 
             //assert
@@ -283,20 +300,31 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 .Returns(databaseFilePath);
 
             //act
-            _sut.MoveCase(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName, _destinationFilePath,
+            _sut.MoveCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName, _destinationFilePath,
                 _destinationInstrumentName);
 
             //assert
+            Assert.AreEqual(_sourceServerName, _sourceConnectionModel.ServerName);
+            _unityProviderMock.Verify(v => v.RegisterDependencies(_sourceConnectionModel), Times.Exactly(2));
             _fileServiceMock.Verify(v => v.CreateDatabaseFile(metaFileName, databaseFilePath, _destinationInstrumentName), Times.Once);
             _dataServiceMock.Verify(v => v.WriteDataRecord(dataRecordMock.Object, databaseFilePath), Times.Once);
             _dataServiceMock.Verify(v => v.RemoveDataRecord(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);
         }
 
         [Test]
+        public void Given_A_Null_SourceConnectionModel_When_I_Call_MoveCase_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MoveCase(null, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
+                _destinationFilePath, _destinationInstrumentName));
+            Assert.AreEqual("The argument 'sourceConnectionModel' must be supplied", exception.ParamName);
+        }
+
+        [Test]
         public void Given_An_Empty_PrimaryKeyValue_ForFile_When_I_Call_MoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.MoveCase(string.Empty, _sourceInstrumentName, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentException>(() => _sut.MoveCase(_sourceConnectionModel, string.Empty, _sourceInstrumentName, _sourceServerParkName,
                 _destinationFilePath, _destinationInstrumentName));
             Assert.AreEqual("A value for the argument 'primaryKeyValue' must be supplied", exception.Message);
         }
@@ -305,7 +333,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_PrimaryKeyValue_ForFile_When_I_Call_MoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MoveCase(null, _sourceInstrumentName, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MoveCase(_sourceConnectionModel, null, _sourceInstrumentName, _sourceServerParkName,
                 _destinationFilePath, _destinationInstrumentName));
             Assert.AreEqual("primaryKeyValue", exception.ParamName);
         }
@@ -314,7 +342,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_SourceInstrumentName_ForFile_When_I_Call_MoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.MoveCase(_primaryKeyValue, string.Empty, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentException>(() => _sut.MoveCase(_sourceConnectionModel, _primaryKeyValue, string.Empty, _sourceServerParkName,
                 _destinationFilePath, _destinationInstrumentName));
             Assert.AreEqual("A value for the argument 'sourceInstrumentName' must be supplied", exception.Message);
         }
@@ -323,7 +351,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_SourceInstrumentName_ForFile_When_I_Call_MoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MoveCase(_primaryKeyValue, null, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MoveCase(_sourceConnectionModel, _primaryKeyValue, null, _sourceServerParkName,
                 _destinationFilePath, _destinationInstrumentName));
             Assert.AreEqual("sourceInstrumentName", exception.ParamName);
         }
@@ -332,7 +360,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_SourceServerParkName_ForFile_When_I_Call_MoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.MoveCase(_primaryKeyValue, _sourceInstrumentName, string.Empty,
+            var exception = Assert.Throws<ArgumentException>(() => _sut.MoveCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, string.Empty,
                 _destinationFilePath, _destinationInstrumentName));
             Assert.AreEqual("A value for the argument 'sourceServerParkName' must be supplied", exception.Message);
         }
@@ -341,7 +369,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_SourceServerParkName_When_I_Call_MoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MoveCase(_primaryKeyValue, _sourceInstrumentName, null,
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MoveCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, null,
                 _destinationFilePath, _destinationInstrumentName));
             Assert.AreEqual("sourceServerParkName", exception.ParamName);
         }
@@ -350,7 +378,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_DestinationFilePath_ForFile_When_I_Call_MoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.MoveCase(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentException>(() => _sut.MoveCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
                 string.Empty, _destinationInstrumentName));
             Assert.AreEqual("A value for the argument 'destinationFilePath' must be supplied", exception.Message);
         }
@@ -359,7 +387,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_DestinationFilePath_When_I_Call_MoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MoveCase(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MoveCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
                 null, _destinationInstrumentName));
             Assert.AreEqual("destinationFilePath", exception.ParamName);
         }
@@ -368,7 +396,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_DestinationInstrumentName_ForFile_When_I_Call_MoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.MoveCase(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentException>(() => _sut.MoveCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
                 _destinationFilePath, string.Empty));
             Assert.AreEqual("A value for the argument 'destinationInstrumentName' must be supplied", exception.Message);
         }
@@ -377,7 +405,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_DestinationInstrumentName_When_I_Call_MoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MoveCase(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.MoveCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName,
                 _destinationFilePath, null));
             Assert.AreEqual("destinationInstrumentName", exception.ParamName);
         }
