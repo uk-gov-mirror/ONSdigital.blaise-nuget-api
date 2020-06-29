@@ -338,9 +338,10 @@ namespace Blaise.Nuget.Api
             _userService.RemoveUser(userName);
         }
 
-        public void CopyCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
+        public void CopyCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
             ConnectionModel destinationConnectionModel, string destinationInstrumentName, string destinationServerParkName)
         {
+            sourceConnectionModel.ThrowExceptionIfNull("sourceConnectionModel");
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
             sourceInstrumentName.ThrowExceptionIfNullOrEmpty("sourceInstrumentName");
             sourceServerParkName.ThrowExceptionIfNullOrEmpty("sourceServerParkName");
@@ -348,20 +349,24 @@ namespace Blaise.Nuget.Api
             destinationInstrumentName.ThrowExceptionIfNullOrEmpty("destinationInstrumentName");
             destinationServerParkName.ThrowExceptionIfNullOrEmpty("destinationServerParkName");
 
+            UseConnection(sourceConnectionModel);
             var caseRecord = _dataService.GetDataRecord(primaryKeyValue, sourceInstrumentName, sourceServerParkName);
 
             UseConnection(destinationConnectionModel);
             _dataService.WriteDataRecord(caseRecord, destinationInstrumentName, destinationServerParkName);
         }
 
-        public void CopyCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
+        public void CopyCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
             string destinationFilePath, string destinationInstrumentName)
         {
+            sourceConnectionModel.ThrowExceptionIfNull("sourceConnectionModel");
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
             sourceInstrumentName.ThrowExceptionIfNullOrEmpty("sourceInstrumentName");
             sourceServerParkName.ThrowExceptionIfNullOrEmpty("sourceServerParkName");
             destinationFilePath.ThrowExceptionIfNullOrEmpty("destinationFilePath");
             destinationInstrumentName.ThrowExceptionIfNullOrEmpty("destinationInstrumentName");
+
+            UseConnection(sourceConnectionModel);
 
             if (!_fileService.DatabaseFileExists(destinationFilePath, destinationInstrumentName))
             {
@@ -376,9 +381,10 @@ namespace Blaise.Nuget.Api
             _dataService.WriteDataRecord(caseRecord, fullFilePath);
         }
 
-        public void MoveCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
+        public void MoveCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
             ConnectionModel destinationConnectionModel, string destinationInstrumentName, string destinationServerParkName)
         {
+            sourceConnectionModel.ThrowExceptionIfNull("sourceConnectionModel");
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
             sourceInstrumentName.ThrowExceptionIfNullOrEmpty("sourceInstrumentName");
             sourceServerParkName.ThrowExceptionIfNullOrEmpty("sourceServerParkName");
@@ -386,24 +392,29 @@ namespace Blaise.Nuget.Api
             destinationInstrumentName.ThrowExceptionIfNullOrEmpty("destinationInstrumentName");
             destinationServerParkName.ThrowExceptionIfNullOrEmpty("destinationServerParkName");
 
+            UseConnection(sourceConnectionModel);
             var caseRecord = _dataService.GetDataRecord(primaryKeyValue, sourceInstrumentName, sourceServerParkName);
 
             UseConnection(destinationConnectionModel);
             _dataService.WriteDataRecord(caseRecord, destinationInstrumentName, destinationServerParkName);
 
+            UseConnection(sourceConnectionModel);
             RemoveCase(primaryKeyValue, sourceInstrumentName, sourceServerParkName);
         }
 
-        public void MoveCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
+        public void MoveCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
             string destinationFilePath, string destinationInstrumentName)
         {
+            sourceConnectionModel.ThrowExceptionIfNull("sourceConnectionModel");
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
             sourceInstrumentName.ThrowExceptionIfNullOrEmpty("sourceInstrumentName");
             sourceServerParkName.ThrowExceptionIfNullOrEmpty("sourceServerParkName");
             destinationFilePath.ThrowExceptionIfNullOrEmpty("destinationFilePath");
             destinationInstrumentName.ThrowExceptionIfNullOrEmpty("destinationInstrumentName");
 
-            CopyCase(primaryKeyValue,  sourceInstrumentName, sourceServerParkName, destinationFilePath,
+            UseConnection(sourceConnectionModel);
+
+            CopyCase(sourceConnectionModel, primaryKeyValue,  sourceInstrumentName, sourceServerParkName, destinationFilePath,
                 destinationInstrumentName);
 
             RemoveCase(primaryKeyValue, sourceInstrumentName, sourceServerParkName);

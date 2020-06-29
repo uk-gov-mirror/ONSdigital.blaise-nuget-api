@@ -85,16 +85,16 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         void RemoveUser(string userName);
 
-        void CopyCase(string primaryKeyValue, string sourceInstrumentName,
+        void CopyCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName,
             string sourceServerParkName, string destinationFilePath, string destinationInstrumentName);
 
-        void CopyCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
+        void CopyCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
             ConnectionModel destinationConnectionModel, string destinationInstrumentName, string destinationServerParkName);
 
-        void MoveCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
+        void MoveCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
             string destinationFilePath, string destinationInstrumentName);
 
-        void MoveCase(string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
+        void MoveCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
             ConnectionModel destinationConnectionModel, string destinationInstrumentName, string destinationServerParkName);
 
         void RemoveCase(string primaryKeyValue, string instrumentName, string serverParkName);

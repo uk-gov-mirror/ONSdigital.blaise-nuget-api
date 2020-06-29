@@ -21,7 +21,8 @@ namespace Blaise.Nuget.Api
         private string _instrumentName;
         private string _toInstrumentName;
         private string _primaryKeyValue;
-        private ConnectionModel _toConnectionModel;
+        private ConnectionModel _sourceConnectionModel;
+        private ConnectionModel _destinationConnectionModel;
         private string _filePath;
         private string _toFilePath;
         private string _userName;
@@ -53,7 +54,8 @@ namespace Blaise.Nuget.Api
             _role = null;
             _serverParkNames = new List<string>();
             _caseData = new Dictionary<string, string>();
-            _toConnectionModel = null;
+            _sourceConnectionModel = null;
+            _destinationConnectionModel = null;
             _caseDataRecord = null;
             _statusType = StatusType.NotSpecified;
             _fieldNameType = FieldNameType.NotSpecified;
@@ -82,6 +84,7 @@ namespace Blaise.Nuget.Api
 
         public IFluentBlaiseApi WithConnection(ConnectionModel connectionModel)
         {
+            _sourceConnectionModel = connectionModel;
             _blaiseApi.UseConnection(connectionModel);
 
             return this;
@@ -89,7 +92,7 @@ namespace Blaise.Nuget.Api
 
         public IFluentBlaiseHandler ToConnection(ConnectionModel connectionModel)
         {
-            _toConnectionModel = connectionModel;
+            _destinationConnectionModel = connectionModel;
 
             return this;
         }
@@ -480,6 +483,7 @@ namespace Blaise.Nuget.Api
 
         private void HandleCopy()
         {
+            ValidateSourceConnectionIsSet();
             ValidateInstrumentIsSet();
             ValidateServerParkIsSet();
             ValidatePrimaryKeyValueIsSet();
@@ -487,19 +491,19 @@ namespace Blaise.Nuget.Api
             if (!string.IsNullOrWhiteSpace(_toFilePath))
             {
                 ValidateToInstrumentIsSet();
-                _blaiseApi.CopyCase(_primaryKeyValue, _instrumentName, _serverParkName, _toFilePath,
+                _blaiseApi.CopyCase(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName, _toFilePath,
                     _toInstrumentName);
 
                 InitialiseSettings();
                 return;
             }
 
-            if (_toConnectionModel != null)
+            if (_destinationConnectionModel != null)
             {
                 ValidateToInstrumentIsSet();
                 ValidateToServerParkIsSet();
 
-                _blaiseApi.CopyCase(_primaryKeyValue, _instrumentName, _serverParkName, _toConnectionModel,
+                _blaiseApi.CopyCase(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName, _destinationConnectionModel,
                     _toInstrumentName, _toServerParkName);
 
                 InitialiseSettings();
@@ -511,6 +515,7 @@ namespace Blaise.Nuget.Api
 
         private void HandleMove()
         {
+            ValidateSourceConnectionIsSet();
             ValidateInstrumentIsSet();
             ValidateServerParkIsSet();
             ValidatePrimaryKeyValueIsSet();
@@ -518,19 +523,19 @@ namespace Blaise.Nuget.Api
             if (!string.IsNullOrWhiteSpace(_toFilePath))
             {
                 ValidateToInstrumentIsSet();
-                _blaiseApi.MoveCase(_primaryKeyValue, _instrumentName, _serverParkName, _toFilePath,
+                _blaiseApi.MoveCase(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName, _toFilePath,
                     _toInstrumentName);
 
                 InitialiseSettings();
                 return;
             }
 
-            if (_toConnectionModel != null)
+            if (_destinationConnectionModel != null)
             {
                 ValidateToInstrumentIsSet();
                 ValidateToServerParkIsSet();
 
-                _blaiseApi.MoveCase(_primaryKeyValue, _instrumentName, _serverParkName, _toConnectionModel,
+                _blaiseApi.MoveCase(_sourceConnectionModel,_primaryKeyValue, _instrumentName, _serverParkName, _destinationConnectionModel,
                     _toInstrumentName, _toServerParkName);
 
                 InitialiseSettings();
@@ -624,6 +629,14 @@ namespace Blaise.Nuget.Api
 
             _blaiseApi.CreateNewDataRecord(_primaryKeyValue, _caseData, _instrumentName, _serverParkName);
             InitialiseSettings();
+        }
+
+        private void ValidateSourceConnectionIsSet()
+        {
+            if (_sourceConnectionModel == null)
+            {
+                throw new NullReferenceException("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection");
+            }
         }
 
         private void ValidateServerParkIsSet()

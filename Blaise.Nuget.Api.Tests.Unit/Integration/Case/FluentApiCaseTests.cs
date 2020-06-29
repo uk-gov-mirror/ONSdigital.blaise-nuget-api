@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Interfaces;
+using Blaise.Nuget.Api.Contracts.Models;
 using NUnit.Framework;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
@@ -7,6 +8,36 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
     public class FluentApiCaseTests
     {
         [Ignore("Wont run without app settings on build environment")]
+        [Test]
+        public void Given_I_Use_With_Connection_And_A_Case_That_Exists_When_I_Call_Exists_True_Is_Returned()
+        {
+            //arrange
+            IFluentBlaiseApi sut = new FluentBlaiseApi();
+
+            //act
+            var connectionModel = new ConnectionModel
+            {
+                Binding = "HTTP",
+                UserName = "Root",
+                Password = "Root",
+                ServerName = "localhost",
+                Port = 8031,
+                RemotePort = 8033
+            };
+
+            var result = sut
+                .WithConnection(connectionModel)
+				.WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey("11000011")
+                .Exists;
+
+            //assert
+            Assert.True(result);
+        }
+
+		[Ignore("Wont run without app settings on build environment")]
         [Test]
         public void Given_A_Case_That_Exists_When_I_Call_Exists_True_Is_Returned()
         {
