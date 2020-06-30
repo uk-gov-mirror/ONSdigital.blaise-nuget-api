@@ -8,12 +8,13 @@ using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Core.Mappers;
 using Blaise.Nuget.Api.Core.Providers;
 using Blaise.Nuget.Api.Core.Services;
+using Blaise.Nuget.Api.Interfaces;
 using Unity;
 using Unity.Injection;
 
 namespace Blaise.Nuget.Api.Providers
 {
-    public class UnityProvider : IUnityProvider
+    public class UnityProvider : IIocProvider
     {
         private UnityContainer _unityContainer;
 

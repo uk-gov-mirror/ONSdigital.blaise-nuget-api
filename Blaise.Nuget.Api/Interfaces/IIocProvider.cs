@@ -1,8 +1,8 @@
 ﻿using Blaise.Nuget.Api.Contracts.Models;
 
-namespace Blaise.Nuget.Api.Providers
+namespace Blaise.Nuget.Api.Interfaces
 {
-    public interface IUnityProvider
+    public interface IIocProvider
     {
         void RegisterDependencies(ConnectionModel connectionModel);
         T Resolve<T>();

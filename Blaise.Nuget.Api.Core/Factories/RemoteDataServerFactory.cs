@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Contracts.Models;
+﻿using System;
+using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataLink;
@@ -9,6 +10,7 @@ namespace Blaise.Nuget.Api.Core.Factories
     {
         private readonly IPasswordService _passwordService;
         private readonly ConnectionModel _connectionModel;
+        private DateTime _dataLinkExpiresOn;
 
         private IRemoteDataServer _remoteDataServer;
 
@@ -18,13 +20,16 @@ namespace Blaise.Nuget.Api.Core.Factories
         {
             _connectionModel = connectionModel;
             _passwordService = passwordService;
+
+            _dataLinkExpiresOn = DateTime.Now.AddHours(1);
         }
 
         public IRemoteDataServer GetConnection()
         {   
-            if(_remoteDataServer == null)
+            if(_remoteDataServer == null || DataLinkHasExpired())
             {
                 CreateRemoteConnection(_connectionModel);
+                _dataLinkExpiresOn = DateTime.Now.AddHours(1);
             }
 
             return _remoteDataServer;
@@ -40,6 +45,11 @@ namespace Blaise.Nuget.Api.Core.Factories
                 connectionModel.Binding,
                 connectionModel.UserName,
                 securePassword);
+        }
+
+        private bool DataLinkHasExpired()
+        {
+            return _dataLinkExpiresOn < DateTime.Now;
         }
     }
 }

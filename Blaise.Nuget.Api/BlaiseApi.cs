@@ -11,6 +11,7 @@ using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using StatNeth.Blaise.API.DataLink;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
+using Blaise.Nuget.Api.Interfaces;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api
@@ -23,7 +24,7 @@ namespace Blaise.Nuget.Api
         private IUserService _userService;
         private IFileService _fileService;
         private IConfigurationProvider _configurationProvider;
-        private readonly IUnityProvider _unityProvider;
+        private readonly IIocProvider _unityProvider;
 
         internal BlaiseApi(
             IDataService dataService,
@@ -31,7 +32,7 @@ namespace Blaise.Nuget.Api
             ISurveyService surveyService, 
             IUserService userService, 
             IFileService fileService,
-            IUnityProvider unityProvider,
+            IIocProvider unityProvider,
             IConfigurationProvider configurationProvider)
         {
             _dataService = dataService;
