@@ -33,7 +33,29 @@ namespace Blaise.Nuget.Api.Core.Services
             return File.Exists(Path.Combine(filePath, $"{instrumentName}.{DatabaseSourceExt}"));
         }
 
-        public void CreateDatabaseFile(string metaFileName, string filePath, string instrumentName)
+        public void BackupDatabaseFile(string dataFileName, string metaFileName, string destinationPath)
+        {
+            //copy data file
+            CopyFileToDirectory(dataFileName, destinationPath);
+
+            //copy meta file
+            CopyFileToDirectory(metaFileName, destinationPath);
+
+            //copy source file
+            var sourceFilePath = Path.GetDirectoryName(dataFileName);
+
+            if (string.IsNullOrWhiteSpace(sourceFilePath))
+            {
+                throw new NullReferenceException($"Could not find path for the dataFile '{dataFileName}'");
+            }
+
+            var sourceFileName = Path.GetFileNameWithoutExtension(dataFileName);
+            var fullSourceFilePath = Path.Combine(sourceFilePath, $"{sourceFileName}.{DatabaseSourceExt}");
+
+            CopyFileToDirectory(fullSourceFilePath, destinationPath);
+        }
+
+        public string CreateDatabaseFile(string metaFileName, string filePath, string instrumentName)
         {
             CopyLibraryFiles(_configurationProvider.LibraryDirectory, filePath);
 
@@ -41,18 +63,27 @@ namespace Blaise.Nuget.Api.Core.Services
             var fileNameToCopy = GetFullFilePath(filePath, instrumentName, DatabaseModelExt);
             File.Copy(metaFileName, fileNameToCopy, true);
 
-            var di = DataInterfaceManager.GetDataInterface();
-            di.ConnectionInfo.DataSourceType = DataSourceType.Blaise;
-            di.ConnectionInfo.DataProviderType = DataProviderType.BlaiseDataProviderForDotNET;
-            di.DataPartitionType = DataPartitionType.Stream;
-            var csb = DataInterfaceManager.GetBlaiseConnectionStringBuilder();
-            csb.DataSource = GetFullFilePath(filePath, instrumentName, DatabaseSourceExt);
-            di.ConnectionInfo.SetConnectionString(csb.ConnectionString);
-            di.DatamodelFileName = GetFullFilePath(filePath, instrumentName, DatabaseModelExt);
-            di.FileName = GetFullFilePath(filePath, instrumentName, DatabaseFileNameExt);
-            di.CreateTableDefinitions();
-            di.CreateDatabaseObjects(null, true);
-            di.SaveToFile(true);
+            var dataInterface = DataInterfaceManager.GetDataInterface();
+            dataInterface.ConnectionInfo.DataSourceType = DataSourceType.Blaise;
+            dataInterface.ConnectionInfo.DataProviderType = DataProviderType.BlaiseDataProviderForDotNET;
+            dataInterface.DataPartitionType = DataPartitionType.Stream;
+            var connectionBuilder = DataInterfaceManager.GetBlaiseConnectionStringBuilder();
+            connectionBuilder.DataSource = GetFullFilePath(filePath, instrumentName, DatabaseSourceExt);
+            dataInterface.ConnectionInfo.SetConnectionString(connectionBuilder.ConnectionString);
+            dataInterface.DatamodelFileName = GetFullFilePath(filePath, instrumentName, DatabaseModelExt);
+            dataInterface.FileName = GetFullFilePath(filePath, instrumentName, DatabaseFileNameExt);
+            dataInterface.CreateTableDefinitions();
+            dataInterface.CreateDatabaseObjects(null, true);
+            dataInterface.SaveToFile(true);
+
+            return dataInterface.FileName;
+        }
+
+        public void CopyFileToDirectory(string sourceFile, string destinationPath)
+        {
+            Directory.CreateDirectory(destinationPath);
+            var destinationFile = Path.Combine(destinationPath, Path.GetFileName(sourceFile));
+            File.Copy(sourceFile, destinationFile, true);
         }
 
         private static string GetFullFilePath(string filePath, string instrumentName, string extension)
@@ -60,7 +91,7 @@ namespace Blaise.Nuget.Api.Core.Services
             return Path.Combine(filePath, $"{instrumentName}.{extension}");
         }
 
-        private void CopyLibraryFiles(string libraryPath, string destinationPath)
+        private static void CopyLibraryFiles(string libraryPath, string destinationPath)
         {
             if (!Directory.Exists(libraryPath))
             {

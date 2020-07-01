@@ -28,6 +28,7 @@ namespace Blaise.Nuget.Api
         private string _userName;
         private string _password;
         private string _role;
+        private string _destinationPath;
 
         private Dictionary<string, string> _caseData;
         private IList<string> _serverParkNames;
@@ -49,6 +50,7 @@ namespace Blaise.Nuget.Api
             _primaryKeyValue = null;
             _filePath = null;
             _toFilePath = null;
+            _destinationPath = null;
             _userName = null;
             _password = null;
             _role = null;
@@ -277,6 +279,21 @@ namespace Blaise.Nuget.Api
             }
         }
 
+        public IFluentBlaiseSurveyApi ToPath(string filePath)
+        {
+            _destinationPath = filePath;
+
+            return this;
+        }
+
+        public void Backup()
+        {
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+            ValidateDestinationPathIsSet();
+
+            _blaiseApi.BackupSurvey(_serverParkName, _instrumentName, _destinationPath);
+        }
 
         public IFluentBlaiseCaseApi WithStatus(StatusType statusType)
         {
@@ -636,6 +653,22 @@ namespace Blaise.Nuget.Api
             if (_sourceConnectionModel == null)
             {
                 throw new NullReferenceException("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection");
+            }
+        }
+
+        private void ValidateFilePathIsSet()
+        {
+            if (_filePath == null)
+            {
+                throw new NullReferenceException("The 'WithFile' step needs to be called with a valid value prior to this to specify the filePath");
+            }
+        }
+
+        private void ValidateDestinationPathIsSet()
+        {
+            if (_destinationPath == null)
+            {
+                throw new NullReferenceException("The 'ToPath' step needs to be called with a valid value prior to this to specify the destination path");
             }
         }
 

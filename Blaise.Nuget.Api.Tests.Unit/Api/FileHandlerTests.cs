@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Interfaces;
-using Blaise.Nuget.Api.Providers;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.DataRecord;
-using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Api
 {
@@ -114,19 +111,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _dataServiceMock.Setup(d => d.GetDataRecord(It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>())).Returns(dataRecordMock.Object);
 
-            var configurationMock = new Mock<IConfiguration>();
-            configurationMock.Setup(c => c.MetaFileName).Returns(metaFileName);
-
-            var configurationItems = new List<IConfiguration> { configurationMock.Object };
-
-            var configurationCollectionMock = new Mock<IMachineConfigurationCollection>();
-            configurationCollectionMock.Setup(s => s.Configurations).Returns(configurationItems);
-
-            var surveyMock = new Mock<ISurvey>();
-            surveyMock.Setup(s => s.Configuration).Returns(configurationCollectionMock.Object);
-
-            _surveyServiceMock.Setup(s => s.GetSurvey(_sourceInstrumentName, _sourceServerParkName))
-                .Returns(surveyMock.Object);
+            _surveyServiceMock.Setup(s => s.GetMetaFileName(_sourceInstrumentName, _sourceServerParkName))
+                .Returns(metaFileName);
 
             _fileServiceMock.Setup(f => f.DatabaseFileExists(_destinationFilePath, _destinationInstrumentName))
                 .Returns(false);
@@ -281,19 +267,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _dataServiceMock.Setup(d => d.GetDataRecord(It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>())).Returns(dataRecordMock.Object);
 
-            var configurationMock = new Mock<IConfiguration>();
-            configurationMock.Setup(c => c.MetaFileName).Returns(metaFileName);
-
-            var configurationItems = new List<IConfiguration> { configurationMock.Object };
-
-            var configurationCollectionMock = new Mock<IMachineConfigurationCollection>();
-            configurationCollectionMock.Setup(s => s.Configurations).Returns(configurationItems);
-
-            var surveyMock = new Mock<ISurvey>();
-            surveyMock.Setup(s => s.Configuration).Returns(configurationCollectionMock.Object);
-
-            _surveyServiceMock.Setup(s => s.GetSurvey(_sourceInstrumentName, _sourceServerParkName))
-                .Returns(surveyMock.Object);
+            _surveyServiceMock.Setup(s => s.GetMetaFileName(_sourceInstrumentName, _sourceServerParkName))
+                .Returns(metaFileName);
 
             _fileServiceMock.Setup(f => f.DatabaseFileExists(_destinationFilePath, _destinationInstrumentName))
                 .Returns(false);
