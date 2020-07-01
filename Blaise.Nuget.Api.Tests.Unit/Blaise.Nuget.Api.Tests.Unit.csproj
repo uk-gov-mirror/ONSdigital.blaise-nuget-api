@@ -84,7 +84,7 @@
     <Compile Include="FluentApi\CaseTests.cs" />
     <Compile Include="FluentApi\UserTests.cs" />
     <Compile Include="FluentBlaiseApiTests.cs" />
-    <Compile Include="Integration\Handler\FluentApiBackupTests.cs" />
+    <Compile Include="Integration\Backup\FluentApiBackupTests.cs" />
     <Compile Include="Integration\Handler\FluentApiToFileHandlerTests.cs" />
     <Compile Include="Integration\Handler\FluentApiToServerHandlerTests.cs" />
     <Compile Include="Integration\Processor\FluentApiProcessorTests.cs" />
