@@ -213,6 +213,15 @@ namespace Blaise.Nuget.Api
             return _dataService.GetDataRecord(key, filePath);
         }
 
+        public IDataRecord GetDataRecord(string primaryKeyValue, string instrumentName, string serverParkName)
+        {
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _dataService.GetDataRecord(primaryKeyValue, instrumentName, serverParkName);
+        }
+
         public void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
             dataRecord.ThrowExceptionIfNull("dataRecord");

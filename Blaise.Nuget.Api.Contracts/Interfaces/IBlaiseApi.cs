@@ -54,6 +54,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IDataRecord GetDataRecord(IKey key, string filePath);
 
+        IDataRecord GetDataRecord(string primaryKeyValue, string instrumentName, string serverParkName);
+
         void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName);
 
         void WriteDataRecord(IDataRecord dataRecord, string filePath);

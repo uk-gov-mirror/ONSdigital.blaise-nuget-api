@@ -28,6 +28,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         void Remove();
 
+        IDataRecord Get();
+
         IFluentBlaiseHandler Copy { get; }
 
         IFluentBlaiseHandler Move { get; }
