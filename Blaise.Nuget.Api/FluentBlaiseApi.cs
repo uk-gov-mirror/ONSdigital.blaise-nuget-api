@@ -339,6 +339,17 @@ namespace Blaise.Nuget.Api
             }
         }
 
+        public IDataRecord Get()
+        {
+            switch (_lastActionType)
+            {
+                case LastActionType.Case:
+                    return GetCase();
+                default:
+                    throw new NotSupportedException("You have not declared a step previously where this action is supported");
+            }
+        }
+
         public IFluentBlaiseHandler Copy
         {
             get
@@ -417,6 +428,15 @@ namespace Blaise.Nuget.Api
 
             _blaiseApi.AddUser(_userName, _password, _role, _serverParkNames);
             InitialiseSettings();
+        }
+
+        private IDataRecord GetCase()
+        {
+            ValidatePrimaryKeyValueIsSet();
+            ValidateInstrumentIsSet();
+            ValidateServerParkIsSet();
+
+            return _blaiseApi.GetDataRecord(_primaryKeyValue, _instrumentName, _serverParkName);
         }
 
         private void UpdateCase()

@@ -38,7 +38,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_A_Primary_Key_Value_When_I_Call_WithCase_Then_It_Returns_Same_Instance_Of_Itself_Back()
+        public void Given_A_Primary_Key_Value_When_I_Call_Case_Then_It_Returns_Same_Instance_Of_Itself_Back()
         {
             //act
             var result = _sut.WithPrimaryKey(_primaryKeyValue);
@@ -70,7 +70,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 {"Key", "Value"}
             };
 
-            _blaiseApiMock.Setup(d => d.CreateNewDataRecord(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<string>(), It.IsAny<string>()));
+            _blaiseApiMock.Setup(d => d.CreateNewDataRecord(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>(),
+                It.IsAny<string>(), It.IsAny<string>()));
 
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
@@ -81,7 +82,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Add();
 
             //assert
-            _blaiseApiMock.Verify(v => v.CreateNewDataRecord(_primaryKeyValue, fieldData, _instrumentName, _serverParkName), Times.Once);
+            _blaiseApiMock.Verify(
+                v => v.CreateNewDataRecord(_primaryKeyValue, fieldData, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -96,7 +98,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual(
+                "The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park",
+                exception.Message);
         }
 
         [Test]
@@ -111,11 +115,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual(
+                "The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument",
+                exception.Message);
         }
 
         [Test]
-        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>();
@@ -126,7 +132,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithPrimaryKey' step needs to be called with a valid value prior to this to specify the primary key value of the case", exception.Message);
+            Assert.AreEqual(
+                "The 'WithPrimaryKey' step needs to be called with a valid value prior to this to specify the primary key value of the case",
+                exception.Message);
         }
 
         [Test]
@@ -139,7 +147,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithData' step needs to be called with a valid value prior to this to specify the data fields of the case", exception.Message);
+            Assert.AreEqual(
+                "The 'WithData' step needs to be called with a valid value prior to this to specify the data fields of the case",
+                exception.Message);
         }
 
 
@@ -148,7 +158,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             //arrange
 
-            _blaiseApiMock.Setup(d => d.GetDataSet(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<IDataSet>());
+            _blaiseApiMock.Setup(d => d.GetDataSet(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(It.IsAny<IDataSet>());
 
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
@@ -180,7 +191,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
+        public void
+            Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithInstrument(_instrumentName);
@@ -190,11 +202,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutCases = _sut.Cases;
             });
-            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual(
+                "The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park",
+                exception.Message);
         }
 
         [Test]
-        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
+        public void
+            Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithServerPark(_serverParkName);
@@ -204,7 +219,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutCases = _sut.Cases;
             });
-            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual(
+                "The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument",
+                exception.Message);
         }
 
 
@@ -241,7 +258,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_PrimaryKey_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Has_Not_Been_Called_When_I_Call_PrimaryKey_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
@@ -250,11 +267,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutPrimaryKey = _sut.PrimaryKey;
             });
-            Assert.AreEqual("The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case", exception.Message);
+            Assert.AreEqual(
+                "The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case",
+                exception.Message);
         }
 
         [Test]
-        public void Given_WithCase_Has_Been_Called_When_I_Call_Completed_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Case_Has_Been_Called_When_I_Call_Completed_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenCompleted(It.IsAny<IDataRecord>())).Returns(It.IsAny<bool>());
@@ -270,7 +289,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_WithCase_Has_Been_Called_When_I_Call_Completed_Then_The_Expected_Result_Is_Returned(bool caseIsComplete)
+        public void Given_Case_Has_Been_Called_When_I_Call_Completed_Then_The_Expected_Result_Is_Returned(
+            bool caseIsComplete)
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenCompleted(_caseDataRecord)).Returns(caseIsComplete);
@@ -285,7 +305,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_Completed_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Has_Not_Been_Called_When_I_Call_Completed_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
@@ -294,11 +314,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutCompleted = _sut.Completed;
             });
-            Assert.AreEqual("The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case", exception.Message);
+            Assert.AreEqual(
+                "The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case",
+                exception.Message);
         }
 
         [Test]
-        public void Given_WithCase_Has_Been_Called_When_I_Call_Processed_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Case_Has_Been_Called_When_I_Call_Processed_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenProcessed(It.IsAny<IDataRecord>())).Returns(It.IsAny<bool>());
@@ -314,7 +336,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_WithCase_Has_Been_Called_When_I_Call_Processed_Then_The_Expected_Result_Is_Returned(bool caseHasBeenProcessed)
+        public void Given_Case_Has_Been_Called_When_I_Call_Processed_Then_The_Expected_Result_Is_Returned(
+            bool caseHasBeenProcessed)
         {
             //arrange
             _blaiseApiMock.Setup(d => d.CaseHasBeenProcessed(_caseDataRecord)).Returns(caseHasBeenProcessed);
@@ -329,7 +352,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_Processed_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Has_Not_Been_Called_When_I_Call_Processed_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
@@ -338,7 +361,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutProcessed = _sut.Processed;
             });
-            Assert.AreEqual("The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case", exception.Message);
+            Assert.AreEqual(
+                "The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case",
+                exception.Message);
         }
 
         [Test]
@@ -350,7 +375,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 {"Key", "Value"}
             };
 
-            _blaiseApiMock.Setup(d => d.MarkCaseAsComplete(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
+            _blaiseApiMock.Setup(d =>
+                d.MarkCaseAsComplete(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
 
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
@@ -361,11 +387,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Update();
 
             //assert
-            _blaiseApiMock.Verify(v => v.UpdateDataRecord(_caseDataRecord, fieldData, _instrumentName, _serverParkName), Times.Once);
+            _blaiseApiMock.Verify(v => v.UpdateDataRecord(_caseDataRecord, fieldData, _instrumentName, _serverParkName),
+                Times.Once);
         }
 
         [Test]
-        public void Given_WithData_Has_Been_Called_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+        public void
+            Given_WithData_Has_Been_Called_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>
@@ -379,11 +407,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual(
+                "The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park",
+                exception.Message);
         }
 
         [Test]
-        public void Given_WithData_Has_Been_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+        public void
+            Given_WithData_Has_Been_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>
@@ -397,11 +428,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual(
+                "The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument",
+                exception.Message);
         }
 
         [Test]
-        public void Given_WithData_Has_Been_Called_But_WithCase_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+        public void
+            Given_WithData_Has_Been_Called_But_Case_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>
@@ -415,14 +449,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case", exception.Message);
+            Assert.AreEqual(
+                "The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case",
+                exception.Message);
         }
 
         [Test]
-        public void Given_A_CompleteStatus_But_WithData_Not_Called_When_I_Call_Update_Then_The_Correct_Service_Method_Is_Called()
+        public void
+            Given_A_CompleteStatus_But_WithData_Not_Called_When_I_Call_Update_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            _blaiseApiMock.Setup(d => d.MarkCaseAsComplete(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
+            _blaiseApiMock.Setup(d =>
+                d.MarkCaseAsComplete(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
 
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
@@ -433,18 +471,22 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Update();
 
             //assert
-            _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName), Times.Once);
+            _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName),
+                Times.Once);
             _blaiseApiMock.Verify(v => v.MarkCaseAsProcessed(It.IsAny<IDataRecord>(), It.IsAny<string>()
                 , It.IsAny<string>()), Times.Never);
-            _blaiseApiMock.Verify(v => v.UpdateDataRecord(It.IsAny<IDataRecord>(), It.IsAny<Dictionary<string, string>>(),
+            _blaiseApiMock.Verify(v => v.UpdateDataRecord(It.IsAny<IDataRecord>(),
+                It.IsAny<Dictionary<string, string>>(),
                 It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
         [Test]
-        public void Given_A_ProcessedStatus_But_WithData_Not_Called_When_I_Call_Update_Then_The_Correct_Service_Method_Is_Called()
+        public void
+            Given_A_ProcessedStatus_But_WithData_Not_Called_When_I_Call_Update_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            _blaiseApiMock.Setup(d => d.MarkCaseAsProcessed(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
+            _blaiseApiMock.Setup(d =>
+                d.MarkCaseAsProcessed(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
 
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
@@ -455,15 +497,20 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Update();
 
             //assert
-            _blaiseApiMock.Verify(v => v.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName), Times.Once);
-            _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName), Times.Never);
-            _blaiseApiMock.Verify(v => v.UpdateDataRecord(It.IsAny<IDataRecord>(), It.IsAny<Dictionary<string, string>>(),
+            _blaiseApiMock.Verify(v => v.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName),
+                Times.Once);
+            _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName),
+                Times.Never);
+            _blaiseApiMock.Verify(v => v.UpdateDataRecord(It.IsAny<IDataRecord>(),
+                It.IsAny<Dictionary<string, string>>(),
                 It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
         [TestCase(StatusType.Completed)]
         [TestCase(StatusType.Processed)]
-        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
+        public void
+            Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown(
+                StatusType statusType)
         {
             //arrange
             _sut.WithInstrument(_instrumentName);
@@ -472,12 +519,16 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual(
+                "The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park",
+                exception.Message);
         }
 
         [TestCase(StatusType.Completed)]
         [TestCase(StatusType.Processed)]
-        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
+        public void
+            Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown(
+                StatusType statusType)
         {
             //arrange
             _sut.WithServerPark(_serverParkName);
@@ -486,12 +537,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual(
+                "The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument",
+                exception.Message);
         }
 
         [TestCase(StatusType.Completed)]
         [TestCase(StatusType.Processed)]
-        public void Given_WithCase_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown(StatusType statusType)
+        public void Given_Case_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown(
+            StatusType statusType)
         {
             //arrange
             _sut.WithInstrument(_instrumentName);
@@ -500,15 +554,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case", exception.Message);
+            Assert.AreEqual(
+                "The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case",
+                exception.Message);
         }
 
         [Test]
-        public void Given_WithCase_Is_Called_When_I_Call_Exists_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Case_Is_Called_When_I_Call_Exists_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
 
-            _blaiseApiMock.Setup(p => p.CaseExists(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
+            _blaiseApiMock.Setup(p => p.CaseExists(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(It.IsAny<bool>());
 
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
@@ -523,11 +580,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_WithCase_Is_Called_When_I_Call_Exists_Then_The_Expected_Result_Is_Returned(bool caseExists)
+        public void Given_Case_Is_Called_When_I_Call_Exists_Then_The_Expected_Result_Is_Returned(bool caseExists)
         {
             //arrange
 
-            _blaiseApiMock.Setup(p => p.CaseExists(_primaryKeyValue, _instrumentName, _serverParkName)).Returns(caseExists);
+            _blaiseApiMock.Setup(p => p.CaseExists(_primaryKeyValue, _instrumentName, _serverParkName))
+                .Returns(caseExists);
 
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
@@ -542,7 +600,25 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithCase_Is_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Is_Called_But_WithPrimary_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Case.Exists;
+            });
+            Assert.AreEqual(
+                "The 'WithPrimaryKey' step needs to be called with a valid value prior to this to specify the primary key value of the case",
+                exception.Message);
+        }
+
+        [Test]
+        public void
+            Given_Case_Is_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
@@ -554,11 +630,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutExists = _sut.Exists;
             });
-            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual(
+                "The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument",
+                exception.Message);
         }
 
         [Test]
-        public void Given_WithCase_Is_Called_But_WithServerPark_Has_Not_Been_Called_When_I_CallExists_Then_An_NullReferenceException_Is_Thrown()
+        public void
+            Given_Case_Is_Called_But_WithServerPark_Has_Not_Been_Called_When_I_CallExists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
 
@@ -570,7 +649,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutExists = _sut.Exists;
             });
-            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual(
+                "The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park",
+                exception.Message);
         }
 
         [Test]
@@ -589,7 +670,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithPrimaryKey_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
+        public void
+            Given_WithPrimaryKey_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithServerPark(_serverParkName);
@@ -598,11 +680,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Case.Remove());
-            Assert.AreEqual("The 'WithPrimaryKey' step needs to be called with a valid value prior to this to specify the primary key value of the case", exception.Message);
+            Assert.AreEqual(
+                "The 'WithPrimaryKey' step needs to be called with a valid value prior to this to specify the primary key value of the case",
+                exception.Message);
         }
 
         [Test]
-        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
+        public void
+            Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithServerPark(_serverParkName);
@@ -611,11 +696,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Case.Remove());
-            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual(
+                "The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument",
+                exception.Message);
         }
 
         [Test]
-        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
+        public void
+            Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             //_sut.WithServerPark(_serverParkName);
@@ -624,7 +712,102 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Case.Remove());
-            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual(
+                "The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park",
+                exception.Message);
+        }
+
+        [Test]
+        public void Given_Case_Is_Called_When_I_Call_Get_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            _blaiseApiMock.Setup(p => p.GetDataRecord(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(It.IsAny<IDataRecord>());
+
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
+
+            //act
+            var result = _sut.Get();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.GetDataRecord(_primaryKeyValue, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_Case_Is_Called_When_I_Call_Get_Then_The_Expected_DataRecord_Is_Returned()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+
+            _blaiseApiMock.Setup(p => p.GetDataRecord(_primaryKeyValue, _instrumentName, _serverParkName))
+                .Returns(dataRecordMock.Object);
+
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
+
+            //act
+            var result = _sut.Get();
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(dataRecordMock.Object, result);
+        }
+
+        [Test]
+        public void
+            Given_Case_Is_Called_But_WithPrimaryKey_Has_Not_Been_Called_When_I_Call_Get_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Case.Get();
+            });
+            Assert.AreEqual(
+                "The 'WithPrimaryKey' step needs to be called with a valid value prior to this to specify the primary key value of the case",
+                exception.Message);
+        }
+
+        [Test]
+        public void
+            Given_Case_Is_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Get_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+
+            _sut.WithServerPark(_serverParkName);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Get();
+            });
+            Assert.AreEqual(
+                "The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument",
+                exception.Message);
+        }
+
+        [Test]
+        public void
+            Given_Case_Is_Called_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Get_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+
+            _sut.WithInstrument(_instrumentName);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Get();
+            });
+
         }
     }
 }

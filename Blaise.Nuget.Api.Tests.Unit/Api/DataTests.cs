@@ -682,7 +682,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             var serverParkName = "Park1";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetDataRecord(null, instrumentName, serverParkName));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetDataRecord((IKey) null, instrumentName, serverParkName));
             Assert.AreEqual("The argument 'key' must be supplied", exception.ParamName);
         }
 
@@ -781,6 +781,95 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetDataRecord(keyMock.Object, null));
             Assert.AreEqual("filePath", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetDataRecord_ByPrimaryKeyValue_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            _dataServiceMock.Setup(d => d.GetDataRecord(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
+
+            //act
+            _sut.GetDataRecord(primaryKeyValue, instrumentName, serverParkName);
+
+            //assert
+            _dataServiceMock.Verify(v => v.GetDataRecord(primaryKeyValue, instrumentName, serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_PrimaryKeyValue_When_I_Call_GetDataRecord_ByPrimaryKeyValue_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetDataRecord(string.Empty, instrumentName, serverParkName));
+            Assert.AreEqual("A value for the argument 'primaryKeyValue' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_PrimaryKeyValue_When_I_Call_GetDataRecord_ByPrimaryKeyValue_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetDataRecord((string) null, instrumentName, serverParkName));
+            Assert.AreEqual("primaryKeyValue", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_GetDataRecord_ByPrimaryKeyValue_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetDataRecord(primaryKeyValue, string.Empty, serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_GetDataRecord_ByPrimaryKeyValue_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetDataRecord(primaryKeyValue, null, serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_GetDataRecord_ByPrimaryKeyValue_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetDataRecord(primaryKeyValue, instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_GetDataRecord_ByPrimaryKeyValue_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var primaryKeyValue = "Key1";
+            var instrumentName = "Instrument1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetDataRecord(primaryKeyValue, instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
         [Test]
