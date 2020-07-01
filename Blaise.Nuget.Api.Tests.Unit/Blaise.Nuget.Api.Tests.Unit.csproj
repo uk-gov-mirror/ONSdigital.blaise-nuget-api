@@ -66,12 +66,14 @@
   <ItemGroup>
     <Compile Include="Api\DataTests.cs" />
     <Compile Include="Api\ConfigurationModelTests.cs" />
+    <Compile Include="Api\FileBackupTests.cs" />
     <Compile Include="Api\FileHandlerTests.cs" />
     <Compile Include="Api\ServerHandlerTests.cs" />
     <Compile Include="Api\UserTests.cs" />
     <Compile Include="Api\SurveyTests.cs" />
     <Compile Include="Api\ServerParkTests.cs" />
     <Compile Include="FluentApi\ConfigurationModelTests.cs" />
+    <Compile Include="FluentApi\BackupTests.cs" />
     <Compile Include="Integration\Case\FluentApiCaseTests.cs" />
     <Compile Include="Integration\Factories\ConnectedServerFactoryTests.cs" />
     <Compile Include="Integration\Factories\RemoteDataServerFactoryTests.cs" />
@@ -82,6 +84,7 @@
     <Compile Include="FluentApi\CaseTests.cs" />
     <Compile Include="FluentApi\UserTests.cs" />
     <Compile Include="FluentBlaiseApiTests.cs" />
+    <Compile Include="Integration\Handler\FluentApiBackupTests.cs" />
     <Compile Include="Integration\Handler\FluentApiToFileHandlerTests.cs" />
     <Compile Include="Integration\Handler\FluentApiToServerHandlerTests.cs" />
     <Compile Include="Integration\Processor\FluentApiProcessorTests.cs" />

@@ -16,5 +16,9 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         IEnumerable<ISurvey> GetAllSurveys();
 
         Guid GetInstrumentId(string instrumentName, string serverParkName);
+
+        string GetMetaFileName(string instrumentName, string serverParkName);
+
+        string GetDataFileName(string instrumentName, string serverParkName);
     }
 }

@@ -4,7 +4,7 @@ using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
@@ -371,8 +371,7 @@ namespace Blaise.Nuget.Api
 
             if (!_fileService.DatabaseFileExists(destinationFilePath, destinationInstrumentName))
             {
-                var survey = _surveyService.GetSurvey(sourceInstrumentName, sourceServerParkName);
-                var metaFileName = survey.Configuration.Configurations.First().MetaFileName;
+                var metaFileName = _surveyService.GetMetaFileName(sourceInstrumentName, sourceServerParkName);
                 _fileService.CreateDatabaseFile(metaFileName, destinationFilePath, destinationInstrumentName);
             }
 
@@ -428,6 +427,19 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             _dataService.RemoveDataRecord(primaryKeyValue, instrumentName, serverParkName);
+        }
+
+        public void BackupSurvey(string serverParkName, string instrumentName, string destinationFilePath)
+        {
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+            destinationFilePath.ThrowExceptionIfNullOrEmpty("destinationFilePath");
+
+            var dataFileName = _surveyService.GetDataFileName(instrumentName, serverParkName);
+            var metaFileName = _surveyService.GetMetaFileName(instrumentName, serverParkName);
+            var backupFilePath = Path.Combine(destinationFilePath, instrumentName);
+
+            _fileService.BackupDatabaseFile(dataFileName ,metaFileName, backupFilePath);
         }
 
         public ConnectionModel GetDefaultConnectionModel()

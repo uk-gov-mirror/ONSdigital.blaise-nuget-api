@@ -75,5 +75,33 @@ namespace Blaise.Nuget.Api.Core.Services
 
             return survey.InstrumentID;
         }
+
+        public string GetMetaFileName(string instrumentName, string serverParkName)
+        {
+            var survey = GetSurvey(instrumentName, serverParkName);
+            var configuration = GetSurveyConfiguration(survey);
+
+            return configuration.MetaFileName;
+        }
+
+        public string GetDataFileName(string instrumentName, string serverParkName)
+        {
+            var survey = GetSurvey(instrumentName, serverParkName);
+            var configuration = GetSurveyConfiguration(survey);
+
+            return configuration.DataFileName;
+        }
+
+        private IConfiguration GetSurveyConfiguration(ISurvey survey)
+        {
+            var configuration = survey.Configuration.Configurations.FirstOrDefault();
+
+            if (configuration == null)
+            {
+                throw new NullReferenceException($"There was no configuration found for survey '{survey.Name}'");
+            }
+
+            return configuration;
+        }
     }
 }

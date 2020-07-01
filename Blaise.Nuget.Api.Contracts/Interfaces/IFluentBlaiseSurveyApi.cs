@@ -10,5 +10,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         SurveyType Type { get; }
 
         bool Exists { get; }
+
+        IFluentBlaiseSurveyApi ToPath(string filePath);
+
+        void Backup();
     }
 }

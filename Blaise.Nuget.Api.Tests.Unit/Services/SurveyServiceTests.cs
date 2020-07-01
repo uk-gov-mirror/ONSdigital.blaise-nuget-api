@@ -248,5 +248,55 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetInstrumentId(instrumentName, _serverParkName));
             Assert.AreEqual($"Instrument '{instrumentName}' not found on server park '{_serverParkName}'", exception.Message);
         }
+
+        [Test]
+        public void Given_I_Call_GetMetaFileName_Then_The_Correct_Name_Is_Returned()
+        {
+            //arrange
+            var metaFileName = "MetaFileName";
+
+            var configurationMock = new Mock<IConfiguration>();
+            configurationMock.Setup(c => c.MetaFileName).Returns(metaFileName);
+
+
+            var configurationItems = new List<IConfiguration> { configurationMock.Object };
+
+            var configurationCollectionMock = new Mock<IMachineConfigurationCollection>();
+            configurationCollectionMock.Setup(s => s.Configurations).Returns(configurationItems);
+
+            _surveyMock.Setup(s => s.Configuration).Returns(configurationCollectionMock.Object);
+
+            //act
+            var result = _sut.GetMetaFileName(_instrumentName, _serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(metaFileName, result);
+        }
+
+        [Test]
+        public void Given_I_Call_GetDataFileName_Then_The_Correct_Name_Is_Returned()
+        {
+            //arrange
+            var dataFileName = "DataFileName";
+
+            var configurationMock = new Mock<IConfiguration>();
+            configurationMock.Setup(c => c.DataFileName).Returns(dataFileName);
+
+
+            var configurationItems = new List<IConfiguration> { configurationMock.Object };
+
+            var configurationCollectionMock = new Mock<IMachineConfigurationCollection>();
+            configurationCollectionMock.Setup(s => s.Configurations).Returns(configurationItems);
+
+            _surveyMock.Setup(s => s.Configuration).Returns(configurationCollectionMock.Object);
+
+            //act
+            var result = _sut.GetDataFileName(_instrumentName, _serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(dataFileName, result);
+        }
     }
 }
