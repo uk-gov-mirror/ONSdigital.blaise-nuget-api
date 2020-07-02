@@ -257,7 +257,10 @@ namespace Blaise.Nuget.Api
 
         public IFluentBlaiseSurveyApi Survey => this;
 
-        public IEnumerable<ISurvey> Surveys => _blaiseApi.GetAllSurveys();
+        public IEnumerable<ISurvey> Surveys =>
+            string.IsNullOrWhiteSpace(_serverParkName) 
+                ? _blaiseApi.GetAllSurveys() 
+                : _blaiseApi.GetSurveys(_serverParkName);
 
         public bool Exists
         {
