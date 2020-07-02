@@ -83,6 +83,48 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
+        public void Given_I_Call_Called_WithServerPark_When_I_Call_Surveys_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            _blaiseApiMock.Setup(p => p.GetSurveys(It.IsAny<string>())).Returns(It.IsAny<List<ISurvey>>());
+
+            //act
+            var sutSurveys = _sut
+                .WithServerPark(_serverParkName)
+                .Surveys;
+
+            //assert
+            _blaiseApiMock.Verify(v => v.GetSurveys(_serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_Called_WithServerPark_When_I_Call_Surveys_Then_The_Expected_Surveys_Are_Returned()
+        {
+            //arrange
+            var survey1Mock = new Mock<ISurvey>();
+            var survey2Mock = new Mock<ISurvey>();
+            var survey3Mock = new Mock<ISurvey>();
+
+            var surveys = new List<ISurvey> { survey1Mock.Object, survey2Mock.Object, survey3Mock.Object };
+
+            _blaiseApiMock.Setup(p => p.GetSurveys(It.IsAny<string>())).Returns(surveys);
+
+            //act
+            var result = _sut
+                .WithServerPark(_serverParkName)
+                .Surveys
+                .ToList();
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsNotEmpty(result);
+            Assert.AreEqual(3, result.Count);
+            Assert.True(result.Contains(survey1Mock.Object));
+            Assert.True(result.Contains(survey2Mock.Object));
+            Assert.True(result.Contains(survey3Mock.Object));
+        }
+
+        [Test]
         public void Given_Valid_Instrument_And_ServerPark_When_I_Call_Type_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
