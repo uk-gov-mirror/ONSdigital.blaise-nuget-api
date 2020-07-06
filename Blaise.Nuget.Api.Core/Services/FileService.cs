@@ -105,6 +105,8 @@ namespace Blaise.Nuget.Api.Core.Services
                 throw new DataNotFoundException($"No Library files with extension '{LibraryFileExt}' found in any directory under '{libraryPath}'");
             }
 
+            Directory.CreateDirectory(destinationPath);
+
             foreach (var libraryFile in libraryFiles)
             {
                 if (FileIsLocked(libraryFile))
