@@ -11,7 +11,7 @@ namespace Blaise.Nuget.Api.Core.Factories
         private readonly IPasswordService _passwordService;
         private readonly ConnectionModel _connectionModel;
         private IConnectedServer _connectedServer;
-         private DateTime _connectionExpiresOn;
+        private DateTime _connectionExpiresOn;
 
         public ConnectedServerFactory(
             ConnectionModel connectionModel,
@@ -19,15 +19,14 @@ namespace Blaise.Nuget.Api.Core.Factories
         {
             _connectionModel = connectionModel;
             _passwordService = passwordService;
-
-             _connectionExpiresOn = DateTime.Now.AddHours(1);
         }
-        
+
         public IConnectedServer GetConnection()
         {
-            if(_connectedServer == null || ConnectionHasExpired())
+            if (_connectedServer == null || ConnectionHasExpired())
             {
                 CreateServerConnection(_connectionModel);
+                _connectionExpiresOn = DateTime.Now.AddHours(1);
             }
 
             return _connectedServer;
