@@ -1,4 +1,5 @@
 ﻿
+using System;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
@@ -14,6 +15,7 @@ namespace Blaise.Nuget.Api.Core.Providers
         private string _instrumentName;
         private string _serverParkName;
         private IDataLink4 _dataLink;
+        private DateTime _connectionExpiresOn;
 
         public RemoteDataLinkProvider(
             IRemoteDataServerFactory connectionFactory,
@@ -28,7 +30,7 @@ namespace Blaise.Nuget.Api.Core.Providers
 
         public IDataLink4 GetDataLink(string instrumentName, string serverParkName)
         {
-            if (_dataLink == null || instrumentName != _instrumentName || serverParkName != _serverParkName)
+            if (_dataLink == null || instrumentName != _instrumentName || serverParkName != _serverParkName || ConnectionHasExpired())
             {
                 _instrumentName = instrumentName;
                 _serverParkName = serverParkName;
@@ -37,9 +39,15 @@ namespace Blaise.Nuget.Api.Core.Providers
                 var connection = _connectionFactory.GetConnection();
 
                 _dataLink = connection.GetDataLink(instrumentId, serverParkName);
+                _connectionExpiresOn = DateTime.Now.AddHours(1);
             }
 
             return _dataLink;
+        }
+
+        private bool ConnectionHasExpired()
+        {
+            return _connectionExpiresOn < DateTime.Now;
         }
     }
 }

@@ -7,15 +7,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
 {
     public class FluentApiCaseTests
     {
-        [Ignore("Wont run without app settings on build environment")]
-        [Test]
-        public void Given_I_Use_With_Connection_And_A_Case_That_Exists_When_I_Call_Exists_True_Is_Returned()
-        {
-            //arrange
-            IFluentBlaiseApi sut = new FluentBlaiseApi();
+        private readonly ConnectionModel _connectionModel;
 
-            //act
-            var connectionModel = new ConnectionModel
+		public FluentApiCaseTests()
+        {
+            _connectionModel = new ConnectionModel
             {
                 Binding = "HTTP",
                 UserName = "Root",
@@ -24,9 +20,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
                 Port = 8031,
                 RemotePort = 8033
             };
+        }
 
+		[Ignore("Wont run without app settings on build environment")]
+		[Test]
+        public void Given_I_Use_With_Connection_And_A_Case_That_Exists_When_I_Call_Exists_True_Is_Returned()
+        {
+            //arrange
+            IFluentBlaiseApi sut = new FluentBlaiseApi();
+
+            //act
             var result = sut
-                .WithConnection(connectionModel)
+                .WithConnection(_connectionModel)
 				.WithInstrument("OPN2004A")
                 .WithServerPark("LocalDevelopment")
                 .Case
@@ -46,7 +51,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
 
             //act
             var result = sut
-                .WithInstrument("OPN2004A")
+                .WithConnection(_connectionModel)
+				.WithInstrument("OPN2004A")
                 .WithServerPark("LocalDevelopment")
                 .Case
                 .WithPrimaryKey("11000011")
@@ -174,6 +180,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
 
 			//act
 			sut
+                .WithConnection(_connectionModel)
 				.WithInstrument("OPN2004A")
                 .WithServerPark("LocalDevelopment")
                 .Case
@@ -183,7 +190,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
 
 
             var result = sut
-                .WithInstrument("OPN2004A")
+                .WithConnection(_connectionModel)
+				.WithInstrument("OPN2004A")
                 .WithServerPark("LocalDevelopment")
                 .Case
                 .WithPrimaryKey("91000011")
@@ -194,7 +202,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
 
 			//cleanup
             sut
-                .WithInstrument("OPN2004A")
+                .WithConnection(_connectionModel)
+				.WithInstrument("OPN2004A")
                 .WithServerPark("LocalDevelopment")
                 .Case
                 .WithPrimaryKey("91000011")

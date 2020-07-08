@@ -10,7 +10,7 @@ namespace Blaise.Nuget.Api.Core.Factories
     {
         private readonly IPasswordService _passwordService;
         private readonly ConnectionModel _connectionModel;
-        private DateTime _dataLinkExpiresOn;
+        private DateTime _connectionExpiresOn;
 
         private IRemoteDataServer _remoteDataServer;
 
@@ -20,16 +20,14 @@ namespace Blaise.Nuget.Api.Core.Factories
         {
             _connectionModel = connectionModel;
             _passwordService = passwordService;
-
-            _dataLinkExpiresOn = DateTime.Now.AddHours(1);
         }
 
         public IRemoteDataServer GetConnection()
         {   
-            if(_remoteDataServer == null || DataLinkHasExpired())
+            if(_remoteDataServer == null || ConnectionHasExpired())
             {
                 CreateRemoteConnection(_connectionModel);
-                _dataLinkExpiresOn = DateTime.Now.AddHours(1);
+                _connectionExpiresOn = DateTime.Now.AddHours(1);
             }
 
             return _remoteDataServer;
@@ -47,9 +45,9 @@ namespace Blaise.Nuget.Api.Core.Factories
                 securePassword);
         }
 
-        private bool DataLinkHasExpired()
+        private bool ConnectionHasExpired()
         {
-            return _dataLinkExpiresOn < DateTime.Now;
+            return _connectionExpiresOn < DateTime.Now;
         }
     }
 }
