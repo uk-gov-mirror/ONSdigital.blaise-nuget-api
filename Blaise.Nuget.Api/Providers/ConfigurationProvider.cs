@@ -22,6 +22,9 @@ namespace Blaise.Nuget.Api.Providers
 
         public string LibraryDirectory => ConfigurationManager.AppSettings["LibraryDirectory"];
 
+        public int ConnectionExpiresInMinutes =>
+            ConvertToInt(ConfigurationManager.AppSettings["ConnectionExpiresInMinutes"]);
+
         private static int ConvertToInt(string integer)
         {
             return int.Parse(integer);

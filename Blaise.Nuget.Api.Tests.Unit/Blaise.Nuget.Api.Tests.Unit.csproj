@@ -90,6 +90,7 @@
     <Compile Include="Integration\Processor\FluentApiProcessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ConfigurationProviderTests.cs" />
+    <Compile Include="Services\ConnectionExpiryServiceTests.cs" />
     <Compile Include="Services\DataRecordServiceTests.cs" />
     <Compile Include="Services\FieldServiceTests.cs" />
     <Compile Include="Services\KeyServiceTests.cs" />

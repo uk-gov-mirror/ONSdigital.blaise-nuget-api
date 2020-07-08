@@ -7,5 +7,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Providers
         ConnectionModel GetConnectionModel();
 
         string LibraryDirectory { get; }
+
+        int ConnectionExpiresInMinutes { get; }
     }
 }

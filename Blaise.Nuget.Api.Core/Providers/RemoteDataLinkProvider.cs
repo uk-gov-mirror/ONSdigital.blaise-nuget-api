@@ -1,6 +1,4 @@
-﻿
-using System;
-using Blaise.Nuget.Api.Core.Interfaces.Factories;
+﻿using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataLink;
@@ -11,18 +9,20 @@ namespace Blaise.Nuget.Api.Core.Providers
     {
         private readonly IRemoteDataServerFactory _connectionFactory;
         private readonly ISurveyService _surveyService;
+        private readonly IConnectionExpiryService _connectionExpiryService;
 
         private string _instrumentName;
         private string _serverParkName;
         private IDataLink4 _dataLink;
-        private DateTime _connectionExpiresOn;
 
         public RemoteDataLinkProvider(
             IRemoteDataServerFactory connectionFactory,
-            ISurveyService surveyService)
+            ISurveyService surveyService, 
+            IConnectionExpiryService connectionExpiryService)
         {
             _connectionFactory = connectionFactory;
             _surveyService = surveyService;
+            _connectionExpiryService = connectionExpiryService;
 
             _instrumentName = string.Empty;
             _serverParkName = string.Empty;
@@ -30,7 +30,8 @@ namespace Blaise.Nuget.Api.Core.Providers
 
         public IDataLink4 GetDataLink(string instrumentName, string serverParkName)
         {
-            if (_dataLink == null || instrumentName != _instrumentName || serverParkName != _serverParkName || ConnectionHasExpired())
+            if (_dataLink == null || instrumentName != _instrumentName || serverParkName != _serverParkName 
+                || _connectionExpiryService.ConnectionHasExpired())
             {
                 _instrumentName = instrumentName;
                 _serverParkName = serverParkName;
@@ -39,15 +40,10 @@ namespace Blaise.Nuget.Api.Core.Providers
                 var connection = _connectionFactory.GetConnection();
 
                 _dataLink = connection.GetDataLink(instrumentId, serverParkName);
-                _connectionExpiresOn = DateTime.Now.AddHours(1);
+                _connectionExpiryService.ResetConnectionExpiryPeriod();
             }
 
             return _dataLink;
-        }
-
-        private bool ConnectionHasExpired()
-        {
-            return _connectionExpiresOn < DateTime.Now;
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
     {
         private Mock<IRemoteDataServerFactory> _connectionFactoryMock;
         private Mock<ISurveyService> _surveyServiceMock;
+        private Mock<IConnectionExpiryService> _connectionExpiryServiceMock;
 
         private Mock<IRemoteDataServer> _remoteDataServerMock;
         private Mock<IDataLink4> _dataLinkMock;
@@ -48,9 +49,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
             _surveyServiceMock = new Mock<ISurveyService>();
             _surveyServiceMock.Setup(p => p.GetInstrumentId(_instrumentName, _serverParkName)).Returns(_instrumentId);
 
+            _connectionExpiryServiceMock = new Mock<IConnectionExpiryService>();
+            _connectionExpiryServiceMock.Setup(c => c.ConnectionHasExpired()).Returns(false);
+
             _sut = new RemoteDataLinkProvider(
                 _connectionFactoryMock.Object,
-                _surveyServiceMock.Object);
+                _surveyServiceMock.Object,
+                _connectionExpiryServiceMock.Object);
         }
 
         [Test]
@@ -66,6 +71,22 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
 
             //assert
             _remoteDataServerMock.Verify(v => v.GetDataLink(It.IsAny<Guid>(), It.IsAny<string>()), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_GetDataLink_With_The_Same_InstrumentName_And_ServerName_But_Connection_Has_expired_Then_A_New_DataLink_Is_Established()
+        {
+            //arrange
+            _surveyServiceMock.Setup(p => p.GetInstrumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<Guid>());
+            _remoteDataServerMock.Setup(r => r.GetDataLink(It.IsAny<Guid>(), It.IsAny<string>())).Returns(_dataLinkMock.Object);
+            _connectionExpiryServiceMock.Setup(c => c.ConnectionHasExpired()).Returns(true);
+
+            //act
+            _sut.GetDataLink(_instrumentName, _serverParkName);
+            _sut.GetDataLink(_instrumentName, _serverParkName);
+
+            //assert
+            _remoteDataServerMock.Verify(v => v.GetDataLink(It.IsAny<Guid>(), It.IsAny<string>()), Times.Exactly(2));
         }
 
         [Test]
