@@ -36,9 +36,9 @@ namespace Blaise.Nuget.Api.Providers
             _unityContainer.RegisterType<IDataMapperService, DataMapperService>();
 
             //providers
-            _unityContainer.RegisterType<ILocalDataLinkProvider, LocalDataLinkProvider>();
-            _unityContainer.RegisterType<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
-            _unityContainer.RegisterType<IConfigurationProvider, ConfigurationProvider>();
+            _unityContainer.RegisterSingleton<ILocalDataLinkProvider, LocalDataLinkProvider>();
+            _unityContainer.RegisterSingleton<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
+            _unityContainer.RegisterSingleton<IConfigurationProvider, ConfigurationProvider>();
 
             //services
             _unityContainer.RegisterType<IDataModelService, DataModelService>();
