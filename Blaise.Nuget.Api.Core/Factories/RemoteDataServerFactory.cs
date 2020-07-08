@@ -1,5 +1,4 @@
-﻿using System;
-using Blaise.Nuget.Api.Contracts.Models;
+﻿using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataLink;
@@ -8,26 +7,28 @@ namespace Blaise.Nuget.Api.Core.Factories
 {
     public class RemoteDataServerFactory : IRemoteDataServerFactory
     {
-        private readonly IPasswordService _passwordService;
         private readonly ConnectionModel _connectionModel;
-        private DateTime _connectionExpiresOn;
+        private readonly IPasswordService _passwordService;
+        private readonly IConnectionExpiryService _connectionExpiryService;
 
         private IRemoteDataServer _remoteDataServer;
 
         public RemoteDataServerFactory(
             ConnectionModel connectionModel,
-            IPasswordService passwordService)
+            IPasswordService passwordService, 
+            IConnectionExpiryService connectionExpiryService)
         {
             _connectionModel = connectionModel;
             _passwordService = passwordService;
+            _connectionExpiryService = connectionExpiryService;
         }
 
         public IRemoteDataServer GetConnection()
         {   
-            if(_remoteDataServer == null || ConnectionHasExpired())
+            if(_remoteDataServer == null || _connectionExpiryService.ConnectionHasExpired())
             {
                 CreateRemoteConnection(_connectionModel);
-                _connectionExpiresOn = DateTime.Now.AddHours(1);
+                _connectionExpiryService.ResetConnectionExpiryPeriod();
             }
 
             return _remoteDataServer;
@@ -43,11 +44,6 @@ namespace Blaise.Nuget.Api.Core.Factories
                 connectionModel.Binding,
                 connectionModel.UserName,
                 securePassword);
-        }
-
-        private bool ConnectionHasExpired()
-        {
-            return _connectionExpiresOn < DateTime.Now;
         }
     }
 }

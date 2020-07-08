@@ -1,5 +1,4 @@
-﻿using System;
-using Blaise.Nuget.Api.Contracts.Models;
+﻿using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.ServerManager;
@@ -8,25 +7,29 @@ namespace Blaise.Nuget.Api.Core.Factories
 {
     public class ConnectedServerFactory : IConnectedServerFactory
     {
-        private readonly IPasswordService _passwordService;
         private readonly ConnectionModel _connectionModel;
+        private readonly IPasswordService _passwordService;
+        private readonly IConnectionExpiryService _connectionExpiryService;
+
         private IConnectedServer _connectedServer;
-        private DateTime _connectionExpiresOn;
 
         public ConnectedServerFactory(
             ConnectionModel connectionModel,
-            IPasswordService passwordService)
+            IPasswordService passwordService,
+            IConnectionExpiryService connectionExpiryService)
         {
             _connectionModel = connectionModel;
             _passwordService = passwordService;
+            _connectionExpiryService = connectionExpiryService;
+
         }
 
         public IConnectedServer GetConnection()
         {
-            if (_connectedServer == null || ConnectionHasExpired())
+            if (_connectedServer == null || _connectionExpiryService.ConnectionHasExpired())
             {
                 CreateServerConnection(_connectionModel);
-                _connectionExpiresOn = DateTime.Now.AddHours(1);
+                _connectionExpiryService.ResetConnectionExpiryPeriod();
             }
 
             return _connectedServer;
@@ -40,11 +43,6 @@ namespace Blaise.Nuget.Api.Core.Factories
                 connectionModel.UserName,
                 _passwordService.CreateSecurePassword(connectionModel.Password),
                 connectionModel.Binding);
-        }
-
-        private bool ConnectionHasExpired()
-        {
-            return _connectionExpiresOn < DateTime.Now;
         }
     }
 }

@@ -43,5 +43,19 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
             Assert.NotNull(result);
             Assert.AreEqual("LibraryDirectoryTest", result);
         }
+
+        [Test]
+        public void Given_ConnectionExpiresInMinutes_Value_Is_Set_When_I_Call_ConnectionExpiresInMinutes_I_Get_The_Correct_Value_Back()
+        {
+            //arrange
+            var sut = new ConfigurationProvider();
+
+            //act
+            var result = sut.ConnectionExpiresInMinutes;
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual(60, result);
+        }
     }
 }

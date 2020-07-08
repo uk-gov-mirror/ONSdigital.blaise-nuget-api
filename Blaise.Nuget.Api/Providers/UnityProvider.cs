@@ -22,23 +22,34 @@ namespace Blaise.Nuget.Api.Providers
         {
             _unityContainer = new UnityContainer();
 
+            // configuration provider
+            _unityContainer.RegisterSingleton<IConfigurationProvider, ConfigurationProvider>();
+
             //password service
             _unityContainer.RegisterType<IPasswordService, PasswordService>();
 
+            // connection timeout service
+            _unityContainer.RegisterType<IConnectionExpiryService, ConnectionExpiryService>();
+
             //factories
             _unityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>(
-                new InjectionConstructor(connectionModel, _unityContainer.Resolve<IPasswordService>()));
+                new InjectionConstructor(
+                    connectionModel, 
+                    _unityContainer.Resolve<IPasswordService>(),
+                    _unityContainer.Resolve<IConnectionExpiryService>()));
 
             _unityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>(
-                new InjectionConstructor(connectionModel, _unityContainer.Resolve<IPasswordService>()));
+                new InjectionConstructor(
+                    connectionModel, 
+                    _unityContainer.Resolve<IPasswordService>(),
+                    _unityContainer.Resolve<IConnectionExpiryService>()));
 
             //mappers
             _unityContainer.RegisterType<IDataMapperService, DataMapperService>();
 
-            //providers
+            //data link providers
             _unityContainer.RegisterSingleton<ILocalDataLinkProvider, LocalDataLinkProvider>();
             _unityContainer.RegisterSingleton<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
-            _unityContainer.RegisterSingleton<IConfigurationProvider, ConfigurationProvider>();
 
             //services
             _unityContainer.RegisterType<IDataModelService, DataModelService>();
