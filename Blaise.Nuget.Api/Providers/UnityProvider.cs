@@ -25,9 +25,6 @@ namespace Blaise.Nuget.Api.Providers
             //password service
             _unityContainer.RegisterType<IPasswordService, PasswordService>();
 
-            // connection timeout service
-            _unityContainer.RegisterType<IConnectionExpiryService, ConnectionExpiryService>();
-
             //factories
             _unityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>();
 

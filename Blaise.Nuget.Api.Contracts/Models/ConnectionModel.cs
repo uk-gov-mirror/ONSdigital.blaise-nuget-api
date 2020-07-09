@@ -14,5 +14,7 @@ namespace Blaise.Nuget.Api.Contracts.Models
         public int Port { get; set; }
 
         public int RemotePort { get; set; }
+
+        public int ConnectionExpiresInMinutes { get; set; }
     }
 }

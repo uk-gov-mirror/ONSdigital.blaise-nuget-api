@@ -1,4 +1,8 @@
-﻿using Blaise.Nuget.Api.Contracts.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Blaise.Nuget.Api.Contracts.Models;
+using Blaise.Nuget.Api.Core.Extensions;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
@@ -10,41 +14,50 @@ namespace Blaise.Nuget.Api.Core.Providers
     {
         private readonly IRemoteDataServerFactory _connectionFactory;
         private readonly ISurveyService _surveyService;
-        private readonly IConnectionExpiryService _connectionExpiryService;
 
-        private string _instrumentName;
-        private string _serverParkName;
-        private IDataLink4 _dataLink;
+        private readonly Dictionary<Tuple<string, string>, Tuple<IDataLink4, DateTime>> _dataLinkConnections;
+
 
         public RemoteDataLinkProvider(
             IRemoteDataServerFactory connectionFactory,
-            ISurveyService surveyService, 
-            IConnectionExpiryService connectionExpiryService)
+            ISurveyService surveyService)
         {
             _connectionFactory = connectionFactory;
             _surveyService = surveyService;
-            _connectionExpiryService = connectionExpiryService;
 
-            _instrumentName = string.Empty;
-            _serverParkName = string.Empty;
+            _dataLinkConnections = new Dictionary<Tuple<string, string>, Tuple<IDataLink4, DateTime>>();
         }
 
         public IDataLink4 GetDataLink(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            if (_dataLink == null || instrumentName != _instrumentName || serverParkName != _serverParkName 
-                || _connectionExpiryService.ConnectionHasExpired())
+            if (_dataLinkConnections.Any(c => c.Key.Item1 == instrumentName && c.Key.Item2 == serverParkName))
             {
-                _instrumentName = instrumentName;
-                _serverParkName = serverParkName;
+                var existingConnection = _dataLinkConnections.First(c => c.Key.Item1 == instrumentName && c.Key.Item2 == serverParkName);
 
-                var instrumentId = _surveyService.GetInstrumentId(connectionModel, instrumentName, serverParkName);
-                var connection = _connectionFactory.GetConnection(connectionModel);
-
-                _dataLink = connection.GetDataLink(instrumentId, serverParkName);
-                _connectionExpiryService.ResetConnectionExpiryPeriod();
+                return existingConnection.Value.Item2.HasExpired()
+                    ? GetFreshConnection(connectionModel, instrumentName, serverParkName)
+                    : existingConnection.Value.Item1;
             }
 
-            return _dataLink;
+            return GetFreshConnection(connectionModel, instrumentName, serverParkName);
+        }
+
+        private IDataLink4 GetFreshConnection(ConnectionModel connectionModel, string instrumentName, string serverParkName)
+        {
+            if (_dataLinkConnections.Any(c => c.Key.Item1 == instrumentName && c.Key.Item2 == serverParkName))
+            {
+                _dataLinkConnections.Remove(new Tuple<string, string>(instrumentName, serverParkName));
+            }
+
+            var instrumentId = _surveyService.GetInstrumentId(connectionModel, instrumentName, serverParkName);
+            var connection = _connectionFactory.GetConnection(connectionModel);
+
+            var dataLink = connection.GetDataLink(instrumentId, serverParkName);
+
+            _dataLinkConnections.Add(new Tuple<string, string>(instrumentName, serverParkName), 
+                new Tuple<IDataLink4, DateTime>(dataLink, connectionModel.ConnectionExpiresInMinutes.GetExpiryDate()));
+
+            return dataLink;
         }
     }
 }

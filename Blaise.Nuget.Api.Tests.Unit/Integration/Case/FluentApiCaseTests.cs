@@ -18,7 +18,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
                 Password = "Root",
                 ServerName = "localhost",
                 Port = 8031,
-                RemotePort = 8033
+                RemotePort = 8033,
+				ConnectionExpiresInMinutes = 10
             };
         }
 
@@ -39,7 +40,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
                 .Exists;
 
             //assert
-            Assert.True(result);
+			Assert.True(result);
         }
 
 		[Ignore("Wont run without app settings on build environment")]
