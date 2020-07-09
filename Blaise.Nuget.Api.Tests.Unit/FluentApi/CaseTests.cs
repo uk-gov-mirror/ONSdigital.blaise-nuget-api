@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Interfaces;
+using Blaise.Nuget.Api.Contracts.Models;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.DataLink;
@@ -13,6 +14,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
     {
         private Mock<IBlaiseApi> _blaiseApiMock;
 
+        private readonly ConnectionModel _connectionModel;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
         private readonly string _primaryKeyValue;
@@ -22,6 +24,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         public CaseTests()
         {
+            _connectionModel = new ConnectionModel();
             _instrumentName = "Instrument1";
             _serverParkName = "Park1";
             _primaryKeyValue = "Key1";
@@ -70,9 +73,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 {"Key", "Value"}
             };
 
-            _blaiseApiMock.Setup(d => d.CreateNewDataRecord(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>(),
+            _blaiseApiMock.Setup(d => d.CreateNewDataRecord(It.IsAny<ConnectionModel>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>(),
                 It.IsAny<string>(), It.IsAny<string>()));
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.WithPrimaryKey(_primaryKeyValue);
@@ -83,7 +87,23 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //assert
             _blaiseApiMock.Verify(
-                v => v.CreateNewDataRecord(_primaryKeyValue, fieldData, _instrumentName, _serverParkName), Times.Once);
+                v => v.CreateNewDataRecord(It.IsAny<ConnectionModel>(), _primaryKeyValue, fieldData, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var fieldData = new Dictionary<string, string>();
+
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.WithData(fieldData);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
         }
 
         [Test]
@@ -92,6 +112,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             var fieldData = new Dictionary<string, string>();
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.WithPrimaryKey(_primaryKeyValue);
             _sut.WithData(fieldData);
@@ -109,6 +130,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             var fieldData = new Dictionary<string, string>();
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithPrimaryKey(_instrumentName);
             _sut.WithData(fieldData);
@@ -126,6 +148,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             var fieldData = new Dictionary<string, string>();
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.WithData(fieldData);
@@ -141,6 +164,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_WithData_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.Case.WithPrimaryKey(_instrumentName);
@@ -158,9 +182,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             //arrange
 
-            _blaiseApiMock.Setup(d => d.GetDataSet(It.IsAny<string>(), It.IsAny<string>()))
+            _blaiseApiMock.Setup(d => d.GetDataSet(It.IsAny<ConnectionModel>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(It.IsAny<IDataSet>());
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
 
@@ -168,7 +193,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             var sutCases = _sut.Cases;
 
             //assert
-            _blaiseApiMock.Verify(v => v.GetDataSet(_instrumentName, _serverParkName), Times.Once);
+            _blaiseApiMock.Verify(v => v.GetDataSet(It.IsAny<ConnectionModel>(), _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -177,8 +202,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             var dataSetMock = new Mock<IDataSet>();
 
-            _blaiseApiMock.Setup(d => d.GetDataSet(_instrumentName, _serverParkName)).Returns(dataSetMock.Object);
+            _blaiseApiMock.Setup(d => d.GetDataSet(It.IsAny<ConnectionModel>(), _instrumentName, _serverParkName)).Returns(dataSetMock.Object);
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
 
@@ -191,10 +217,26 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void
-            Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutCases = _sut.Cases;
+            });
+
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+        }
+
+        [Test]
+        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
 
             //act && assert
@@ -212,6 +254,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
 
             //act && assert
@@ -376,8 +419,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             };
 
             _blaiseApiMock.Setup(d =>
-                d.MarkCaseAsComplete(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
+                d.MarkCaseAsComplete(It.IsAny<ConnectionModel>(), It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.WithDataRecord(_caseDataRecord);
@@ -387,7 +431,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Update();
 
             //assert
-            _blaiseApiMock.Verify(v => v.UpdateDataRecord(_caseDataRecord, fieldData, _instrumentName, _serverParkName),
+            _blaiseApiMock.Verify(v => v.UpdateDataRecord(It.IsAny<ConnectionModel>(), _caseDataRecord, fieldData, _instrumentName, _serverParkName),
                 Times.Once);
         }
 
@@ -401,6 +445,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 {"Key", "Value"}
             };
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.WithDataRecord(_caseDataRecord);
             _sut.WithData(fieldData);
@@ -422,6 +467,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 {"Key", "Value"}
             };
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithDataRecord(_caseDataRecord);
             _sut.WithData(fieldData);
@@ -443,6 +489,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 {"Key", "Value"}
             };
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.WithServerPark(_serverParkName);
             _sut.WithData(fieldData);
@@ -460,8 +507,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             //arrange
             _blaiseApiMock.Setup(d =>
-                d.MarkCaseAsComplete(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
+                d.MarkCaseAsComplete(It.IsAny<ConnectionModel>(), It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.WithDataRecord(_caseDataRecord);
@@ -471,11 +519,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Update();
 
             //assert
-            _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName),
+            _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(It.IsAny<ConnectionModel>(), _caseDataRecord, _instrumentName, _serverParkName),
                 Times.Once);
-            _blaiseApiMock.Verify(v => v.MarkCaseAsProcessed(It.IsAny<IDataRecord>(), It.IsAny<string>()
+            _blaiseApiMock.Verify(v => v.MarkCaseAsProcessed(It.IsAny<ConnectionModel>(), It.IsAny<IDataRecord>(), It.IsAny<string>()
                 , It.IsAny<string>()), Times.Never);
-            _blaiseApiMock.Verify(v => v.UpdateDataRecord(It.IsAny<IDataRecord>(),
+            _blaiseApiMock.Verify(v => v.UpdateDataRecord(It.IsAny<ConnectionModel>(), It.IsAny<IDataRecord>(),
                 It.IsAny<Dictionary<string, string>>(),
                 It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
@@ -486,8 +534,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             //arrange
             _blaiseApiMock.Setup(d =>
-                d.MarkCaseAsProcessed(It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
+                d.MarkCaseAsProcessed(It.IsAny<ConnectionModel>(), It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.WithDataRecord(_caseDataRecord);
@@ -497,13 +546,31 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Update();
 
             //assert
-            _blaiseApiMock.Verify(v => v.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName),
+            _blaiseApiMock.Verify(v => v.MarkCaseAsProcessed(It.IsAny<ConnectionModel>(), _caseDataRecord, _instrumentName, _serverParkName),
                 Times.Once);
-            _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName),
+            _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(It.IsAny<ConnectionModel>(), _caseDataRecord, _instrumentName, _serverParkName),
                 Times.Never);
-            _blaiseApiMock.Verify(v => v.UpdateDataRecord(It.IsAny<IDataRecord>(),
+            _blaiseApiMock.Verify(v => v.UpdateDataRecord(It.IsAny<ConnectionModel>(), It.IsAny<IDataRecord>(),
                 It.IsAny<Dictionary<string, string>>(),
                 It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [TestCase(StatusType.Completed)]
+        [TestCase(StatusType.Processed)]
+        public void
+            Given_WithConnection_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown(
+                StatusType statusType)
+        {
+            //arrange
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithDataRecord(_caseDataRecord);
+            _sut.WithStatus(statusType);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+
         }
 
         [TestCase(StatusType.Completed)]
@@ -513,6 +580,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 StatusType statusType)
         {
             //arrange
+            _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.WithDataRecord(_caseDataRecord);
             _sut.WithStatus(statusType);
@@ -531,6 +599,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 StatusType statusType)
         {
             //arrange
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithDataRecord(_caseDataRecord);
             _sut.WithStatus(statusType);
@@ -548,6 +617,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             StatusType statusType)
         {
             //arrange
+            _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.WithServerPark(_serverParkName);
             _sut.WithStatus(statusType);
@@ -564,9 +634,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             //arrange
 
-            _blaiseApiMock.Setup(p => p.CaseExists(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            _blaiseApiMock.Setup(p => p.CaseExists(It.IsAny<ConnectionModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(It.IsAny<bool>());
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
@@ -575,7 +646,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             var sutExists = _sut.Exists;
 
             //assert
-            _blaiseApiMock.Verify(v => v.CaseExists(_primaryKeyValue, _instrumentName, _serverParkName), Times.Once);
+            _blaiseApiMock.Verify(v => v.CaseExists(It.IsAny<ConnectionModel>(), _primaryKeyValue, _instrumentName, _serverParkName), Times.Once);
         }
 
         [TestCase(true)]
@@ -584,9 +655,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             //arrange
 
-            _blaiseApiMock.Setup(p => p.CaseExists(_primaryKeyValue, _instrumentName, _serverParkName))
+            _blaiseApiMock.Setup(p => p.CaseExists(It.IsAny<ConnectionModel>(), _primaryKeyValue, _instrumentName, _serverParkName))
                 .Returns(caseExists);
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
@@ -600,9 +672,27 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
+        public void Given_Case_Is_Called_But_WithConnection_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            //_sut.WithConnection(_connectionModel);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Case.Exists;
+            });
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+        }
+
+        [Test]
         public void Given_Case_Is_Called_But_WithPrimary_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
+            _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.WithServerPark(_serverParkName);
 
@@ -621,7 +711,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             Given_Case_Is_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
@@ -640,7 +730,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             Given_Case_Is_Called_But_WithServerPark_Has_Not_Been_Called_When_I_CallExists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-
+            _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
@@ -658,6 +748,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_Case_Has_Been_Called_When_I_Call_Remove_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
@@ -666,7 +757,24 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Remove();
 
             //assert
-            _blaiseApiMock.Verify(v => v.RemoveCase(_primaryKeyValue, _instrumentName, _serverParkName), Times.Once);
+            _blaiseApiMock.Verify(v => v.RemoveCase(_connectionModel, _primaryKeyValue, _instrumentName, _serverParkName), Times.Once);
+        }
+
+
+        [Test]
+        public void
+            Given_WithConnection_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            //_sut.WithConnection(_connectionModel);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Case.Remove());
+
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
         }
 
         [Test]
@@ -674,6 +782,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             Given_WithPrimaryKey_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             //_sut.Case.WithPrimaryKey(_primaryKeyValue);
@@ -690,6 +799,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             //_sut.WithInstrument(_instrumentName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
@@ -706,6 +816,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
+            _sut.WithConnection(_connectionModel);
             //_sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
@@ -721,9 +832,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_Case_Is_Called_When_I_Call_Get_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            _blaiseApiMock.Setup(p => p.GetDataRecord(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            _blaiseApiMock.Setup(p => p.GetDataRecord(It.IsAny<ConnectionModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(It.IsAny<IDataRecord>());
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
@@ -732,7 +844,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             var result = _sut.Get();
 
             //assert
-            _blaiseApiMock.Verify(v => v.GetDataRecord(_primaryKeyValue, _instrumentName, _serverParkName), Times.Once);
+            _blaiseApiMock.Verify(v => v.GetDataRecord(It.IsAny<ConnectionModel>(), _primaryKeyValue, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -741,9 +853,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
 
-            _blaiseApiMock.Setup(p => p.GetDataRecord(_primaryKeyValue, _instrumentName, _serverParkName))
+            _blaiseApiMock.Setup(p => p.GetDataRecord(It.IsAny<ConnectionModel>(), _primaryKeyValue, _instrumentName, _serverParkName))
                 .Returns(dataRecordMock.Object);
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
@@ -758,9 +871,27 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [Test]
         public void
+            Given_Case_Is_Called_But_WithConnection_Has_Not_Been_Called_When_I_Call_Get_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
+            _sut.Case.WithPrimaryKey(_primaryKeyValue);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Case.Get();
+            });
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+        }
+
+        [Test]
+        public void
             Given_Case_Is_Called_But_WithPrimaryKey_Has_Not_Been_Called_When_I_Call_Get_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
+            _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.WithServerPark(_serverParkName);
 
@@ -779,7 +910,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             Given_Case_Is_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Get_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
@@ -798,7 +929,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             Given_Case_Is_Called_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Get_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-
+                   _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
 

@@ -6,6 +6,7 @@ using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 using System;
+using Blaise.Nuget.Api.Contracts.Models;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Services
 {
@@ -19,6 +20,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<IKey> _keyMock;
         private Mock<IDataRecord> _dataRecordMock;
 
+        private readonly ConnectionModel _connectionModel;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
         private readonly Guid _instrumentId;
@@ -27,6 +29,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
         public KeyServiceTests()
         {
+            _connectionModel = new ConnectionModel();
             _instrumentName = "TestInstrumentName";
             _serverParkName = "TestServerParkName";
             _instrumentId = Guid.NewGuid();
@@ -47,7 +50,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
                 .Returns(_remoteDataLinkMock.Object);
 
             _remoteDataLinkProviderMock = new Mock<IRemoteDataLinkProvider>();
-            _remoteDataLinkProviderMock.Setup(r => r.GetDataLink(_instrumentName, _serverParkName))
+            _remoteDataLinkProviderMock.Setup(r => r.GetDataLink(_connectionModel, _instrumentName, _serverParkName))
                 .Returns(_remoteDataLinkMock.Object);
 
             _sut = new KeyService(_remoteDataLinkProviderMock.Object);
@@ -60,7 +63,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.KeyExists(_keyMock.Object)).Returns(It.IsAny<bool>());
 
             //act
-            var result = _sut.KeyExists(_keyMock.Object, _instrumentName, _serverParkName);
+            var result = _sut.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -75,7 +78,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.KeyExists(_keyMock.Object)).Returns(keyExists);
 
             //act
-            var result = _sut.KeyExists(_keyMock.Object, _instrumentName, _serverParkName);
+            var result = _sut.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -89,10 +92,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.KeyExists(_keyMock.Object)).Returns(It.IsAny<bool>());
 
             //act
-            _sut.KeyExists(_keyMock.Object, _instrumentName, _serverParkName);
+            _sut.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
-            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_instrumentName, _serverParkName), Times.Once);
+            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);
             _remoteDataLinkMock.Verify(v => v.KeyExists(_keyMock.Object), Times.Once);
         }
 

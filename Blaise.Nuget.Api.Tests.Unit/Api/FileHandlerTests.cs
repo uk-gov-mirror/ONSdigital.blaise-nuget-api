@@ -81,7 +81,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             var databaseFilePath = "FilePath";
 
             var dataRecordMock = new Mock<IDataRecord>();
-            _dataServiceMock.Setup(d => d.GetDataRecord(It.IsAny<string>(), It.IsAny<string>(),
+            _dataServiceMock.Setup(d => d.GetDataRecord(It.IsAny<ConnectionModel>(), It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>())).Returns(dataRecordMock.Object);
 
             _fileServiceMock.Setup(f => f.DatabaseFileExists(_destinationFilePath, _destinationInstrumentName))
@@ -108,10 +108,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             var metaFileName = "MetaFileName";
 
             var dataRecordMock = new Mock<IDataRecord>();
-            _dataServiceMock.Setup(d => d.GetDataRecord(It.IsAny<string>(), It.IsAny<string>(),
+            _dataServiceMock.Setup(d => d.GetDataRecord(It.IsAny<ConnectionModel>(), It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>())).Returns(dataRecordMock.Object);
 
-            _surveyServiceMock.Setup(s => s.GetMetaFileName(_sourceInstrumentName, _sourceServerParkName))
+            _surveyServiceMock.Setup(s => s.GetMetaFileName(It.IsAny<ConnectionModel>(), _sourceInstrumentName, _sourceServerParkName))
                 .Returns(metaFileName);
 
             _fileServiceMock.Setup(f => f.DatabaseFileExists(_destinationFilePath, _destinationInstrumentName))
@@ -126,7 +126,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
 
             //assert
             Assert.AreEqual(_sourceServerName, _sourceConnectionModel.ServerName);
-            _unityProviderMock.Verify(v => v.RegisterDependencies(_sourceConnectionModel), Times.Once);
             _fileServiceMock.Verify(v => v.CreateDatabaseFile(metaFileName, databaseFilePath, _destinationInstrumentName), Times.Once);
             _dataServiceMock.Verify(v => v.WriteDataRecord(dataRecordMock.Object, databaseFilePath), Times.Once);
         }
@@ -236,7 +235,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             var databaseFilePath = "FilePath";
 
             var dataRecordMock = new Mock<IDataRecord>();
-            _dataServiceMock.Setup(d => d.GetDataRecord(It.IsAny<string>(), It.IsAny<string>(),
+            _dataServiceMock.Setup(d => d.GetDataRecord(It.IsAny<ConnectionModel>(), It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>())).Returns(dataRecordMock.Object);
 
             _fileServiceMock.Setup(f => f.DatabaseFileExists(_destinationFilePath, _destinationInstrumentName))
@@ -253,7 +252,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _fileServiceMock.Verify(v => v.CreateDatabaseFile(It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>()), Times.Never);
             _dataServiceMock.Verify(v => v.WriteDataRecord(dataRecordMock.Object, databaseFilePath), Times.Once);
-            _dataServiceMock.Verify(v => v.RemoveDataRecord(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);
+            _dataServiceMock.Verify(v => v.RemoveDataRecord(It.IsAny<ConnectionModel>(), _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);
         }
 
         [Test]
@@ -264,10 +263,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             var metaFileName = "MetaFileName";
 
             var dataRecordMock = new Mock<IDataRecord>();
-            _dataServiceMock.Setup(d => d.GetDataRecord(It.IsAny<string>(), It.IsAny<string>(),
+            _dataServiceMock.Setup(d => d.GetDataRecord(It.IsAny<ConnectionModel>(), It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>())).Returns(dataRecordMock.Object);
 
-            _surveyServiceMock.Setup(s => s.GetMetaFileName(_sourceInstrumentName, _sourceServerParkName))
+            _surveyServiceMock.Setup(s => s.GetMetaFileName(It.IsAny<ConnectionModel>(), _sourceInstrumentName, _sourceServerParkName))
                 .Returns(metaFileName);
 
             _fileServiceMock.Setup(f => f.DatabaseFileExists(_destinationFilePath, _destinationInstrumentName))
@@ -282,10 +281,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
 
             //assert
             Assert.AreEqual(_sourceServerName, _sourceConnectionModel.ServerName);
-            _unityProviderMock.Verify(v => v.RegisterDependencies(_sourceConnectionModel), Times.Exactly(2));
             _fileServiceMock.Verify(v => v.CreateDatabaseFile(metaFileName, databaseFilePath, _destinationInstrumentName), Times.Once);
             _dataServiceMock.Verify(v => v.WriteDataRecord(dataRecordMock.Object, databaseFilePath), Times.Once);
-            _dataServiceMock.Verify(v => v.RemoveDataRecord(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);
+            _dataServiceMock.Verify(v => v.RemoveDataRecord(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);
         }
 
         [Test]

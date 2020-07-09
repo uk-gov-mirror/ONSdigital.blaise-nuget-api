@@ -1,9 +1,10 @@
-﻿using StatNeth.Blaise.API.DataLink;
+﻿using Blaise.Nuget.Api.Contracts.Models;
+using StatNeth.Blaise.API.DataLink;
 
 namespace Blaise.Nuget.Api.Core.Interfaces.Factories
 {
     public interface IRemoteDataServerFactory
     {
-        IRemoteDataServer GetConnection();
+        IRemoteDataServer GetConnection(ConnectionModel connectionModel);
     }
 }

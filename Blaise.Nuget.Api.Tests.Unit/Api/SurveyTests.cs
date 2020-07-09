@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Interfaces;
+using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Interfaces;
-using Blaise.Nuget.Api.Providers;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.ServerManager;
@@ -23,7 +23,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         private Mock<IIocProvider> _unityProviderMock;
         private Mock<IConfigurationProvider> _configurationProviderMock;
 
+        private readonly string _serverParkName;
+        private readonly string _instrumentName;
+        private readonly ConnectionModel _connectionModel;
+
         private IBlaiseApi _sut;
+
+        public SurveyTests()
+        {
+            _connectionModel = new ConnectionModel();
+            _serverParkName = "Park1";
+            _instrumentName = "Instrument1";
+        }
 
         [SetUp]
         public void SetUpTests()
@@ -50,13 +61,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void When_I_Call_GetAllSurveys_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            _surveyServiceMock.Setup(p => p.GetAllSurveys()).Returns(It.IsAny<List<ISurvey>>());
+            _surveyServiceMock.Setup(p => p.GetAllSurveys(_connectionModel)).Returns(It.IsAny<List<ISurvey>>());
 
             //act
-            _sut.GetAllSurveys();
+            _sut.GetAllSurveys(_connectionModel);
 
             //assert
-            _surveyServiceMock.Verify(v => v.GetAllSurveys(), Times.Once);
+            _surveyServiceMock.Verify(v => v.GetAllSurveys(_connectionModel), Times.Once);
         }
 
         [Test]
@@ -69,10 +80,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
 
             var surveys = new List<ISurvey> { survey1Mock.Object, survey2Mock.Object, survey3Mock.Object };
 
-            _surveyServiceMock.Setup(p => p.GetAllSurveys()).Returns(surveys);
+            _surveyServiceMock.Setup(p => p.GetAllSurveys(_connectionModel)).Returns(surveys);
 
             //act
-            var result = _sut.GetAllSurveys().ToList();
+            var result = _sut.GetAllSurveys(_connectionModel).ToList();
 
             //assert
             Assert.IsNotNull(result);
@@ -87,32 +98,29 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_Valid_Arguments_When_I_Call_GetSurveyNames_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            var serverParkName = "Park1";
-
-            _surveyServiceMock.Setup(p => p.GetSurveyNames(It.IsAny<string>())).Returns(It.IsAny<List<string>>());
+            _surveyServiceMock.Setup(p => p.GetSurveyNames(_connectionModel, It.IsAny<string>())).Returns(It.IsAny<List<string>>());
 
             //act
-            _sut.GetSurveyNames(serverParkName);
+            _sut.GetSurveyNames(_connectionModel, _serverParkName);
 
             //assert
-            _surveyServiceMock.Verify(v => v.GetSurveyNames(serverParkName), Times.Once);
+            _surveyServiceMock.Verify(v => v.GetSurveyNames(_connectionModel, _serverParkName), Times.Once);
         }
 
         [Test]
         public void Given_Valid_Arguments_When_I_Call_GetSurveyNames_Then_The_Expected_Result_Is_Returned()
         {
             //arrange
-            const string serverParkName = "Park1";
             var surveyList = new List<string>
             {
                 "Instrument1",
                 "Instrument2"
             };
 
-            _surveyServiceMock.Setup(p => p.GetSurveyNames(serverParkName)).Returns(surveyList);
+            _surveyServiceMock.Setup(p => p.GetSurveyNames(_connectionModel, _serverParkName)).Returns(surveyList);
 
             //act            
-            var result = _sut.GetSurveyNames(serverParkName).ToList();
+            var result = _sut.GetSurveyNames(_connectionModel, _serverParkName).ToList();
 
             //assert
             Assert.IsNotNull(result);
@@ -122,10 +130,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         }
 
         [Test]
+        public void Given_A_Null_ConnectionModel_When_I_Call_GetSurveyNames_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyNames(null, _serverParkName));
+            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
+        }
+
+        [Test]
         public void Given_An_Empty_ServerParkName_When_I_Call_GetSurveyNames_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyNames(string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyNames(_connectionModel, string.Empty));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
@@ -133,30 +149,26 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_ServerParkName_When_I_Call_GetSurveyNames_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyNames(null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyNames(_connectionModel, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
         [Test]
         public void Given_Valid_Arguments_When_I_Call_GetSurveys_Then_The_Correct_Service_Method_Is_Called()
         {
-            //arrange
-            var serverParkName = "Park1";
-
-            _surveyServiceMock.Setup(p => p.GetSurveys(It.IsAny<string>())).Returns(It.IsAny<List<ISurvey>>());
+            _surveyServiceMock.Setup(p => p.GetSurveys(_connectionModel, It.IsAny<string>())).Returns(It.IsAny<List<ISurvey>>());
 
             //act
-            _sut.GetSurveys(serverParkName);
+            _sut.GetSurveys(_connectionModel, _serverParkName);
 
             //assert
-            _surveyServiceMock.Verify(v => v.GetSurveys(serverParkName), Times.Once);
+            _surveyServiceMock.Verify(v => v.GetSurveys(_connectionModel, _serverParkName), Times.Once);
         }
 
         [Test]
         public void Given_Valid_Arguments_When_I_Call_GetSurveys_Then_The_Expected_Result_Is_Returned()
         {
             //arrange
-            const string serverParkName = "Park1";
             var survey1Mock = new Mock<ISurvey>();
             var survey2Mock = new Mock<ISurvey>();
             var surveyList = new List<ISurvey>
@@ -165,10 +177,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 survey2Mock.Object
             };
 
-            _surveyServiceMock.Setup(p => p.GetSurveys(serverParkName)).Returns(surveyList);
+            _surveyServiceMock.Setup(p => p.GetSurveys(_connectionModel, _serverParkName)).Returns(surveyList);
 
             //act            
-            var result = _sut.GetSurveys(serverParkName).ToList();
+            var result = _sut.GetSurveys(_connectionModel, _serverParkName).ToList();
 
             //assert
             Assert.IsNotNull(result);
@@ -178,10 +190,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         }
 
         [Test]
+        public void Given_A_Null_ConnectionModel_When_I_Call_GetSurveys_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveys(null, _serverParkName));
+            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
+        }
+
+        [Test]
         public void Given_An_Empty_ServerParkName_When_I_Call_GetSurveys_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveys(string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveys(_connectionModel, string.Empty));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
@@ -189,7 +209,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_ServerParkName_When_I_Call_GetSurveys_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveys(null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveys(_connectionModel, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
@@ -197,30 +217,25 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_Valid_Arguments_When_I_Call_GetInstrumentId_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-
-            _surveyServiceMock.Setup(p => p.GetInstrumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<Guid>());
+            _surveyServiceMock.Setup(p => p.GetInstrumentId(_connectionModel, It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<Guid>());
 
             //act
-            _sut.GetInstrumentId(instrumentName, serverParkName);
+            _sut.GetInstrumentId(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
-            _surveyServiceMock.Verify(v => v.GetInstrumentId(instrumentName, serverParkName), Times.Once);
+            _surveyServiceMock.Verify(v => v.GetInstrumentId(_connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
         public void Given_Valid_Arguments_When_I_Call_GetInstrumentId_Then_The_Expected_Result_Is_Returned()
         {
             //arrange
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
             var instrumentId = Guid.NewGuid();
 
-            _surveyServiceMock.Setup(p => p.GetInstrumentId(instrumentName, serverParkName)).Returns(instrumentId);
+            _surveyServiceMock.Setup(p => p.GetInstrumentId(_connectionModel, _instrumentName, _serverParkName)).Returns(instrumentId);
 
             //act
-            var result = _sut.GetInstrumentId(instrumentName, serverParkName);
+            var result = _sut.GetInstrumentId(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             Assert.IsNotNull(result);
@@ -228,77 +243,67 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         }
 
         [Test]
+        public void Given_A_Null_ConnectionModel_When_I_Call_GetInstrumentId_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetInstrumentId(null, _instrumentName, _serverParkName));
+            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
+        }
+
+        [Test]
         public void Given_An_Empty_InstrumentName_When_I_Call_GetInstrumentId_Then_An_ArgumentException_Is_Thrown()
         {
-            //arrange 
-            var serverParkName = "Park1";
-
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.GetInstrumentId(string.Empty, serverParkName));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetInstrumentId(_connectionModel, string.Empty, _serverParkName));
             Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
         }
 
         [Test]
         public void Given_A_Null_InstrumentName_When_I_Call_GetInstrumentId_Then_An_ArgumentNullException_Is_Thrown()
         {
-            //arrange 
-            var serverParkName = "Park1";
-
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetInstrumentId(null, serverParkName));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetInstrumentId(_connectionModel, null, _serverParkName));
             Assert.AreEqual("instrumentName", exception.ParamName);
         }
 
         [Test]
         public void Given_An_Empty_ServerParkName_When_I_Call_GetInstrumentId_Then_An_ArgumentException_Is_Thrown()
         {
-            //arrange 
-            var instrumentName = "Instrument1";
-
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.GetInstrumentId(instrumentName, string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetInstrumentId(_connectionModel, _instrumentName, string.Empty));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
         [Test]
         public void Given_A_Null_ServerParkName_When_I_Call_GetInstrumentId_Then_An_ArgumentNullException_Is_Thrown()
         {
-            //arrange 
-            var instrumentName = "Instrument1";
-
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetInstrumentId(instrumentName, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetInstrumentId(_connectionModel, _instrumentName, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
         [Test]
         public void Given_Valid_Instrument_AndServerPark_When_I_Call_GetSurveyType_Then_The_Correct_Service_Method_Is_Called()
         {
-            //arrange
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
-
-            _dataServiceMock.Setup(d => d.GetSurveyType(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<SurveyType>());
+            _dataServiceMock.Setup(d => d.GetSurveyType(_connectionModel, It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<SurveyType>());
 
             //act
-            _sut.GetSurveyType(instrumentName, serverParkName);
+            _sut.GetSurveyType(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.GetSurveyType(instrumentName, serverParkName), Times.Once);
+            _dataServiceMock.Verify(v => v.GetSurveyType(_connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
         public void Given_Valid_Arguments_When_I_Call_GetSurveyType_Then_The_Expected_Result_Is_Returned()
         {
             //arrange
-            var instrumentName = "Instrument1";
-            var serverParkName = "Park1";
             var surveyType = SurveyType.NotMapped;
 
-            _dataServiceMock.Setup(d => d.GetSurveyType(instrumentName, serverParkName)).Returns(surveyType);
+            _dataServiceMock.Setup(d => d.GetSurveyType(_connectionModel, _instrumentName, _serverParkName)).Returns(surveyType);
 
             //act
-            var result = _sut.GetSurveyType(instrumentName, serverParkName);
+            var result = _sut.GetSurveyType(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             Assert.IsNotNull(result);
@@ -306,46 +311,42 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         }
 
         [Test]
+        public void Given_A_Null_ConnectionModel_When_I_Call_GetSurveyType_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyType(null, _instrumentName, _serverParkName));
+            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
+        }
+
+        [Test]
         public void Given_An_Empty_InstrumentName_When_I_Call_GetSurveyType_Then_An_ArgumentException_Is_Thrown()
         {
-            //arrange 
-            var serverParkName = "Park1";
-
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyType(string.Empty, serverParkName));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyType(_connectionModel, string.Empty, _serverParkName));
             Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
         }
 
         [Test]
         public void Given_A_Null_InstrumentName_When_I_Call_GetSurveyType_Then_An_ArgumentNullException_Is_Thrown()
         {
-            //arrange 
-            var serverParkName = "Park1";
-
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyType(null, serverParkName));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyType(_connectionModel, null, _serverParkName));
             Assert.AreEqual("instrumentName", exception.ParamName);
         }
 
         [Test]
         public void Given_An_Empty_ServerParkName_When_I_Call_GetSurveyType_Then_An_ArgumentException_Is_Thrown()
         {
-            //arrange 
-            var instrumentName = "Instrument1";
-
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyType(instrumentName, string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyType(_connectionModel, _instrumentName, string.Empty));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
         [Test]
         public void Given_A_Null_ServerParkName_When_I_Call_GetSurveyType_Then_An_ArgumentNullException_Is_Thrown()
         {
-            //arrange 
-            var instrumentName = "Instrument1";
-
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyType(instrumentName, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyType(_connectionModel, _instrumentName, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
     }

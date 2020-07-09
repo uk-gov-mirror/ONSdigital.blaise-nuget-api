@@ -6,6 +6,7 @@ using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 using System;
+using Blaise.Nuget.Api.Contracts.Models;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Services
 {
@@ -20,8 +21,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<IDatamodel> _dataModelMock;
         private Mock<IKey> _keyMock;
         private Mock<IDataSet> _dataSetMock;
-        private Mock<IDataRecord> _dataRecordMock;        
+        private Mock<IDataRecord> _dataRecordMock;
 
+        private readonly ConnectionModel _connectionModel;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
         private readonly string _filePath;
@@ -31,6 +33,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
         public DataRecordServiceTests()
         {
+            _connectionModel = new ConnectionModel();
             _instrumentName = "TestInstrumentName";
             _serverParkName = "TestServerParkName";
             _filePath = "c:\\filePath";
@@ -54,7 +57,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataServerMock.Setup(r => r.GetDataLink(_instrumentId, _serverParkName)).Returns(_remoteDataLinkMock.Object);
 
             _remoteDataLinkProviderMock = new Mock<IRemoteDataLinkProvider>();
-            _remoteDataLinkProviderMock.Setup(r => r.GetDataLink(_instrumentName, _serverParkName)).Returns(_remoteDataLinkMock.Object);
+            _remoteDataLinkProviderMock.Setup(r => r.GetDataLink(_connectionModel, _instrumentName, _serverParkName)).Returns(_remoteDataLinkMock.Object);
 
             _localDataLinkProviderMock = new Mock<ILocalDataLinkProvider>();
             _localDataLinkProviderMock.Setup(r => r.GetDataLink(_filePath)).Returns(_localDataLinkMock.Object);
@@ -71,7 +74,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
 
             //act
-            var result = _sut.GetDataSet(_instrumentName, _serverParkName);
+            var result = _sut.GetDataSet(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -85,7 +88,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
 
             //act
-            var result = _sut.GetDataSet(_instrumentName, _serverParkName);
+            var result = _sut.GetDataSet(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -99,10 +102,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(It.IsAny<IDataSet>());
 
             //act
-            _sut.GetDataSet(_instrumentName, _serverParkName);
+            _sut.GetDataSet(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
-            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_instrumentName, _serverParkName), Times.Once);
+            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);
             _remoteDataLinkMock.Verify(v => v.Read(null), Times.Once);
         }
 
@@ -155,7 +158,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.ReadRecord(It.IsAny<IKey>())).Returns(_dataRecordMock.Object);
 
             //act
-            var result = _sut.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
+            var result = _sut.GetDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -169,7 +172,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.ReadRecord(It.IsAny<IKey>())).Returns(_dataRecordMock.Object);
 
             //act
-            var result = _sut.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
+            var result = _sut.GetDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -183,10 +186,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.ReadRecord(It.IsAny<IKey>())).Returns(It.IsAny<IDataRecord>());
 
             //act
-            _sut.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
+            _sut.GetDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
-            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_instrumentName, _serverParkName), Times.Once);
+            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);
             _remoteDataLinkMock.Verify(v => v.ReadRecord(_keyMock.Object), Times.Once);
         }
 
@@ -225,10 +228,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.Write(It.IsAny<IDataRecord>()));
 
             //act
-            _sut.WriteDataRecord(_dataRecordMock.Object, _instrumentName, _serverParkName);
+            _sut.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName);
 
             //assert
-            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_instrumentName, _serverParkName), Times.Once);
+            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);
             _remoteDataLinkMock.Verify(v => v.Write(_dataRecordMock.Object), Times.Once);
         }
 
@@ -253,10 +256,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.Delete(It.IsAny<IKey>()));
 
             //act
-            _sut.DeleteDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
+            _sut.DeleteDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
-            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_instrumentName, _serverParkName), Times.Once);
+            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);
             _remoteDataLinkMock.Verify(v => v.Delete(_keyMock.Object), Times.Once);
         }
     }

@@ -18,7 +18,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Factories
             var blaiseApi = new BlaiseApi();
 
             //act
-            var result = blaiseApi.GetServerParkNames().ToList();
+            var result = blaiseApi.GetServerParkNames(blaiseApi.GetDefaultConnectionModel()).ToList();
 
             //assert
             Assert.IsNotNull(result);
@@ -38,8 +38,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Factories
             connectionModel.ServerName = "localhost";
 
             //act
-            blaiseApi.UseConnection(connectionModel);
-            var result = blaiseApi.GetServerParkNames().ToList();
+            var result = blaiseApi.GetServerParkNames(connectionModel).ToList();
 
             //assert
             Assert.IsNotNull(result);

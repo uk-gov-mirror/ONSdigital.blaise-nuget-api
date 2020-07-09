@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Security;
+using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Core.Services;
@@ -24,6 +25,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<IUserServerParkCollection> _userServerParkCollectionMock;
         private Mock<IUserCollection> _userCollectionMock;
 
+        private readonly ConnectionModel _connectionModel;
         private readonly string _serverParkName;
         private readonly string _userName;
         private readonly string _password;
@@ -33,6 +35,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
         public UserServiceTests()
         {
+            _connectionModel = new ConnectionModel();
             _serverParkName = "TestServerParkName";
             _userName = "User1";
             _password = "Password1";
@@ -70,7 +73,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _connectedServerMock.Setup(c => c.Users).Returns(_userCollectionMock.Object);
 
             _connectionFactoryMock = new Mock<IConnectedServerFactory>();
-            _connectionFactoryMock.Setup(c => c.GetConnection()).Returns(_connectedServerMock.Object);
+            _connectionFactoryMock.Setup(c => c.GetConnection(_connectionModel)).Returns(_connectedServerMock.Object);
             _connectedServerMock.Setup(c => c.AddUser(It.IsAny<string>(), It.IsAny<SecureString>()))
                 .Returns(_userMock.Object);
 
@@ -95,7 +98,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             const string role = "King";
 
             //act
-            _sut.AddUser(_userName, _password, role, serverParkNameList);
+            _sut.AddUser(_connectionModel, _userName, _password, role, serverParkNameList);
 
             //assert
             _passwordServiceMock.Verify(v => v.CreateSecurePassword(_password), Times.Once);
@@ -125,7 +128,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _userMock.Setup(u => u.Role).Throws(new Exception());
 
             //act
-            _sut.AddUser(_userName, _password, role, serverParkNameList);
+            _sut.AddUser(_connectionModel, _userName, _password, role, serverParkNameList);
 
             //assert
             _passwordServiceMock.Verify(v => v.CreateSecurePassword(_password), Times.Once);
@@ -152,7 +155,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             const string role = "King";
 
             //act
-            _sut.EditUser(_userName, role, serverParkNameList);
+            _sut.EditUser(_connectionModel, _userName, role, serverParkNameList);
 
             //assert
             _connectedServerMock.Verify(v => v.Users.GetItem(_userName), Times.Once);
@@ -183,7 +186,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _userMock.Setup(u => u.Role).Throws(new Exception());
 
             //act
-            _sut.EditUser(_userName, role, serverParkNameList);
+            _sut.EditUser(_connectionModel, _userName, role, serverParkNameList);
 
             //assert
             _connectedServerMock.Verify(v => v.Users.GetItem(_userName), Times.Once);
@@ -204,7 +207,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //arrange
 
             //act
-            _sut.ChangePassword(_userName, _password);
+            _sut.ChangePassword(_connectionModel, _userName, _password);
 
             //assert
             _passwordServiceMock.Verify(v => v.CreateSecurePassword(_password), Times.Once);
@@ -223,7 +226,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _userMock.Setup(u => u.Name).Returns(_userName);
 
             //act
-            var result = _sut.UserExists(userName);
+            var result = _sut.UserExists(_connectionModel, userName);
 
             //assert
            Assert.IsTrue(result);
@@ -236,7 +239,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _userMock.Setup(u => u.Name).Returns("NotFound");
             
             //act
-            var result = _sut.UserExists(_userName);
+            var result = _sut.UserExists(_connectionModel, _userName);
 
             //assert
             Assert.IsFalse(result);
@@ -246,7 +249,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_Valid_Arguments_When_I_Call_RemoveUser_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.RemoveUser(_userName);
+            _sut.RemoveUser(_connectionModel, _userName);
 
             //assert
             _connectedServerMock.Verify(v => v.RemoveUser(_userName), Times.Once);

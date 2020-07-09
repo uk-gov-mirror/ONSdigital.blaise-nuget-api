@@ -5,6 +5,7 @@ using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.ServerManager;
 using System.Collections.Generic;
 using System.Linq;
+using Blaise.Nuget.Api.Contracts.Models;
 
 namespace Blaise.Nuget.Api.Core.Services
 {
@@ -17,9 +18,9 @@ namespace Blaise.Nuget.Api.Core.Services
             _connectionFactory = connectionFactory;
         }
 
-        public IEnumerable<string> GetServerParkNames()
+        public IEnumerable<string> GetServerParkNames(ConnectionModel connectionModel)
         {
-            var connection = _connectionFactory.GetConnection();
+            var connection = _connectionFactory.GetConnection(connectionModel);
             var serverParks = connection.ServerParks;
 
             if (!serverParks.Any())
@@ -30,18 +31,18 @@ namespace Blaise.Nuget.Api.Core.Services
             return serverParks.Select(sp => sp.Name);
         }
 
-        public bool ServerParkExists(string serverParkName)
+        public bool ServerParkExists(ConnectionModel connectionModel, string serverParkName)
         {
-            var serverParkNames = GetServerParkNames();
+            var serverParkNames = GetServerParkNames(connectionModel);
 
             return serverParkNames.Any(sp => sp.Equals(serverParkName, StringComparison.OrdinalIgnoreCase));
         }
 
-        public IServerPark GetServerPark(string serverParkName)
+        public IServerPark GetServerPark(ConnectionModel connectionModel, string serverParkName)
         {
-            var connection = _connectionFactory.GetConnection();
+            var connection = _connectionFactory.GetConnection(connectionModel);
 
-            if(!ServerParkExists(serverParkName))
+            if(!ServerParkExists(connectionModel, serverParkName))
             {
                 throw new DataNotFoundException($"Server park '{serverParkName}' not found");
             }

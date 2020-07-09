@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Blaise.Nuget.Api.Contracts.Interfaces;
+using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Interfaces;
@@ -19,6 +20,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         private Mock<IIocProvider> _unityProviderMock;
         private Mock<IConfigurationProvider> _configurationProviderMock;
 
+        private readonly ConnectionModel _connectionModel;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
         private readonly string _destinationFilePath;
@@ -27,6 +29,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
 
         public FileBackupTests()
         {
+            _connectionModel = new ConnectionModel();
             _instrumentName = "Instrument1";
             _serverParkName = "Park1";
             _destinationFilePath = "FilePath";
@@ -60,13 +63,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             const string metaFileName = "OPN2004A.bmix";
             var backupFilePath = Path.Combine(_destinationFilePath, _instrumentName);
 
-            _surveyServiceMock.Setup(s => s.GetDataFileName(_instrumentName, _serverParkName)).Returns(dataFileName);
-            _surveyServiceMock.Setup(s => s.GetMetaFileName(_instrumentName, _serverParkName)).Returns(metaFileName);
+            _surveyServiceMock.Setup(s => s.GetDataFileName(_connectionModel, _instrumentName, _serverParkName)).Returns(dataFileName);
+            _surveyServiceMock.Setup(s => s.GetMetaFileName(_connectionModel, _instrumentName, _serverParkName)).Returns(metaFileName);
             
             _fileServiceMock.Setup(f => f.BackupDatabaseFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
 
             //act
-            _sut.BackupSurvey(_serverParkName,_instrumentName, _destinationFilePath);
+            _sut.BackupSurvey(_connectionModel, _serverParkName, _instrumentName, _destinationFilePath);
 
             //assert
             _fileServiceMock.Verify(v => v.BackupDatabaseFile(dataFileName, metaFileName, backupFilePath));
@@ -76,7 +79,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_ServerParkName_When_I_Call_BackupSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurvey(string.Empty, _serverParkName, _destinationFilePath));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurvey(_connectionModel, string.Empty, 
+                _instrumentName, _destinationFilePath));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
@@ -84,7 +88,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_ServerParkName_When_I_Call_BackupSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.BackupSurvey(null, _serverParkName, _destinationFilePath));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.BackupSurvey(_connectionModel, null, 
+                _instrumentName, _destinationFilePath));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
@@ -92,7 +97,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_InstrumentName_When_I_Call_BackupSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurvey(_serverParkName, string.Empty, _destinationFilePath));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurvey(_connectionModel, _serverParkName,
+                string.Empty, _destinationFilePath));
             Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
         }
 
@@ -100,7 +106,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_InstrumentName_When_I_Call_BackupSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.BackupSurvey(_serverParkName, null, _destinationFilePath));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.BackupSurvey(_connectionModel, _serverParkName, 
+                null, _destinationFilePath));
             Assert.AreEqual("instrumentName", exception.ParamName);
         }
 
@@ -108,7 +115,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_DestinationFilePath_When_I_Call_BackupSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurvey(_serverParkName, _instrumentName, string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurvey(_connectionModel, _serverParkName, 
+                _instrumentName, string.Empty));
             Assert.AreEqual("A value for the argument 'destinationFilePath' must be supplied", exception.Message);
         }
 
@@ -116,7 +124,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_DestinationFilePath_When_I_Call_BackupSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.BackupSurvey(_serverParkName, _instrumentName, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.BackupSurvey(_connectionModel, _serverParkName, 
+                _instrumentName, null));
             Assert.AreEqual("destinationFilePath", exception.ParamName);
         }
     }

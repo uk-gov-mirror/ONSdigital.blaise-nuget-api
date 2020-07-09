@@ -87,7 +87,6 @@ namespace Blaise.Nuget.Api
         public IFluentBlaiseApi WithConnection(ConnectionModel connectionModel)
         {
             _sourceConnectionModel = connectionModel;
-            _blaiseApi.UseConnection(connectionModel);
 
             return this;
         }
@@ -128,16 +127,33 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IEnumerable<string> ServerParks => _blaiseApi.GetServerParkNames();
+        public IEnumerable<string> ServerParks
+        {
+            get
+            {
+                ValidateSourceConnectionIsSet();
+                
+                var serverParkNames =  _blaiseApi.GetServerParkNames(_sourceConnectionModel);
+                
+                InitialiseSettings();
+
+                return serverParkNames;
+            }
+        }
 
         public IDataSet Cases
         {
             get
             {
+                ValidateSourceConnectionIsSet();
                 ValidateServerParkIsSet();
                 ValidateInstrumentIsSet();
 
-                return _blaiseApi.GetDataSet(_instrumentName, _serverParkName);
+                var cases = _blaiseApi.GetDataSet(_sourceConnectionModel, _instrumentName, _serverParkName);
+                
+                InitialiseSettings();
+                
+                return cases;
             }
         }
 
@@ -257,10 +273,21 @@ namespace Blaise.Nuget.Api
 
         public IFluentBlaiseSurveyApi Survey => this;
 
-        public IEnumerable<ISurvey> Surveys =>
-            string.IsNullOrWhiteSpace(_serverParkName) 
-                ? _blaiseApi.GetAllSurveys() 
-                : _blaiseApi.GetSurveys(_serverParkName);
+        public IEnumerable<ISurvey> Surveys
+        {
+            get
+            {
+                ValidateSourceConnectionIsSet();
+
+                var surveys = string.IsNullOrWhiteSpace(_serverParkName)
+                    ? _blaiseApi.GetAllSurveys(_sourceConnectionModel)
+                    : _blaiseApi.GetSurveys(_sourceConnectionModel, _serverParkName);
+
+                InitialiseSettings();
+
+                return surveys;
+            }
+        }
 
         public bool Exists
         {
@@ -291,11 +318,14 @@ namespace Blaise.Nuget.Api
 
         public void Backup()
         {
+            ValidateSourceConnectionIsSet();
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
             ValidateDestinationPathIsSet();
 
-            _blaiseApi.BackupSurvey(_serverParkName, _instrumentName, _destinationPath);
+            _blaiseApi.BackupSurvey(_sourceConnectionModel, _serverParkName, _instrumentName, _destinationPath);
+
+            InitialiseSettings();
         }
 
         public IFluentBlaiseCaseApi WithStatus(StatusType statusType)
@@ -386,10 +416,15 @@ namespace Blaise.Nuget.Api
         {
             get
             {
+                ValidateSourceConnectionIsSet();
                 ValidateServerParkIsSet();
                 ValidateInstrumentIsSet();
 
-                return _blaiseApi.GetSurveyType(_instrumentName, _serverParkName);
+                var surveyType =  _blaiseApi.GetSurveyType(_sourceConnectionModel, _instrumentName, _serverParkName);
+
+                InitialiseSettings();
+
+                return surveyType;
             }
         }
 
@@ -424,33 +459,40 @@ namespace Blaise.Nuget.Api
 
         private void AddUser()
         {
+            ValidateSourceConnectionIsSet();
             ValidateUserIsSet();
             ValidatePasswordIsSet();
             ValidateRoleIsSet();
             ValidateServerParksAreSet();
 
-            _blaiseApi.AddUser(_userName, _password, _role, _serverParkNames);
+            _blaiseApi.AddUser(_sourceConnectionModel, _userName, _password, _role, _serverParkNames);
             InitialiseSettings();
         }
 
         private IDataRecord GetCase()
         {
+            ValidateSourceConnectionIsSet();
             ValidatePrimaryKeyValueIsSet();
             ValidateInstrumentIsSet();
             ValidateServerParkIsSet();
 
-            return _blaiseApi.GetDataRecord(_primaryKeyValue, _instrumentName, _serverParkName);
+            var dataRecord = _blaiseApi.GetDataRecord(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName);
+            
+            InitialiseSettings();
+            
+            return dataRecord;
         }
 
         private void UpdateCase()
         {
             if (_caseData.Any())
             {
+                ValidateSourceConnectionIsSet();
                 ValidateInstrumentIsSet();
                 ValidateServerParkIsSet();
                 ValidateCaseDataRecordIsSet();
 
-                _blaiseApi.UpdateDataRecord(_caseDataRecord, _caseData, _instrumentName, _serverParkName);
+                _blaiseApi.UpdateDataRecord(_sourceConnectionModel, _caseDataRecord, _caseData, _instrumentName, _serverParkName);
             }
 
             if (_statusType == StatusType.Completed)
@@ -468,18 +510,19 @@ namespace Blaise.Nuget.Api
 
         private void UpdateUser()
         {
+            ValidateSourceConnectionIsSet();
             ValidateUserIsSet();
 
             if (!string.IsNullOrWhiteSpace(_password))
             {
-                _blaiseApi.ChangePassword(_userName, _password);
+                _blaiseApi.ChangePassword(_sourceConnectionModel, _userName, _password);
             }
 
             if (!string.IsNullOrWhiteSpace(_role) || _serverParkNames.Any())
             {
                 ValidateRoleIsSet();
                 ValidateServerParksAreSet();
-                _blaiseApi.EditUser(_userName, _role, _serverParkNames);
+                _blaiseApi.EditUser(_sourceConnectionModel, _userName, _role, _serverParkNames);
             }
 
             InitialiseSettings();
@@ -487,20 +530,22 @@ namespace Blaise.Nuget.Api
 
         private void RemoveCase()
         {
+            ValidateSourceConnectionIsSet();
             ValidateInstrumentIsSet();
             ValidateServerParkIsSet();
             ValidatePrimaryKeyValueIsSet();
 
-            _blaiseApi.RemoveCase(_primaryKeyValue, _instrumentName, _serverParkName);
+            _blaiseApi.RemoveCase(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName);
 
             InitialiseSettings();
         }
 
         private void RemoveUser()
         {
+            ValidateSourceConnectionIsSet();
             ValidateUserIsSet();
 
-            _blaiseApi.RemoveUser(_userName);
+            _blaiseApi.RemoveUser(_sourceConnectionModel, _userName);
 
             InitialiseSettings();
         }
@@ -588,11 +633,12 @@ namespace Blaise.Nuget.Api
 
         private bool CaseExists()
         {
+            ValidateSourceConnectionIsSet();
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
             ValidatePrimaryKeyValueIsSet();
 
-            var caseExists = _blaiseApi.CaseExists(_primaryKeyValue, _instrumentName, _serverParkName);
+            var caseExists = _blaiseApi.CaseExists(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName);
             InitialiseSettings();
 
             return caseExists;
@@ -600,9 +646,10 @@ namespace Blaise.Nuget.Api
 
         private bool ParkExists()
         {
+            ValidateSourceConnectionIsSet();
             ValidateServerParkIsSet();
 
-            var parkExists = _blaiseApi.ServerParkExists(_serverParkName);
+            var parkExists = _blaiseApi.ServerParkExists(_sourceConnectionModel, _serverParkName);
             InitialiseSettings();
 
             return parkExists;
@@ -611,9 +658,10 @@ namespace Blaise.Nuget.Api
 
         private bool UserExists()
         {
+            ValidateSourceConnectionIsSet();
             ValidateUserIsSet();
 
-            var userExists = _blaiseApi.UserExists(_userName);
+            var userExists = _blaiseApi.UserExists(_sourceConnectionModel, _userName);
             InitialiseSettings();
 
             return userExists;
@@ -621,17 +669,18 @@ namespace Blaise.Nuget.Api
 
         private bool FieldExists()
         {
+            ValidateSourceConnectionIsSet();
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
 
             switch (_fieldNameType)
             {
                 case FieldNameType.Completed:
-                    var completedFieldExists = _blaiseApi.CompletedFieldExists(_instrumentName, _serverParkName);
+                    var completedFieldExists = _blaiseApi.CompletedFieldExists(_sourceConnectionModel, _instrumentName, _serverParkName);
                     InitialiseSettings();
                     return completedFieldExists;
                 case FieldNameType.Processed:
-                    var processedFieldExists = _blaiseApi.ProcessedFieldExists(_instrumentName, _serverParkName);
+                    var processedFieldExists = _blaiseApi.ProcessedFieldExists(_sourceConnectionModel, _instrumentName, _serverParkName);
                     InitialiseSettings();
                     return processedFieldExists;
                 default:
@@ -642,32 +691,35 @@ namespace Blaise.Nuget.Api
 
         private void SetStatusAsComplete()
         {
+            ValidateSourceConnectionIsSet();
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
             ValidateCaseDataRecordIsSet();
 
-            _blaiseApi.MarkCaseAsComplete(_caseDataRecord, _instrumentName, _serverParkName);
+            _blaiseApi.MarkCaseAsComplete(_sourceConnectionModel, _caseDataRecord, _instrumentName, _serverParkName);
             InitialiseSettings();
         }
 
         private void SetStatusAsProcessed()
         {
+            ValidateSourceConnectionIsSet();
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
             ValidateCaseDataRecordIsSet();
 
-            _blaiseApi.MarkCaseAsProcessed(_caseDataRecord, _instrumentName, _serverParkName);
+            _blaiseApi.MarkCaseAsProcessed(_sourceConnectionModel, _caseDataRecord, _instrumentName, _serverParkName);
             InitialiseSettings();
         }
 
         private void AddCase()
         {
+            ValidateSourceConnectionIsSet();
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
             ValidatePrimaryKeyValueIsSet();
             ValidateDataIsSet();
 
-            _blaiseApi.CreateNewDataRecord(_primaryKeyValue, _caseData, _instrumentName, _serverParkName);
+            _blaiseApi.CreateNewDataRecord(_sourceConnectionModel, _primaryKeyValue, _caseData, _instrumentName, _serverParkName);
             InitialiseSettings();
         }
 

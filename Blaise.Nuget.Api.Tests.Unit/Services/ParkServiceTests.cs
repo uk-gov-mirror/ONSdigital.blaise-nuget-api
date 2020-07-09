@@ -6,6 +6,7 @@ using NUnit.Framework;
 using StatNeth.Blaise.API.ServerManager;
 using System.Collections.Generic;
 using System.Linq;
+using Blaise.Nuget.Api.Contracts.Models;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Services
 {
@@ -17,9 +18,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<IConnectedServer> _connectedServerMock;
         private Mock<IServerParkCollection> _serverParkCollectionMock;
 
+        private readonly ConnectionModel _connectionModel;
         private string _serverParkName;
 
         private ParkService _sut;
+
+        public ParkServiceTests()
+        {
+            _connectionModel = new ConnectionModel();
+        }
 
         [SetUp]
         public void SetUpTests()
@@ -41,7 +48,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _connectedServerMock.Setup(c => c.GetServerPark(_serverParkName)).Returns(_serverParkMock.Object);
 
             _connectionFactoryMock = new Mock<IConnectedServerFactory>();
-            _connectionFactoryMock.Setup(c => c.GetConnection()).Returns(_connectedServerMock.Object);
+            _connectionFactoryMock.Setup(c => c.GetConnection(_connectionModel)).Returns(_connectedServerMock.Object);
 
             //setup service under test
             _sut = new ParkService(_connectionFactoryMock.Object);
@@ -51,7 +58,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetServerParkNames_Then_I_Get_An_IEnumerable_Of_Strings_Returned()
         {
             //act
-            var result = _sut.GetServerParkNames();
+            var result = _sut.GetServerParkNames(_connectionModel);
 
             //assert
             Assert.NotNull(result);
@@ -73,7 +80,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _serverParkCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => serverParkItems.GetEnumerator());
 
             //act
-            var result = _sut.GetServerParkNames().ToList();
+            var result = _sut.GetServerParkNames(_connectionModel).ToList();
 
             //assert
             Assert.NotNull(result);
@@ -92,7 +99,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _serverParkCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => serverParkItems.GetEnumerator());
 
             //act && assert
-            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetServerParkNames());
+            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetServerParkNames(_connectionModel));
             Assert.AreEqual("No server parks found", exception.Message);
         }
 
@@ -100,7 +107,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_ServerPark_Exists_When_I_Call_GetServerPark_Then_The_Correct_Service_Is_Called()
         {
             //act
-            _sut.GetServerPark((_serverParkName));
+            _sut.GetServerPark(_connectionModel, _serverParkName);
 
             //assert
             _connectedServerMock.Verify(v => v.GetServerPark(_serverParkName), Times.Once);
@@ -113,7 +120,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_ServerPark_Exists_When_I_Call_ServerParkExists_Then_True_Is_Returned(string serverParkName)
         {
             //act
-            var result = _sut.ServerParkExists(serverParkName);
+            var result = _sut.ServerParkExists(_connectionModel, serverParkName);
 
             //assert
             Assert.IsNotNull(result);
@@ -127,7 +134,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var serverParkName = "NotFound";
 
             //act
-            var result = _sut.ServerParkExists(serverParkName);
+            var result = _sut.ServerParkExists(_connectionModel, serverParkName);
 
             //assert
             Assert.IsNotNull(result);
@@ -139,7 +146,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_ServerPark_Exists_When_I_Call_GetServerPark_Then_I_Get_A_ServerPark_Returned()
         {
             //act
-            var result = _sut.GetServerPark(_serverParkName);
+            var result = _sut.GetServerPark(_connectionModel, _serverParkName);
 
             //assert
             Assert.IsNotNull(result);
@@ -154,7 +161,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var serverParkName = "NotFound";
 
             //act && assert
-            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetServerPark(serverParkName));
+            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetServerPark(_connectionModel, serverParkName));
             Assert.AreEqual($"Server park '{serverParkName}' not found", exception.Message);
         }
     }

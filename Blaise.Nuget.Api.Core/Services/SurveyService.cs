@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Exceptions;
+using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.ServerManager;
 
@@ -17,16 +18,16 @@ namespace Blaise.Nuget.Api.Core.Services
             _parkService = parkService;
         }
 
-        public IEnumerable<string> GetSurveyNames(string serverParkName)
+        public IEnumerable<string> GetSurveyNames(ConnectionModel connectionModel, string serverParkName)
         {
-            var surveys = GetSurveys(serverParkName);
+            var surveys = GetSurveys(connectionModel, serverParkName);
 
             return surveys.Select(sp => sp.Name);
         }
 
-        public IEnumerable<ISurvey> GetSurveys(string serverParkName)
+        public IEnumerable<ISurvey> GetSurveys(ConnectionModel connectionModel, string serverParkName)
         {
-            var serverPark = _parkService.GetServerPark(serverParkName);
+            var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
 
             if (!serverPark.Surveys.Any())
             {
@@ -36,9 +37,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return serverPark.Surveys;
         }
 
-        public ISurvey GetSurvey(string instrumentName, string serverParkName)
+        public ISurvey GetSurvey(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            var surveys = GetSurveys(serverParkName);
+            var surveys = GetSurveys(connectionModel, serverParkName);
             var survey = surveys.FirstOrDefault(s => s.Name == instrumentName);
 
             if (survey == null)
@@ -49,23 +50,23 @@ namespace Blaise.Nuget.Api.Core.Services
             return survey;
         }
 
-        public IEnumerable<ISurvey> GetAllSurveys()
+        public IEnumerable<ISurvey> GetAllSurveys(ConnectionModel connectionModel)
         {
             var surveyList = new List<ISurvey>();
-            var serverParkNames = _parkService.GetServerParkNames();
+            var serverParkNames = _parkService.GetServerParkNames(connectionModel);
 
             foreach (var serverParkName in serverParkNames)
             {
-                var serverPark = _parkService.GetServerPark(serverParkName);
+                var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
                 surveyList.AddRange(serverPark.Surveys);
             }
 
             return surveyList;
         }
 
-        public Guid GetInstrumentId(string instrumentName, string serverParkName)
+        public Guid GetInstrumentId(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            var serverPark = _parkService.GetServerPark(serverParkName);
+            var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
             var survey = serverPark.Surveys.FirstOrDefault(s => string.Equals(s.Name, instrumentName, StringComparison.OrdinalIgnoreCase));
 
             if (survey == null)
@@ -76,17 +77,17 @@ namespace Blaise.Nuget.Api.Core.Services
             return survey.InstrumentID;
         }
 
-        public string GetMetaFileName(string instrumentName, string serverParkName)
+        public string GetMetaFileName(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            var survey = GetSurvey(instrumentName, serverParkName);
+            var survey = GetSurvey(connectionModel, instrumentName, serverParkName);
             var configuration = GetSurveyConfiguration(survey);
 
             return configuration.MetaFileName;
         }
 
-        public string GetDataFileName(string instrumentName, string serverParkName)
+        public string GetDataFileName(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            var survey = GetSurvey(instrumentName, serverParkName);
+            var survey = GetSurvey(connectionModel, instrumentName, serverParkName);
             var configuration = GetSurveyConfiguration(survey);
 
             return configuration.DataFileName;

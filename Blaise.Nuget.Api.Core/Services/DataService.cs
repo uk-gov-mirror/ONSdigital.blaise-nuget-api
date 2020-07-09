@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Mappers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataLink;
@@ -30,14 +31,14 @@ namespace Blaise.Nuget.Api.Core.Services
             _mapperService = mapperService;
         }
 
-        public IDatamodel GetDataModel(string instrumentName, string serverParkName)
+        public IDatamodel GetDataModel(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            return _dataModelService.GetDataModel(instrumentName, serverParkName);
+            return _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
         }
 
-        public SurveyType GetSurveyType(string instrumentName, string serverParkName)
+        public SurveyType GetSurveyType(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            return _dataModelService.GetSurveyType(instrumentName, serverParkName);
+            return _dataModelService.GetSurveyType(connectionModel, instrumentName, serverParkName);
         }
 
         public IKey GetKey(IDatamodel dataModel, string keyName)
@@ -50,9 +51,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return _keyService.GetPrimaryKey(dataModel);
         }
 
-        public bool KeyExists(IKey key, string instrumentName, string serverParkName)
+        public bool KeyExists(ConnectionModel connectionModel, IKey key, string instrumentName, string serverParkName)
         {
-            return _keyService.KeyExists(key, instrumentName, serverParkName);
+            return _keyService.KeyExists(connectionModel, key, instrumentName, serverParkName);
         }
 
         public string GetPrimaryKeyValue(IDataRecord dataRecord)
@@ -65,9 +66,9 @@ namespace Blaise.Nuget.Api.Core.Services
             _keyService.AssignPrimaryKeyValue(key, primaryKeyValue);
         }
 
-        public IDataSet GetDataSet(string instrumentName, string serverParkName)
+        public IDataSet GetDataSet(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            return _dataRecordService.GetDataSet(instrumentName, serverParkName);
+            return _dataRecordService.GetDataSet(connectionModel, instrumentName, serverParkName);
         }
 
         public IDataSet GetDataSet(string filePath)
@@ -80,19 +81,19 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataRecordService.GetDataRecord(datamodel);
         }
 
-        public IDataRecord GetDataRecord(IKey key, string instrumentName, string serverParkName)
+        public IDataRecord GetDataRecord(ConnectionModel connectionModel, IKey key, string instrumentName, string serverParkName)
         {
-            return _dataRecordService.GetDataRecord(key, instrumentName, serverParkName);
+            return _dataRecordService.GetDataRecord(connectionModel, key, instrumentName, serverParkName);
         }
 
-        public IDataRecord GetDataRecord(string primaryKeyValue, string instrumentName, string serverParkName)
+        public IDataRecord GetDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName)
         {
-            var dataModel = _dataModelService.GetDataModel(instrumentName, serverParkName);
+            var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
             var primaryKey = _keyService.GetPrimaryKey(dataModel);
 
             _keyService.AssignPrimaryKeyValue(primaryKey, primaryKeyValue);
 
-            return GetDataRecord(primaryKey, instrumentName, serverParkName);
+            return GetDataRecord(connectionModel, primaryKey, instrumentName, serverParkName);
         }
 
         public IDataRecord GetDataRecord(IKey key, string filePath)
@@ -100,9 +101,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataRecordService.GetDataRecord(key, filePath);
         }
 
-        public void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName)
+        public void WriteDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
-            _dataRecordService.WriteDataRecord(dataRecord, instrumentName, serverParkName);
+            _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
         }
 
         public void WriteDataRecord(IDataRecord dataRecord, string filePath)
@@ -110,9 +111,9 @@ namespace Blaise.Nuget.Api.Core.Services
             _dataRecordService.WriteDataRecord(dataRecord, filePath);
         }
 
-        public bool CompletedFieldExists(string instrumentName, string serverParkName)
+        public bool CompletedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            return _fieldService.CompletedFieldExists(instrumentName, serverParkName);
+            return _fieldService.CompletedFieldExists(connectionModel, instrumentName, serverParkName);
         }
 
         public bool CaseHasBeenCompleted(IDataRecord dataRecord)
@@ -120,14 +121,14 @@ namespace Blaise.Nuget.Api.Core.Services
             return _fieldService.CaseHasBeenCompleted(dataRecord);
         }
 
-        public void MarkCaseAsComplete(IDataRecord dataRecord, string instrumentName, string serverParkName)
+        public void MarkCaseAsComplete(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
-            _fieldService.MarkCaseAsComplete(dataRecord, instrumentName, serverParkName);
+            _fieldService.MarkCaseAsComplete(connectionModel, dataRecord, instrumentName, serverParkName);
         }
 
-        public bool ProcessedFieldExists(string instrumentName, string serverParkName)
+        public bool ProcessedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            return _fieldService.ProcessedFieldExists(instrumentName, serverParkName);
+            return _fieldService.ProcessedFieldExists(connectionModel, instrumentName, serverParkName);
         }
 
         public bool CaseHasBeenProcessed(IDataRecord dataRecord)
@@ -135,47 +136,47 @@ namespace Blaise.Nuget.Api.Core.Services
             return _fieldService.CaseHasBeenProcessed(dataRecord);
         }
 
-        public void MarkCaseAsProcessed(IDataRecord dataRecord, string instrumentName, string serverParkName)
+        public void MarkCaseAsProcessed(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
-            _fieldService.MarkCaseAsProcessed(dataRecord, instrumentName, serverParkName);
+            _fieldService.MarkCaseAsProcessed(connectionModel, dataRecord, instrumentName, serverParkName);
         }
 
-        public void RemoveDataRecord(string primaryKeyValue, string instrumentName, string serverParkName)
+        public void RemoveDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName)
         {
-            var dataModel = _dataModelService.GetDataModel(instrumentName, serverParkName);
+            var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
             var primaryKey = _keyService.GetPrimaryKey(dataModel);
 
             _keyService.AssignPrimaryKeyValue(primaryKey, primaryKeyValue);
 
-            _dataRecordService.DeleteDataRecord(primaryKey, instrumentName, serverParkName);
+            _dataRecordService.DeleteDataRecord(connectionModel, primaryKey, instrumentName, serverParkName);
         }
 
-        public bool CaseExists(string primaryKeyValue, string instrumentName, string serverParkName)
+        public bool CaseExists(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName)
         {
-            var dataModel = _dataModelService.GetDataModel(instrumentName, serverParkName);
+            var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
             var primaryKey = _keyService.GetPrimaryKey(dataModel);
 
             _keyService.AssignPrimaryKeyValue(primaryKey, primaryKeyValue);
 
-            return _keyService.KeyExists(primaryKey, instrumentName, serverParkName);
+            return _keyService.KeyExists(connectionModel, primaryKey, instrumentName, serverParkName);
         }
 
-        public void CreateNewDataRecord(string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName, string serverParkName)
+        public void CreateNewDataRecord(ConnectionModel connectionModel, string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName, string serverParkName)
         {
-            var dataModel = GetDataModel(instrumentName, serverParkName);
+            var dataModel = GetDataModel(connectionModel, instrumentName, serverParkName);
             var key = GetPrimaryKey(dataModel);
             var dataRecord = GetDataRecord(dataModel);
 
             dataRecord = _mapperService.MapDataRecordFields(dataRecord, dataModel, key, primaryKeyValue, fieldData);
 
-            WriteDataRecord(dataRecord, instrumentName, serverParkName);
+            WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
         }
 
-        public void UpdateDataRecord(IDataRecord dataRecord, Dictionary<string, string> fieldData, string instrumentName, string serverParkName)
+        public void UpdateDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, Dictionary<string, string> fieldData, string instrumentName, string serverParkName)
         {
             dataRecord = _mapperService.MapDataRecordFields(dataRecord, fieldData);
 
-            WriteDataRecord(dataRecord, instrumentName, serverParkName);
+            WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
         }
     }
 }

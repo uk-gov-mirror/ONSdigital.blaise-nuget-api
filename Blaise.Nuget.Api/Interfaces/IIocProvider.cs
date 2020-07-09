@@ -4,7 +4,7 @@ namespace Blaise.Nuget.Api.Interfaces
 {
     public interface IIocProvider
     {
-        void RegisterDependencies(ConnectionModel connectionModel);
+        void RegisterDependencies();
         T Resolve<T>();
     }
 }

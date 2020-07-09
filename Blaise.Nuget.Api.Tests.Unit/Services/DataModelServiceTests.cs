@@ -1,5 +1,6 @@
 ﻿using System;
 using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Services;
 using Moq;
@@ -15,8 +16,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
         private Mock<IDataLink4> _remoteDataLinkMock;
         private Mock<IDatamodel> _dataModelMock;
-   
 
+        private readonly ConnectionModel _connectionModel;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
 
@@ -24,6 +25,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
         public DataModelServiceTests()
         {
+            _connectionModel = new ConnectionModel();
             _instrumentName = "TestInstrumentName";
             _serverParkName = "TestServerParkName";
         }
@@ -37,7 +39,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.Datamodel).Returns(_dataModelMock.Object);
 
             _remoteDataLinkProviderMock = new Mock<IRemoteDataLinkProvider>();
-            _remoteDataLinkProviderMock.Setup(r => r.GetDataLink(_instrumentName, _serverParkName)).Returns(_remoteDataLinkMock.Object);
+            _remoteDataLinkProviderMock.Setup(r => r.GetDataLink(_connectionModel, _instrumentName, _serverParkName)).Returns(_remoteDataLinkMock.Object);
             
             _sut = new DataModelService(_remoteDataLinkProviderMock.Object);
         }
@@ -47,7 +49,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataModel_I_Get_A_DataModel_Back()
         {
             //act
-            var result = _sut.GetDataModel(_instrumentName, _serverParkName);
+            var result = _sut.GetDataModel(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -58,7 +60,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataModel_I_Get_The_Correct_DataModel_Back()
         {
             //act
-            var result = _sut.GetDataModel(_instrumentName, _serverParkName);
+            var result = _sut.GetDataModel(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             Assert.AreEqual(_dataModelMock.Object, result);
@@ -71,7 +73,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.Datamodel).Returns(null as IDatamodel);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataModel(_instrumentName, _serverParkName));
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataModel(_connectionModel, _instrumentName, _serverParkName));
             Assert.AreEqual($"No datamodel was found for instrument '{_instrumentName}' on server park '{_serverParkName}'", exception.Message);
         }
 
@@ -79,10 +81,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataModel_Then_The_Correct_Services_Are_Called()
         {
             //act
-             _sut.GetDataModel(_instrumentName, _serverParkName);
+             _sut.GetDataModel(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
-            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_instrumentName, _serverParkName), Times.Once);
+            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);
             _remoteDataLinkMock.Verify(v => v.Datamodel, Times.AtLeastOnce);
         }
 
@@ -96,7 +98,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataModelMock.Setup(d => d.Name).Returns(caseName);
 
             //act
-            var result = _sut.GetSurveyType(_instrumentName, _serverParkName);
+            var result = _sut.GetSurveyType(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             Assert.AreEqual(surveyType, result);
@@ -106,10 +108,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetSurveyType_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.GetSurveyType(_instrumentName, _serverParkName);
+            _sut.GetSurveyType(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
-            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_instrumentName, _serverParkName), Times.Once);
+            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);
             _remoteDataLinkMock.Verify(v => v.Datamodel, Times.AtLeastOnce);
         }
     }

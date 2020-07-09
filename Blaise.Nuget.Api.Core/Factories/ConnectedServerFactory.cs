@@ -7,28 +7,24 @@ namespace Blaise.Nuget.Api.Core.Factories
 {
     public class ConnectedServerFactory : IConnectedServerFactory
     {
-        private readonly ConnectionModel _connectionModel;
         private readonly IPasswordService _passwordService;
         private readonly IConnectionExpiryService _connectionExpiryService;
 
         private IConnectedServer _connectedServer;
 
         public ConnectedServerFactory(
-            ConnectionModel connectionModel,
             IPasswordService passwordService,
             IConnectionExpiryService connectionExpiryService)
         {
-            _connectionModel = connectionModel;
             _passwordService = passwordService;
             _connectionExpiryService = connectionExpiryService;
-
         }
 
-        public IConnectedServer GetConnection()
+        public IConnectedServer GetConnection(ConnectionModel connectionModel)
         {
             if (_connectedServer == null || _connectionExpiryService.ConnectionHasExpired())
             {
-                CreateServerConnection(_connectionModel);
+                CreateServerConnection(connectionModel);
                 _connectionExpiryService.ResetConnectionExpiryPeriod();
             }
 
