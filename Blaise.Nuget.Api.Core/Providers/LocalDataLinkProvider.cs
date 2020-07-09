@@ -1,32 +1,51 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Blaise.Nuget.Api.Core.Extensions;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
-using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataLink;
 
 namespace Blaise.Nuget.Api.Core.Providers
 {
     public class LocalDataLinkProvider : ILocalDataLinkProvider
     {
-        private readonly IConnectionExpiryService _connectionExpiryService;
+        private readonly IConfigurationProvider _configurationProvider;
 
-        private string _filePath;
-        private IDataLink _dataLink;
+        private readonly Dictionary<string, Tuple<IDataLink, DateTime>> _dataLinkConnections;
 
-        public LocalDataLinkProvider(IConnectionExpiryService connectionExpiryService)
+        public LocalDataLinkProvider(IConfigurationProvider configurationProvider)
         {
-            _connectionExpiryService = connectionExpiryService;
+            _configurationProvider = configurationProvider;
+            _dataLinkConnections = new Dictionary<string, Tuple<IDataLink, DateTime>>();
         }
 
         public IDataLink GetDataLink(string filePath)
         {
-            if (_dataLink == null | filePath != _filePath || _connectionExpiryService.ConnectionHasExpired())
+            if (_dataLinkConnections.Any(c => c.Key == filePath))
             {
-                _filePath = filePath;
-                _dataLink = DataLinkManager.GetDataLink(filePath);
-                _connectionExpiryService.ResetConnectionExpiryPeriod();
+                var existingConnection = _dataLinkConnections.First(c => c.Key == filePath);
+
+                return existingConnection.Value.Item2.HasExpired()
+                    ? GetFreshConnection(filePath)
+                    : existingConnection.Value.Item1;
             }
 
-            return _dataLink;
+            return GetFreshConnection(filePath);
+        }
+
+        private IDataLink GetFreshConnection(string filePath)
+        {
+            if (_dataLinkConnections.Any(c => c.Key == filePath))
+            {
+                _dataLinkConnections.Remove(filePath);
+            }
+
+            var dataLink = DataLinkManager.GetDataLink(filePath);
+
+            _dataLinkConnections.Add(filePath,
+                new Tuple<IDataLink, DateTime>(dataLink, _configurationProvider.ConnectionExpiresInMinutes.GetExpiryDate()));
+
+            return dataLink;
         }
     }
 }

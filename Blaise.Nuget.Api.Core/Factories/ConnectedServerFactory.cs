@@ -1,4 +1,8 @@
-﻿using Blaise.Nuget.Api.Contracts.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Blaise.Nuget.Api.Contracts.Models;
+using Blaise.Nuget.Api.Core.Extensions;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.ServerManager;
@@ -8,32 +12,47 @@ namespace Blaise.Nuget.Api.Core.Factories
     public class ConnectedServerFactory : IConnectedServerFactory
     {
         private readonly IPasswordService _passwordService;
-        private readonly IConnectionExpiryService _connectionExpiryService;
 
-        private IConnectedServer _connectedServer;
+        private readonly Dictionary<string, Tuple<IConnectedServer, DateTime>> _connectedServers;
 
-        public ConnectedServerFactory(
-            IPasswordService passwordService,
-            IConnectionExpiryService connectionExpiryService)
+        public ConnectedServerFactory(IPasswordService passwordService)
         {
             _passwordService = passwordService;
-            _connectionExpiryService = connectionExpiryService;
+            _connectedServers = new Dictionary<string, Tuple<IConnectedServer, DateTime>>();
         }
 
         public IConnectedServer GetConnection(ConnectionModel connectionModel)
         {
-            if (_connectedServer == null || _connectionExpiryService.ConnectionHasExpired())
+            if (_connectedServers.Any(c => c.Key == connectionModel.ServerName))
             {
-                CreateServerConnection(connectionModel);
-                _connectionExpiryService.ResetConnectionExpiryPeriod();
+                var existingConnection = _connectedServers.First(c => c.Key == connectionModel.ServerName);
+
+                return existingConnection.Value.Item2.HasExpired()
+                    ? GetFreshServerConnection(connectionModel)
+                    : existingConnection.Value.Item1;
             }
 
-            return _connectedServer;
+            return GetFreshServerConnection(connectionModel);
         }
 
-        private void CreateServerConnection(ConnectionModel connectionModel)
+        private IConnectedServer GetFreshServerConnection(ConnectionModel connectionModel)
         {
-            _connectedServer = ServerManager.ConnectToServer(
+            if (_connectedServers.Any(c => c.Key == connectionModel.ServerName))
+            {
+                _connectedServers.Remove(connectionModel.ServerName);
+            }
+
+            var connectedServer = CreateServerConnection(connectionModel);
+
+            _connectedServers.Add(connectionModel.ServerName,
+                new Tuple<IConnectedServer, DateTime>(connectedServer, connectionModel.ConnectionExpiresInMinutes.GetExpiryDate()));
+
+            return connectedServer;
+        }
+
+        private IConnectedServer CreateServerConnection(ConnectionModel connectionModel)
+        {
+            return ServerManager.ConnectToServer(
                 connectionModel.ServerName,
                 connectionModel.Port,
                 connectionModel.UserName,

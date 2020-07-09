@@ -306,6 +306,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_User_Has_Been_Called_When_I_Call_Remove_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
+            _sut.WithConnection(_connectionModel);
             _sut.WithUserName(_userName);
 
             //act
@@ -316,9 +317,24 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithUserName(_userName);
+
+            var setup = _sut.User;
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.User.Remove());
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+        }
+
+        [Test]
         public void Given_WithUser_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
+            _sut.WithConnection(_connectionModel);
+
             var setup = _sut.User;
 
             //act && assert

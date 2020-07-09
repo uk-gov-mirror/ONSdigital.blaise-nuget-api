@@ -14,7 +14,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
     {
         private Mock<IRemoteDataServerFactory> _connectionFactoryMock;
         private Mock<ISurveyService> _surveyServiceMock;
-        private Mock<IConnectionExpiryService> _connectionExpiryServiceMock;
 
         private Mock<IRemoteDataServer> _remoteDataServerMock;
         private Mock<IDataLink4> _dataLinkMock;
@@ -52,13 +51,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
             _surveyServiceMock = new Mock<ISurveyService>();
             _surveyServiceMock.Setup(p => p.GetInstrumentId(_connectionModel, _instrumentName, _serverParkName)).Returns(_instrumentId);
 
-            _connectionExpiryServiceMock = new Mock<IConnectionExpiryService>();
-            _connectionExpiryServiceMock.Setup(c => c.ConnectionHasExpired()).Returns(false);
-
             _sut = new RemoteDataLinkProvider(
                 _connectionFactoryMock.Object,
-                _surveyServiceMock.Object,
-                _connectionExpiryServiceMock.Object);
+                _surveyServiceMock.Object);
         }
 
         [Test]
@@ -82,7 +77,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
             //arrange
             _surveyServiceMock.Setup(p => p.GetInstrumentId(_connectionModel, It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<Guid>());
             _remoteDataServerMock.Setup(r => r.GetDataLink(It.IsAny<Guid>(), It.IsAny<string>())).Returns(_dataLinkMock.Object);
-            _connectionExpiryServiceMock.Setup(c => c.ConnectionHasExpired()).Returns(true);
 
             //act
             _sut.GetDataLink(_connectionModel, _instrumentName, _serverParkName);

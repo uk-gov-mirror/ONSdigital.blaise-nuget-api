@@ -15,7 +15,8 @@ namespace Blaise.Nuget.Api.Providers
                 Password = ConfigurationManager.AppSettings["BlaiseServerPassword"],
                 Binding = ConfigurationManager.AppSettings["BlaiseServerBinding"],
                 Port = ConvertToInt(ConfigurationManager.AppSettings["BlaiseConnectionPort"]),
-                RemotePort = ConvertToInt(ConfigurationManager.AppSettings["BlaiseRemoteConnectionPort"])
+                RemotePort = ConvertToInt(ConfigurationManager.AppSettings["BlaiseRemoteConnectionPort"]),
+                ConnectionExpiresInMinutes = ConvertToInt(ConfigurationManager.AppSettings["ConnectionExpiresInMinutes"]),
             };
             return connectionModel;
         }
