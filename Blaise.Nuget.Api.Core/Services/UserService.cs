@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.ServerManager;
@@ -20,9 +21,9 @@ namespace Blaise.Nuget.Api.Core.Services
             _passwordService = passwordService;
         }
 
-        public void AddUser(string userName, string password, string role, IEnumerable<string> serverParkNames)
+        public void AddUser(ConnectionModel connectionModel, string userName, string password, string role, IEnumerable<string> serverParkNames)
         {
-            var connection = _connectedServerFactory.GetConnection();
+            var connection = _connectedServerFactory.GetConnection(connectionModel);
             var securePassword = _passwordService.CreateSecurePassword(password);
             var user = (IUser2)connection.AddUser(userName, securePassword);
 
@@ -32,9 +33,9 @@ namespace Blaise.Nuget.Api.Core.Services
             user.Save();
         }
 
-        public void EditUser(string userName, string role, IEnumerable<string> serverParkNames)
+        public void EditUser(ConnectionModel connectionModel, string userName, string role, IEnumerable<string> serverParkNames)
         {
-            var connection = _connectedServerFactory.GetConnection();
+            var connection = _connectedServerFactory.GetConnection(connectionModel);
             var user = (IUser2)connection.Users.GetItem(userName);
 
             user.ServerParks.Clear();
@@ -45,9 +46,9 @@ namespace Blaise.Nuget.Api.Core.Services
             user.Save();
         }
 
-        public void ChangePassword(string userName, string password)
+        public void ChangePassword(ConnectionModel connectionModel, string userName, string password)
         {
-            var connection = _connectedServerFactory.GetConnection();
+            var connection = _connectedServerFactory.GetConnection(connectionModel);
             var securePassword = _passwordService.CreateSecurePassword(password);
 
             var user = (IUser2)connection.Users.GetItem(userName);
@@ -56,16 +57,16 @@ namespace Blaise.Nuget.Api.Core.Services
             user.Save();
         }
 
-        public bool UserExists(string userName)
+        public bool UserExists(ConnectionModel connectionModel, string userName)
         {
-            var connection = _connectedServerFactory.GetConnection();
+            var connection = _connectedServerFactory.GetConnection(connectionModel);
 
             return connection.Users.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
         }
 
-        public void RemoveUser(string userName)
+        public void RemoveUser(ConnectionModel connectionModel, string userName)
         {
-            var connection = _connectedServerFactory.GetConnection();
+            var connection = _connectedServerFactory.GetConnection(connectionModel);
 
             connection.RemoveUser(userName);
         }

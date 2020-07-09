@@ -1,6 +1,4 @@
-﻿
-using Blaise.Nuget.Api.Contracts.Models;
-using Blaise.Nuget.Api.Core.Factories;
+﻿using Blaise.Nuget.Api.Core.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Mappers;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
@@ -10,7 +8,6 @@ using Blaise.Nuget.Api.Core.Providers;
 using Blaise.Nuget.Api.Core.Services;
 using Blaise.Nuget.Api.Interfaces;
 using Unity;
-using Unity.Injection;
 
 namespace Blaise.Nuget.Api.Providers
 {
@@ -18,7 +15,7 @@ namespace Blaise.Nuget.Api.Providers
     {
         private UnityContainer _unityContainer;
 
-        public void RegisterDependencies(ConnectionModel connectionModel)
+        public void RegisterDependencies()
         {
             _unityContainer = new UnityContainer();
 
@@ -32,17 +29,9 @@ namespace Blaise.Nuget.Api.Providers
             _unityContainer.RegisterType<IConnectionExpiryService, ConnectionExpiryService>();
 
             //factories
-            _unityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>(
-                new InjectionConstructor(
-                    connectionModel, 
-                    _unityContainer.Resolve<IPasswordService>(),
-                    _unityContainer.Resolve<IConnectionExpiryService>()));
+            _unityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>();
 
-            _unityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>(
-                new InjectionConstructor(
-                    connectionModel, 
-                    _unityContainer.Resolve<IPasswordService>(),
-                    _unityContainer.Resolve<IConnectionExpiryService>()));
+            _unityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>();
 
             //mappers
             _unityContainer.RegisterType<IDataMapperService, DataMapperService>();

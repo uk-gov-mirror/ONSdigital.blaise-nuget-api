@@ -20,7 +20,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Factories
             var blaiseApi = new BlaiseApi();
 
             //act
-            var result = blaiseApi.GetDataSet(instrumentName, serverPark);
+            var result = blaiseApi.GetDataSet(blaiseApi.GetDefaultConnectionModel(), instrumentName, serverPark);
 
             //assert
             Assert.IsNotNull(result);

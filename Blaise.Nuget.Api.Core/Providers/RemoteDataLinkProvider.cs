@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Core.Interfaces.Factories;
+﻿using Blaise.Nuget.Api.Contracts.Models;
+using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataLink;
@@ -28,7 +29,7 @@ namespace Blaise.Nuget.Api.Core.Providers
             _serverParkName = string.Empty;
         }
 
-        public IDataLink4 GetDataLink(string instrumentName, string serverParkName)
+        public IDataLink4 GetDataLink(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             if (_dataLink == null || instrumentName != _instrumentName || serverParkName != _serverParkName 
                 || _connectionExpiryService.ConnectionHasExpired())
@@ -36,8 +37,8 @@ namespace Blaise.Nuget.Api.Core.Providers
                 _instrumentName = instrumentName;
                 _serverParkName = serverParkName;
 
-                var instrumentId = _surveyService.GetInstrumentId(instrumentName, serverParkName);
-                var connection = _connectionFactory.GetConnection();
+                var instrumentId = _surveyService.GetInstrumentId(connectionModel, instrumentName, serverParkName);
+                var connection = _connectionFactory.GetConnection(connectionModel);
 
                 _dataLink = connection.GetDataLink(instrumentId, serverParkName);
                 _connectionExpiryService.ResetConnectionExpiryPeriod();

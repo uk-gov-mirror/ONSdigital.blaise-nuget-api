@@ -4,7 +4,6 @@ using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Interfaces;
-using Blaise.Nuget.Api.Providers;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.DataRecord;
@@ -86,7 +85,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
-            _dataServiceMock.Setup(d => d.GetDataRecord(It.IsAny<string>(), It.IsAny<string>(),
+            _dataServiceMock.Setup(d => d.GetDataRecord(It.IsAny<ConnectionModel>(),It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>())).Returns(dataRecordMock.Object);
 
             //act
@@ -95,11 +94,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
 
             //assert
             Assert.AreEqual(_sourceServerName, _sourceConnectionModel.ServerName);
-            _unityProviderMock.Verify(v => v.RegisterDependencies(_sourceConnectionModel), Times.Once);
-            _dataServiceMock.Verify(v => v.GetDataRecord(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);
-            _unityProviderMock.Verify(v => v.RegisterDependencies(_destinationConnectionModel), Times.Once);
+            _dataServiceMock.Verify(v => v.GetDataRecord(_sourceConnectionModel,_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);
             Assert.AreEqual(_destinationServerName, _destinationConnectionModel.ServerName);
-            _dataServiceMock.Verify(v => v.WriteDataRecord(dataRecordMock.Object, _destinationInstrumentName, _destinationServerParkName));
+            _dataServiceMock.Verify(v => v.WriteDataRecord(_destinationConnectionModel, dataRecordMock.Object, _destinationInstrumentName, _destinationServerParkName));
         }
 
         [Test]
@@ -214,7 +211,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
-            _dataServiceMock.Setup(d => d.GetDataRecord(It.IsAny<string>(), It.IsAny<string>(),
+            _dataServiceMock.Setup(d => d.GetDataRecord(It.IsAny<ConnectionModel>(), It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>())).Returns(dataRecordMock.Object);
 
             //act
@@ -222,12 +219,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 _destinationInstrumentName, _destinationServerParkName);
 
             //assert
-            _unityProviderMock.Verify(v => v.RegisterDependencies(_sourceConnectionModel), Times.Exactly(2));
-            _dataServiceMock.Verify(v => v.GetDataRecord(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);
+            _dataServiceMock.Verify(v => v.GetDataRecord(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);
             Assert.AreEqual(_destinationConnectionModel.ServerName, _destinationConnectionModel.ServerName);
-            _unityProviderMock.Verify(v => v.RegisterDependencies(_destinationConnectionModel));
-            _dataServiceMock.Verify(v => v.WriteDataRecord(dataRecordMock.Object, _destinationInstrumentName, _destinationServerParkName));
-            _dataServiceMock.Verify(v => v.RemoveDataRecord(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);
+            _dataServiceMock.Verify(v => v.WriteDataRecord(_destinationConnectionModel, dataRecordMock.Object, _destinationInstrumentName, _destinationServerParkName));
+            _dataServiceMock.Verify(v => v.RemoveDataRecord(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);
         }
 
         [Test]
@@ -342,20 +337,26 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         [Test]
         public void Given_Valid_Arguments_When_I_Call_RemoveCase_The_Correct_Services_Are_Called()
         {
-            //arrange
-
             //act
-            _sut.RemoveCase(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName);
+            _sut.RemoveCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.RemoveDataRecord(_primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);
+            _dataServiceMock.Verify(v => v.RemoveDataRecord(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_Null_ConnectionModel_When_I_Call_RemoveCase_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveCase(null, _primaryKeyValue, _sourceInstrumentName, _sourceServerParkName));
+            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
         }
 
         [Test]
         public void Given_An_Empty_PrimaryKeyValue_When_I_Call_RemoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.RemoveCase(string.Empty, _sourceInstrumentName, _sourceServerParkName));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.RemoveCase(_sourceConnectionModel, string.Empty, _sourceInstrumentName, _sourceServerParkName));
             Assert.AreEqual("A value for the argument 'primaryKeyValue' must be supplied", exception.Message);
         }
 
@@ -363,7 +364,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_PrimaryKeyValue_When_I_Call_RemoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveCase(null, _sourceInstrumentName, _sourceServerParkName));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveCase(_sourceConnectionModel, null, _sourceInstrumentName, _sourceServerParkName));
             Assert.AreEqual("primaryKeyValue", exception.ParamName);
         }
 
@@ -371,7 +372,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_InstrumentName_When_I_Call_RemoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.RemoveCase (_primaryKeyValue, string.Empty, _sourceServerParkName));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.RemoveCase (_sourceConnectionModel, _primaryKeyValue, string.Empty, _sourceServerParkName));
             Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
         }
 
@@ -379,7 +380,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_InstrumentName_When_I_Call_RemoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveCase(_primaryKeyValue, null, _sourceServerParkName));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveCase(_sourceConnectionModel, _primaryKeyValue, null, _sourceServerParkName));
             Assert.AreEqual("instrumentName", exception.ParamName);
         }
 
@@ -387,7 +388,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_ServerParkName_When_I_Call_RemoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.RemoveCase(_primaryKeyValue, _sourceInstrumentName, string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.RemoveCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, string.Empty));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
@@ -395,7 +396,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_ServerParkName_When_I_Call_RemoveCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveCase(_primaryKeyValue, _sourceInstrumentName, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveCase(_sourceConnectionModel, _primaryKeyValue, _sourceInstrumentName, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
     }

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Interfaces;
+using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Interfaces;
-using Blaise.Nuget.Api.Providers;
 using Moq;
 using NUnit.Framework;
 
@@ -20,7 +20,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         private Mock<IIocProvider> _unityProviderMock;
         private Mock<IConfigurationProvider> _configurationProviderMock;
 
-
+        private readonly ConnectionModel _connectionModel;
         private readonly string _userName;
         private readonly string _password;
 
@@ -28,6 +28,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
 
         public UserTests()
         {
+            _connectionModel = new ConnectionModel();
             _userName = "User1";
             _password = "Password1";
         }
@@ -65,10 +66,27 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             const string role = "King";
 
             //act
-            _sut.AddUser(_userName, _password, role, serverParkNameList);
+            _sut.AddUser(_connectionModel,_userName, _password, role, serverParkNameList);
 
             //assert
-            _userServiceMock.Verify(v => v.AddUser(_userName, _password, role, serverParkNameList), Times.Once);
+            _userServiceMock.Verify(v => v.AddUser(_connectionModel, _userName, _password, role, serverParkNameList), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_null_ConnectionModel_When_I_Call_AddUser_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var serverParkNameList = new List<string>
+            {
+                "ServerPark1",
+                "ServerPark2",
+            };
+
+            const string role = "King";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(null, _userName, _password, role, serverParkNameList));
+            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
         }
 
         [Test]
@@ -84,12 +102,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(string.Empty, _password, role, serverParkNameList));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(_connectionModel, string.Empty, _password, role, serverParkNameList));
             Assert.AreEqual("A value for the argument 'userName' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_null_UserName_When_I_Call_AddUser_Then_An_ArgumentException_Is_Thrown()
+        public void Given_A_null_UserName_When_I_Call_AddUser_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
             var serverParkNameList = new List<string>
@@ -101,7 +119,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(null, _password, role, serverParkNameList));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(_connectionModel, null, _password, role, serverParkNameList));
             Assert.AreEqual("userName", exception.ParamName);
         }
 
@@ -118,7 +136,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(_userName, string.Empty, role, serverParkNameList));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(_connectionModel, _userName, string.Empty, role, serverParkNameList));
             Assert.AreEqual("A value for the argument 'password' must be supplied", exception.Message);
         }
 
@@ -135,7 +153,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(_userName, null, role, serverParkNameList));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(_connectionModel, _userName, null, role, serverParkNameList));
             Assert.AreEqual("password", exception.ParamName);
         }
 
@@ -150,7 +168,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             };
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(_userName, _password, string.Empty, serverParkNameList));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(_connectionModel, _userName, _password, string.Empty, serverParkNameList));
             Assert.AreEqual("A value for the argument 'role' must be supplied", exception.Message);
         }
 
@@ -165,7 +183,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             };
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(_userName, _password, null, serverParkNameList));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(_connectionModel, _userName, _password, null, serverParkNameList));
             Assert.AreEqual("role", exception.ParamName);
         }
 
@@ -178,7 +196,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(_userName, _password, role, serverParkNameList));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(_connectionModel, _userName, _password, role, serverParkNameList));
             Assert.AreEqual("A value for the argument 'serverParkNames' must be supplied", exception.Message);
         }
 
@@ -189,7 +207,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(_userName, _password, role, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(_connectionModel, _userName, _password, role, null));
             Assert.AreEqual("serverParkNames", exception.ParamName);
         }
 
@@ -206,10 +224,28 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             const string role = "King";
 
             //act
-            _sut.EditUser(_userName, role, serverParkNameList);
+            _sut.EditUser(_connectionModel, _userName, role, serverParkNameList);
 
             //assert
-            _userServiceMock.Verify(v => v.EditUser(_userName, role, serverParkNameList), Times.Once);
+            _userServiceMock.Verify(v => v.EditUser(_connectionModel, _userName, role, serverParkNameList), Times.Once);
+        }
+
+
+        [Test]
+        public void Given_A_null_connectionModel_When_I_Call_EditUser_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var serverParkNameList = new List<string>
+            {
+                "ServerPark1",
+                "ServerPark2",
+            };
+
+            const string role = "King";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.EditUser(null, _userName, role, serverParkNameList));
+            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
         }
 
         [Test]
@@ -225,12 +261,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.EditUser(string.Empty, role, serverParkNameList));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.EditUser(_connectionModel, string.Empty, role, serverParkNameList));
             Assert.AreEqual("A value for the argument 'userName' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_null_UserName_When_I_Call_EditUser_Then_An_ArgumentException_Is_Thrown()
+        public void Given_A_null_UserName_When_I_Call_EditUser_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
             var serverParkNameList = new List<string>
@@ -242,7 +278,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.EditUser(null, role, serverParkNameList));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.EditUser(_connectionModel, null, role, serverParkNameList));
             Assert.AreEqual("userName", exception.ParamName);
         }
 
@@ -257,12 +293,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             };
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.EditUser(_userName, string.Empty, serverParkNameList));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.EditUser(_connectionModel, _userName, string.Empty, serverParkNameList));
             Assert.AreEqual("A value for the argument 'role' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_null_Role_When_I_Call_EditUser_Then_An_ArgumentException_Is_Thrown()
+        public void Given_A_null_Role_When_I_Call_EditUser_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
             var serverParkNameList = new List<string>
@@ -272,7 +308,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             };
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.EditUser(_userName, null, serverParkNameList));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.EditUser(_connectionModel, _userName, null, serverParkNameList));
             Assert.AreEqual("role", exception.ParamName);
         }
 
@@ -285,44 +321,51 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.EditUser(_userName, role, serverParkNameList));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.EditUser(_connectionModel, _userName, role, serverParkNameList));
             Assert.AreEqual("A value for the argument 'serverParkNames' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_null_ServerParkList_When_I_Call_EditUser_Then_An_ArgumentException_Is_Thrown()
+        public void Given_A_null_ServerParkList_When_I_Call_EditUser_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.EditUser(_userName, role, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.EditUser(_connectionModel, _userName, role, null));
             Assert.AreEqual("serverParkNames", exception.ParamName);
         }
         [Test]
         public void When_I_Call_ChangePassword_Then_The_Correct_Service_Method_Is_Called()
         {
             //act
-            _sut.ChangePassword(_userName, _password);
+            _sut.ChangePassword(_connectionModel, _userName, _password);
 
             //assert
-            _userServiceMock.Verify(v => v.ChangePassword(_userName, _password), Times.Once);
+            _userServiceMock.Verify(v => v.ChangePassword(_connectionModel, _userName, _password), Times.Once);
         }
 
+        [Test]
+        public void Given_A_null_ConnectionModel_When_I_Call_ChangePassword_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ChangePassword(null, _userName, _password));
+            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
+        }
 
         [Test]
         public void Given_An_Empty_UserName_When_I_Call_ChangePassword_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.ChangePassword(string.Empty, _password));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.ChangePassword(_connectionModel, string.Empty, _password));
             Assert.AreEqual("A value for the argument 'userName' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_null_UserName_When_I_Call_ChangePassword_Then_An_ArgumentException_Is_Thrown()
+        public void Given_A_null_UserName_When_I_Call_ChangePassword_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ChangePassword(null, _password));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ChangePassword(_connectionModel, null, _password));
             Assert.AreEqual("userName", exception.ParamName);
         }
 
@@ -330,7 +373,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_Password_When_I_Call_ChangePassword_Then_An_ArgumentException_Is_Thrown()
         {
              //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.ChangePassword(_userName, string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.ChangePassword(_connectionModel, _userName, string.Empty));
             Assert.AreEqual("A value for the argument 'password' must be supplied", exception.Message);
         }
 
@@ -338,7 +381,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_null_Password_When_I_Call_ChangePassword_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ChangePassword(_userName, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ChangePassword(_connectionModel, _userName, null));
             Assert.AreEqual("password", exception.ParamName);
         }
 
@@ -346,10 +389,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void When_I_Call_UserExists_Then_The_Correct_Service_Method_Is_Called()
         {
             //act
-            _sut.UserExists(_userName);
+            _sut.UserExists(_connectionModel, _userName);
 
             //assert
-            _userServiceMock.Verify(v => v.UserExists(_userName), Times.Once);
+            _userServiceMock.Verify(v => v.UserExists(_connectionModel, _userName), Times.Once);
         }
 
         [TestCase(true)]
@@ -357,28 +400,35 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void When_I_Call_UserExists_Then_The_Expected_Result_Is_Returned(bool userExists)
         {
             //arrange
-            _userServiceMock.Setup(u => u.UserExists(_userName)).Returns(userExists);
+            _userServiceMock.Setup(u => u.UserExists(_connectionModel, _userName)).Returns(userExists);
 
             //act
-            var result = _sut.UserExists(_userName);
+            var result = _sut.UserExists(_connectionModel, _userName);
 
             //assert
            Assert.AreEqual(userExists, result);
         }
 
         [Test]
+        public void Given_A_null_ConnectionModel_When_I_Call_UserExists_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UserExists(null, _userName));
+            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
+        }
+        [Test]
         public void Given_An_Empty_UserName_When_I_Call_UserExists_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.UserExists(string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.UserExists(_connectionModel, string.Empty));
             Assert.AreEqual("A value for the argument 'userName' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_null_UserName_When_I_Call_UserExists_Then_An_ArgumentException_Is_Thrown()
+        public void Given_A_null_UserName_When_I_Call_UserExists_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UserExists(null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UserExists(_connectionModel, null));
             Assert.AreEqual("userName", exception.ParamName);
         }
 
@@ -386,25 +436,33 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void When_I_Call_RemoveUser_Then_The_Correct_Service_Method_Is_Called()
         {
             //act
-            _sut.RemoveUser(_userName);
+            _sut.RemoveUser(_connectionModel, _userName);
 
             //assert
-            _userServiceMock.Verify(v => v.RemoveUser(_userName), Times.Once);
+            _userServiceMock.Verify(v => v.RemoveUser(_connectionModel, _userName), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_null_ConnectionModel_When_I_Call_RemoveUser_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveUser(null, _userName));
+            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
         }
 
         [Test]
         public void Given_An_Empty_UserName_When_I_Call_RemoveUser_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.RemoveUser(string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.RemoveUser(_connectionModel, string.Empty));
             Assert.AreEqual("A value for the argument 'userName' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_null_UserName_When_I_Call_RemoveUser_Then_An_ArgumentException_Is_Thrown()
+        public void Given_A_null_UserName_When_I_Call_RemoveUser_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveUser(null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveUser(_connectionModel,null));
             Assert.AreEqual("userName", exception.ParamName);
         }
     }

@@ -28,16 +28,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_A_ConnectionModel_When_I_Call_WithConnection_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.WithConnection(_connectionModel);
-
-            //assert
-            _blaiseApiMock.Verify(v => v.UseConnection(_connectionModel), Times.Once);
-        }
-
-        [Test]
         public void Given_I_Call_GetDefaultConnectionModel_The_Correct_Model_Is_Returned()
         {
             //act

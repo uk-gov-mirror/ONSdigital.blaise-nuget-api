@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Models;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Core.Interfaces.Services
@@ -7,18 +8,18 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
     public interface ISurveyService
     {
 
-        IEnumerable<string> GetSurveyNames(string serverParkName);
+        IEnumerable<string> GetSurveyNames(ConnectionModel connectionModel, string serverParkName);
 
-        IEnumerable<ISurvey> GetSurveys(string serverParkName);
+        IEnumerable<ISurvey> GetSurveys(ConnectionModel connectionModel, string serverParkName);
 
-        ISurvey GetSurvey(string instrumentName, string serverParkName);
+        ISurvey GetSurvey(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
-        IEnumerable<ISurvey> GetAllSurveys();
+        IEnumerable<ISurvey> GetAllSurveys(ConnectionModel connectionModel);
 
-        Guid GetInstrumentId(string instrumentName, string serverParkName);
+        Guid GetInstrumentId(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
-        string GetMetaFileName(string instrumentName, string serverParkName);
+        string GetMetaFileName(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
-        string GetDataFileName(string instrumentName, string serverParkName);
+        string GetDataFileName(ConnectionModel connectionModel, string instrumentName, string serverParkName);
     }
 }

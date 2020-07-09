@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Core.Interfaces.Services;
+﻿using Blaise.Nuget.Api.Contracts.Models;
+using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 
@@ -20,9 +21,9 @@ namespace Blaise.Nuget.Api.Core.Services
             _dataModelService = dataModelService;
         }
 
-        public bool CompletedFieldExists(string instrumentName, string serverParkName)
+        public bool CompletedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            var dataModel = _dataModelService.GetDataModel(instrumentName, serverParkName);
+            var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
             var definitionScope = (IDefinitionScope2)dataModel;
 
             return definitionScope.FieldExists(CompletedFieldName);
@@ -35,17 +36,17 @@ namespace Blaise.Nuget.Api.Core.Services
             return completedField.DataValue.IntegerValue == 1;
         }
 
-        public void MarkCaseAsComplete(IDataRecord dataRecord, string instrumentName, string serverParkName)
+        public void MarkCaseAsComplete(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
             var completedField = GetField(dataRecord, CompletedFieldName);
             completedField.DataValue.Assign("1");
 
-            _dataRecordService.WriteDataRecord(dataRecord, instrumentName, serverParkName);
+            _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
         }
 
-        public bool ProcessedFieldExists(string instrumentName, string serverParkName)
+        public bool ProcessedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            var dataModel = _dataModelService.GetDataModel(instrumentName, serverParkName);
+            var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
             var definitionScope = (IDefinitionScope2)dataModel;
 
             return definitionScope.FieldExists(ProcessedFieldName);
@@ -58,13 +59,13 @@ namespace Blaise.Nuget.Api.Core.Services
             return processedField.DataValue.EnumerationValue == 1;
         }
 
-        public void MarkCaseAsProcessed(IDataRecord dataRecord, string instrumentName, string serverParkName)
+        public void MarkCaseAsProcessed(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
             var processedField = GetField(dataRecord, ProcessedFieldName);
 
             processedField.DataValue.Assign("1");
 
-            _dataRecordService.WriteDataRecord(dataRecord, instrumentName, serverParkName);
+            _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
         }
 
         private static IField GetField(IDataRecord dataRecord, string fieldName)

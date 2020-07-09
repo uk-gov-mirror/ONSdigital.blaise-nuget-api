@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Core.Interfaces.Providers;
+﻿using Blaise.Nuget.Api.Contracts.Models;
+using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
@@ -15,9 +16,9 @@ namespace Blaise.Nuget.Api.Core.Services
             _remoteDataLinkProvider = remoteDataLinkProvider;
         }
 
-        public bool KeyExists(IKey key, string instrumentName, string serverParkName)
+        public bool KeyExists(ConnectionModel connectionModel, IKey key, string instrumentName, string serverParkName)
         {
-            var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
+            var dataLink = _remoteDataLinkProvider.GetDataLink(connectionModel, instrumentName, serverParkName);
 
             return dataLink.KeyExists(key);
         }

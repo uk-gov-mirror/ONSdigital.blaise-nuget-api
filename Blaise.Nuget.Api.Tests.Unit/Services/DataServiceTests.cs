@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Mappers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Core.Services;
@@ -22,6 +23,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<IKey> _keyMock;
         private Mock<IDataRecord> _dataRecordMock;
 
+        private readonly ConnectionModel _connectionModel;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
         private readonly string _filePath;
@@ -32,6 +34,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
         public DataServiceTests()
         {
+            _connectionModel = new ConnectionModel();
             _instrumentName = "TestInstrumentName";
             _serverParkName = "TestServerParkName";
             _filePath = "c:\\filePath";
@@ -47,11 +50,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataRecordMock = new Mock<IDataRecord>();
 
             _dataModelServiceMock = new Mock<IDataModelService>();
-            _dataModelServiceMock.Setup(d => d.GetDataModel(_instrumentName, _serverParkName)).Returns(_dataModelMock.Object);
-            _dataModelServiceMock.Setup(d => d.GetSurveyType(_instrumentName, _serverParkName)).Returns(_surveyType);
+            _dataModelServiceMock.Setup(d => d.GetDataModel(_connectionModel, _instrumentName, _serverParkName)).Returns(_dataModelMock.Object);
+            _dataModelServiceMock.Setup(d => d.GetSurveyType(_connectionModel, _instrumentName, _serverParkName)).Returns(_surveyType);
 
             _keyServiceMock = new Mock<IKeyService>();
-            _keyServiceMock.Setup(d => d.KeyExists(_keyMock.Object, _instrumentName, _serverParkName)).Returns(true);
+            _keyServiceMock.Setup(d => d.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName)).Returns(true);
             _keyServiceMock.Setup(d => d.GetKey(_dataModelMock.Object, _keyName)).Returns(_keyMock.Object);
             _keyServiceMock.Setup(d => d.GetPrimaryKey(_dataModelMock.Object)).Returns(_keyMock.Object);
 
@@ -74,7 +77,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataModel_Then_A_DataModel_Is_Returned()
         {
             //act
-            var result = _sut.GetDataModel(_instrumentName, _serverParkName);
+            var result = _sut.GetDataModel(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -85,7 +88,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataModel_Then_The_Correct_DataModel_Is_Returned()
         {
             //act
-            var result = _sut.GetDataModel(_instrumentName, _serverParkName);
+            var result = _sut.GetDataModel(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             Assert.AreEqual(_dataModelMock.Object, result);
@@ -95,17 +98,17 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataModel_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.GetDataModel(_instrumentName, _serverParkName);
+            _sut.GetDataModel(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
-            _dataModelServiceMock.Verify(v => v.GetDataModel(_instrumentName, _serverParkName), Times.Once);
+            _dataModelServiceMock.Verify(v => v.GetDataModel(_connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
         public void Given_I_Call_GetSurveyType_Then_A_SurveyType_Is_Returned()
         {
             //act
-            var result = _sut.GetSurveyType(_instrumentName, _serverParkName);
+            var result = _sut.GetSurveyType(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -116,7 +119,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetSurveyType_Then_The_Correct_SurveyType_Is_Returned()
         {
             //act
-            var result = _sut.GetSurveyType(_instrumentName, _serverParkName);
+            var result = _sut.GetSurveyType(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             Assert.AreEqual(_surveyType, result);
@@ -126,10 +129,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetSurveyType_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.GetSurveyType(_instrumentName, _serverParkName);
+            _sut.GetSurveyType(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
-            _dataModelServiceMock.Verify(v => v.GetSurveyType(_instrumentName, _serverParkName), Times.Once);
+            _dataModelServiceMock.Verify(v => v.GetSurveyType(_connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -198,7 +201,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_KeyExists_Then_A_Bool_Is_Returned()
         {
             //act
-            var result = _sut.KeyExists(_keyMock.Object, _instrumentName, _serverParkName);
+            var result = _sut.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -210,10 +213,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_KeyExists_Then_A_The_Correct_Value_Is_Returned(bool keyExists)
         {
             //arrange 
-            _keyServiceMock.Setup(d => d.KeyExists(_keyMock.Object, _instrumentName, _serverParkName)).Returns(keyExists);
+            _keyServiceMock.Setup(d => d.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName)).Returns(keyExists);
 
             //act
-            var result = _sut.KeyExists(_keyMock.Object, _instrumentName, _serverParkName);
+            var result = _sut.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
             Assert.AreEqual(keyExists, result);
@@ -223,10 +226,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_KeyExists_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.KeyExists(_keyMock.Object, _instrumentName, _serverParkName);
+            _sut.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
-            _keyServiceMock.Verify(v => v.KeyExists(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);
+            _keyServiceMock.Verify(v => v.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -273,10 +276,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataSet_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.GetDataSet(_instrumentName, _serverParkName);
+            _sut.GetDataSet(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
-            _dataRecordServiceMock.Verify(v => v.GetDataSet(_instrumentName, _serverParkName), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.GetDataSet(_connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -324,20 +327,20 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_Key_And_An_InstrumentName_And_ServerParkName_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName);
+            _sut.GetDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName);
 
             //assert
-            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
         public void Given_A_KeyValue_And_An_InstrumentName_And_ServerParkName_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.GetDataRecord(_keyName, _instrumentName, _serverParkName);
+            _sut.GetDataRecord(_connectionModel, _keyName, _instrumentName, _serverParkName);
 
             //assert
-            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -354,10 +357,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_An_InstrumentName_And_ServerParkName_When_I_Call_WriteDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.WriteDataRecord(_dataRecordMock.Object, _instrumentName, _serverParkName);
+            _sut.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName);
 
             //assert
-            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -374,10 +377,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_Valid_Arguments_When_I_Call_CompletedFieldExists_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.CompletedFieldExists(_instrumentName, _serverParkName);
+            _sut.CompletedFieldExists(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
-            _fieldServiceMock.Verify(v => v.CompletedFieldExists(_instrumentName, _serverParkName), Times.Once);
+            _fieldServiceMock.Verify(v => v.CompletedFieldExists(_connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
         [TestCase(true)]
@@ -385,10 +388,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_Valid_Arguments_When_I_Call_CompletedFieldExists_Then_The_Correct_Value_Is_Returned(bool fieldExists)
         {
             //arrange
-            _fieldServiceMock.Setup(f => f.CompletedFieldExists(It.IsAny<string>(), It.IsAny<string>())).Returns(fieldExists);
+            _fieldServiceMock.Setup(f => f.CompletedFieldExists(_connectionModel, It.IsAny<string>(), It.IsAny<string>())).Returns(fieldExists);
 
             //act
-            var result = _sut.CompletedFieldExists(_instrumentName, _serverParkName);
+            var result = _sut.CompletedFieldExists(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             Assert.AreEqual(fieldExists, result);
@@ -422,20 +425,20 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_Valid_Arguments_When_I_Call_MarkCaseAsComplete_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.MarkCaseAsComplete(_dataRecordMock.Object, _instrumentName, _serverParkName);
+            _sut.MarkCaseAsComplete(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName);
 
             //assert
-            _fieldServiceMock.Verify(v => v.MarkCaseAsComplete(_dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
+            _fieldServiceMock.Verify(v => v.MarkCaseAsComplete(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
         public void Given_Valid_Arguments_When_I_Call_ProcessedFieldExists_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.ProcessedFieldExists(_instrumentName, _serverParkName);
+            _sut.ProcessedFieldExists(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
-            _fieldServiceMock.Verify(v => v.ProcessedFieldExists(_instrumentName, _serverParkName), Times.Once);
+            _fieldServiceMock.Verify(v => v.ProcessedFieldExists(_connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
         [TestCase(true)]
@@ -443,10 +446,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_Valid_Arguments_When_I_Call_ProcessedFieldExists_Then_The_Correct_Value_Is_Returned(bool fieldExists)
         {
             //arrange
-            _fieldServiceMock.Setup(f => f.ProcessedFieldExists(It.IsAny<string>(), It.IsAny<string>())).Returns(fieldExists);
+            _fieldServiceMock.Setup(f => f.ProcessedFieldExists(_connectionModel, It.IsAny<string>(), It.IsAny<string>())).Returns(fieldExists);
 
             //act
-            var result = _sut.ProcessedFieldExists(_instrumentName, _serverParkName);
+            var result = _sut.ProcessedFieldExists(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             Assert.AreEqual(fieldExists, result);
@@ -480,10 +483,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_Valid_Arguments_When_I_Call_MarkCaseAsProcessed_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.MarkCaseAsProcessed(_dataRecordMock.Object, _instrumentName, _serverParkName);
+            _sut.MarkCaseAsProcessed(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName);
 
             //assert
-            _fieldServiceMock.Verify(v => v.MarkCaseAsProcessed(_dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
+            _fieldServiceMock.Verify(v => v.MarkCaseAsProcessed(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -493,13 +496,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var primaryKeyValue = "Key1";
 
             //act
-            _sut.CaseExists(primaryKeyValue, _instrumentName, _serverParkName);
+            _sut.CaseExists(_connectionModel, primaryKeyValue, _instrumentName, _serverParkName);
 
             //assert
-            _dataModelServiceMock.Verify(v => v.GetDataModel(_instrumentName, _serverParkName), Times.Once);
+            _dataModelServiceMock.Verify(v => v.GetDataModel(_connectionModel, _instrumentName, _serverParkName), Times.Once);
             _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataModelMock.Object), Times.Once);
             _keyServiceMock.Verify(v => v.AssignPrimaryKeyValue(_keyMock.Object, primaryKeyValue), Times.Once);
-            _keyServiceMock.Verify(v => v.KeyExists(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);
+            _keyServiceMock.Verify(v => v.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
         [TestCase(true)]
@@ -508,11 +511,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         {
             //arrange
             var primaryKeyValue = "Key1";
-            _keyServiceMock.Setup(k => k.KeyExists(_keyMock.Object, _instrumentName, _serverParkName))
+            _keyServiceMock.Setup(k => k.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName))
                 .Returns(caseExists);
 
             //act
-            var result = _sut.CaseExists(primaryKeyValue, _instrumentName, _serverParkName);
+            var result = _sut.CaseExists(_connectionModel, primaryKeyValue, _instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -531,14 +534,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
                 .Returns(_dataRecordMock.Object);
 
             //act
-            _sut.CreateNewDataRecord(primaryKeyValue, fieldData, _instrumentName, _serverParkName);
+            _sut.CreateNewDataRecord(_connectionModel, primaryKeyValue, fieldData, _instrumentName, _serverParkName);
 
             //assert
-            _dataModelServiceMock.Verify(v => v.GetDataModel(_instrumentName, _serverParkName), Times.Once);
+            _dataModelServiceMock.Verify(v => v.GetDataModel(_connectionModel, _instrumentName, _serverParkName), Times.Once);
             _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataModelMock.Object), Times.Once);
             _dataRecordServiceMock.Verify(v => v.GetDataRecord(_dataModelMock.Object), Times.Once);
             _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, _dataModelMock.Object, _keyMock.Object, primaryKeyValue, fieldData), Times.Once);
-            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -551,21 +554,21 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
                     It.IsAny<Dictionary<string, string>>())).Returns(_dataRecordMock.Object);
 
             //act
-            _sut.UpdateDataRecord(_dataRecordMock.Object, fieldData, _instrumentName, _serverParkName);
+            _sut.UpdateDataRecord(_connectionModel, _dataRecordMock.Object, fieldData, _instrumentName, _serverParkName);
 
             //assert
             _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, fieldData), Times.Once);
-            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
         public void Given_A_KeyValue_And_An_InstrumentName_And_ServerParkName_When_I_Call_RemoveDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.RemoveDataRecord(_keyName, _instrumentName, _serverParkName);
+            _sut.RemoveDataRecord(_connectionModel, _keyName, _instrumentName, _serverParkName);
 
             //assert
-            _dataRecordServiceMock.Verify(v => v.DeleteDataRecord(_keyMock.Object, _instrumentName, _serverParkName), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.DeleteDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
     }
 }

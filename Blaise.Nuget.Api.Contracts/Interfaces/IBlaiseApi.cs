@@ -14,78 +14,76 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
     {
         ConnectionModel GetDefaultConnectionModel();
 
-        void UseConnection(ConnectionModel connectionModel);
+        IEnumerable<string> GetServerParkNames(ConnectionModel connectionModel);
 
-        IEnumerable<string> GetServerParkNames();
+        IEnumerable<string> GetSurveyNames(ConnectionModel connectionModel, string serverParkName);
 
-        IEnumerable<string> GetSurveyNames(string serverParkName);
+        IEnumerable<ISurvey> GetSurveys(ConnectionModel connectionModel, string serverParkName);
 
-        IEnumerable<ISurvey> GetSurveys(string serverParkName);
+        IEnumerable<ISurvey> GetAllSurveys(ConnectionModel connectionModel);
 
-        IEnumerable<ISurvey> GetAllSurveys();
+        bool ServerParkExists(ConnectionModel connectionModel, string serverParkName);
 
-        bool ServerParkExists(string serverParkName);
+        Guid GetInstrumentId(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
-        Guid GetInstrumentId(string instrumentName, string serverParkName);
+        IDatamodel GetDataModel(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
-        IDatamodel GetDataModel(string instrumentName, string serverParkName);
-
-        SurveyType GetSurveyType(string instrumentName, string serverParkName);
+        SurveyType GetSurveyType(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         IKey GetKey(IDatamodel dataModel, string keyName);
 
         IKey GetPrimaryKey(IDatamodel dataModel);
 
-        bool KeyExists(IKey key, string instrumentName, string serverParkName);
+        bool KeyExists(ConnectionModel connectionModel, IKey key, string instrumentName, string serverParkName);
 
-        bool CaseExists(string primaryKeyValue, string instrumentName, string serverParkName);
+        bool CaseExists(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName);
 
         string GetPrimaryKeyValue(IDataRecord dataRecord);
 
         void AssignPrimaryKeyValue(IKey key, string primaryKeyValue);
 
-        IDataSet GetDataSet(string instrumentName, string serverParkName);
+        IDataSet GetDataSet(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         IDataSet GetDataSet(string filePath);
 
         IDataRecord GetDataRecord(IDatamodel dataModel);
 
-        IDataRecord GetDataRecord(IKey key, string instrumentName, string serverParkName);
+        IDataRecord GetDataRecord(ConnectionModel connectionModel, IKey key, string instrumentName, string serverParkName);
 
         IDataRecord GetDataRecord(IKey key, string filePath);
 
-        IDataRecord GetDataRecord(string primaryKeyValue, string instrumentName, string serverParkName);
+        IDataRecord GetDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName);
 
-        void WriteDataRecord(IDataRecord dataRecord, string instrumentName, string serverParkName);
+        void WriteDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
 
         void WriteDataRecord(IDataRecord dataRecord, string filePath);
 
-        void CreateNewDataRecord(string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName,
+        void CreateNewDataRecord(ConnectionModel connectionModel, string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName,
             string serverParkName);
 
-        void UpdateDataRecord(IDataRecord dataRecord, Dictionary<string, string> fieldData, string instrumentName,
+        void UpdateDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, Dictionary<string, string> fieldData, string instrumentName,
             string serverParkName);
 
-        bool CompletedFieldExists(string instrumentName, string serverParkName);
+        bool CompletedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         bool CaseHasBeenCompleted(IDataRecord dataRecord);
 
-        void MarkCaseAsComplete(IDataRecord dataRecord, string instrumentName, string serverParkName);
+        void MarkCaseAsComplete(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
 
-        bool ProcessedFieldExists(string instrumentName, string serverParkName);
+        bool ProcessedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName);
         bool CaseHasBeenProcessed(IDataRecord dataRecord);
 
-        void MarkCaseAsProcessed(IDataRecord dataRecord, string instrumentName, string serverParkName);
+        void MarkCaseAsProcessed(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
 
-        void AddUser(string userName, string password, string role, IList<string> serverParkNames);
+        void AddUser(ConnectionModel connectionModel, string userName, string password, string role, IList<string> serverParkNames);
 
-        void EditUser(string userName, string role, IList<string> serverParkNames);
+        void EditUser(ConnectionModel connectionModel, string userName, string role, IList<string> serverParkNames);
 
-        void ChangePassword(string userName, string password);
+        void ChangePassword(ConnectionModel connectionModel, string userName, string password);
 
-        bool UserExists(string userName);
+        bool UserExists(ConnectionModel connectionModel, string userName);
 
-        void RemoveUser(string userName);
+        void RemoveUser(ConnectionModel connectionModel, string userName);
 
         void CopyCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName,
             string sourceServerParkName, string destinationFilePath, string destinationInstrumentName);
@@ -99,7 +97,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         void MoveCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
             ConnectionModel destinationConnectionModel, string destinationInstrumentName, string destinationServerParkName);
 
-        void RemoveCase(string primaryKeyValue, string instrumentName, string serverParkName);
-        void BackupSurvey(string serverParkName, string instrumentName, string destinationFilePath);
+        void RemoveCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string instrumentName, string serverParkName);
+        void BackupSurvey(ConnectionModel connectionModel, string serverParkName, string instrumentName, string destinationFilePath);
     }
 }

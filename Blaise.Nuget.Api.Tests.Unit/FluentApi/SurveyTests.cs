@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Interfaces;
+using Blaise.Nuget.Api.Contracts.Models;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.ServerManager;
@@ -13,6 +14,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
     {
         private Mock<IBlaiseApi> _blaiseApiMock;
 
+        private readonly ConnectionModel _connectionModel;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
 
@@ -20,6 +22,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         public SurveyTests()
         {
+            _connectionModel = new ConnectionModel();
             _instrumentName = "Instrument1";
             _serverParkName = "Park1";
         }
@@ -49,13 +52,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void When_I_Call_Surveys_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            _blaiseApiMock.Setup(p => p.GetAllSurveys()).Returns(It.IsAny<List<ISurvey>>());
+            _blaiseApiMock.Setup(p => p.GetAllSurveys(_connectionModel)).Returns(It.IsAny<List<ISurvey>>());
+
+            _sut.WithConnection(_connectionModel);
 
             //act
             var sutSurveys = _sut.Surveys;
 
             //assert
-            _blaiseApiMock.Verify(v => v.GetAllSurveys(), Times.Once);
+            _blaiseApiMock.Verify(v => v.GetAllSurveys(_connectionModel), Times.Once);
         }
 
         [Test]
@@ -68,7 +73,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             var surveys = new List<ISurvey> { survey1Mock.Object, survey2Mock.Object, survey3Mock.Object };
 
-            _blaiseApiMock.Setup(p => p.GetAllSurveys()).Returns(surveys);
+            _blaiseApiMock.Setup(p => p.GetAllSurveys(_connectionModel)).Returns(surveys);
+
+            _sut.WithConnection(_connectionModel);
 
             //act
             var result = _sut.Surveys.ToList();
@@ -83,18 +90,53 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Surveys_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            _blaiseApiMock.Setup(p => p.GetAllSurveys(_connectionModel)).Returns(It.IsAny<List<ISurvey>>());
+
+            // _sut.WithConnection(_connectionModel);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutSurveys = _sut.Surveys;
+            });
+
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+        }
+
+        [Test]
         public void Given_I_Call_Called_WithServerPark_When_I_Call_Surveys_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            _blaiseApiMock.Setup(p => p.GetSurveys(It.IsAny<string>())).Returns(It.IsAny<List<ISurvey>>());
+            _blaiseApiMock.Setup(p => p.GetSurveys(_connectionModel, It.IsAny<string>())).Returns(It.IsAny<List<ISurvey>>());
 
             //act
             var sutSurveys = _sut
+                .WithConnection(_connectionModel)
                 .WithServerPark(_serverParkName)
                 .Surveys;
 
             //assert
-            _blaiseApiMock.Verify(v => v.GetSurveys(_serverParkName), Times.Once);
+            _blaiseApiMock.Verify(v => v.GetSurveys(_connectionModel, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_GetSurveys_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            _blaiseApiMock.Setup(p => p.GetSurveys(_connectionModel, It.IsAny<string>())).Returns(It.IsAny<List<ISurvey>>());
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutSurveys = _sut
+                    .WithServerPark(_serverParkName)
+                    .Surveys;
+            });
+
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
         }
 
         [Test]
@@ -107,10 +149,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             var surveys = new List<ISurvey> { survey1Mock.Object, survey2Mock.Object, survey3Mock.Object };
 
-            _blaiseApiMock.Setup(p => p.GetSurveys(It.IsAny<string>())).Returns(surveys);
+            _blaiseApiMock.Setup(p => p.GetSurveys(_connectionModel, It.IsAny<string>())).Returns(surveys);
 
             //act
             var result = _sut
+                .WithConnection(_connectionModel)
                 .WithServerPark(_serverParkName)
                 .Surveys
                 .ToList();
@@ -128,8 +171,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_Valid_Instrument_And_ServerPark_When_I_Call_Type_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            _blaiseApiMock.Setup(d => d.GetSurveyType(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<SurveyType>());
-
+            _blaiseApiMock.Setup(d => d.GetSurveyType(_connectionModel, It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<SurveyType>());
+           
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
 
@@ -137,7 +181,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             var surveyType = _sut.Type;
 
             //assert
-            _blaiseApiMock.Verify(v => v.GetSurveyType(_instrumentName, _serverParkName), Times.Once);
+            _blaiseApiMock.Verify(v => v.GetSurveyType(_connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
         [TestCase(SurveyType.Appointment)]
@@ -146,9 +190,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_Valid_Arguments_When_I_Call_Type_Then_The_Expected_Result_Is_Returned(SurveyType surveyType)
         {
             //arrange
-
-            _blaiseApiMock.Setup(d => d.GetSurveyType(_instrumentName, _serverParkName)).Returns(surveyType);
-
+            _blaiseApiMock.Setup(d => d.GetSurveyType(_connectionModel, _instrumentName, _serverParkName)).Returns(surveyType);
+        
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
 
@@ -161,9 +205,26 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Type_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var surveyType = _sut.Type;
+            });
+
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+        }
+
+        [Test]
         public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Type_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
+            _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
 
             //act && assert
@@ -178,6 +239,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Type_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
 
             //act && assert
@@ -193,8 +255,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             //arrange
 
-            _blaiseApiMock.Setup(p => p.CompletedFieldExists(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
+            _blaiseApiMock.Setup(p => p.CompletedFieldExists(_connectionModel, It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.Survey.WithField(FieldNameType.Completed);
@@ -203,7 +266,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             var sutExists = _sut.Exists;
 
             //assert
-            _blaiseApiMock.Verify(v => v.CompletedFieldExists(_instrumentName, _serverParkName), Times.Once);
+            _blaiseApiMock.Verify(v => v.CompletedFieldExists(_connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
         [TestCase(true)]
@@ -212,8 +275,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             //arrange
 
-            _blaiseApiMock.Setup(p => p.CompletedFieldExists(_instrumentName, _serverParkName)).Returns(fieldExists);
+            _blaiseApiMock.Setup(p => p.CompletedFieldExists(_connectionModel, _instrumentName, _serverParkName)).Returns(fieldExists);
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.Survey.WithField(FieldNameType.Completed);
@@ -227,10 +291,27 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
+        public void Given_WithConnection_Completed_Is_Called_But_Instrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.Survey.WithField(FieldNameType.Completed);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Exists;
+            });
+
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+        }
+
+        [Test]
         public void Given_WithField_Completed_Is_Called_But_Instrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.Survey.WithField(FieldNameType.Completed);
 
@@ -246,7 +327,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_WithField_Completed_Is_Called_But_ServerPark_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-
+            _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.Survey.WithField(FieldNameType.Completed);
 
@@ -263,8 +344,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             //arrange
 
-            _blaiseApiMock.Setup(p => p.CompletedFieldExists(It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
+            _blaiseApiMock.Setup(p => p.CompletedFieldExists(_connectionModel, It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.Survey.WithField(FieldNameType.Processed);
@@ -273,7 +355,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             var sutExists = _sut.Exists;
 
             //assert
-            _blaiseApiMock.Verify(v => v.ProcessedFieldExists(_instrumentName, _serverParkName), Times.Once);
+            _blaiseApiMock.Verify(v => v.ProcessedFieldExists(_connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
         [TestCase(true)]
@@ -282,8 +364,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         {
             //arrange
 
-            _blaiseApiMock.Setup(p => p.ProcessedFieldExists(_instrumentName, _serverParkName)).Returns(fieldExists);
+            _blaiseApiMock.Setup(p => p.ProcessedFieldExists(It.IsAny<ConnectionModel>(), _instrumentName, _serverParkName)).Returns(fieldExists);
 
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.Survey.WithField(FieldNameType.Processed);
@@ -297,10 +380,26 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
+        public void Given_WithField_Processed_Is_Called_But_WithConnection_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.Survey.WithField(FieldNameType.Processed);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Exists;
+            });
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+        }
+
+        [Test]
         public void Given_WithField_Processed_Is_Called_But_Instrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-
+            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.Survey.WithField(FieldNameType.Processed);
 
@@ -316,7 +415,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         public void Given_WithField_Processed_Is_Called_But_ServerPark_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-
+            _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.Survey.WithField(FieldNameType.Processed);
 

@@ -7,27 +7,24 @@ namespace Blaise.Nuget.Api.Core.Factories
 {
     public class RemoteDataServerFactory : IRemoteDataServerFactory
     {
-        private readonly ConnectionModel _connectionModel;
         private readonly IPasswordService _passwordService;
         private readonly IConnectionExpiryService _connectionExpiryService;
 
         private IRemoteDataServer _remoteDataServer;
 
         public RemoteDataServerFactory(
-            ConnectionModel connectionModel,
             IPasswordService passwordService, 
             IConnectionExpiryService connectionExpiryService)
         {
-            _connectionModel = connectionModel;
             _passwordService = passwordService;
             _connectionExpiryService = connectionExpiryService;
         }
 
-        public IRemoteDataServer GetConnection()
+        public IRemoteDataServer GetConnection(ConnectionModel connectionModel)
         {   
             if(_remoteDataServer == null || _connectionExpiryService.ConnectionHasExpired())
             {
-                CreateRemoteConnection(_connectionModel);
+                CreateRemoteConnection(connectionModel);
                 _connectionExpiryService.ResetConnectionExpiryPeriod();
             }
 

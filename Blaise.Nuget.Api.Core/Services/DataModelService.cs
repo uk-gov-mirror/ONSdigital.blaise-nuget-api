@@ -1,5 +1,6 @@
 ﻿using System;
 using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.Meta;
@@ -15,9 +16,9 @@ namespace Blaise.Nuget.Api.Core.Services
             _remoteDataLinkProvider = remoteDataLinkProvider;
         }
 
-        public IDatamodel GetDataModel(string instrumentName, string serverParkName)
+        public IDatamodel GetDataModel(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            var dataLink = _remoteDataLinkProvider.GetDataLink(instrumentName, serverParkName);
+            var dataLink = _remoteDataLinkProvider.GetDataLink(connectionModel, instrumentName, serverParkName);
 
             if (dataLink?.Datamodel == null)
             {
@@ -27,9 +28,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return dataLink.Datamodel;
         }
 
-        public SurveyType GetSurveyType(string instrumentName, string serverParkName)
+        public SurveyType GetSurveyType(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            var dataModel = GetDataModel(instrumentName, serverParkName);
+            var dataModel = GetDataModel(connectionModel, instrumentName, serverParkName);
 
             switch (dataModel.Name)
             {
