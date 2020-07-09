@@ -771,7 +771,7 @@ namespace Blaise.Nuget.Api
         {
             if (!_serverParkNames.Any())
             {
-                throw new NullReferenceException("The 'WithServerParks' step needs to be called with a valid value prior to this to specify the server parks of the user");
+                throw new NullReferenceException("The 'WithServerParks' step needs to be called with at least one entry to specify the server park(s) associated with the user.");
             }
         }
 

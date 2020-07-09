@@ -102,7 +102,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithServerParks' step needs to be called with a valid value prior to this to specify the server parks of the user", exception.Message);
+            Assert.AreEqual("The 'WithServerParks' step needs to be called with at least one entry to specify the server park(s) associated with the user.", exception.Message);
         }
 
         [Test]
@@ -205,7 +205,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithServerParks' step needs to be called with a valid value prior to this to specify the server parks of the user", exception.Message);
+            Assert.AreEqual("The 'WithServerParks' step needs to be called with at least one entry to specify the server park(s) associated with the user.", exception.Message);
         }
 
         [Test]
