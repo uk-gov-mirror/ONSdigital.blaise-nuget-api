@@ -27,7 +27,7 @@ namespace Blaise.Nuget.Api.Core.Providers
 
                 return expiryDate.HasExpired()
                     ? GetFreshConnection(filePath)
-                    : dataLink;
+                    : dataLink ?? GetFreshConnection(filePath);
             }
 
             return GetFreshConnection(filePath);

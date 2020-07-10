@@ -34,7 +34,7 @@ namespace Blaise.Nuget.Api.Core.Providers
 
                 return expiryDate.HasExpired()
                     ? GetFreshConnection(connectionModel, instrumentName, serverParkName)
-                    : dataLink;
+                    : dataLink ?? GetFreshConnection(connectionModel, instrumentName, serverParkName);
             }
 
             return GetFreshConnection(connectionModel, instrumentName, serverParkName);
