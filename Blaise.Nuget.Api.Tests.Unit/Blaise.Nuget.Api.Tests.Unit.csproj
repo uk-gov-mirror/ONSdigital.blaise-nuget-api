@@ -76,6 +76,7 @@
     <Compile Include="FluentApi\BackupTests.cs" />
     <Compile Include="Integration\Case\FluentApiCaseTests.cs" />
     <Compile Include="Integration\Factories\ConnectedServerFactoryTests.cs" />
+    <Compile Include="Integration\Factories\DictionaryTest.cs" />
     <Compile Include="Integration\Factories\RemoteDataServerFactoryTests.cs" />
     <Compile Include="FluentApi\HandlerTests.cs" />
     <Compile Include="FluentApi\ServerParkTests.cs" />
@@ -86,7 +87,7 @@
     <Compile Include="FluentBlaiseApiTests.cs" />
     <Compile Include="Integration\Backup\FluentApiBackupTests.cs" />
     <Compile Include="Integration\Handler\FluentApiToFileHandlerTests.cs" />
-    <Compile Include="Integration\Handler\FluentApiToServerHandlerTests.cs" />
+    <Compile Include="Integration\Handler\FluentApiHandlerUnderLoadTests.cs" />
     <Compile Include="Integration\Processor\FluentApiProcessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ConfigurationProviderTests.cs" />

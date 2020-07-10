@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
@@ -80,6 +81,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
 
             //act
             _sut.GetDataLink(_connectionModel, _instrumentName, _serverParkName);
+            Thread.Sleep(1000);
             _sut.GetDataLink(_connectionModel, _instrumentName, _serverParkName);
 
             //assert

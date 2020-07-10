@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Extensions;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
@@ -18,18 +17,18 @@ namespace Blaise.Nuget.Api.Core.Factories
         public RemoteDataServerFactory(IPasswordService passwordService)
         {
             _passwordService = passwordService;
-            _remoteDataServers = new Dictionary<string, Tuple<IRemoteDataServer, DateTime>>();
+            _remoteDataServers = new Dictionary<string, Tuple<IRemoteDataServer, DateTime>>(StringComparer.OrdinalIgnoreCase);
         }
 
         public IRemoteDataServer GetConnection(ConnectionModel connectionModel)
         {
-            if (_remoteDataServers.Any(c => c.Key == connectionModel.ServerName))
+            if (_remoteDataServers.ContainsKey(connectionModel.ServerName))
             {
-                var existingConnection = _remoteDataServers.First(c => c.Key == connectionModel.ServerName);
+                var (remoteServer, expiryDate) = _remoteDataServers[connectionModel.ServerName];
 
-                return existingConnection.Value.Item2.HasExpired()
+                return expiryDate.HasExpired()
                     ? GetFreshServerConnection(connectionModel)
-                    : existingConnection.Value.Item1;
+                    : remoteServer;
             }
 
             return GetFreshServerConnection(connectionModel);
@@ -37,15 +36,10 @@ namespace Blaise.Nuget.Api.Core.Factories
 
         private IRemoteDataServer GetFreshServerConnection(ConnectionModel connectionModel)
         {
-            if (_remoteDataServers.Any(c => c.Key == connectionModel.ServerName))
-            {
-                _remoteDataServers.Remove(connectionModel.ServerName);
-            }
-
             var remoteConnection = CreateRemoteConnection(connectionModel);
 
-            _remoteDataServers.Add(connectionModel.ServerName, 
-                new Tuple<IRemoteDataServer, DateTime>(remoteConnection, connectionModel.ConnectionExpiresInMinutes.GetExpiryDate()));
+            _remoteDataServers[connectionModel.ServerName] =
+                new Tuple<IRemoteDataServer, DateTime>(remoteConnection, connectionModel.ConnectionExpiresInMinutes.GetExpiryDate());
 
             return remoteConnection;
         }
