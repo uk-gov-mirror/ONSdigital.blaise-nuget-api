@@ -28,7 +28,7 @@ namespace Blaise.Nuget.Api.Core.Factories
 
                 return expiryDate.HasExpired()
                     ? GetFreshServerConnection(connectionModel)
-                    : connectedServer;
+                    : connectedServer ?? GetFreshServerConnection(connectionModel);
             }
 
             return GetFreshServerConnection(connectionModel);
