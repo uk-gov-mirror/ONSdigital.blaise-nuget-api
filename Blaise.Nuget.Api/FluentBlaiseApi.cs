@@ -34,7 +34,7 @@ namespace Blaise.Nuget.Api
         private IList<string> _serverParkNames;
         private IDataRecord _caseDataRecord;
 
-        private StatusType _statusType;
+        private CaseStatusType _statusType;
         private FieldNameType _fieldNameType;
         private LastActionType _lastActionType;
         private HandleType _handleType;
@@ -59,7 +59,7 @@ namespace Blaise.Nuget.Api
             _sourceConnectionModel = null;
             _destinationConnectionModel = null;
             _caseDataRecord = null;
-            _statusType = StatusType.NotSpecified;
+            _statusType = CaseStatusType.NotSpecified;
             _fieldNameType = FieldNameType.NotSpecified;
             _lastActionType = LastActionType.NotSupported;
             _handleType = HandleType.NotSupported;
@@ -246,8 +246,22 @@ namespace Blaise.Nuget.Api
             get
             {
                 ValidateCaseDataRecordIsSet();
+                var processed = _blaiseApi.CaseHasBeenProcessed(_caseDataRecord);
 
-                return _blaiseApi.CaseHasBeenProcessed(_caseDataRecord);
+                InitialiseSettings();
+                return processed;
+            }
+        }
+
+        public WebFormStatusType WebFormStatus
+        {
+            get
+            {
+                var status = GetWebFormStatusType();
+
+                InitialiseSettings();
+
+                return status;
             }
         }
 
@@ -323,7 +337,7 @@ namespace Blaise.Nuget.Api
             InitialiseSettings();
         }
 
-        public IFluentBlaiseCaseApi WithStatus(StatusType statusType)
+        public IFluentBlaiseCaseApi WithStatus(CaseStatusType statusType)
         {
             _lastActionType = LastActionType.Case;
 
@@ -338,7 +352,11 @@ namespace Blaise.Nuget.Api
             {
                 ValidateCaseDataRecordIsSet();
 
-                return _blaiseApi.GetPrimaryKeyValue(_caseDataRecord);
+                var primaryKey =  _blaiseApi.GetPrimaryKeyValue(_caseDataRecord);
+
+                InitialiseSettings();
+
+                return primaryKey;
             }
         }
 
@@ -348,7 +366,11 @@ namespace Blaise.Nuget.Api
             {
                 ValidateCaseDataRecordIsSet();
 
-                return _blaiseApi.CaseHasBeenCompleted(_caseDataRecord);
+                var completed =  _blaiseApi.CaseHasBeenCompleted(_caseDataRecord);
+
+                InitialiseSettings();
+
+                return completed;
             }
         }
 
@@ -490,12 +512,12 @@ namespace Blaise.Nuget.Api
                 _blaiseApi.UpdateDataRecord(_sourceConnectionModel, _caseDataRecord, _caseData, _instrumentName, _serverParkName);
             }
 
-            if (_statusType == StatusType.Completed)
+            if (_statusType == CaseStatusType.Completed)
             {
                 SetStatusAsComplete();
             }
 
-            if (_statusType == StatusType.Processed)
+            if (_statusType == CaseStatusType.Processed)
             {
                 SetStatusAsProcessed();
             }
@@ -737,6 +759,38 @@ namespace Blaise.Nuget.Api
 
             _blaiseApi.MarkCaseAsProcessed(_sourceConnectionModel, _caseDataRecord, _instrumentName, _serverParkName);
             InitialiseSettings();
+        }
+
+        private WebFormStatusType GetWebFormStatusType()
+        {
+            IDataValue dataValue;
+
+            if (_caseDataRecord != null)
+            {
+                dataValue = _blaiseApi.GetFieldValue(_caseDataRecord, FieldNameType.WebFormStatus);
+            }
+            else
+            {
+                ValidateSourceConnectionIsSet();
+                ValidateInstrumentIsSet();
+                ValidateServerParkIsSet();
+                ValidatePrimaryKeyValueIsSet();
+
+                dataValue = _blaiseApi.GetFieldValue(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName,
+                    FieldNameType.WebFormStatus);
+            }
+
+            switch (dataValue.EnumerationValue)
+            {
+                case 0:
+                    return WebFormStatusType.NotProcessed;
+                case 1:
+                    return WebFormStatusType.Complete;
+                case 2:
+                    return WebFormStatusType.Partial;
+                default:
+                    return WebFormStatusType.NotSpecified;
+            }
         }
 
         private void AddCase()

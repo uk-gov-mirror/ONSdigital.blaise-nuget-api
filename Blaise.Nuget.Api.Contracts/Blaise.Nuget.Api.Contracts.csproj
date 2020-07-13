@@ -47,8 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\FieldNameType.cs" />
-    <Compile Include="Enums\StatusType.cs" />
+    <Compile Include="Enums\CaseStatusType.cs" />
     <Compile Include="Enums\SurveyType.cs" />
+    <Compile Include="Enums\WebFormStatusType.cs" />
     <Compile Include="Exceptions\DataNotFoundException.cs" />
     <Compile Include="Interfaces\IBlaiseApi.cs" />
     <Compile Include="Interfaces\IFluentBlaiseCaseApi.cs" />

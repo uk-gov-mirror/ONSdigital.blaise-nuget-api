@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Contracts.Models;
+﻿using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
@@ -7,9 +8,6 @@ namespace Blaise.Nuget.Api.Core.Services
 {
     public class FieldService : IFieldService
     {
-        private const string CompletedFieldName = "Completed";
-        private const string ProcessedFieldName = "Processed";
-
         private readonly IDataRecordService _dataRecordService;
         private readonly IDataModelService _dataModelService;
 
@@ -26,19 +24,19 @@ namespace Blaise.Nuget.Api.Core.Services
             var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
             var definitionScope = (IDefinitionScope2)dataModel;
 
-            return definitionScope.FieldExists(CompletedFieldName);
+            return definitionScope.FieldExists(FieldNameType.Completed.ToString());
         }
 
         public bool CaseHasBeenCompleted(IDataRecord dataRecord)
         {
-            var completedField = GetField(dataRecord, CompletedFieldName);
+            var completedField = GetField(dataRecord, FieldNameType.Completed);
 
             return completedField.DataValue.IntegerValue == 1;
         }
 
         public void MarkCaseAsComplete(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
-            var completedField = GetField(dataRecord, CompletedFieldName);
+            var completedField = GetField(dataRecord, FieldNameType.Completed);
             completedField.DataValue.Assign("1");
 
             _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
@@ -49,28 +47,28 @@ namespace Blaise.Nuget.Api.Core.Services
             var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
             var definitionScope = (IDefinitionScope2)dataModel;
 
-            return definitionScope.FieldExists(ProcessedFieldName);
+            return definitionScope.FieldExists(FieldNameType.Processed.ToString());
         }
 
         public bool CaseHasBeenProcessed(IDataRecord dataRecord)
         {
-            var processedField = GetField(dataRecord, ProcessedFieldName);
+            var processedField = GetField(dataRecord, FieldNameType.Processed);
 
             return processedField.DataValue.EnumerationValue == 1;
         }
 
         public void MarkCaseAsProcessed(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
-            var processedField = GetField(dataRecord, ProcessedFieldName);
+            var processedField = GetField(dataRecord, FieldNameType.Processed);
 
             processedField.DataValue.Assign("1");
 
             _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
         }
 
-        private static IField GetField(IDataRecord dataRecord, string fieldName)
+        public IField GetField(IDataRecord dataRecord, FieldNameType fieldNameType)
         {
-            var field = dataRecord.GetField(fieldName);
+            var field = dataRecord.GetField(fieldNameType.ToString());
 
             return field;
         }

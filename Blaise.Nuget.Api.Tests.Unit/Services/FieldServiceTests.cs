@@ -1,4 +1,5 @@
 ﻿
+using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Core.Services;
@@ -14,8 +15,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<IDataRecordService> _dataRecordServiceMock;
         private Mock<IDataModelService> _dataModelServiceMock;
 
-        private const string CompletedFieldName = "Completed";
-        private const string ProcessedFieldName = "Processed";
+        private readonly string _completedFieldName = FieldNameType.Completed.ToString();
+        private readonly string _processedFieldName = FieldNameType.Processed.ToString();
 
         private readonly ConnectionModel _connectionModel;
         private readonly string _instrumentName;
@@ -64,7 +65,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //arrange
             var dataModelMock = new Mock<IDatamodel>();
             dataModelMock.As<IDefinitionScope2>();
-            dataModelMock.As<IDefinitionScope2>().Setup(d => d.FieldExists(CompletedFieldName)).Returns(fieldExists);
+            dataModelMock.As<IDefinitionScope2>().Setup(d => d.FieldExists(_completedFieldName)).Returns(fieldExists);
             _dataModelServiceMock.Setup(d => d.GetDataModel(_connectionModel, It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(dataModelMock.Object);
 
@@ -86,7 +87,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             fieldMock.Setup(c => c.DataValue.IntegerValue).Returns(value);
 
             var dataRecordMock = new Mock<IDataRecord>();
-            dataRecordMock.Setup(d => d.GetField(CompletedFieldName)).Returns(fieldMock.Object);
+            dataRecordMock.Setup(d => d.GetField(_completedFieldName)).Returns(fieldMock.Object);
 
             //act
             var result = _sut.CaseHasBeenCompleted(dataRecordMock.Object);
@@ -104,7 +105,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             fieldMock.Setup(c => c.DataValue.IntegerValue);
 
             var dataRecordMock = new Mock<IDataRecord>();
-            dataRecordMock.Setup(d => d.GetField(CompletedFieldName)).Returns(fieldMock.Object);
+            dataRecordMock.Setup(d => d.GetField(_completedFieldName)).Returns(fieldMock.Object);
 
             //act
             _sut.MarkCaseAsComplete(_connectionModel, dataRecordMock.Object, _instrumentName, _serverParkName);
@@ -119,7 +120,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //arrange
             var dataModelMock = new Mock<IDatamodel>();
             dataModelMock.As<IDefinitionScope2>();
-            dataModelMock.As<IDefinitionScope2>().Setup(d => d.FieldExists(ProcessedFieldName)).Returns(It.IsAny<bool>());
+            dataModelMock.As<IDefinitionScope2>().Setup(d => d.FieldExists(_processedFieldName)).Returns(It.IsAny<bool>());
 
             _dataModelServiceMock.Setup(d => d.GetDataModel(_connectionModel, It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(dataModelMock.Object);
@@ -138,7 +139,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //arrange
             var dataModelMock = new Mock<IDatamodel>();
             dataModelMock.As<IDefinitionScope2>();
-            dataModelMock.As<IDefinitionScope2>().Setup(d => d.FieldExists(ProcessedFieldName)).Returns(fieldExists);
+            dataModelMock.As<IDefinitionScope2>().Setup(d => d.FieldExists(_processedFieldName)).Returns(fieldExists);
             _dataModelServiceMock.Setup(d => d.GetDataModel(_connectionModel, It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(dataModelMock.Object);
 
@@ -160,7 +161,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             fieldMock.Setup(c => c.DataValue.EnumerationValue).Returns(value);
 
             var dataRecordMock = new Mock<IDataRecord>();
-            dataRecordMock.Setup(d => d.GetField(ProcessedFieldName)).Returns(fieldMock.Object);
+            dataRecordMock.Setup(d => d.GetField(_processedFieldName)).Returns(fieldMock.Object);
 
             //act
             var result = _sut.CaseHasBeenProcessed(dataRecordMock.Object);
@@ -179,13 +180,31 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             fieldMock.Setup(c => c.DataValue.IntegerValue);
 
             var dataRecordMock = new Mock<IDataRecord>();
-            dataRecordMock.Setup(d => d.GetField(ProcessedFieldName)).Returns(fieldMock.Object);
+            dataRecordMock.Setup(d => d.GetField(_processedFieldName)).Returns(fieldMock.Object);
 
             //act
             _sut.MarkCaseAsProcessed(_connectionModel, dataRecordMock.Object, _instrumentName, _serverParkName);
 
             //assert
             _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, dataRecordMock.Object, _instrumentName, _serverParkName));
+        }
+
+        [TestCase(FieldNameType.Completed)]
+        [TestCase(FieldNameType.Processed)]
+        [TestCase(FieldNameType.WebFormStatus)]
+        public void Given_I_Call_GetField_Then_The_Correct_Field_Is_Returned(FieldNameType fieldNameType)
+        {
+            //arrange
+            var fieldMock = new Mock<IField>();
+
+            var dataRecordMock = new Mock<IDataRecord>();
+            dataRecordMock.Setup(d => d.GetField(fieldNameType.ToString())).Returns(fieldMock.Object);
+
+            //act
+           var result = _sut.GetField(dataRecordMock.Object, fieldNameType);
+
+            //assert
+            Assert.AreEqual(fieldMock.Object, result);
         }
     }
 }

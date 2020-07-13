@@ -550,7 +550,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.WithDataRecord(_caseDataRecord);
-            _sut.WithStatus(StatusType.Completed);
+            _sut.WithStatus(CaseStatusType.Completed);
 
             //act
             _sut.Update();
@@ -577,7 +577,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             _sut.WithDataRecord(_caseDataRecord);
-            _sut.WithStatus(StatusType.Processed);
+            _sut.WithStatus(CaseStatusType.Processed);
 
             //act
             _sut.Update();
@@ -592,11 +592,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
-        [TestCase(StatusType.Completed)]
-        [TestCase(StatusType.Processed)]
+        [TestCase(CaseStatusType.Completed)]
+        [TestCase(CaseStatusType.Processed)]
         public void
             Given_WithConnection_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown(
-                StatusType statusType)
+                CaseStatusType statusType)
         {
             //arrange
             _sut.WithServerPark(_serverParkName);
@@ -610,11 +610,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         }
 
-        [TestCase(StatusType.Completed)]
-        [TestCase(StatusType.Processed)]
+        [TestCase(CaseStatusType.Completed)]
+        [TestCase(CaseStatusType.Processed)]
         public void
             Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown(
-                StatusType statusType)
+                CaseStatusType statusType)
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -629,11 +629,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 exception.Message);
         }
 
-        [TestCase(StatusType.Completed)]
-        [TestCase(StatusType.Processed)]
+        [TestCase(CaseStatusType.Completed)]
+        [TestCase(CaseStatusType.Processed)]
         public void
             Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown(
-                StatusType statusType)
+                CaseStatusType statusType)
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -648,10 +648,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 exception.Message);
         }
 
-        [TestCase(StatusType.Completed)]
-        [TestCase(StatusType.Processed)]
+        [TestCase(CaseStatusType.Completed)]
+        [TestCase(CaseStatusType.Processed)]
         public void Given_Case_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown(
-            StatusType statusType)
+            CaseStatusType statusType)
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -1057,11 +1057,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void
-            Given_Case_Is_Called_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Get_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Is_Called_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Get_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-                   _sut.WithConnection(_connectionModel);
+            _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.Case.WithPrimaryKey(_primaryKeyValue);
 
@@ -1070,7 +1069,182 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutExists = _sut.Get();
             });
+        }
 
+        [Test]
+        public void Given_A_DataRecord_And_Case_Is_Called_When_I_Call_WebFormStatus_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataValueMock = new Mock<IDataValue>();
+            dataValueMock.Setup(d => d.EnumerationValue).Returns(1);
+
+            _blaiseApiMock.Setup(b => b.GetFieldValue(_caseDataRecord, FieldNameType.WebFormStatus))
+                .Returns(dataValueMock.Object);
+
+            _sut.WithDataRecord(_caseDataRecord);
+
+            //act
+            var result = _sut.Case.WebFormStatus;
+
+            //assert
+            _blaiseApiMock.Verify(v => v.GetFieldValue(_caseDataRecord, FieldNameType.WebFormStatus), Times.Once);
+        }
+
+        [TestCase(0, WebFormStatusType.NotProcessed)]
+        [TestCase(1, WebFormStatusType.Complete)]
+        [TestCase(2, WebFormStatusType.Partial)]
+        [TestCase(3, WebFormStatusType.NotSpecified)]
+        public void Given_A_DataRecord_And_Case_Is_Called_When_I_Call_WebFormStatus_Then_The_Expected_Status_Is_Returned(int dataEnumerationValue, WebFormStatusType webFormStatusType)
+        {
+            //arrange
+            var dataValueMock = new Mock<IDataValue>();
+            dataValueMock.Setup(d => d.EnumerationValue).Returns(dataEnumerationValue);
+
+            _blaiseApiMock.Setup(b => b.GetFieldValue(_caseDataRecord, FieldNameType.WebFormStatus))
+                .Returns(dataValueMock.Object);
+
+            _sut.WithDataRecord(_caseDataRecord);
+
+            //act
+            var result = _sut.WebFormStatus;
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(webFormStatusType, result);
+        }
+
+        [Test]
+        public void Given_A_PrimaryKey_And_Case_Is_Called_When_I_Call_WebFormStatus_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataValueMock = new Mock<IDataValue>();
+            dataValueMock.Setup(d => d.EnumerationValue).Returns(1);
+
+            _blaiseApiMock.Setup(b => b.GetFieldValue(_connectionModel, _primaryKeyValue, _instrumentName, 
+                    _serverParkName, FieldNameType.WebFormStatus))
+                .Returns(dataValueMock.Object);
+
+            _sut.WithConnection(_connectionModel);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithPrimaryKey(_primaryKeyValue);
+
+            //act
+            var result = _sut.Case.WebFormStatus;
+
+            //assert
+            _blaiseApiMock.Verify(v => v.GetFieldValue(_connectionModel, _primaryKeyValue, _instrumentName,
+                _serverParkName, FieldNameType.WebFormStatus), Times.Once);
+        }
+
+        [TestCase(0, WebFormStatusType.NotProcessed)]
+        [TestCase(1, WebFormStatusType.Complete)]
+        [TestCase(2, WebFormStatusType.Partial)]
+        [TestCase(3, WebFormStatusType.NotSpecified)]
+        public void Given_A_PrimaryKey_And_Case_Is_Called_When_I_Call_WebFormStatus_Then_The_Expected_Status_Is_Returned(int dataEnumerationValue, WebFormStatusType webFormStatusType)
+        {
+            //arrange
+            var dataValueMock = new Mock<IDataValue>();
+            dataValueMock.Setup(d => d.EnumerationValue).Returns(dataEnumerationValue);
+
+            _blaiseApiMock.Setup(b => b.GetFieldValue(_connectionModel, _primaryKeyValue, _instrumentName,
+                    _serverParkName, FieldNameType.WebFormStatus))
+                .Returns(dataValueMock.Object);
+
+            _sut.WithConnection(_connectionModel);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithPrimaryKey(_primaryKeyValue);
+
+            //act
+            var result = _sut.WebFormStatus;
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(webFormStatusType, result);
+        }
+
+        [Test]
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_WebFormStatus_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithPrimaryKey(_primaryKeyValue);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var webFormStatusType = _sut.WebFormStatus;
+
+            });
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+        }
+
+        [Test]
+        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_WebFormStatus_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+
+            _sut.WithConnection(_connectionModel);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithPrimaryKey(_primaryKeyValue);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var webFormStatusType = _sut.WebFormStatus;
+
+            });
+
+            Assert.AreEqual(
+                "The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park",
+                exception.Message);
+        }
+
+        [Test]
+        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_WebFormStatus_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var fieldData = new Dictionary<string, string>();
+
+            _sut.WithConnection(_connectionModel);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithPrimaryKey(_instrumentName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var webFormStatusType = _sut.WebFormStatus;
+
+            });
+
+            Assert.AreEqual(
+                "The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument",
+                exception.Message);
+        }
+
+        [Test]
+        public void Given_WithPrimaryKey_Has_Not_Been_Called_When_I_Call_WebFormStatus_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            var fieldData = new Dictionary<string, string>();
+
+            _sut.WithConnection(_connectionModel);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var webFormStatusType = _sut.WebFormStatus;
+
+            });
+
+            Assert.AreEqual(
+                "The 'WithPrimaryKey' step needs to be called with a valid value prior to this to specify the primary key value of the case",
+                exception.Message);
         }
     }
 }

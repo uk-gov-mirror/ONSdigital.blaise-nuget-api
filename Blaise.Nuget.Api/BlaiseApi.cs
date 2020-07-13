@@ -323,6 +323,26 @@ namespace Blaise.Nuget.Api
             return _dataService.CaseHasBeenProcessed(dataRecord);
         }
 
+        public IDataValue GetFieldValue(IDataRecord dataRecord, FieldNameType fieldNameType)
+        {
+            dataRecord.ThrowExceptionIfNull("dataRecord");
+
+            return _dataService.GetFieldValue(dataRecord, fieldNameType);
+        }
+
+        public IDataValue GetFieldValue(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName,
+            string serverParkName, FieldNameType fieldNameType)
+        {
+            connectionModel.ThrowExceptionIfNull("connectionModel");
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            var dataRecord = _dataService.GetDataRecord(connectionModel, primaryKeyValue, instrumentName, serverParkName);
+
+            return GetFieldValue(dataRecord, fieldNameType);
+        }
+
         public void MarkCaseAsProcessed(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
