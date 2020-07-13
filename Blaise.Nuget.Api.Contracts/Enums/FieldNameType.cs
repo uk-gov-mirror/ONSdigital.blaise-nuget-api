@@ -4,6 +4,7 @@
     {
         NotSpecified = 0,
         Completed,
-        Processed
+        Processed,
+        WebFormStatus
     }
 }

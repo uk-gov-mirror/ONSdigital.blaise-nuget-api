@@ -75,6 +75,10 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         bool ProcessedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName);
         bool CaseHasBeenProcessed(IDataRecord dataRecord);
 
+        IDataValue GetFieldValue(IDataRecord dataRecord, FieldNameType fieldNameType);
+
+        IDataValue GetFieldValue(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName, FieldNameType fieldNameType);
+
         void MarkCaseAsProcessed(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
 
         void AddUser(ConnectionModel connectionModel, string userName, string password, string role, IList<string> serverParkNames);

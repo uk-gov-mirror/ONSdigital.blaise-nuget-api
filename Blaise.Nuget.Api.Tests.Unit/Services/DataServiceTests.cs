@@ -570,5 +570,43 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //assert
             _dataRecordServiceMock.Verify(v => v.DeleteDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
+
+        [TestCase(FieldNameType.Completed)]
+        [TestCase(FieldNameType.Processed)]
+        [TestCase(FieldNameType.WebFormStatus)]
+        public void Given_I_Call_GetFieldValue_Then_The_Correct_DataModel_Is_Returned(FieldNameType fieldNameType)
+        {
+            //arrange
+            var dataValueMock = new Mock<IDataValue>();
+            var fieldMock = new Mock<IField>();
+
+            fieldMock.Setup(f => f.DataValue).Returns(dataValueMock.Object);
+            _fieldServiceMock.Setup(f => f.GetField(_dataRecordMock.Object, fieldNameType)).Returns(fieldMock.Object);
+
+            //act
+            var result = _sut.GetFieldValue(_dataRecordMock.Object, fieldNameType);
+
+            //assert
+            Assert.AreEqual(dataValueMock.Object, result);
+        }
+
+        [TestCase(FieldNameType.Completed)]
+        [TestCase(FieldNameType.Processed)]
+        [TestCase(FieldNameType.WebFormStatus)]
+        public void Given_I_Call_GetFieldValue_Then_The_Correct_Services_Are_Called(FieldNameType fieldNameType)
+        {
+            //arrange
+            var dataValueMock = new Mock<IDataValue>();
+            var fieldMock = new Mock<IField>();
+
+            fieldMock.Setup(f => f.DataValue).Returns(dataValueMock.Object);
+            _fieldServiceMock.Setup(f => f.GetField(_dataRecordMock.Object, fieldNameType)).Returns(fieldMock.Object);
+
+            //act
+            _sut.GetFieldValue(_dataRecordMock.Object, fieldNameType);
+
+            //assert
+            _fieldServiceMock.Verify(v => v.GetField(_dataRecordMock.Object, fieldNameType), Times.Once);
+        }
     }
 }

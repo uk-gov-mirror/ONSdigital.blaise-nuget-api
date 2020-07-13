@@ -12,13 +12,15 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseCaseApi WithData(Dictionary<string, string> data);
 
-        IFluentBlaiseCaseApi WithStatus(StatusType statusType);
+        IFluentBlaiseCaseApi WithStatus(CaseStatusType statusType);
 
         string PrimaryKey { get; }
 
         bool Completed { get; }
 
         bool Processed { get; }
+
+        WebFormStatusType WebFormStatus { get; }
 
         bool Exists { get; }
 

@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Contracts.Models;
+﻿using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Contracts.Models;
 using StatNeth.Blaise.API.DataRecord;
 
 namespace Blaise.Nuget.Api.Core.Interfaces.Services
@@ -16,5 +17,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         bool CaseHasBeenProcessed(IDataRecord dataRecord);
 
         void MarkCaseAsProcessed(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
+
+        IField GetField(IDataRecord dataRecord, FieldNameType fieldNameType);
     }
 }

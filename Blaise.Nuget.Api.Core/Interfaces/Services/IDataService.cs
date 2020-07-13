@@ -58,5 +58,6 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         void MarkCaseAsProcessed(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
 
         void RemoveDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName);
+        IDataValue GetFieldValue(IDataRecord dataRecord, FieldNameType fieldNameType);
     }
 }

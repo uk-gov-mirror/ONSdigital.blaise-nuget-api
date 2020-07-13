@@ -151,6 +151,11 @@ namespace Blaise.Nuget.Api.Core.Services
             _dataRecordService.DeleteDataRecord(connectionModel, primaryKey, instrumentName, serverParkName);
         }
 
+        public IDataValue GetFieldValue(IDataRecord dataRecord, FieldNameType fieldNameType)
+        {
+            return _fieldService.GetField(dataRecord, fieldNameType).DataValue;
+        }
+
         public bool CaseExists(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName)
         {
             var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
