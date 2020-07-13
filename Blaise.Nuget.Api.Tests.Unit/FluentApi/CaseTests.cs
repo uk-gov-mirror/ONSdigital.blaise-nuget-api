@@ -15,6 +15,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         private Mock<IBlaiseApi> _blaiseApiMock;
 
         private readonly ConnectionModel _connectionModel;
+        private readonly string _filePath;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
         private readonly string _primaryKeyValue;
@@ -24,6 +25,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         public CaseTests()
         {
+            _filePath = "FilePath1";
             _connectionModel = new ConnectionModel();
             _instrumentName = "Instrument1";
             _serverParkName = "Park1";
@@ -87,7 +89,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //assert
             _blaiseApiMock.Verify(
-                v => v.CreateNewDataRecord(It.IsAny<ConnectionModel>(), _primaryKeyValue, fieldData, _instrumentName, _serverParkName), Times.Once);
+                v => v.CreateNewDataRecord(_connectionModel, _primaryKeyValue, fieldData, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -176,9 +178,45 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 exception.Message);
         }
 
+        [Test]
+        public void Given_A_FilePath_Has_Been_Set_When_I_Call_Cases_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+
+            _blaiseApiMock.Setup(d => d.GetDataSet(It.IsAny<string>()))
+                .Returns(It.IsAny<IDataSet>());
+
+            _sut.WithConnection(_connectionModel);
+            _sut.WithFile(_filePath);
+
+            //act
+            var sutCases = _sut.Cases;
+
+            //assert
+            _blaiseApiMock.Verify(v => v.GetDataSet(_filePath), Times.Once);
+        }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_Cases_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_A_FilePath_Has_Been_Set_When_I_Call_Cases_Then_The_Expected_Result_Is_Returned()
+        {
+            //arrange
+            var dataSetMock = new Mock<IDataSet>();
+
+            _blaiseApiMock.Setup(d => d.GetDataSet(_filePath)).Returns(dataSetMock.Object);
+
+            _sut.WithConnection(_connectionModel);
+            _sut.WithFile(_filePath);
+
+            //act
+            var result = _sut.Cases;
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreSame(dataSetMock.Object, result);
+        }
+
+        [Test]
+        public void Given_A_FilePath_Has_Not_Been_Set_When_I_Call_Cases_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
 
@@ -193,11 +231,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             var sutCases = _sut.Cases;
 
             //assert
-            _blaiseApiMock.Verify(v => v.GetDataSet(It.IsAny<ConnectionModel>(), _instrumentName, _serverParkName), Times.Once);
+            _blaiseApiMock.Verify(v => v.GetDataSet(_connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_Cases_Then_The_Expected_Result_Is_Returned()
+        public void Given_A_FilePath_Has_Not_Been_Set_When_I_Call_Cases_Then_The_Expected_Result_Is_Returned()
         {
             //arrange
             var dataSetMock = new Mock<IDataSet>();
@@ -217,7 +255,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_A_FilePath_Has_Not_Been_Set_And_WithConnection_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithServerPark(_serverParkName);
@@ -233,7 +271,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_A_FilePath_Has_Not_Been_Set_And_WithServerPark_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -250,8 +288,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void
-            Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_A_FilePath_Has_Not_Been_Set_And_WithInstrument_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -431,7 +468,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Update();
 
             //assert
-            _blaiseApiMock.Verify(v => v.UpdateDataRecord(It.IsAny<ConnectionModel>(), _caseDataRecord, fieldData, _instrumentName, _serverParkName),
+            _blaiseApiMock.Verify(v => v.UpdateDataRecord(_connectionModel, _caseDataRecord, fieldData, _instrumentName, _serverParkName),
                 Times.Once);
         }
 
@@ -519,7 +556,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Update();
 
             //assert
-            _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(It.IsAny<ConnectionModel>(), _caseDataRecord, _instrumentName, _serverParkName),
+            _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(_connectionModel, _caseDataRecord, _instrumentName, _serverParkName),
                 Times.Once);
             _blaiseApiMock.Verify(v => v.MarkCaseAsProcessed(It.IsAny<ConnectionModel>(), It.IsAny<IDataRecord>(), It.IsAny<string>()
                 , It.IsAny<string>()), Times.Never);
@@ -546,7 +583,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Update();
 
             //assert
-            _blaiseApiMock.Verify(v => v.MarkCaseAsProcessed(It.IsAny<ConnectionModel>(), _caseDataRecord, _instrumentName, _serverParkName),
+            _blaiseApiMock.Verify(v => v.MarkCaseAsProcessed(_connectionModel, _caseDataRecord, _instrumentName, _serverParkName),
                 Times.Once);
             _blaiseApiMock.Verify(v => v.MarkCaseAsComplete(It.IsAny<ConnectionModel>(), _caseDataRecord, _instrumentName, _serverParkName),
                 Times.Never);
