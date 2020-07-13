@@ -35,19 +35,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut = new FluentBlaiseApi(_blaiseApiMock.Object);
         }
 
-        [TestCase(FieldNameType.Completed)]
-        [TestCase(FieldNameType.Processed)]
-        public void Given_A_I_Call_WithField_Then_It_Returns_Same_Instance_Of_Itself_Back(FieldNameType fieldNameType)
-        {
-            //act
-            var result = _sut.Survey.WithField(fieldNameType);
-
-            //assert
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOf<IFluentBlaiseSurveyApi>(result);
-            Assert.AreSame(_sut, result);
-        }
-
         [Test]
         public void When_I_Call_Surveys_Then_The_Correct_Service_Method_Is_Called()
         {
@@ -253,7 +240,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         [TestCase(FieldNameType.Completed)]
         [TestCase(FieldNameType.Processed)]
         [TestCase(FieldNameType.WebFormStatus)]
-        public void Given_WithField_Is_Called_When_I_Call_Exists_Then_The_Correct_Service_Method_Is_Called(FieldNameType fieldNameType)
+        [TestCase(FieldNameType.CaseId)]
+        [TestCase(FieldNameType.HOut)]
+        public void Given_Valid_Arguments_When_I_Call_Exists_Then_The_Correct_Service_Method_Is_Called(FieldNameType fieldNameType)
         {
             //arrange
 
@@ -263,10 +252,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.Survey.WithField(fieldNameType);
 
             //act
-            var sutExists = _sut.Exists;
+            var sutExists = _sut.Survey.HasField(fieldNameType);
 
             //assert
             _blaiseApiMock.Verify(v => v.FieldExists(_connectionModel, _instrumentName, _serverParkName, fieldNameType), Times.Once);
@@ -274,7 +262,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_WithField_Is_Called_When_I_Call_Exists_Then_The_Expected_Result_Is_Returned(bool fieldExists)
+        public void Given_Valid_Arguments_When_I_Call_HasField_Then_The_Expected_Result_Is_Returned(bool fieldExists)
         {
             //arrange
 
@@ -284,10 +272,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.Survey.WithField(FieldNameType.WebFormStatus);
-
+            
             //act
-            var result = _sut.Exists;
+            var result = _sut.Survey.HasField(FieldNameType.WebFormStatus);
 
             //assert
             Assert.IsNotNull(result);
@@ -295,69 +282,49 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithField_Is_Called_But_Connection_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Connection_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.Survey.WithField(FieldNameType.Completed);
-
+            
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() =>
             {
-                var sutExists = _sut.Exists;
+                var sutExists = _sut.Survey.HasField(FieldNameType.Completed);
             });
 
             Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
         }
 
         [Test]
-        public void Given_WithField_Is_Called_But_Instrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_HasField_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
-            _sut.Survey.WithField(FieldNameType.Completed);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() =>
             {
-                var sutExists = _sut.Exists;
+                var sutExists = _sut.Survey.HasField(FieldNameType.Completed);
             });
             Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
         }
 
         [Test]
-        public void Given_WithField_Is_Called_But_ServerPark_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_HasField_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
-            _sut.Survey.WithField(FieldNameType.Completed);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() =>
             {
-                var sutExists = _sut.Exists;
+                var sutExists = _sut.Survey.HasField(FieldNameType.Completed);
             });
             Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
-        }
-
-        [Test]
-        public void Given_WithField_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            _sut.WithConnection(_connectionModel);
-            _sut.WithInstrument(_instrumentName);
-            _sut.WithServerPark(_serverParkName);
-            _sut.Survey.WithField(FieldNameType.NotSpecified);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() =>
-            {
-                var sutExists = _sut.Survey.Exists;
-            });
-            Assert.AreEqual("The 'WithField' step needs to be called with a valid value prior to this to specify the field you are interested in", exception.Message);
         }
     }
 }

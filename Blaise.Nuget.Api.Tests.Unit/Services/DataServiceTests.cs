@@ -553,6 +553,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         [TestCase(FieldNameType.Completed)]
         [TestCase(FieldNameType.Processed)]
         [TestCase(FieldNameType.WebFormStatus)]
+        [TestCase(FieldNameType.CaseId)]
+        [TestCase(FieldNameType.HOut)]
         public void Given_I_Call_GetFieldValue_Then_The_Correct_DataModel_Is_Returned(FieldNameType fieldNameType)
         {
             //arrange
@@ -572,6 +574,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         [TestCase(FieldNameType.Completed)]
         [TestCase(FieldNameType.Processed)]
         [TestCase(FieldNameType.WebFormStatus)]
+        [TestCase(FieldNameType.CaseId)]
+        [TestCase(FieldNameType.HOut)]
         public void Given_I_Call_GetFieldValue_Then_The_Correct_Services_Are_Called(FieldNameType fieldNameType)
         {
             //arrange
@@ -586,6 +590,45 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _fieldServiceMock.Verify(v => v.GetField(_dataRecordMock.Object, fieldNameType), Times.Once);
+        }
+
+        [TestCase(FieldNameType.Completed, true)]
+        [TestCase(FieldNameType.Completed, false)]
+        [TestCase(FieldNameType.Processed, true)]
+        [TestCase(FieldNameType.Processed, false)]
+        [TestCase(FieldNameType.WebFormStatus, true)]
+        [TestCase(FieldNameType.WebFormStatus, false)]
+        [TestCase(FieldNameType.CaseId, true)]
+        [TestCase(FieldNameType.CaseId, false)]
+        [TestCase(FieldNameType.HOut, true)]
+        [TestCase(FieldNameType.HOut, false)]
+        public void Given_I_Call_FieldExists_Then_The_Correct_DataModel_Is_Returned(FieldNameType fieldNameType, bool exists)
+        {
+            //arrange
+            _fieldServiceMock.Setup(f => f.FieldExists(_dataRecordMock.Object, fieldNameType)).Returns(exists);
+
+            //act
+            var result = _sut.FieldExists(_dataRecordMock.Object, fieldNameType);
+
+            //assert
+            Assert.AreEqual(exists, result);
+        }
+
+        [TestCase(FieldNameType.Completed)]
+        [TestCase(FieldNameType.Processed)]
+        [TestCase(FieldNameType.WebFormStatus)]
+        [TestCase(FieldNameType.CaseId)]
+        [TestCase(FieldNameType.HOut)]
+        public void Given_I_Call_FieldExists_Then_The_Correct_Services_Are_Called(FieldNameType fieldNameType)
+        {
+            //arrange
+            _fieldServiceMock.Setup(f => f.FieldExists(_dataRecordMock.Object, fieldNameType)).Returns(true);
+
+            //act
+            _sut.FieldExists(_dataRecordMock.Object, fieldNameType);
+
+            //assert
+            _fieldServiceMock.Verify(v => v.FieldExists(_dataRecordMock.Object, fieldNameType), Times.Once);
         }
     }
 }

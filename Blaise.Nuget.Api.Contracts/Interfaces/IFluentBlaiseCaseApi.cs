@@ -14,6 +14,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseCaseApi WithStatus(CaseStatusType statusType);
 
+        bool HasField(FieldNameType fieldNameType);
+
         string PrimaryKey { get; }
 
         string CaseId { get; }

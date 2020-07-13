@@ -81,7 +81,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
 
             //act
             _sut.GetDataLink(_connectionModel, _instrumentName, _serverParkName);
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
             _sut.GetDataLink(_connectionModel, _instrumentName, _serverParkName);
 
             //assert

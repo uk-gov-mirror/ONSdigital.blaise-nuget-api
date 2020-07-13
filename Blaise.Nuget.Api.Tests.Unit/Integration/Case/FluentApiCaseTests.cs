@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using NUnit.Framework;
@@ -63,7 +64,37 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
             Assert.True(result);
         }
 
-        [Ignore("Wont run without app settings on build environment")]
+		[Ignore("Wont run without app settings on build environment")]
+		[TestCase(FieldNameType.Completed, true)]
+        [TestCase(FieldNameType.Processed, true)]
+        [TestCase(FieldNameType.WebFormStatus, true)]
+        [TestCase(FieldNameType.CaseId, true)]
+        [TestCase(FieldNameType.HOut, true)]
+        [TestCase(FieldNameType.NotSpecified, false)]
+		public void Given_A_Case_That_Exists_When_I_Call_HasField_Then_The_Expected_Value_Is_Returned(FieldNameType fieldNameType, bool exists)
+        {
+            //arrange
+            IFluentBlaiseApi sut = new FluentBlaiseApi();
+
+            //act
+            var dataRecord = sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey("11000011")
+                .Get();
+
+            var result = sut
+                .Case
+                .WithDataRecord(dataRecord)
+                .HasField(fieldNameType);
+
+			//assert
+			Assert.AreEqual(exists, result);
+        }
+
+		[Ignore("Wont run without app settings on build environment")]
 		[Test]
         public void Given_Valid_Values_When_I_Call_Add_A_New_Case_Is_Added()
         {

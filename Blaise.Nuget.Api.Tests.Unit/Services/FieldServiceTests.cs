@@ -1,6 +1,8 @@
 ﻿
+using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Models;
+using Blaise.Nuget.Api.Core.Extensions;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Core.Services;
 using Moq;
@@ -43,6 +45,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         [TestCase(FieldNameType.Completed)]
         [TestCase(FieldNameType.Processed)]
         [TestCase(FieldNameType.WebFormStatus)]
+        [TestCase(FieldNameType.CaseId)]
+        [TestCase(FieldNameType.HOut)]
         public void Given_I_Call_FieldExists_Then_The_Correct_Services_Are_Called(FieldNameType fieldNameType)
         {
             //arrange
@@ -73,6 +77,33 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //act
             var result = _sut.FieldExists(_connectionModel, _instrumentName, _serverParkName, FieldNameType.Completed);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual(fieldExists, result);
+        }
+
+        [TestCase(FieldNameType.CaseId, true)]
+        [TestCase(FieldNameType.HOut, false)]
+        public void Given_A_DataRecord_When_I_Call_FieldExists_Then_The_Correct_Value_Is_Returned(FieldNameType fieldNameType, bool fieldExists)
+        {
+            //arrange
+            var iFieldMock = new Mock<IField>();
+
+            if (fieldExists)
+            {
+                iFieldMock.Setup(f => f.FullName).Returns(fieldNameType.FromDescription());
+            }
+            else
+            {
+                iFieldMock.Setup(f => f.FullName).Returns("Does Not Exist");
+            }
+
+            var dataRecord2Mock = new Mock<IDataRecord2>();
+            dataRecord2Mock.Setup(d => d.GetDataFields()).Returns(new List<IField> { iFieldMock .Object});
+
+            //act
+            var result = _sut.FieldExists(dataRecord2Mock.Object, fieldNameType);
 
             //assert
             Assert.NotNull(result);

@@ -1279,6 +1279,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         [TestCase(FieldNameType.Completed)]
         [TestCase(FieldNameType.Processed)]
         [TestCase(FieldNameType.WebFormStatus)]
+        [TestCase(FieldNameType.CaseId)]
+        [TestCase(FieldNameType.HOut)]
         public void Given_Valid_Arguments_When_I_Call_FieldExists_Then_The_Correct_Service_Method_Is_Called(FieldNameType fieldNameType)
         {
             //arrange
@@ -1351,6 +1353,57 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.FieldExists(_connectionModel, _instrumentName,
                 null, FieldNameType.WebFormStatus));
             Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [TestCase(FieldNameType.Completed)]
+        [TestCase(FieldNameType.Processed)]
+        [TestCase(FieldNameType.WebFormStatus)]
+        [TestCase(FieldNameType.CaseId)]
+        [TestCase(FieldNameType.HOut)]
+        public void Given_A_DataRecord_When_I_Call_FieldExists_Then_The_Correct_Service_Method_Is_Called(FieldNameType fieldNameType)
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            _dataServiceMock.Setup(d => d.FieldExists(It.IsAny<IDataRecord>(), It.IsAny<FieldNameType>())).Returns(It.IsAny<bool>());
+
+            //act
+            _sut.FieldExists(dataRecordMock.Object, fieldNameType);
+
+            //CompletedFieldExists
+            _dataServiceMock.Verify(v => v.FieldExists(dataRecordMock.Object, fieldNameType), Times.Once);
+        }
+
+
+        [TestCase(FieldNameType.Completed, true)]
+        [TestCase(FieldNameType.Completed, false)]
+        [TestCase(FieldNameType.Processed, true)]
+        [TestCase(FieldNameType.Processed, false)]
+        [TestCase(FieldNameType.WebFormStatus, true)]
+        [TestCase(FieldNameType.WebFormStatus, false)]
+        [TestCase(FieldNameType.CaseId, true)]
+        [TestCase(FieldNameType.CaseId, false)]
+        [TestCase(FieldNameType.HOut, true)]
+        [TestCase(FieldNameType.HOut, false)]
+        public void Given_A_DataRecord_When_I_Call_FieldExists_Then_The_Expected_Result_Is_Returned(FieldNameType fieldNameType, bool exists)
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord>();
+            _dataServiceMock.Setup(d => d.FieldExists(dataRecordMock.Object, fieldNameType)).Returns(exists);
+
+            //act
+            var result = _sut.FieldExists(dataRecordMock.Object, fieldNameType);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(exists, result);
+        }
+
+        [Test]
+        public void Given_A_Null_DataRecord_When_I_Call_FieldExists_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.FieldExists(null, FieldNameType.WebFormStatus));
+            Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
         }
 
         [Test]

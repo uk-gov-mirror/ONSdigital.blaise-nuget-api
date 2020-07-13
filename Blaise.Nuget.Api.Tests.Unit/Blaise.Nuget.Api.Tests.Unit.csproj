@@ -89,6 +89,7 @@
     <Compile Include="Integration\Handler\FluentApiToFileHandlerTests.cs" />
     <Compile Include="Integration\Handler\FluentApiHandlerUnderLoadTests.cs" />
     <Compile Include="Integration\Processor\FluentApiProcessorTests.cs" />
+    <Compile Include="Integration\Survey\FluentApiSurveyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ConfigurationProviderTests.cs" />
     <Compile Include="Services\DataRecordServiceTests.cs" />

@@ -68,6 +68,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         bool FieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName, FieldNameType fieldNameType);
 
+        bool FieldExists(IDataRecord dataRecord, FieldNameType fieldNameType);
+
         bool CaseHasBeenCompleted(IDataRecord dataRecord);
 
         void MarkCaseAsComplete(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);

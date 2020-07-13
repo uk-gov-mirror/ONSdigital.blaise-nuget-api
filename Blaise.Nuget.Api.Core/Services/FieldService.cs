@@ -1,4 +1,6 @@
-﻿using Blaise.Nuget.Api.Contracts.Enums;
+﻿using System;
+using System.Linq;
+using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Extensions;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
@@ -25,7 +27,16 @@ namespace Blaise.Nuget.Api.Core.Services
             var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
             var definitionScope = (IDefinitionScope2)dataModel;
 
-            return definitionScope.FieldExists(fieldNameType.ToString());
+            return definitionScope.FieldExists(fieldNameType.FromDescription());
+        }
+
+        public bool FieldExists(IDataRecord dataRecord, FieldNameType fieldNameType)
+        {
+            var dataRecord2 = (IDataRecord2)dataRecord;
+            var dataFields = dataRecord2.GetDataFields();
+
+            return dataFields.Any(f =>
+                f.FullName.Equals(fieldNameType.FromDescription(), StringComparison.InvariantCultureIgnoreCase));
         }
 
         public bool CaseHasBeenCompleted(IDataRecord dataRecord)

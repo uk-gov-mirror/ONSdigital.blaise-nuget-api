@@ -290,6 +290,13 @@ namespace Blaise.Nuget.Api
             return _dataService.FieldExists(connectionModel, instrumentName, serverParkName, fieldNameType);
         }
 
+        public bool FieldExists(IDataRecord dataRecord, FieldNameType fieldNameType)
+        {
+            dataRecord.ThrowExceptionIfNull("dataRecord");
+
+            return _dataService.FieldExists(dataRecord, fieldNameType);
+        }
+
         public bool CaseHasBeenCompleted(IDataRecord dataRecord)
         {
             dataRecord.ThrowExceptionIfNull("dataRecord");
