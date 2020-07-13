@@ -35,7 +35,6 @@ namespace Blaise.Nuget.Api
         private IDataRecord _caseDataRecord;
 
         private CaseStatusType _statusType;
-        private FieldNameType _fieldNameType;
         private LastActionType _lastActionType;
         private HandleType _handleType;
 
@@ -60,7 +59,6 @@ namespace Blaise.Nuget.Api
             _destinationConnectionModel = null;
             _caseDataRecord = null;
             _statusType = CaseStatusType.NotSpecified;
-            _fieldNameType = FieldNameType.NotSpecified;
             _lastActionType = LastActionType.NotSupported;
             _handleType = HandleType.NotSupported;
         }
@@ -310,20 +308,24 @@ namespace Blaise.Nuget.Api
                         return ParkExists();
                     case LastActionType.User:
                         return UserExists();
-                    case LastActionType.Field:
-                        return FieldExists();
                     default:
                         throw new NotSupportedException("You have not declared a step previously where this action is supported");
                 }
             }
         }
 
+        public bool HasField(FieldNameType fieldNameType)
+        {
+            return FieldExists(fieldNameType);
+        }
+        
         public IFluentBlaiseSurveyApi ToPath(string filePath)
         {
             _destinationPath = filePath;
 
             return this;
         }
+
 
         public void Backup()
         {
@@ -421,15 +423,6 @@ namespace Blaise.Nuget.Api
 
                 return this;
             }
-        }
-
-        IFluentBlaiseSurveyApi IFluentBlaiseSurveyApi.WithField(FieldNameType fieldType)
-        {
-            _lastActionType = LastActionType.Field;
-
-            _fieldNameType = fieldType;
-
-            return this;
         }
 
         public SurveyType Type
@@ -720,14 +713,22 @@ namespace Blaise.Nuget.Api
             return userExists;
         }
 
-        private bool FieldExists()
+        private bool FieldExists(FieldNameType fieldNameType)
         {
-            ValidateSourceConnectionIsSet();
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-            ValidateFieldNameTypeSet();
+            bool fieldExists;
+            if (_caseDataRecord != null)
+            {
+                fieldExists = _blaiseApi.FieldExists(_caseDataRecord, fieldNameType);
+            }
+            else
+            {
+                ValidateSourceConnectionIsSet();
+                ValidateServerParkIsSet();
+                ValidateInstrumentIsSet();
 
-            var fieldExists = _blaiseApi.FieldExists(_sourceConnectionModel, _instrumentName, _serverParkName, _fieldNameType);
+                fieldExists = _blaiseApi.FieldExists(_sourceConnectionModel, _instrumentName, _serverParkName, fieldNameType);
+            }
+
             InitialiseSettings();
 
             return fieldExists;
@@ -928,14 +929,6 @@ namespace Blaise.Nuget.Api
             if (!_caseData.Any())
             {
                 throw new NullReferenceException("The 'WithData' step needs to be called with a valid value prior to this to specify the data fields of the case");
-            }
-        }
-
-        private void ValidateFieldNameTypeSet()
-        {
-            if (_fieldNameType == FieldNameType.NotSpecified)
-            {
-                throw new NullReferenceException("The 'WithField' step needs to be called with a valid value prior to this to specify the field you are interested in");
             }
         }
     }

@@ -1349,5 +1349,43 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 "The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case",
                 exception.Message);
         }
+
+        [TestCase(FieldNameType.Completed)]
+        [TestCase(FieldNameType.Processed)]
+        [TestCase(FieldNameType.WebFormStatus)]
+        [TestCase(FieldNameType.CaseId)]
+        [TestCase(FieldNameType.HOut)]
+        public void Given_Valid_Arguments_When_I_Call_Exists_Then_The_Correct_Service_Method_Is_Called(FieldNameType fieldNameType)
+        {
+            //arrange
+            _blaiseApiMock.Setup(p => p.FieldExists(It.IsAny<IDataRecord>(),
+                It.IsAny<FieldNameType>())).Returns(It.IsAny<bool>());
+
+            _sut.WithDataRecord(_caseDataRecord);
+
+            //act
+            _sut.Case.HasField(fieldNameType);
+
+            //assert
+            _blaiseApiMock.Verify(v => v.FieldExists(_caseDataRecord, fieldNameType), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_Valid_Arguments_When_I_Call_HasField_Then_The_Expected_Result_Is_Returned(bool fieldExists)
+        {
+            //arrange
+            _blaiseApiMock.Setup(p => p.FieldExists(It.IsAny<IDataRecord>(),
+                It.IsAny<FieldNameType>())).Returns(fieldExists);
+
+            _sut.WithDataRecord(_caseDataRecord);
+
+            //act
+            var result = _sut.Survey.HasField(FieldNameType.WebFormStatus);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(fieldExists, result);
+        }
     }
 }

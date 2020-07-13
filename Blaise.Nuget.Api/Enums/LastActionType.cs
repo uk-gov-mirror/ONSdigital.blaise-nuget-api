@@ -4,7 +4,6 @@
     {
         NotSupported = 0,
         Case,
-        Field,
         ServerPark,
         User
     }

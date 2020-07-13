@@ -5,13 +5,11 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IFluentBlaiseSurveyApi
     {
-        IFluentBlaiseSurveyApi WithField(FieldNameType fieldType);
-
         SurveyType Type { get; }
 
-        bool Exists { get; }
-
         IFluentBlaiseSurveyApi ToPath(string filePath);
+
+        bool HasField(FieldNameType fieldNameType);
 
         void Backup();
     }

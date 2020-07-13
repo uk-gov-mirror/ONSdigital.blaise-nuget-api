@@ -151,6 +151,11 @@ namespace Blaise.Nuget.Api.Core.Services
             return _fieldService.GetField(dataRecord, fieldNameType).DataValue;
         }
 
+        public bool FieldExists(IDataRecord dataRecord, FieldNameType fieldNameType)
+        {
+            return _fieldService.FieldExists(dataRecord, fieldNameType);
+        }
+
         public bool CaseExists(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName)
         {
             var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
