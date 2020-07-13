@@ -1,5 +1,6 @@
 ﻿using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Models;
+using Blaise.Nuget.Api.Core.Extensions;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
@@ -60,7 +61,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public IField GetField(IDataRecord dataRecord, FieldNameType fieldNameType)
         {
-            var field = dataRecord.GetField(fieldNameType.ToString());
+            var field = dataRecord.GetField(fieldNameType.FromDescription());
 
             return field;
         }

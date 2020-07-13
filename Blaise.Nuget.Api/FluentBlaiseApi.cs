@@ -360,6 +360,9 @@ namespace Blaise.Nuget.Api
             }
         }
 
+        public string CaseId => GetCaseId();
+        public decimal HOut => GetHOut();
+
         public bool Completed
         {
             get
@@ -750,6 +753,26 @@ namespace Blaise.Nuget.Api
 
             _blaiseApi.MarkCaseAsProcessed(_sourceConnectionModel, _caseDataRecord, _instrumentName, _serverParkName);
             InitialiseSettings();
+        }
+
+        private string GetCaseId()
+        {
+            ValidateCaseDataRecordIsSet();
+            var dataValue = _blaiseApi.GetFieldValue(_caseDataRecord, FieldNameType.CaseId);
+
+            InitialiseSettings();
+
+            return dataValue.ValueAsText;
+        }
+
+        private decimal GetHOut()
+        {
+            ValidateCaseDataRecordIsSet();
+            var dataValue = _blaiseApi.GetFieldValue(_caseDataRecord, FieldNameType.HOut);
+
+            InitialiseSettings();
+
+            return dataValue.IntegerValue;
         }
 
         private WebFormStatusType GetWebFormStatusType()

@@ -1246,5 +1246,108 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 "The 'WithPrimaryKey' step needs to be called with a valid value prior to this to specify the primary key value of the case",
                 exception.Message);
         }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_CaseId_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var caseId = "Case1";
+            var dataValueMock = new Mock<IDataValue>();
+            dataValueMock.Setup(d => d.ValueAsText).Returns(caseId);
+
+            _blaiseApiMock.Setup(d => d.GetFieldValue(It.IsAny<IDataRecord>(), It.IsAny<FieldNameType>())).Returns(dataValueMock.Object);
+
+            _sut.WithDataRecord(_caseDataRecord);
+
+            //act
+            var result = _sut.CaseId;
+
+            //assert
+            _blaiseApiMock.Verify(v => v.GetFieldValue(_caseDataRecord, FieldNameType.CaseId), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_CaseId_Then_The_Expected_Result_Is_Returned()
+        {
+            //arrange
+            var caseId = "Case1";
+            var dataValueMock = new Mock<IDataValue>();
+            dataValueMock.Setup(d => d.ValueAsText).Returns(caseId);
+
+            _blaiseApiMock.Setup(d => d.GetFieldValue(It.IsAny<IDataRecord>(), It.IsAny<FieldNameType>())).Returns(dataValueMock.Object);
+
+            _sut.WithDataRecord(_caseDataRecord);
+
+            //act
+            var result = _sut.CaseId;
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(caseId, result);
+        }
+
+        [Test]
+        public void Given_WithDataRecord_Has_Not_Been_Called_When_I_Call_CaseId_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var caseId = _sut.CaseId;
+            });
+            Assert.AreEqual(
+                "The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case",
+                exception.Message);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_HOut_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            decimal hOut = 1;
+            var dataValueMock = new Mock<IDataValue>();
+            dataValueMock.Setup(d => d.IntegerValue).Returns(hOut);
+            _blaiseApiMock.Setup(d => d.GetFieldValue(It.IsAny<IDataRecord>(), It.IsAny<FieldNameType>())).Returns(dataValueMock.Object);
+
+            _sut.WithDataRecord(_caseDataRecord);
+
+            //act
+            var caseId = _sut.HOut;
+
+            //assert
+            _blaiseApiMock.Verify(v => v.GetFieldValue(_caseDataRecord, FieldNameType.HOut), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_HOut_Then_The_Expected_Result_Is_Returned()
+        {
+            //arrange
+            decimal hOut = 1;
+            var dataValueMock = new Mock<IDataValue>();
+            dataValueMock.Setup(d => d.IntegerValue).Returns(hOut);
+
+            _blaiseApiMock.Setup(d => d.GetFieldValue(It.IsAny<IDataRecord>(), It.IsAny<FieldNameType>())).Returns(dataValueMock.Object);
+
+            _sut.WithDataRecord(_caseDataRecord);
+
+            //act
+            var result = _sut.HOut;
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(hOut, result);
+        }
+
+        [Test]
+        public void Given_WithDataRecord_Has_Not_Been_Called_When_I_Call_HOut_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var caseId = _sut.HOut;
+            });
+            Assert.AreEqual(
+                "The 'WithDataRecord' step needs to be called with a valid value prior to this to specify the data record of the case",
+                exception.Message);
+        }
     }
 }
