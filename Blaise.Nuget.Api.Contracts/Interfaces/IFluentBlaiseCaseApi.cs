@@ -16,6 +16,10 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         string PrimaryKey { get; }
 
+        string CaseId { get; }
+
+        decimal HOut { get; }
+
         bool Completed { get; }
 
         bool Processed { get; }
