@@ -782,6 +782,101 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
+        public void Given_A_DataRecord_And_Case_Is_Called_When_I_Call_Exists_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+
+            _blaiseApiMock.Setup(p => p.CaseExists(It.IsAny<ConnectionModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(It.IsAny<bool>());
+
+            _sut.WithConnection(_connectionModel);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.Case.WithDataRecord(_caseDataRecord);
+
+            //act
+            var sutExists = _sut.Exists;
+
+            //assert
+            _blaiseApiMock.Verify(v => v.CaseExists(It.IsAny<ConnectionModel>(), _caseDataRecord, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_A_DataRecord_And_Case_Is_Called_When_I_Call_Exists_Then_The_Expected_Result_Is_Returned(bool caseExists)
+        {
+            //arrange
+
+            _blaiseApiMock.Setup(p => p.CaseExists(It.IsAny<ConnectionModel>(), _caseDataRecord, _instrumentName, _serverParkName))
+                .Returns(caseExists);
+
+            _sut.WithConnection(_connectionModel);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.Case.WithDataRecord(_caseDataRecord);
+
+            //act
+            var result = _sut.Exists;
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(caseExists, result);
+        }
+
+        [Test]
+        public void Given_A_DataRecord_And_Case_Is_Called_But_WithConnection_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            //_sut.WithConnection(_connectionModel);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
+            _sut.Case.WithDataRecord(_caseDataRecord);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Case.Exists;
+            });
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_DataRecord_And_Case_Is_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithConnection(_connectionModel);
+            _sut.WithServerPark(_serverParkName);
+            _sut.Case.WithDataRecord(_caseDataRecord);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Exists;
+            });
+            Assert.AreEqual(
+                "The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument",
+                exception.Message);
+        }
+
+        [Test]
+        public void Given_A_DataRecord_And_Case_Is_Called_But_WithServerPark_Has_Not_Been_Called_When_I_CallExists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithConnection(_connectionModel);
+            _sut.WithInstrument(_instrumentName);
+            _sut.Case.WithDataRecord(_caseDataRecord);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Exists;
+            });
+            Assert.AreEqual(
+                "The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park",
+                exception.Message);
+        }
+
+        [Test]
         public void Given_Case_Has_Been_Called_When_I_Call_Remove_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
