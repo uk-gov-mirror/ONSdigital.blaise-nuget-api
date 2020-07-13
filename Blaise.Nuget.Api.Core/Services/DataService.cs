@@ -111,9 +111,9 @@ namespace Blaise.Nuget.Api.Core.Services
             _dataRecordService.WriteDataRecord(dataRecord, filePath);
         }
 
-        public bool CompletedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName)
+        public bool FieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName, FieldNameType fieldNameType)
         {
-            return _fieldService.CompletedFieldExists(connectionModel, instrumentName, serverParkName);
+            return _fieldService.FieldExists(connectionModel, instrumentName, serverParkName, fieldNameType);
         }
 
         public bool CaseHasBeenCompleted(IDataRecord dataRecord)
@@ -124,11 +124,6 @@ namespace Blaise.Nuget.Api.Core.Services
         public void MarkCaseAsComplete(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
             _fieldService.MarkCaseAsComplete(connectionModel, dataRecord, instrumentName, serverParkName);
-        }
-
-        public bool ProcessedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName)
-        {
-            return _fieldService.ProcessedFieldExists(connectionModel, instrumentName, serverParkName);
         }
 
         public bool CaseHasBeenProcessed(IDataRecord dataRecord)

@@ -132,9 +132,9 @@ namespace Blaise.Nuget.Api
             get
             {
                 ValidateSourceConnectionIsSet();
-                
-                var serverParkNames =  _blaiseApi.GetServerParkNames(_sourceConnectionModel);
-                
+
+                var serverParkNames = _blaiseApi.GetServerParkNames(_sourceConnectionModel);
+
                 InitialiseSettings();
 
                 return serverParkNames;
@@ -146,7 +146,7 @@ namespace Blaise.Nuget.Api
             get
             {
                 var cases = GetCases();
-                
+
                 InitialiseSettings();
                 return cases;
             }
@@ -352,7 +352,7 @@ namespace Blaise.Nuget.Api
             {
                 ValidateCaseDataRecordIsSet();
 
-                var primaryKey =  _blaiseApi.GetPrimaryKeyValue(_caseDataRecord);
+                var primaryKey = _blaiseApi.GetPrimaryKeyValue(_caseDataRecord);
 
                 InitialiseSettings();
 
@@ -366,7 +366,7 @@ namespace Blaise.Nuget.Api
             {
                 ValidateCaseDataRecordIsSet();
 
-                var completed =  _blaiseApi.CaseHasBeenCompleted(_caseDataRecord);
+                var completed = _blaiseApi.CaseHasBeenCompleted(_caseDataRecord);
 
                 InitialiseSettings();
 
@@ -437,7 +437,7 @@ namespace Blaise.Nuget.Api
                 ValidateServerParkIsSet();
                 ValidateInstrumentIsSet();
 
-                var surveyType =  _blaiseApi.GetSurveyType(_sourceConnectionModel, _instrumentName, _serverParkName);
+                var surveyType = _blaiseApi.GetSurveyType(_sourceConnectionModel, _instrumentName, _serverParkName);
 
                 InitialiseSettings();
 
@@ -494,9 +494,9 @@ namespace Blaise.Nuget.Api
             ValidateServerParkIsSet();
 
             var dataRecord = _blaiseApi.GetDataRecord(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName);
-            
+
             InitialiseSettings();
-            
+
             return dataRecord;
         }
 
@@ -637,7 +637,7 @@ namespace Blaise.Nuget.Api
                 ValidateToInstrumentIsSet();
                 ValidateToServerParkIsSet();
 
-                _blaiseApi.MoveCase(_sourceConnectionModel,_primaryKeyValue, _instrumentName, _serverParkName, _destinationConnectionModel,
+                _blaiseApi.MoveCase(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName, _destinationConnectionModel,
                     _toInstrumentName, _toServerParkName);
 
                 InitialiseSettings();
@@ -722,21 +722,12 @@ namespace Blaise.Nuget.Api
             ValidateSourceConnectionIsSet();
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
+            ValidateFieldNameTypeSet();
 
-            switch (_fieldNameType)
-            {
-                case FieldNameType.Completed:
-                    var completedFieldExists = _blaiseApi.CompletedFieldExists(_sourceConnectionModel, _instrumentName, _serverParkName);
-                    InitialiseSettings();
-                    return completedFieldExists;
-                case FieldNameType.Processed:
-                    var processedFieldExists = _blaiseApi.ProcessedFieldExists(_sourceConnectionModel, _instrumentName, _serverParkName);
-                    InitialiseSettings();
-                    return processedFieldExists;
-                default:
-                    InitialiseSettings();
-                    throw new NotSupportedException("You have not declared a field previously where this action is supported");
-            }
+            var fieldExists = _blaiseApi.FieldExists(_sourceConnectionModel, _instrumentName, _serverParkName, _fieldNameType);
+            InitialiseSettings();
+
+            return fieldExists;
         }
 
         private void SetStatusAsComplete()
@@ -914,6 +905,14 @@ namespace Blaise.Nuget.Api
             if (!_caseData.Any())
             {
                 throw new NullReferenceException("The 'WithData' step needs to be called with a valid value prior to this to specify the data fields of the case");
+            }
+        }
+
+        private void ValidateFieldNameTypeSet()
+        {
+            if (_fieldNameType == FieldNameType.NotSpecified)
+            {
+                throw new NullReferenceException("The 'WithField' step needs to be called with a valid value prior to this to specify the field you are interested in");
             }
         }
     }

@@ -40,19 +40,21 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _sut = new FieldService(_dataRecordServiceMock.Object, _dataModelServiceMock.Object);
         }
 
-        [Test]
-        public void Given_I_Call_CompletedFieldExists_Then_The_Correct_Services_Are_Called()
+        [TestCase(FieldNameType.Completed)]
+        [TestCase(FieldNameType.Processed)]
+        [TestCase(FieldNameType.WebFormStatus)]
+        public void Given_I_Call_FieldExists_Then_The_Correct_Services_Are_Called(FieldNameType fieldNameType)
         {
             //arrange
             var dataModelMock = new Mock<IDatamodel>();
             dataModelMock.As<IDefinitionScope2>();
-            dataModelMock.As<IDefinitionScope2>().Setup(d => d.FieldExists("CompletedFieldName")).Returns(It.IsAny<bool>());
+            dataModelMock.As<IDefinitionScope2>().Setup(d => d.FieldExists(fieldNameType.ToString())).Returns(It.IsAny<bool>());
 
             _dataModelServiceMock.Setup(d => d.GetDataModel(_connectionModel, It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(dataModelMock.Object);
 
             //act
-            _sut.CompletedFieldExists(_connectionModel, _instrumentName, _serverParkName);
+            _sut.FieldExists(_connectionModel, _instrumentName, _serverParkName, fieldNameType);
 
             //assert
             _dataModelServiceMock.Verify(d => d.GetDataModel(_connectionModel, _instrumentName, _serverParkName), Times.Once);
@@ -60,17 +62,17 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_I_Call_CompletedFieldExists_Then_The_Correct_Value_Is_Returned(bool fieldExists)
+        public void Given_I_Call_FieldExists_Then_The_Correct_Value_Is_Returned(bool fieldExists)
         {
             //arrange
             var dataModelMock = new Mock<IDatamodel>();
             dataModelMock.As<IDefinitionScope2>();
-            dataModelMock.As<IDefinitionScope2>().Setup(d => d.FieldExists(_completedFieldName)).Returns(fieldExists);
+            dataModelMock.As<IDefinitionScope2>().Setup(d => d.FieldExists(FieldNameType.Completed.ToString())).Returns(fieldExists);
             _dataModelServiceMock.Setup(d => d.GetDataModel(_connectionModel, It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(dataModelMock.Object);
 
             //act
-            var result = _sut.CompletedFieldExists(_connectionModel, _instrumentName, _serverParkName);
+            var result = _sut.FieldExists(_connectionModel, _instrumentName, _serverParkName, FieldNameType.Completed);
 
             //assert
             Assert.NotNull(result);
@@ -112,43 +114,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, dataRecordMock.Object, _instrumentName, _serverParkName));
-        }
-
-        [Test]
-        public void Given_I_Call_ProcessedFieldExists_Then_The_Correct_Services_Are_Called()
-        {
-            //arrange
-            var dataModelMock = new Mock<IDatamodel>();
-            dataModelMock.As<IDefinitionScope2>();
-            dataModelMock.As<IDefinitionScope2>().Setup(d => d.FieldExists(_processedFieldName)).Returns(It.IsAny<bool>());
-
-            _dataModelServiceMock.Setup(d => d.GetDataModel(_connectionModel, It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(dataModelMock.Object);
-
-            //act
-            _sut.ProcessedFieldExists(_connectionModel, _instrumentName, _serverParkName);
-
-            //assert
-            _dataModelServiceMock.Verify(d => d.GetDataModel(_connectionModel, _instrumentName, _serverParkName), Times.Once);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void Given_I_Call_ProcessedFieldExists_Then_The_Correct_Value_Is_Returned(bool fieldExists)
-        {
-            //arrange
-            var dataModelMock = new Mock<IDatamodel>();
-            dataModelMock.As<IDefinitionScope2>();
-            dataModelMock.As<IDefinitionScope2>().Setup(d => d.FieldExists(_processedFieldName)).Returns(fieldExists);
-            _dataModelServiceMock.Setup(d => d.GetDataModel(_connectionModel, It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(dataModelMock.Object);
-
-            //act
-            var result = _sut.ProcessedFieldExists(_connectionModel, _instrumentName, _serverParkName);
-
-            //assert
-            Assert.NotNull(result);
-            Assert.AreEqual(fieldExists, result);
         }
 
         [TestCase(2, false)]

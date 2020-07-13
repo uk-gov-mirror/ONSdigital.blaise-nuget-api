@@ -281,13 +281,13 @@ namespace Blaise.Nuget.Api
             _dataService.UpdateDataRecord(connectionModel, dataRecord, fieldData, instrumentName, serverParkName);
         }
 
-        public bool CompletedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName)
+        public bool FieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName, FieldNameType fieldNameType)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            return _dataService.CompletedFieldExists(connectionModel, instrumentName, serverParkName);
+            return _dataService.FieldExists(connectionModel, instrumentName, serverParkName, fieldNameType);
         }
 
         public bool CaseHasBeenCompleted(IDataRecord dataRecord)
@@ -305,15 +305,6 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             _dataService.MarkCaseAsComplete(connectionModel, dataRecord, instrumentName, serverParkName);
-        }
-
-        public bool ProcessedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName)
-        {
-            connectionModel.ThrowExceptionIfNull("connectionModel");
-            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
-
-            return _dataService.ProcessedFieldExists(connectionModel, instrumentName, serverParkName);
         }
 
         public bool CaseHasBeenProcessed(IDataRecord dataRecord)

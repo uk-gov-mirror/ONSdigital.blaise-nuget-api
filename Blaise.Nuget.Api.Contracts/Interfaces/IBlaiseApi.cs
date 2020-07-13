@@ -66,13 +66,12 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         void UpdateDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, Dictionary<string, string> fieldData, string instrumentName,
             string serverParkName);
 
-        bool CompletedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName);
+        bool FieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName, FieldNameType fieldNameType);
 
         bool CaseHasBeenCompleted(IDataRecord dataRecord);
 
         void MarkCaseAsComplete(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
 
-        bool ProcessedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName);
         bool CaseHasBeenProcessed(IDataRecord dataRecord);
 
         IDataValue GetFieldValue(IDataRecord dataRecord, FieldNameType fieldNameType);

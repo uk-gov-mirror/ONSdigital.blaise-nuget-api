@@ -373,25 +373,28 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _filePath), Times.Once);
         }
 
-        [Test]
-        public void Given_Valid_Arguments_When_I_Call_CompletedFieldExists_Then_The_Correct_Services_Are_Called()
+        [TestCase(FieldNameType.Completed)]
+        [TestCase(FieldNameType.Processed)]
+        [TestCase(FieldNameType.WebFormStatus)]
+        public void Given_Valid_Arguments_When_I_Call_FieldExists_Then_The_Correct_Services_Are_Called(FieldNameType fieldNameType)
         {
             //act
-            _sut.CompletedFieldExists(_connectionModel, _instrumentName, _serverParkName);
+            _sut.FieldExists(_connectionModel, _instrumentName, _serverParkName, fieldNameType);
 
             //assert
-            _fieldServiceMock.Verify(v => v.CompletedFieldExists(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+            _fieldServiceMock.Verify(v => v.FieldExists(_connectionModel, _instrumentName, _serverParkName, fieldNameType), Times.Once);
         }
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_Valid_Arguments_When_I_Call_CompletedFieldExists_Then_The_Correct_Value_Is_Returned(bool fieldExists)
+        public void Given_Valid_Arguments_When_I_Call_FieldExists_Then_The_Correct_Value_Is_Returned(bool fieldExists)
         {
             //arrange
-            _fieldServiceMock.Setup(f => f.CompletedFieldExists(_connectionModel, It.IsAny<string>(), It.IsAny<string>())).Returns(fieldExists);
+            _fieldServiceMock.Setup(f => f.FieldExists(_connectionModel, It.IsAny<string>(), It.IsAny<string>(),
+                It.IsAny<FieldNameType>())).Returns(fieldExists);
 
             //act
-            var result = _sut.CompletedFieldExists(_connectionModel, _instrumentName, _serverParkName);
+            var result = _sut.FieldExists(_connectionModel, _instrumentName, _serverParkName, FieldNameType.WebFormStatus);
 
             //assert
             Assert.AreEqual(fieldExists, result);
@@ -429,30 +432,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _fieldServiceMock.Verify(v => v.MarkCaseAsComplete(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
-        }
-
-        [Test]
-        public void Given_Valid_Arguments_When_I_Call_ProcessedFieldExists_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.ProcessedFieldExists(_connectionModel, _instrumentName, _serverParkName);
-
-            //assert
-            _fieldServiceMock.Verify(v => v.ProcessedFieldExists(_connectionModel, _instrumentName, _serverParkName), Times.Once);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void Given_Valid_Arguments_When_I_Call_ProcessedFieldExists_Then_The_Correct_Value_Is_Returned(bool fieldExists)
-        {
-            //arrange
-            _fieldServiceMock.Setup(f => f.ProcessedFieldExists(_connectionModel, It.IsAny<string>(), It.IsAny<string>())).Returns(fieldExists);
-
-            //act
-            var result = _sut.ProcessedFieldExists(_connectionModel, _instrumentName, _serverParkName);
-
-            //assert
-            Assert.AreEqual(fieldExists, result);
         }
 
         [Test]

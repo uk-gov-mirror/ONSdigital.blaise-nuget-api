@@ -250,37 +250,41 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
         }
 
-        [Test]
-        public void Given_WithField_Completed_Is_Called_When_I_Call_Exists_Then_The_Correct_Service_Method_Is_Called()
+        [TestCase(FieldNameType.Completed)]
+        [TestCase(FieldNameType.Processed)]
+        [TestCase(FieldNameType.WebFormStatus)]
+        public void Given_WithField_Is_Called_When_I_Call_Exists_Then_The_Correct_Service_Method_Is_Called(FieldNameType fieldNameType)
         {
             //arrange
 
-            _blaiseApiMock.Setup(p => p.CompletedFieldExists(_connectionModel, It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
+            _blaiseApiMock.Setup(p => p.FieldExists(_connectionModel, It.IsAny<string>(), 
+                It.IsAny<string>(), It.IsAny<FieldNameType>())).Returns(It.IsAny<bool>());
 
             _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.Survey.WithField(FieldNameType.Completed);
+            _sut.Survey.WithField(fieldNameType);
 
             //act
             var sutExists = _sut.Exists;
 
             //assert
-            _blaiseApiMock.Verify(v => v.CompletedFieldExists(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+            _blaiseApiMock.Verify(v => v.FieldExists(_connectionModel, _instrumentName, _serverParkName, fieldNameType), Times.Once);
         }
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Given_WithField_Completed_Is_Called_When_I_Call_Exists_Then_The_Expected_Result_Is_Returned(bool fieldExists)
+        public void Given_WithField_Is_Called_When_I_Call_Exists_Then_The_Expected_Result_Is_Returned(bool fieldExists)
         {
             //arrange
 
-            _blaiseApiMock.Setup(p => p.CompletedFieldExists(_connectionModel, _instrumentName, _serverParkName)).Returns(fieldExists);
+            _blaiseApiMock.Setup(p => p.FieldExists(_connectionModel, _instrumentName, _serverParkName
+                ,FieldNameType.WebFormStatus)).Returns(fieldExists);
 
             _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.Survey.WithField(FieldNameType.Completed);
+            _sut.Survey.WithField(FieldNameType.WebFormStatus);
 
             //act
             var result = _sut.Exists;
@@ -291,7 +295,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithConnection_Completed_Is_Called_But_Instrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithField_Is_Called_But_Connection_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithServerPark(_serverParkName);
@@ -308,7 +312,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithField_Completed_Is_Called_But_Instrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithField_Is_Called_But_Instrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -324,7 +328,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithField_Completed_Is_Called_But_ServerPark_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithField_Is_Called_But_ServerPark_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -340,91 +344,20 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithField_Processed_Is_Called_When_I_Call_Exists_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_WithField_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
-
-            _blaiseApiMock.Setup(p => p.CompletedFieldExists(_connectionModel, It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
-
             _sut.WithConnection(_connectionModel);
-            _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
-            _sut.Survey.WithField(FieldNameType.Processed);
-
-            //act
-            var sutExists = _sut.Exists;
-
-            //assert
-            _blaiseApiMock.Verify(v => v.ProcessedFieldExists(_connectionModel, _instrumentName, _serverParkName), Times.Once);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void Given_WithField_Processed_Is_Called_When_I_Call_Exists_Then_The_Expected_Result_Is_Returned(bool fieldExists)
-        {
-            //arrange
-
-            _blaiseApiMock.Setup(p => p.ProcessedFieldExists(It.IsAny<ConnectionModel>(), _instrumentName, _serverParkName)).Returns(fieldExists);
-
-            _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
-            _sut.WithInstrument(_instrumentName);
-            _sut.Survey.WithField(FieldNameType.Processed);
-
-            //act
-            var result = _sut.Exists;
-
-            //assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(fieldExists, result);
-        }
-
-        [Test]
-        public void Given_WithField_Processed_Is_Called_But_WithConnection_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            _sut.WithServerPark(_serverParkName);
-            _sut.WithInstrument(_instrumentName);
-            _sut.Survey.WithField(FieldNameType.Processed);
+            _sut.Survey.WithField(FieldNameType.NotSpecified);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() =>
             {
-                var sutExists = _sut.Exists;
+                var sutExists = _sut.Survey.Exists;
             });
-            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
-        }
-
-        [Test]
-        public void Given_WithField_Processed_Is_Called_But_Instrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            _sut.WithConnection(_connectionModel);
-            _sut.WithServerPark(_serverParkName);
-            _sut.Survey.WithField(FieldNameType.Processed);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() =>
-            {
-                var sutExists = _sut.Exists;
-            });
-            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
-        }
-
-        [Test]
-        public void Given_WithField_Processed_Is_Called_But_ServerPark_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            _sut.WithConnection(_connectionModel);
-            _sut.WithInstrument(_instrumentName);
-            _sut.Survey.WithField(FieldNameType.Processed);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() =>
-            {
-                var sutExists = _sut.Exists;
-            });
-            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithField' step needs to be called with a valid value prior to this to specify the field you are interested in", exception.Message);
         }
     }
 }
