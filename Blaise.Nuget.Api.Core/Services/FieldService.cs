@@ -19,12 +19,12 @@ namespace Blaise.Nuget.Api.Core.Services
             _dataModelService = dataModelService;
         }
 
-        public bool CompletedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName)
+        public bool FieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName, FieldNameType fieldNameType)
         {
             var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
             var definitionScope = (IDefinitionScope2)dataModel;
 
-            return definitionScope.FieldExists(FieldNameType.Completed.ToString());
+            return definitionScope.FieldExists(fieldNameType.ToString());
         }
 
         public bool CaseHasBeenCompleted(IDataRecord dataRecord)
@@ -40,14 +40,6 @@ namespace Blaise.Nuget.Api.Core.Services
             completedField.DataValue.Assign("1");
 
             _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
-        }
-
-        public bool ProcessedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName)
-        {
-            var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
-            var definitionScope = (IDefinitionScope2)dataModel;
-
-            return definitionScope.FieldExists(FieldNameType.Processed.ToString());
         }
 
         public bool CaseHasBeenProcessed(IDataRecord dataRecord)

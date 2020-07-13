@@ -6,13 +6,11 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 {
     public interface IFieldService
     {
-        bool CompletedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName);
+        bool FieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName, FieldNameType fieldNameType);
 
         bool CaseHasBeenCompleted(IDataRecord dataRecord);
 
         void MarkCaseAsComplete(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
-
-        bool ProcessedFieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         bool CaseHasBeenProcessed(IDataRecord dataRecord);
 
