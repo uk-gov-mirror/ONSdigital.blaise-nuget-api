@@ -38,6 +38,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         bool CaseExists(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName);
 
+        bool CaseExists(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
+
         string GetPrimaryKeyValue(IDataRecord dataRecord);
 
         void AssignPrimaryKeyValue(IKey key, string primaryKeyValue);

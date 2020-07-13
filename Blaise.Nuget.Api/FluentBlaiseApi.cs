@@ -145,9 +145,7 @@ namespace Blaise.Nuget.Api
         {
             get
             {
-                var cases = string.IsNullOrWhiteSpace(_filePath) 
-                    ? GetCasesFromDatabase() 
-                    : GetCasesFromFile();
+                var cases = GetCases();
                 
                 InitialiseSettings();
                 return cases;
@@ -628,6 +626,15 @@ namespace Blaise.Nuget.Api
             throw new ArgumentException("You must specify a file with the 'ToFile' step, or a server with the 'ToServer' step before calling handle");
         }
 
+        private IDataSet GetCases()
+        {
+            var cases = string.IsNullOrWhiteSpace(_filePath)
+                ? GetCasesFromDatabase()
+                : GetCasesFromFile();
+
+            return cases;
+        }
+
         private IDataSet GetCasesFromFile()
         {
             return _blaiseApi.GetDataSet(_filePath);
@@ -647,9 +654,19 @@ namespace Blaise.Nuget.Api
             ValidateSourceConnectionIsSet();
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
-            ValidatePrimaryKeyValueIsSet();
 
-            var caseExists = _blaiseApi.CaseExists(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName);
+            bool caseExists;
+            if (_caseDataRecord != null)
+            {
+                caseExists = _blaiseApi.CaseExists(_sourceConnectionModel, _caseDataRecord, _instrumentName, _serverParkName);
+            }
+            else
+            {
+                ValidatePrimaryKeyValueIsSet();
+
+                caseExists = _blaiseApi.CaseExists(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName);
+            }
+
             InitialiseSettings();
 
             return caseExists;

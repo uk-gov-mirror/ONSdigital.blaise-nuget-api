@@ -163,6 +163,18 @@ namespace Blaise.Nuget.Api
             return _dataService.CaseExists(connectionModel, primaryKeyValue, instrumentName, serverParkName);
         }
 
+        public bool CaseExists(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
+        {
+            connectionModel.ThrowExceptionIfNull("connectionModel");
+            dataRecord.ThrowExceptionIfNull("dataRecord");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            var primaryKeyValue = GetPrimaryKeyValue(dataRecord);
+
+            return _dataService.CaseExists(connectionModel, primaryKeyValue, instrumentName, serverParkName);
+        }
+
         public string GetPrimaryKeyValue(IDataRecord dataRecord)
         {
             dataRecord.ThrowExceptionIfNull("dataRecord");
