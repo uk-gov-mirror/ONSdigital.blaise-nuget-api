@@ -35,7 +35,7 @@ namespace Blaise.Nuget.Api.Core.Services
         {
             var serverParkNames = GetServerParkNames(connectionModel);
 
-            return serverParkNames.Any(sp => sp.Equals(serverParkName, StringComparison.OrdinalIgnoreCase));
+            return serverParkNames.Any(sp => sp.Equals(serverParkName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public IServerPark GetServerPark(ConnectionModel connectionModel, string serverParkName)

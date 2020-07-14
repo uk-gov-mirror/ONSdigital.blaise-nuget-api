@@ -278,7 +278,14 @@ namespace Blaise.Nuget.Api
             }
         }
 
-        public IFluentBlaiseSurveyApi Survey => this;
+        public IFluentBlaiseSurveyApi Survey
+        {
+            get
+            {
+                _lastActionType = LastActionType.Survey;
+                return this;
+            }
+        }
 
         public IEnumerable<ISurvey> Surveys
         {
@@ -306,6 +313,8 @@ namespace Blaise.Nuget.Api
                         return CaseExists();
                     case LastActionType.ServerPark:
                         return ParkExists();
+                    case LastActionType.Survey:
+                        return SurveyExists();
                     case LastActionType.User:
                         return UserExists();
                     default:
@@ -701,6 +710,17 @@ namespace Blaise.Nuget.Api
             return parkExists;
         }
 
+        private bool SurveyExists()
+        {
+            ValidateSourceConnectionIsSet();
+            ValidateServerParkIsSet();
+            ValidateInstrumentIsSet();
+
+            var surveyExists = _blaiseApi.SurveyExists(_sourceConnectionModel, _instrumentName, _serverParkName);
+            InitialiseSettings();
+
+            return surveyExists;
+        }
 
         private bool UserExists()
         {

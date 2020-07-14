@@ -107,6 +107,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.AreEqual($"No surveys found for server park '{serverParkName}'", exception.Message);
         }
 
+        [TestCase("TestInstrumentName", true)]
+        [TestCase("InstrumentNotFound", false)]
+        public void Given_I_Call_SurveyExists_Then_I_Get_A_Correct_Value_Returned(string instrumentName, bool exists)
+        {
+            //act
+            var result = _sut.SurveyExists(_connectionModel, instrumentName, _serverParkName);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual(exists, result);
+        }
+
         [Test]
         public void Given_I_Call_GetSurveys_Then_I_Get_A_Correct_List_Of_Surveys_Returned()
         {

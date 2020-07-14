@@ -3,7 +3,7 @@ using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using NUnit.Framework;
 
-namespace Blaise.Nuget.Api.Tests.Unit.Integration.Handler
+namespace Blaise.Nuget.Api.Tests.Behaviour.Handler
 {
     public class FluentApiHandlerUnderLoadTests
     {
@@ -38,9 +38,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Handler
             _primaryKey = "90000666";
         }
 
-
-
-        [Ignore("Wont run without app settings on build environment")]
         [TestCase(100)]
         public void Given_I_Use_Create_Then_Delete_A_Case_X_Times_It_Handles_Successfully(int numberOfTimes)
         {

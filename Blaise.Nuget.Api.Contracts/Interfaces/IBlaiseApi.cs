@@ -18,6 +18,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IEnumerable<string> GetSurveyNames(ConnectionModel connectionModel, string serverParkName);
 
+        bool SurveyExists(ConnectionModel connectionModel, string instrumentName, string serverParkName);
+
         IEnumerable<ISurvey> GetSurveys(ConnectionModel connectionModel, string serverParkName);
 
         IEnumerable<ISurvey> GetAllSurveys(ConnectionModel connectionModel);

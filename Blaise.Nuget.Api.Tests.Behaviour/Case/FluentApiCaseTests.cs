@@ -4,13 +4,13 @@ using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using NUnit.Framework;
 
-namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
+namespace Blaise.Nuget.Api.Tests.Behaviour.Case
 {
     public class FluentApiCaseTests
     {
         private readonly ConnectionModel _connectionModel;
 
-		public FluentApiCaseTests()
+        public FluentApiCaseTests()
         {
             _connectionModel = new ConnectionModel
             {
@@ -20,11 +20,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
                 ServerName = "localhost",
                 Port = 8031,
                 RemotePort = 8033,
-				ConnectionExpiresInMinutes = 10
+                ConnectionExpiresInMinutes = 1
             };
         }
 
-		[Ignore("Wont run without app settings on build environment")]
 		[Test]
         public void Given_I_Use_With_Connection_And_A_Case_That_Exists_When_I_Call_Exists_True_Is_Returned()
         {
@@ -44,7 +43,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
 			Assert.True(result);
         }
 
-		[Ignore("Wont run without app settings on build environment")]
         [Test]
         public void Given_A_Case_That_Exists_When_I_Call_Exists_True_Is_Returned()
         {
@@ -64,7 +62,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
             Assert.True(result);
         }
 
-		[Ignore("Wont run without app settings on build environment")]
 		[TestCase(FieldNameType.Completed, true)]
         [TestCase(FieldNameType.Processed, true)]
         [TestCase(FieldNameType.WebFormStatus, true)]
@@ -94,7 +91,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Case
 			Assert.AreEqual(exists, result);
         }
 
-		[Ignore("Wont run without app settings on build environment")]
 		[Test]
         public void Given_Valid_Values_When_I_Call_Add_A_New_Case_Is_Added()
         {
