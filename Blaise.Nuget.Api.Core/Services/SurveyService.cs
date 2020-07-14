@@ -25,6 +25,13 @@ namespace Blaise.Nuget.Api.Core.Services
             return surveys.Select(sp => sp.Name);
         }
 
+        public bool SurveyExists(ConnectionModel connectionModel, string instrumentName, string serverParkName)
+        {
+            var surveyNames = GetSurveyNames(connectionModel, serverParkName);
+
+            return surveyNames.Any(sp => sp.Equals(instrumentName, StringComparison.InvariantCultureIgnoreCase));
+        }
+
         public IEnumerable<ISurvey> GetSurveys(ConnectionModel connectionModel, string serverParkName)
         {
             var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);

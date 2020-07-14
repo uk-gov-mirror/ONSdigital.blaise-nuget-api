@@ -12,5 +12,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         bool HasField(FieldNameType fieldNameType);
 
         void Backup();
+
+        bool Exists { get; }
     }
 }

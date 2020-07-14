@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using StatNeth.Blaise.API.DataLink;
 
-namespace Blaise.Nuget.Api.Tests.Unit.Integration.Processor
+namespace Blaise.Nuget.Api.Tests.Behaviour.Processor
 {
     public class FluentApiProcessorTests
     {
@@ -11,7 +11,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Processor
         public void Given_A_Bdix_File_When_I_Call_GetDataLink_A_DataLink_Is_Returned(string file)
         {
             //act
-
             var dataLink = DataLinkManager.GetDataLink(file);
 
             //assert

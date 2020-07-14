@@ -101,6 +101,15 @@ namespace Blaise.Nuget.Api
             return _parkService.ServerParkExists(connectionModel, serverParkName);
         }
 
+        public bool SurveyExists(ConnectionModel connectionModel, string instrumentName, string serverParkName)
+        {
+            connectionModel.ThrowExceptionIfNull("connectionModel");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _surveyService.SurveyExists(connectionModel, instrumentName, serverParkName);
+        }
+
         public Guid GetInstrumentId(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");

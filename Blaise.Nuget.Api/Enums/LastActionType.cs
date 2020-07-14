@@ -5,6 +5,7 @@
         NotSupported = 0,
         Case,
         ServerPark,
+        Survey,
         User
     }
 }

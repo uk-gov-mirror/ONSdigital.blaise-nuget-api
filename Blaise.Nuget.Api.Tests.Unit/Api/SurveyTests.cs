@@ -58,6 +58,76 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         }
 
         [Test]
+        public void Given_Valid_Arguments_When_I_Call_SurveyExists_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            _surveyServiceMock.Setup(p => p.SurveyExists(_connectionModel, It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
+
+            //act
+            _sut.SurveyExists(_connectionModel, _instrumentName, _serverParkName);
+
+            //assert
+            _surveyServiceMock.Verify(v => v.SurveyExists(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_Valid_Arguments_When_I_Call_SurveyExists_Then_The_Expected_Result_Is_Returned(bool exists)
+        {
+            //arrange
+            _surveyServiceMock.Setup(p => p.SurveyExists(_connectionModel, _instrumentName,_serverParkName))
+                .Returns(exists);
+
+            //act            
+            var result = _sut.SurveyExists(_connectionModel, _instrumentName, _serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(exists, result);
+        }
+
+        [Test]
+        public void Given_A_Null_ConnectionModel_When_I_Call_SurveyExists_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.SurveyExists(null, _instrumentName, _serverParkName));
+            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_SurveyExists_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.SurveyExists(_connectionModel, string.Empty, _serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_SurveyExists_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() =>
+                    _sut.SurveyExists(_connectionModel, null, _serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_SurveyExists_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.SurveyExists(_connectionModel, _instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_SurveyExists_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.SurveyExists(_connectionModel, _instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
         public void When_I_Call_GetAllSurveys_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange

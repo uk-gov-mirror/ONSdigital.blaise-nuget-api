@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using Blaise.Nuget.Api.Contracts.Enums;
+﻿using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using NUnit.Framework;
 
-namespace Blaise.Nuget.Api.Tests.Unit.Integration.Survey
+namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
 {
     public class FluentApiSurveyTests
     {
@@ -24,7 +23,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Integration.Survey
             };
         }
 
-		[Ignore("Wont run without app settings on build environment")]
 		[TestCase(FieldNameType.Completed, true)]
         [TestCase(FieldNameType.Processed, true)]
         [TestCase(FieldNameType.WebFormStatus, true)]

@@ -242,7 +242,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         [TestCase(FieldNameType.WebFormStatus)]
         [TestCase(FieldNameType.CaseId)]
         [TestCase(FieldNameType.HOut)]
-        public void Given_Valid_Arguments_When_I_Call_Exists_Then_The_Correct_Service_Method_Is_Called(FieldNameType fieldNameType)
+        public void Given_Valid_Arguments_When_I_Call_HasField_Then_The_Correct_Service_Method_Is_Called(FieldNameType fieldNameType)
         {
             //arrange
 
@@ -282,7 +282,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Connection_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Connection_Has_Not_Been_Called_When_I_Call_HasField_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithServerPark(_serverParkName);
@@ -323,6 +323,91 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             var exception = Assert.Throws<NullReferenceException>(() =>
             {
                 var sutExists = _sut.Survey.HasField(FieldNameType.Completed);
+            });
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_Exists_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+
+            _blaiseApiMock.Setup(p => p.SurveyExists(_connectionModel, It.IsAny<string>(),
+                It.IsAny<string>())).Returns(It.IsAny<bool>());
+
+            _sut.WithConnection(_connectionModel);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+
+            //act
+            var sutExists = _sut.Survey.Exists;
+
+            //assert
+            _blaiseApiMock.Verify(v => v.SurveyExists(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Given_Valid_Arguments_When_I_Call_Exists_Then_The_Expected_Result_Is_Returned(bool exists)
+        {
+            //arrange
+
+            _blaiseApiMock.Setup(p => p.SurveyExists(_connectionModel, _instrumentName, _serverParkName)).Returns(exists);
+
+            _sut.WithConnection(_connectionModel);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+
+            //act
+            var result = _sut.Survey.Exists;
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(exists, result);
+        }
+
+        [Test]
+        public void Given_Connection_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Survey.Exists;
+            });
+
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+        }
+
+        [Test]
+        public void Given_Instrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithConnection(_connectionModel);
+            _sut.WithServerPark(_serverParkName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Survey.Exists;
+            });
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
+        }
+
+        [Test]
+        public void Given_ServerPark_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithConnection(_connectionModel);
+            _sut.WithInstrument(_instrumentName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                var sutExists = _sut.Survey.Exists;
             });
             Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
         }
