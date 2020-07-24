@@ -12,7 +12,7 @@ namespace Blaise.Nuget.Api.Providers
             {
                 ServerName = ConfigurationManager.AppSettings["BlaiseServerHostName"],
                 UserName = ConfigurationManager.AppSettings["BlaiseServerUserName"],
-                Password = ConfigurationManager.AppSettings["BlaiseServerPassword"],
+                Password = Environment.GetEnvironmentVariable("BLAISE_SERVER_PASSWORD", EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["BlaiseServerPassword"],
                 Binding = ConfigurationManager.AppSettings["BlaiseServerBinding"],
                 Port = ConvertToInt(ConfigurationManager.AppSettings["BlaiseConnectionPort"]),
                 RemotePort = ConvertToInt(ConfigurationManager.AppSettings["BlaiseRemoteConnectionPort"]),
