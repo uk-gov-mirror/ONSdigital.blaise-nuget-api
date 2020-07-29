@@ -10,18 +10,18 @@ namespace Blaise.Nuget.Api.Providers
         {
             var connectionModel = new ConnectionModel
             {
-                ServerName = ConfigurationManager.AppSettings["BlaiseServerHostName"],
-                UserName = ConfigurationManager.AppSettings["BlaiseServerUserName"],
-                Password = Environment.GetEnvironmentVariable("BLAISE_SERVER_PASSWORD", EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["BlaiseServerPassword"],
-                Binding = ConfigurationManager.AppSettings["BlaiseServerBinding"],
-                Port = ConvertToInt(ConfigurationManager.AppSettings["BlaiseConnectionPort"]),
-                RemotePort = ConvertToInt(ConfigurationManager.AppSettings["BlaiseRemoteConnectionPort"]),
-                ConnectionExpiresInMinutes = ConvertToInt(ConfigurationManager.AppSettings["ConnectionExpiresInMinutes"]),
+                ServerName = Environment.GetEnvironmentVariable("ENV_BLAISE_SERVER_HOST_NAME", EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["BlaiseServerHostName"],
+                UserName = Environment.GetEnvironmentVariable("ENV_BLAISE_ADMIN_USER", EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["BlaiseServerUserName"],
+                Password = Environment.GetEnvironmentVariable("ENV_BLAISE_ADMIN_PASSWORD", EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["BlaiseServerPassword"],
+                Binding = Environment.GetEnvironmentVariable("ENV_BLAISE_SERVER_BINDING", EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["BlaiseServerBinding"],
+                Port = ConvertToInt(Environment.GetEnvironmentVariable("ENV_BLAISE_CONNECTION_PORT", EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["BlaiseConnectionPort"]),
+                RemotePort = ConvertToInt(Environment.GetEnvironmentVariable("ENV_BLAISE_REMOTE_CONNECTION_PORT", EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["BlaiseRemoteConnectionPort"]),
+                ConnectionExpiresInMinutes = Environment.GetEnvironmentVariable("ENV_CONNECTION_EXPIRES_IN_MINUTES", EnvironmentVariableTarget.Machine) ?? ConvertToInt(ConfigurationManager.AppSettings["ConnectionExpiresInMinutes"]),
             };
             return connectionModel;
-        }
+        }         
 
-        public string LibraryDirectory => ConfigurationManager.AppSettings["LibraryDirectory"];
+        public string LibraryDirectory => Environment.GetEnvironmentVariable("ENV_LIBRARY_DIRECTORY", EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["LibraryDirectory"];
 
         public int ConnectionExpiresInMinutes =>
             ConvertToInt(ConfigurationManager.AppSettings["ConnectionExpiresInMinutes"]);
