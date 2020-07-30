@@ -17,7 +17,7 @@ namespace Blaise.Nuget.Api.Providers
                 Binding = Environment.GetEnvironmentVariable("ENV_BLAISE_SERVER_BINDING", EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["BlaiseServerBinding"],
                 Port = ConvertToInt(Environment.GetEnvironmentVariable("ENV_BLAISE_CONNECTION_PORT", EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["BlaiseConnectionPort"]),
                 RemotePort = ConvertToInt(Environment.GetEnvironmentVariable("ENV_BLAISE_REMOTE_CONNECTION_PORT", EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["BlaiseRemoteConnectionPort"]),
-                ConnectionExpiresInMinutes = Environment.GetEnvironmentVariable("ENV_CONNECTION_EXPIRES_IN_MINUTES", EnvironmentVariableTarget.Machine) ?? ConvertToInt(ConfigurationManager.AppSettings["ConnectionExpiresInMinutes"]),
+                ConnectionExpiresInMinutes = ConvertToInt(Environment.GetEnvironmentVariable("ENV_CONNECTION_EXPIRES_IN_MINUTES", EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["ConnectionExpiresInMinutes"]),
             };
             return connectionModel;
         }         
