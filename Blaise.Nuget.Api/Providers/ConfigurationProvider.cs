@@ -25,7 +25,9 @@ namespace Blaise.Nuget.Api.Providers
         public string LibraryDirectory => Environment.GetEnvironmentVariable("ENV_LIBRARY_DIRECTORY", EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["LibraryDirectory"];
 
         public int ConnectionExpiresInMinutes =>
-            ConvertToInt(ConfigurationManager.AppSettings["ConnectionExpiresInMinutes"]);
+            ConvertToInt(
+                Environment.GetEnvironmentVariable("ENV_CONNECTION_EXPIRES_IN_MINUTES",
+                    EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["ConnectionExpiresInMinutes"]);
 
         private static int ConvertToInt(string integer)
         {
