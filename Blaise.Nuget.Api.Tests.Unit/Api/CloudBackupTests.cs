@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
@@ -10,7 +9,7 @@ using NUnit.Framework;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Api
 {
-    public class FileBackupTests
+    public class CloudBackupTests
     {
         private Mock<IDataService> _dataServiceMock;
         private Mock<IParkService> _parkServiceMock;
@@ -24,16 +23,16 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         private readonly ConnectionModel _connectionModel;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
-        private readonly string _destinationFilePath;
+        private readonly string _bucketName;
 
         private IBlaiseApi _sut;
 
-        public FileBackupTests()
+        public CloudBackupTests()
         {
             _connectionModel = new ConnectionModel();
             _instrumentName = "Instrument1";
             _serverParkName = "Park1";
-            _destinationFilePath = "FilePath";
+            _bucketName = "OpnBucket";
         }
         [SetUp]
         public void SetUpTests()
@@ -64,26 +63,30 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             //arrange
             const string dataFileName = "OPN2004A.bdix";
             const string metaFileName = "OPN2004A.bmix";
-            var backupFilePath = Path.Combine(_destinationFilePath, _instrumentName);
+            const string databaseFileName = "OPN2004A.bdbx";
 
             _surveyServiceMock.Setup(s => s.GetDataFileName(_connectionModel, _instrumentName, _serverParkName)).Returns(dataFileName);
             _surveyServiceMock.Setup(s => s.GetMetaFileName(_connectionModel, _instrumentName, _serverParkName)).Returns(metaFileName);
-            
-            _fileServiceMock.Setup(f => f.BackupDatabaseFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
+
+            _fileServiceMock.Setup(f => f.GetDatabaseSourceFile(It.IsAny<string>())).Returns(databaseFileName);
+
+            _cloudStorageServiceMock.Setup(f => f.UploadToBucket(It.IsAny<string>(), It.IsAny<string>()));
 
             //act
-            _sut.BackupSurveyToFile(_connectionModel, _serverParkName, _instrumentName, _destinationFilePath);
+            _sut.BackupSurveyToBucket(_connectionModel, _serverParkName, _instrumentName, _bucketName);
 
             //assert
-            _fileServiceMock.Verify(v => v.BackupDatabaseFile(dataFileName, metaFileName, backupFilePath), Times.Once);
+            _cloudStorageServiceMock.Verify(v => v.UploadToBucket(dataFileName, _bucketName), Times.Once);
+            _cloudStorageServiceMock.Verify(v => v.UploadToBucket(metaFileName, _bucketName), Times.Once);
+            _cloudStorageServiceMock.Verify(v => v.UploadToBucket(databaseFileName, _bucketName), Times.Once);
         }
 
         [Test]
         public void Given_An_Empty_ServerParkName_When_I_Call_BackupSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurveyToFile(_connectionModel, string.Empty, 
-                _instrumentName, _destinationFilePath));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurveyToBucket(_connectionModel, string.Empty, 
+                _instrumentName, _bucketName));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
@@ -91,8 +94,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_ServerParkName_When_I_Call_BackupSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.BackupSurveyToFile(_connectionModel, null, 
-                _instrumentName, _destinationFilePath));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.BackupSurveyToBucket(_connectionModel, null, 
+                _instrumentName, _bucketName));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
@@ -100,8 +103,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_An_Empty_InstrumentName_When_I_Call_BackupSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurveyToFile(_connectionModel, _serverParkName,
-                string.Empty, _destinationFilePath));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurveyToBucket(_connectionModel, _serverParkName,
+                string.Empty, _bucketName));
             Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
         }
 
@@ -109,27 +112,27 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_InstrumentName_When_I_Call_BackupSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.BackupSurveyToFile(_connectionModel, _serverParkName, 
-                null, _destinationFilePath));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.BackupSurveyToBucket(_connectionModel, _serverParkName, 
+                null, _bucketName));
             Assert.AreEqual("instrumentName", exception.ParamName);
         }
 
         [Test]
-        public void Given_An_Empty_DestinationFilePath_When_I_Call_BackupSurvey_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_BucketName_When_I_Call_BackupSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurveyToFile(_connectionModel, _serverParkName, 
+            var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurveyToBucket(_connectionModel, _serverParkName, 
                 _instrumentName, string.Empty));
-            Assert.AreEqual("A value for the argument 'destinationFilePath' must be supplied", exception.Message);
+            Assert.AreEqual("A value for the argument 'bucketName' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_Null_DestinationFilePath_When_I_Call_BackupSurvey_Then_An_ArgumentException_Is_Thrown()
+        public void Given_A_Null_BucketName_When_I_Call_BackupSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.BackupSurveyToFile(_connectionModel, _serverParkName, 
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.BackupSurveyToBucket(_connectionModel, _serverParkName, 
                 _instrumentName, null));
-            Assert.AreEqual("destinationFilePath", exception.ParamName);
+            Assert.AreEqual("bucketName", exception.ParamName);
         }
     }
 }

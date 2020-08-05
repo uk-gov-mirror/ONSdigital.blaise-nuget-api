@@ -8,5 +8,7 @@
 
         void BackupDatabaseFile(string dataFileName, string metaFileName, string destinationPath);
         void CopyFileToDirectory(string dataFileName, string destinationFilePath);
+
+        string GetDatabaseSourceFile(string filePath);
     }
 }

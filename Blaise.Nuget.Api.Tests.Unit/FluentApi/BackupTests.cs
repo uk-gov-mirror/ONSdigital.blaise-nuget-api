@@ -14,6 +14,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         private readonly string _instrumentName;
         private readonly string _serverParkName;
         private readonly string _destinationFilePath;
+        private readonly string _bucketName;
 
         private FluentBlaiseApi _sut;
 
@@ -23,6 +24,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _instrumentName = "Instrument1";
             _serverParkName = "Park1";
             _destinationFilePath = "FilePath";
+            _bucketName = "OpnBucket";
         }
 
         [SetUp]
@@ -34,7 +36,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Steps_Are_Setup_When_I_Call_Backup_The_Correct_Services_Are_Called()
+        public void Given_ToPath_Steps_Are_Setup_When_I_Call_Backup_The_Correct_Services_Are_Called()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -46,11 +48,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Backup();
 
             //assert
-            _blaiseApiMock.Verify(v => v.BackupSurvey(It.IsAny<ConnectionModel>(), _serverParkName, _instrumentName, _destinationFilePath), Times.Once);
+            _blaiseApiMock.Verify(v => v.BackupSurveyToFile(It.IsAny<ConnectionModel>(), _serverParkName, _instrumentName, _destinationFilePath), Times.Once);
         }
 
         [Test]
-        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_ToPath_Steps_Are_Setup_But_WithConnection_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             //_sut.WithConnection(_connectionModel);
@@ -68,7 +70,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_ToPath_Steps_Are_Setup_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -86,7 +88,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_ToPath_Steps_Are_Setup_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -104,7 +106,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithFile_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_ToPath_Steps_Are_Setup_But_WithFile_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -119,6 +121,76 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             });
 
             Assert.AreEqual("The 'ToPath' step needs to be called with a valid value prior to this to specify the destination path", exception.Message);
+        }
+
+        [Test]
+        public void Given_ToBucket_Steps_Are_Setup_When_I_Call_Backup_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            _sut.WithConnection(_connectionModel);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
+            _sut.Survey.ToBucket(_bucketName);
+
+            //act
+            _sut.Backup();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.BackupSurveyToBucket(It.IsAny<ConnectionModel>(), _serverParkName, _instrumentName, _bucketName), Times.Once);
+        }
+
+        [Test]
+        public void Given_ToBucket_Steps_Are_Setup_But_WithConnection_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            //_sut.WithConnection(_connectionModel);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
+            _sut.Survey.ToBucket(_bucketName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                _sut.Backup();
+            });
+
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+        }
+
+        [Test]
+        public void Given_ToBucket_Steps_Are_Setup_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithConnection(_connectionModel);
+            //_sut.WithInstrument(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
+            _sut.Survey.ToBucket(_bucketName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                _sut.Backup();
+            });
+
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
+        }
+
+        [Test]
+        public void Given_ToBucket_Steps_Are_Setup_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithConnection(_connectionModel);
+            _sut.WithInstrument(_instrumentName);
+            //_sut.WithServerPark(_serverParkName);
+            _sut.Survey.ToBucket(_bucketName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                _sut.Backup();
+            });
+
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
         }
     }
 }

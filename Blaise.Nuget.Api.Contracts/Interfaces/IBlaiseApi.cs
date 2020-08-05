@@ -107,6 +107,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
             ConnectionModel destinationConnectionModel, string destinationInstrumentName, string destinationServerParkName);
 
         void RemoveCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string instrumentName, string serverParkName);
-        void BackupSurvey(ConnectionModel connectionModel, string serverParkName, string instrumentName, string destinationFilePath);
+        void BackupSurveyToFile(ConnectionModel connectionModel, string serverParkName, string instrumentName, string destinationFilePath);
+        void BackupSurveyToBucket(ConnectionModel sourceConnectionModel, string serverParkName, string instrumentName, string bucketName);
     }
 }
