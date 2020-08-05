@@ -14,6 +14,7 @@
         <dependency id="System.Configuration.ConfigurationManager" version="4.7.0" />
         <dependency id="StatNeth.Blaise.API.x64" version="5.7.5" />
         <dependency id="System.Data.SQLite" version="1.0.112.0" />
+		<dependency id="Google.Cloud.Storage.V1" version="3.2.0" />
       </group>
     </dependencies>
   </metadata>
