@@ -29,6 +29,7 @@ namespace Blaise.Nuget.Api
         private string _password;
         private string _role;
         private string _destinationPath;
+        private string _bucketName;
 
         private Dictionary<string, string> _caseData;
         private IList<string> _serverParkNames;
@@ -50,6 +51,7 @@ namespace Blaise.Nuget.Api
             _filePath = null;
             _toFilePath = null;
             _destinationPath = null;
+            _bucketName = null;
             _userName = null;
             _password = null;
             _role = null;
@@ -335,15 +337,29 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
+        public IFluentBlaiseSurveyApi ToBucket(string bucketName)
+        {
+            _bucketName = bucketName;
+
+            return this;
+        }
 
         public void Backup()
         {
             ValidateSourceConnectionIsSet();
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
-            ValidateDestinationPathIsSet();
 
-            _blaiseApi.BackupSurvey(_sourceConnectionModel, _serverParkName, _instrumentName, _destinationPath);
+            if (string.IsNullOrWhiteSpace(_bucketName))
+            {
+                ValidateDestinationPathIsSet();
+
+                _blaiseApi.BackupSurveyToFile(_sourceConnectionModel, _serverParkName, _instrumentName, _destinationPath);
+            }
+            else
+            {
+                _blaiseApi.BackupSurveyToBucket(_sourceConnectionModel, _serverParkName, _instrumentName, _bucketName);
+            }
 
             InitialiseSettings();
         }

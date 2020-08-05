@@ -17,6 +17,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         private Mock<ISurveyService> _surveyServiceMock;
         private Mock<IUserService> _userServiceMock;
         private Mock<IFileService> _fileServiceMock;
+        private Mock<ICloudStorageService> _cloudStorageServiceMock;
         private Mock<IIocProvider> _unityProviderMock;
         private Mock<IConfigurationProvider> _configurationProviderMock;
 
@@ -40,6 +41,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _surveyServiceMock = new Mock<ISurveyService>();
             _userServiceMock = new Mock<IUserService>();
             _fileServiceMock = new Mock<IFileService>();
+            _cloudStorageServiceMock = new Mock<ICloudStorageService>();
             _unityProviderMock = new Mock<IIocProvider>();
             _configurationProviderMock = new Mock<IConfigurationProvider>();
 
@@ -49,6 +51,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 _surveyServiceMock.Object,
                 _userServiceMock.Object,
                 _fileServiceMock.Object,
+                _cloudStorageServiceMock.Object,
                 _unityProviderMock.Object,
                 _configurationProviderMock.Object);
         }

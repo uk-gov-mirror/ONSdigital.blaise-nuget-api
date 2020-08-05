@@ -15,7 +15,7 @@ using Blaise.Nuget.Api.Interfaces;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api
-{ 
+{
     public class BlaiseApi : IBlaiseApi
     {
         private IDataService _dataService;
@@ -23,15 +23,17 @@ namespace Blaise.Nuget.Api
         private ISurveyService _surveyService;
         private IUserService _userService;
         private IFileService _fileService;
+        private ICloudStorageService _cloudStorageService;
         private IConfigurationProvider _configurationProvider;
         private readonly IIocProvider _unityProvider;
 
         internal BlaiseApi(
             IDataService dataService,
-            IParkService parkService, 
-            ISurveyService surveyService, 
-            IUserService userService, 
+            IParkService parkService,
+            ISurveyService surveyService,
+            IUserService userService,
             IFileService fileService,
+            ICloudStorageService cloudStorageService,
             IIocProvider unityProvider,
             IConfigurationProvider configurationProvider)
         {
@@ -40,13 +42,14 @@ namespace Blaise.Nuget.Api
             _surveyService = surveyService;
             _userService = userService;
             _fileService = fileService;
+            _cloudStorageService = cloudStorageService;
             _unityProvider = unityProvider;
             _configurationProvider = configurationProvider;
         }
 
         public BlaiseApi()
         {
-           _configurationProvider = new ConfigurationProvider();
+            _configurationProvider = new ConfigurationProvider();
 
             _unityProvider = new UnityProvider();
             RegisterAndResolveDependencies();
@@ -62,6 +65,7 @@ namespace Blaise.Nuget.Api
             _surveyService = _unityProvider.Resolve<ISurveyService>();
             _userService = _unityProvider.Resolve<IUserService>();
             _fileService = _unityProvider.Resolve<IFileService>();
+            _cloudStorageService = _unityProvider.Resolve<ICloudStorageService>();
             _configurationProvider = _unityProvider.Resolve<IConfigurationProvider>();
         }
 
@@ -473,13 +477,13 @@ namespace Blaise.Nuget.Api
             destinationInstrumentName.ThrowExceptionIfNullOrEmpty("destinationInstrumentName");
 
 
-            CopyCase(sourceConnectionModel, primaryKeyValue,  sourceInstrumentName, sourceServerParkName, destinationFilePath,
+            CopyCase(sourceConnectionModel, primaryKeyValue, sourceInstrumentName, sourceServerParkName, destinationFilePath,
                 destinationInstrumentName);
 
             RemoveCase(sourceConnectionModel, primaryKeyValue, sourceInstrumentName, sourceServerParkName);
         }
 
-        public void RemoveCase(ConnectionModel connectionModel, string primaryKeyValue,  string instrumentName, string serverParkName)
+        public void RemoveCase(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
@@ -489,18 +493,35 @@ namespace Blaise.Nuget.Api
             _dataService.RemoveDataRecord(connectionModel, primaryKeyValue, instrumentName, serverParkName);
         }
 
-        public void BackupSurvey(ConnectionModel connectionModel, string serverParkName, string instrumentName, string destinationFilePath)
+        public void BackupSurveyToFile(ConnectionModel connectionModel, string serverParkName, string instrumentName, string destinationFilePath)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
             destinationFilePath.ThrowExceptionIfNullOrEmpty("destinationFilePath");
 
-            var dataFileName = _surveyService.GetDataFileName(connectionModel, instrumentName, serverParkName);
-            var metaFileName = _surveyService.GetMetaFileName(connectionModel, instrumentName, serverParkName);
+            var dataFilePath = _surveyService.GetDataFileName(connectionModel, instrumentName, serverParkName);
+            var metaFilePath = _surveyService.GetMetaFileName(connectionModel, instrumentName, serverParkName);
             var backupFilePath = Path.Combine(destinationFilePath, instrumentName);
 
-            _fileService.BackupDatabaseFile(dataFileName ,metaFileName, backupFilePath);
+            _fileService.BackupDatabaseFile(dataFilePath, metaFilePath, backupFilePath);
+        }
+
+        public void BackupSurveyToBucket(ConnectionModel connectionModel, string serverParkName, string instrumentName,
+            string bucketName)
+        {
+            connectionModel.ThrowExceptionIfNull("connectionModel");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+            bucketName.ThrowExceptionIfNullOrEmpty("bucketName");
+
+            var dataFilePath = _surveyService.GetDataFileName(connectionModel, instrumentName, serverParkName);
+            var metaFilePath = _surveyService.GetMetaFileName(connectionModel, instrumentName, serverParkName);
+            var databaseSourceFilePath = _fileService.GetDatabaseSourceFile(metaFilePath);
+            
+            _cloudStorageService.UploadToBucket(dataFilePath, bucketName);
+            _cloudStorageService.UploadToBucket(metaFilePath, bucketName);
+            _cloudStorageService.UploadToBucket(databaseSourceFilePath, bucketName);
         }
 
         public ConnectionModel GetDefaultConnectionModel()

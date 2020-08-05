@@ -28,6 +28,19 @@ namespace Blaise.Nuget.Api.Core.Services
             return GetFullFilePath(filePath, instrumentName, DatabaseFileNameExt);
         }
 
+        public string GetDatabaseSourceFile(string filePath)
+        {
+            var sourceFilePath = Path.GetDirectoryName(filePath);
+
+            if (string.IsNullOrWhiteSpace(sourceFilePath))
+            {
+                throw new NullReferenceException($"Could not find path for the file '{filePath}'");
+            }
+
+            var sourceFileName = Path.GetFileNameWithoutExtension(filePath);
+            return Path.Combine(sourceFilePath, $"{sourceFileName}.{DatabaseSourceExt}");
+        }
+
         public bool DatabaseFileExists(string filePath, string instrumentName)
         {
             return File.Exists(Path.Combine(filePath, $"{instrumentName}.{DatabaseSourceExt}"));
@@ -41,18 +54,10 @@ namespace Blaise.Nuget.Api.Core.Services
             //copy meta file
             CopyFileToDirectory(metaFileName, destinationPath);
 
-            //copy source file
-            var sourceFilePath = Path.GetDirectoryName(dataFileName);
+            //copy db file
+            var databaseSourceFile = GetDatabaseSourceFile(dataFileName);
 
-            if (string.IsNullOrWhiteSpace(sourceFilePath))
-            {
-                throw new NullReferenceException($"Could not find path for the dataFile '{dataFileName}'");
-            }
-
-            var sourceFileName = Path.GetFileNameWithoutExtension(dataFileName);
-            var fullSourceFilePath = Path.Combine(sourceFilePath, $"{sourceFileName}.{DatabaseSourceExt}");
-
-            CopyFileToDirectory(fullSourceFilePath, destinationPath);
+            CopyFileToDirectory(databaseSourceFile, destinationPath);
         }
 
         public string CreateDatabaseFile(string metaFileName, string filePath, string instrumentName)
