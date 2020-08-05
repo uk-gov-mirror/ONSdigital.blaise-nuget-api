@@ -24,7 +24,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
 
         [Ignore("")]
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_Backup_Then_A_Survey_Is_Backed_Up()
+        public void Given_I_Want_To_Backup_To_A_File_Location_When_I_Call_Backup_Then_A_Survey_Is_Backed_Up()
         {
             //arrange
             IFluentBlaiseApi sut = new FluentBlaiseApi();
@@ -36,6 +36,25 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
                 .WithInstrument("OPN2004A")
                 .Survey
                 .ToPath(@"D:\Temp\OPN\Backup")
+                .Backup();
+
+            //assert
+        }
+
+        [Ignore("")]
+        [Test]
+        public void Given_I_Want_To_Backup_To_A_Bucket_When_I_Call_Backup_Then_A_Survey_Is_Backed_Up()
+        {
+            //arrange
+            IFluentBlaiseApi sut = new FluentBlaiseApi();
+
+            //act
+            sut
+                .WithConnection(_connectionModel)
+                .WithServerPark("LocalDevelopment")
+                .WithInstrument("OPN2004A")
+                .Survey
+                .ToBucket(@"ons-blaise-opn")
                 .Backup();
 
             //assert
