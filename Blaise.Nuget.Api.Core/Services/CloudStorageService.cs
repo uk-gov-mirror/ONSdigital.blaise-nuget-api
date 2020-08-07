@@ -18,7 +18,7 @@ namespace Blaise.Nuget.Api.Core.Services
             var fileName = Path.GetFileName(filePath);
             var bucket = _storageClient.GetStorageClient();
 
-            using (var fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
+            using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (var streamWriter = new StreamWriter(fileStream))
             {
                 bucket.UploadObject(bucketName, fileName, null, streamWriter.BaseStream);
