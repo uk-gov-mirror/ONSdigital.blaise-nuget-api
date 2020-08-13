@@ -90,7 +90,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 var sutSurveys = _sut.Surveys;
             });
 
-            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid model, check that the step has been called with a valid model containing the connection properties of the blaise server you wish to connect to", exception.Message);
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                     .Surveys;
             });
 
-            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid model, check that the step has been called with a valid model containing the connection properties of the blaise server you wish to connect to", exception.Message);
         }
 
         [Test]
@@ -204,7 +204,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 var surveyType = _sut.Type;
             });
 
-            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid model, check that the step has been called with a valid model containing the connection properties of the blaise server you wish to connect to", exception.Message);
         }
 
         [Test]
@@ -219,7 +219,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var surveyType = _sut.Type;
             });
-            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value, check that the step has been called with a valid value for the server park", exception.Message);
         }
 
         [Test]
@@ -234,7 +234,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var surveyType = _sut.Type;
             });
-            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value, check that the step has been called with a valid instrument", exception.Message);
         }
 
         [TestCase(FieldNameType.Completed)]
@@ -294,7 +294,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 var sutExists = _sut.Survey.HasField(FieldNameType.Completed);
             });
 
-            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid model, check that the step has been called with a valid model containing the connection properties of the blaise server you wish to connect to", exception.Message);
         }
 
         [Test]
@@ -309,7 +309,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutExists = _sut.Survey.HasField(FieldNameType.Completed);
             });
-            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value, check that the step has been called with a valid instrument", exception.Message);
         }
 
         [Test]
@@ -324,7 +324,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutExists = _sut.Survey.HasField(FieldNameType.Completed);
             });
-            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value, check that the step has been called with a valid value for the server park", exception.Message);
         }
 
         [Test]
@@ -379,7 +379,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 var sutExists = _sut.Survey.Exists;
             });
 
-            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid model, check that the step has been called with a valid model containing the connection properties of the blaise server you wish to connect to", exception.Message);
         }
 
         [Test]
@@ -394,7 +394,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutExists = _sut.Survey.Exists;
             });
-            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value, check that the step has been called with a valid instrument", exception.Message);
         }
 
         [Test]
@@ -409,7 +409,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             {
                 var sutExists = _sut.Survey.Exists;
             });
-            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value, check that the step has been called with a valid value for the server park", exception.Message);
         }
     }
 }
