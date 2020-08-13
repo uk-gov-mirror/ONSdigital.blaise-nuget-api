@@ -68,7 +68,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid model, check that the step has been called with a valid model containing the connection properties of the blaise server you wish to connect to", exception.Message);
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithUser' step needs to be called with a valid value prior to this to specify the name of the user", exception.Message);
+            Assert.AreEqual("The 'WithUser' step needs to be called with a valid value, check that the step has been called with a valid user name", exception.Message);
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithPassword' step needs to be called with a valid value prior to this to specify the password of the user", exception.Message);
+            Assert.AreEqual("The 'WithPassword' step needs to be called with a valid value, check that the step has been called with a valid password", exception.Message);
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithRole' step needs to be called with a valid value prior to this to specify the role of the user", exception.Message);
+            Assert.AreEqual("The 'WithRole' step needs to be called with a valid value, check that the step has been called with a valid role", exception.Message);
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithServerParks' step needs to be called with at least one entry to specify the server park(s) associated with the user.", exception.Message);
+            Assert.AreEqual("The 'WithServerParks' step needs to be called with at least one valid server park, check that the step has been called with a valid server park(s)", exception.Message);
         }
 
         [Test]
@@ -188,7 +188,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid model, check that the step has been called with a valid model containing the connection properties of the blaise server you wish to connect to", exception.Message);
         }
 
         [Test]
@@ -200,7 +200,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithUser' step needs to be called with a valid value prior to this to specify the name of the user", exception.Message);
+            Assert.AreEqual("The 'WithUser' step needs to be called with a valid value, check that the step has been called with a valid user name", exception.Message);
         }
 
         [Test]
@@ -212,7 +212,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithUser' step needs to be called with a valid value prior to this to specify the name of the user", exception.Message);
+            Assert.AreEqual("The 'WithUser' step needs to be called with a valid value, check that the step has been called with a valid user name", exception.Message);
         }
 
         [Test]
@@ -224,7 +224,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithUser' step needs to be called with a valid value prior to this to specify the name of the user", exception.Message);
+            Assert.AreEqual("The 'WithUser' step needs to be called with a valid value, check that the step has been called with a valid user name", exception.Message);
         }
 
         [Test]
@@ -236,7 +236,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithRole' step needs to be called with a valid value prior to this to specify the role of the user", exception.Message);
+            Assert.AreEqual("The 'WithRole' step needs to be called with a valid value, check that the step has been called with a valid role", exception.Message);
         }
 
         [Test]
@@ -248,7 +248,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithServerParks' step needs to be called with at least one entry to specify the server park(s) associated with the user.", exception.Message);
+            Assert.AreEqual("The 'WithServerParks' step needs to be called with at least one valid server park, check that the step has been called with a valid server park(s)", exception.Message);
         }
 
         [Test]
@@ -281,7 +281,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 var sutExists = _sut.Exists;
             });
 
-            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid model, check that the step has been called with a valid model containing the connection properties of the blaise server you wish to connect to", exception.Message);
         }
 
         [TestCase(true)]
@@ -326,7 +326,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.User.Remove());
-            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid model, check that the step has been called with a valid model containing the connection properties of the blaise server you wish to connect to", exception.Message);
         }
 
         [Test]
@@ -339,7 +339,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.User.Remove());
-            Assert.AreEqual("The 'WithUser' step needs to be called with a valid value prior to this to specify the name of the user", exception.Message);
+            Assert.AreEqual("The 'WithUser' step needs to be called with a valid value, check that the step has been called with a valid user name", exception.Message);
         }
     }
 }

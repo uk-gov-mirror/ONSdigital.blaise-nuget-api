@@ -73,7 +73,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 var result = _sut.ServerParks;
             });
 
-            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid model, check that the step has been called with a valid model containing the connection properties of the blaise server you wish to connect to", exception.Message);
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 var result = _sut.Exists;
             });
 
-            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid model, check that the step has been called with a valid model containing the connection properties of the blaise server you wish to connect to", exception.Message);
         }
     }
 }

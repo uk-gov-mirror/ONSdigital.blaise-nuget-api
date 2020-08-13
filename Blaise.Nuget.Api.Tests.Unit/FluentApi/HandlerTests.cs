@@ -81,7 +81,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Copy.Handle();
             });
 
-            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid model, check that the step has been called with a valid model containing the connection properties of the blaise server you wish to connect to", exception.Message);
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Copy.Handle();
             });
 
-            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value, check that the step has been called with a valid instrument", exception.Message);
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Copy.Handle();
             });
 
-            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value, check that the step has been called with a valid value for the server park", exception.Message);
         }
 
         [Test]
@@ -165,7 +165,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Copy.Handle();
             });
 
-            Assert.AreEqual("The 'ToInstrument' step needs to be called with a valid value prior to this to specify the destination name of the instrument", exception.Message);
+            Assert.AreEqual("The 'ToInstrument' step needs to be called with a valid value, check that the step has been called with a valid value for the destination instrument", exception.Message);
         }
 
         [Test]
@@ -206,7 +206,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Move.Handle();
             });
 
-            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value, check that the step has been called with a valid instrument", exception.Message);
         }
 
         [Test]
@@ -227,7 +227,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Move.Handle();
             });
 
-            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value, check that the step has been called with a valid value for the server park", exception.Message);
         }
 
         [Test]
@@ -269,7 +269,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Copy.Handle();
             });
 
-            Assert.AreEqual("The 'ToInstrument' step needs to be called with a valid value prior to this to specify the destination name of the instrument", exception.Message);
+            Assert.AreEqual("The 'ToInstrument' step needs to be called with a valid value, check that the step has been called with a valid value for the destination instrument", exception.Message);
         }
 
         [Test]
@@ -313,7 +313,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Copy.Handle();
             });
 
-            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid model, check that the step has been called with a valid model containing the connection properties of the blaise server you wish to connect to", exception.Message);
         }
 
         [Test]
@@ -335,7 +335,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Copy.Handle();
             });
 
-            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value, check that the step has been called with a valid instrument", exception.Message);
         }
 
         [Test]
@@ -357,7 +357,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Copy.Handle();
             });
 
-            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value, check that the step has been called with a valid value for the server park", exception.Message);
         }
 
         [Test]
@@ -401,7 +401,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Copy.Handle();
             });
 
-            Assert.AreEqual("The 'ToInstrument' step needs to be called with a valid value prior to this to specify the destination name of the instrument", exception.Message);
+            Assert.AreEqual("The 'ToInstrument' step needs to be called with a valid value, check that the step has been called with a valid value for the destination instrument", exception.Message);
         }
 
         [Test]
@@ -423,7 +423,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Copy.Handle();
             });
 
-            Assert.AreEqual("The 'ToServerPark' step needs to be called with a valid value prior to this to specify the destination name of the server park", exception.Message);
+            Assert.AreEqual("The 'ToServerPark' step needs to be called with a valid value, check that the step has been called with a valid value for the destination name of the server park", exception.Message);
         }
 
         [Test]
@@ -467,7 +467,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Move.Handle();
             });
 
-            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid value prior to this to specify the source connection", exception.Message);
+            Assert.AreEqual("The 'WithConnection' step needs to be called with a valid model, check that the step has been called with a valid model containing the connection properties of the blaise server you wish to connect to", exception.Message);
         }
 
         [Test]
@@ -489,7 +489,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Move.Handle();
             });
 
-            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value prior to this to specify the name of the instrument", exception.Message);
+            Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value, check that the step has been called with a valid instrument", exception.Message);
         }
 
         [Test]
@@ -511,7 +511,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Move.Handle();
             });
 
-            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value prior to this to specify the name of the server park", exception.Message);
+            Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value, check that the step has been called with a valid value for the server park", exception.Message);
         }
 
         [Test]
@@ -555,7 +555,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Copy.Handle();
             });
 
-            Assert.AreEqual("The 'ToInstrument' step needs to be called with a valid value prior to this to specify the destination name of the instrument", exception.Message);
+            Assert.AreEqual("The 'ToInstrument' step needs to be called with a valid value, check that the step has been called with a valid value for the destination instrument", exception.Message);
         }
 
         [Test]
@@ -577,7 +577,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 _sut.Copy.Handle();
             });
 
-            Assert.AreEqual("The 'ToServerPark' step needs to be called with a valid value prior to this to specify the destination name of the server park", exception.Message);
+            Assert.AreEqual("The 'ToServerPark' step needs to be called with a valid value, check that the step has been called with a valid value for the destination name of the server park", exception.Message);
         }
 
         [Test]
