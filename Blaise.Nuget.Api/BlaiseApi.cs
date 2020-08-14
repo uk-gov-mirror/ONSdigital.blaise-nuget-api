@@ -370,7 +370,6 @@ namespace Blaise.Nuget.Api
             userName.ThrowExceptionIfNullOrEmpty("userName");
             password.ThrowExceptionIfNullOrEmpty("password");
             role.ThrowExceptionIfNullOrEmpty("role");
-            serverParkNames.ThrowExceptionIfNullOrEmpty("serverParkNames");
 
             _userService.AddUser(connectionModel, userName, password, role, serverParkNames);
         }
@@ -380,7 +379,6 @@ namespace Blaise.Nuget.Api
             connectionModel.ThrowExceptionIfNull("connectionModel");
             userName.ThrowExceptionIfNullOrEmpty("userName");
             role.ThrowExceptionIfNullOrEmpty("role");
-            serverParkNames.ThrowExceptionIfNullOrEmpty("serverParkNames");
 
             _userService.EditUser(connectionModel, userName, role, serverParkNames);
         }

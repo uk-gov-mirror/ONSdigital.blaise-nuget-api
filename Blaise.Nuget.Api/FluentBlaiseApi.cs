@@ -501,7 +501,6 @@ namespace Blaise.Nuget.Api
             ValidateUserIsSet();
             ValidatePasswordIsSet();
             ValidateRoleIsSet();
-            ValidateServerParksAreSet();
 
             _blaiseApi.AddUser(_sourceConnectionModel, _userName, _password, _role, _serverParkNames);
             InitialiseSettings();
@@ -559,7 +558,7 @@ namespace Blaise.Nuget.Api
             if (!string.IsNullOrWhiteSpace(_role) || _serverParkNames.Any())
             {
                 ValidateRoleIsSet();
-                ValidateServerParksAreSet();
+
                 _blaiseApi.EditUser(_sourceConnectionModel, _userName, _role, _serverParkNames);
             }
 
@@ -941,14 +940,6 @@ namespace Blaise.Nuget.Api
             if (_role == null)
             {
                 throw new NullReferenceException("The 'WithRole' step needs to be called with a valid value, check that the step has been called with a valid role");
-            }
-        }
-
-        private void ValidateServerParksAreSet()
-        {
-            if (!_serverParkNames.Any())
-            {
-                throw new NullReferenceException("The 'WithServerParks' step needs to be called with at least one valid server park, check that the step has been called with a valid server park(s)");
             }
         }
 

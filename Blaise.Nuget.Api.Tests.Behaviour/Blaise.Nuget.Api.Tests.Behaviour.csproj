@@ -60,6 +60,7 @@
     <Compile Include="Processor\FluentApiProcessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Survey\FluentApiSurveyTests.cs" />
+    <Compile Include="User\FluentApiUserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -114,20 +114,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithServerParks_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            _sut.WithConnection(_connectionModel);
-            _sut.WithUserName(_userName);
-            _sut.WithPassword(_password);
-            _sut.WithRole(_role);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
-            Assert.AreEqual("The 'WithServerParks' step needs to be called with at least one valid server park, check that the step has been called with a valid server park(s)", exception.Message);
-        }
-
-        [Test]
         public void Given_All_Steps_Have_Been_Called_When_I_Call_Update_Then_The_Correct_Service_Methods_Are_Called()
         {
             //arrange
@@ -237,18 +223,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
             Assert.AreEqual("The 'WithRole' step needs to be called with a valid value, check that the step has been called with a valid role", exception.Message);
-        }
-
-        [Test]
-        public void Given_WithServerParks_Has_Not_Been_Called_But_WithRole_Has_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
-        {
-            _sut.WithConnection(_connectionModel);
-            _sut.WithUserName(_userName);
-            _sut.WithRole(_role);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
-            Assert.AreEqual("The 'WithServerParks' step needs to be called with at least one valid server park, check that the step has been called with a valid server park(s)", exception.Message);
         }
 
         [Test]
