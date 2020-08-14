@@ -190,29 +190,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             Assert.AreEqual("role", exception.ParamName);
         }
 
-        [Test]
-        public void Given_An_Empty_ServerParkList_When_I_Call_AddUser_Then_An_ArgumentException_Is_Thrown()
-        {
-            //arrange
-            var serverParkNameList = new List<string>();
-
-            const string role = "King";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(_connectionModel, _userName, _password, role, serverParkNameList));
-            Assert.AreEqual("A value for the argument 'serverParkNames' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_A_null_ServerParkList_When_I_Call_AddUser_Then_An_ArgumentException_Is_Thrown()
-        {
-            //arrange
-            const string role = "King";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(_connectionModel, _userName, _password, role, null));
-            Assert.AreEqual("serverParkNames", exception.ParamName);
-        }
 
         [Test]
         public void When_I_Call_EditUser_Then_The_Correct_Service_Method_Is_Called()
@@ -315,29 +292,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             Assert.AreEqual("role", exception.ParamName);
         }
 
-        [Test]
-        public void Given_An_Empty_ServerParkList_When_I_Call_EditUser_Then_An_ArgumentException_Is_Thrown()
-        {
-            //arrange
-            var serverParkNameList = new List<string>();
-
-            const string role = "King";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.EditUser(_connectionModel, _userName, role, serverParkNameList));
-            Assert.AreEqual("A value for the argument 'serverParkNames' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_A_null_ServerParkList_When_I_Call_EditUser_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange
-            const string role = "King";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.EditUser(_connectionModel, _userName, role, null));
-            Assert.AreEqual("serverParkNames", exception.ParamName);
-        }
         [Test]
         public void When_I_Call_ChangePassword_Then_The_Correct_Service_Method_Is_Called()
         {
