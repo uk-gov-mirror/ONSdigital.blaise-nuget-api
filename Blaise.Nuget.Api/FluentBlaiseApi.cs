@@ -527,7 +527,12 @@ namespace Blaise.Nuget.Api
                 ValidateSourceConnectionIsSet();
                 ValidateInstrumentIsSet();
                 ValidateServerParkIsSet();
-                ValidateCaseDataRecordIsSet();
+
+                if (_caseDataRecord == null)
+                {
+                    ValidatePrimaryKeyValueIsSet();
+                    _caseDataRecord = _blaiseApi.GetDataRecord(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName);
+                }
 
                 _blaiseApi.UpdateDataRecord(_sourceConnectionModel, _caseDataRecord, _caseData, _instrumentName, _serverParkName);
             }
