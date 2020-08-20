@@ -447,7 +447,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithData_Has_Been_Called_When_I_Call_Update_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_WithData_And_WithDataRecord_Has_Been_Called_When_I_Call_Update_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             var fieldData = new Dictionary<string, string>
@@ -468,6 +468,39 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Update();
 
             //assert
+            _blaiseApiMock.Verify(v => v.UpdateDataRecord(_connectionModel, _caseDataRecord, fieldData, _instrumentName, _serverParkName),
+                Times.Once);
+        }
+
+
+        [Test]
+        public void Given_WithData_And_WithPrimaryKey_Has_Been_Called_When_I_Call_Update_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var fieldData = new Dictionary<string, string>
+            {
+                {"Key", "Value"}
+            };
+
+            _blaiseApiMock.Setup(d =>
+                d.MarkCaseAsComplete(It.IsAny<ConnectionModel>(), It.IsAny<IDataRecord>(), It.IsAny<string>(), It.IsAny<string>()));
+
+            _blaiseApiMock
+                .Setup(b => b.GetDataRecord(_connectionModel, _primaryKeyValue, _instrumentName, _serverParkName))
+                .Returns(_caseDataRecord);
+
+            _sut.WithConnection(_connectionModel);
+            _sut.WithServerPark(_serverParkName);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithPrimaryKey(_primaryKeyValue);
+            _sut.WithData(fieldData);
+
+            //act
+            _sut.Update();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.GetDataRecord(_connectionModel, _primaryKeyValue, _instrumentName, _serverParkName),
+                Times.Once);
             _blaiseApiMock.Verify(v => v.UpdateDataRecord(_connectionModel, _caseDataRecord, fieldData, _instrumentName, _serverParkName),
                 Times.Once);
         }
@@ -518,7 +551,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [Test]
         public void
-            Given_WithData_Has_Been_Called_But_Case_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+            Given_WithData_Has_Been_Called_But_DataRecord_Or_PrimaryKey_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>
@@ -534,7 +567,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Update());
             Assert.AreEqual(
-                "The 'WithDataRecord' step needs to be called with a valid value, check that the step has been called with a valid data record",
+                "The 'WithPrimaryKey' step needs to be called with a valid value, check that the step has been called with a valid primary key value",
                 exception.Message);
         }
 

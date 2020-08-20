@@ -14,13 +14,13 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
         {
             _connectionModel = new ConnectionModel
             {
-                Binding = "HTTP",
-                UserName = "Root",
-                Password = "Root",
-                ServerName = "localhost",
+                Binding = "HTTPS",
+                UserName = "blaise",
+                Password = "mbLJ3Qels4F5VvCH",
+                ServerName = "dev-jam39-client-tel.social-surveys.gcp.onsdigital.uk",
                 Port = 8031,
                 RemotePort = 8033,
-                ConnectionExpiresInMinutes = 1
+                ConnectionExpiresInMinutes = 60
             };
         }
 
@@ -34,9 +34,9 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
             var result = sut
                 .WithConnection(_connectionModel)
 				.WithInstrument("OPN2004A")
-                .WithServerPark("LocalDevelopment")
+                .WithServerPark("TEL")
                 .Case
-                .WithPrimaryKey("11000011")
+                .WithPrimaryKey("2951121")
                 .Exists;
 
             //assert
