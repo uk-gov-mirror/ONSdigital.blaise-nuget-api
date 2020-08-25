@@ -364,14 +364,15 @@ namespace Blaise.Nuget.Api
             _dataService.MarkCaseAsProcessed(connectionModel, dataRecord, instrumentName, serverParkName);
         }
 
-        public void AddUser(ConnectionModel connectionModel, string userName, string password, string role, IList<string> serverParkNames)
+        public void AddUser(ConnectionModel connectionModel, string userName, string password, string role, IList<string> serverParkNames,string defaultServerPark)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
             userName.ThrowExceptionIfNullOrEmpty("userName");
             password.ThrowExceptionIfNullOrEmpty("password");
             role.ThrowExceptionIfNullOrEmpty("role");
+            defaultServerPark.ThrowExceptionIfNullOrEmpty("role");
 
-            _userService.AddUser(connectionModel, userName, password, role, serverParkNames);
+            _userService.AddUser(connectionModel, userName, password, role, serverParkNames, defaultServerPark);
         }
 
         public void EditUser(ConnectionModel connectionModel, string userName, string role, IList<string> serverParkNames)

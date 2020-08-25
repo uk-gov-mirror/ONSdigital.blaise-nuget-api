@@ -24,6 +24,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<IUser2> _userMock;
         private Mock<IUserServerParkCollection> _userServerParkCollectionMock;
         private Mock<IUserCollection> _userCollectionMock;
+        private Mock<IUserPreferenceCollection> _userPreferenceCollectionMock;
+        private Mock<IUserPreference>_userPreferenceMock;
 
         private readonly ConnectionModel _connectionModel;
         private readonly string _serverParkName;
@@ -51,14 +53,26 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             var serverParkItems = new List<IServerPark> { _serverParkMock.Object };
 
+            //Mock user preference
+            _userPreferenceMock = new Mock<IUserPreference>();
+            _userPreferenceMock.Setup(s => s.Type).Returns("TestdefaultServerParkType");
+            _userPreferenceMock.Setup(s => s.Value).Returns("TestdefaultServerParkValue");
+
+            //Mock user preference
+            _userPreferenceCollectionMock = new Mock<IUserPreferenceCollection>();
+            _userPreferenceCollectionMock.Setup(s => s.Add(It.IsAny<string>())).Returns(() => _userPreferenceMock.Object);
+            _userPreferenceCollectionMock.Setup(s => s.GetItem(It.IsAny<string>())).Returns(() => _userPreferenceMock.Object);
+
             _serverParkCollectionMock = new Mock<IServerParkCollection>();
             _serverParkCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => serverParkItems.GetEnumerator());
+
 
             //setup user mocks
             _userServerParkCollectionMock = new Mock<IUserServerParkCollection>();
 
             _userMock = new Mock<IUser2>();
             _userMock.Setup(u => u.ServerParks).Returns(_userServerParkCollectionMock.Object);
+            _userMock.Setup(u => u.Preferences).Returns(_userPreferenceCollectionMock.Object);
 
             var userItems = new List<IUser> { _userMock.Object };
 
@@ -95,10 +109,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
                 "ServerPark2",
             };
 
+            var defaultServerPark = "ServerPark1";
+
             const string role = "King";
 
             //act
-            _sut.AddUser(_connectionModel, _userName, _password, role, serverParkNameList);
+            _sut.AddUser(_connectionModel, _userName, _password, role, serverParkNameList, defaultServerPark);
 
             //assert
             _passwordServiceMock.Verify(v => v.CreateSecurePassword(_password), Times.Once);
@@ -109,9 +125,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
                 _userServerParkCollectionMock.Verify(v => v.Add(serverParkName), Times.Once);
             }
 
+            _userPreferenceCollectionMock.Verify(v => v.Add("CATI.Preferences"), Times.Once);
+
             _userMock.VerifySet(u => u.Role = role, Times.Once);
             _userMock.Verify(v => v.Save(), Times.Once);
         }
+
 
         [Test]
         public void Given_An_Error_Occurs_In_Setting_The_User_Role_When_I_Call_AddUser_Then_The_User_Is_Still_Added()
@@ -125,10 +144,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             const string role = "King";
 
+            var defaultServerPark = "ServerPark1";
+
             _userMock.Setup(u => u.Role).Throws(new Exception());
 
             //act
-            _sut.AddUser(_connectionModel, _userName, _password, role, serverParkNameList);
+            _sut.AddUser(_connectionModel, _userName, _password, role, serverParkNameList, defaultServerPark);
 
             //assert
             _passwordServiceMock.Verify(v => v.CreateSecurePassword(_password), Times.Once);

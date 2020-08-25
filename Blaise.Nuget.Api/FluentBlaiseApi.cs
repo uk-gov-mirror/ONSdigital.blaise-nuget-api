@@ -17,6 +17,7 @@ namespace Blaise.Nuget.Api
         private readonly IBlaiseApi _blaiseApi;
 
         private string _serverParkName;
+        private string _defaultServerPark;
         private string _toServerParkName;
         private string _instrumentName;
         private string _toInstrumentName;
@@ -228,6 +229,14 @@ namespace Blaise.Nuget.Api
         {
             _lastActionType = LastActionType.User;
             _serverParkNames = serverParkNames;
+
+            return this;
+        }
+
+        public IFluentBlaiseUserApi WithDefaultServerPark(string defaultServerPark)
+        {
+            _lastActionType = LastActionType.User;
+            _defaultServerPark = defaultServerPark;
 
             return this;
         }
@@ -502,7 +511,7 @@ namespace Blaise.Nuget.Api
             ValidatePasswordIsSet();
             ValidateRoleIsSet();
 
-            _blaiseApi.AddUser(_sourceConnectionModel, _userName, _password, _role, _serverParkNames);
+            _blaiseApi.AddUser(_sourceConnectionModel, _userName, _password, _role, _serverParkNames, _defaultServerPark);
             InitialiseSettings();
         }
 
