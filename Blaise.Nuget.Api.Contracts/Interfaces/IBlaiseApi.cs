@@ -84,7 +84,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         void MarkCaseAsProcessed(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
 
-        void AddUser(ConnectionModel connectionModel, string userName, string password, string role, IList<string> serverParkNames);
+        void AddUser(ConnectionModel connectionModel, string userName, string password, string role, IList<string> serverParkNames, string defaultServerPark);
 
         void EditUser(ConnectionModel connectionModel, string userName, string role, IList<string> serverParkNames);
 

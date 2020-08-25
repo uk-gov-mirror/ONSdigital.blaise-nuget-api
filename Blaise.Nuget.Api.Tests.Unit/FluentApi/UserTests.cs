@@ -16,6 +16,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         private readonly string _password;
         private readonly string _role;
         private readonly List<string> _serverParkNameList;
+        private readonly string _defaultServerPark;
 
         private FluentBlaiseApi _sut;
 
@@ -30,6 +31,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
                 "ServerPark1",
                 "ServerPark2",
             };
+            _defaultServerPark = "ServerPark1";
         }
 
         [SetUp]
@@ -49,12 +51,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithPassword(_password);
             _sut.WithRole(_role);
             _sut.WithServerParks(_serverParkNameList);
+            _sut.WithDefaultServerPark(_defaultServerPark);
 
             //act
             _sut.Add();
 
             //assert
-            _blaiseApiMock.Verify(v => v.AddUser(_connectionModel, _userName, _password, _role, _serverParkNameList), Times.Once);
+            _blaiseApiMock.Verify(v => v.AddUser(_connectionModel, _userName, _password, _role, _serverParkNameList, _defaultServerPark), Times.Once);
         }
 
         [Test]
@@ -65,6 +68,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithPassword(_password);
             _sut.WithRole(_role);
             _sut.WithServerParks(_serverParkNameList);
+            _sut.WithDefaultServerPark(_defaultServerPark);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
@@ -79,6 +83,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithPassword(_password);
             _sut.WithRole(_role);
             _sut.WithServerParks(_serverParkNameList);
+            _sut.WithDefaultServerPark(_defaultServerPark);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
@@ -93,6 +98,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithUserName(_userName);
             _sut.WithRole(_role);
             _sut.WithServerParks(_serverParkNameList);
+            _sut.WithDefaultServerPark(_defaultServerPark);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
@@ -107,6 +113,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithUserName(_userName);
             _sut.WithPassword(_password);
             _sut.WithServerParks(_serverParkNameList);
+            _sut.WithDefaultServerPark(_defaultServerPark);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
@@ -122,6 +129,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithPassword(_password);
             _sut.WithRole(_role);
             _sut.WithServerParks(_serverParkNameList);
+            _sut.WithDefaultServerPark(_defaultServerPark);
 
             //act
             _sut.Update();
