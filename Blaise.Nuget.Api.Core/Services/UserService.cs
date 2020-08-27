@@ -31,7 +31,6 @@ namespace Blaise.Nuget.Api.Core.Services
             AddServerParksToUser(user, serverParkNames);
             AssignRoleToUser(user, role);
             
-
             user.Save();
         }
 
@@ -95,7 +94,7 @@ namespace Blaise.Nuget.Api.Core.Services
         {
             user.Preferences.Add("CATI.Preferences");
             var catiPreference = user.Preferences.GetItem("CATI.Preferences");
-            catiPreference.Value = String.Format("<CatiDashboard><ServerPark>{0}</ServerPark></CatiDashboard>", defaultServerPark);
+            catiPreference.Value = $"<CatiDashboard><ServerPark>{defaultServerPark}</ServerPark></CatiDashboard>";
         }
     }
 }
