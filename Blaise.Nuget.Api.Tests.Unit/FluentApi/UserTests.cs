@@ -121,6 +121,21 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
+        public void Given_WithDefaultServerPark_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithConnection(_connectionModel);
+            _sut.WithUserName(_userName);
+            _sut.WithPassword(_password);
+            _sut.WithServerParks(_serverParkNameList);
+            _sut.WithRole(_role);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.Add());
+            Assert.AreEqual("The 'WithDefaultServerPark' step needs to be called with a valid value, check that the step has been called with a valid server park", exception.Message);
+        }
+
+        [Test]
         public void Given_All_Steps_Have_Been_Called_When_I_Call_Update_Then_The_Correct_Service_Methods_Are_Called()
         {
             //arrange

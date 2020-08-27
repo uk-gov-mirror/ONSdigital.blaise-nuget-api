@@ -510,6 +510,7 @@ namespace Blaise.Nuget.Api
             ValidateUserIsSet();
             ValidatePasswordIsSet();
             ValidateRoleIsSet();
+            ValidateDefaultServerParkIsSet();
 
             _blaiseApi.AddUser(_sourceConnectionModel, _userName, _password, _role, _serverParkNames, _defaultServerPark);
             InitialiseSettings();
@@ -949,6 +950,14 @@ namespace Blaise.Nuget.Api
             if (_role == null)
             {
                 throw new NullReferenceException("The 'WithRole' step needs to be called with a valid value, check that the step has been called with a valid role");
+            }
+        }
+
+        private void ValidateDefaultServerParkIsSet()
+        {
+            if (_defaultServerPark == null)
+            {
+                throw new NullReferenceException("The 'WithDefaultServerPark' step needs to be called with a valid value, check that the step has been called with a valid server park");
             }
         }
 
