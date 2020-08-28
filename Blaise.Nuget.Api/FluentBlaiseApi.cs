@@ -44,6 +44,7 @@ namespace Blaise.Nuget.Api
         private void InitialiseSettings()
         {
             _serverParkName = null;
+            _defaultServerPark = null;
             _toServerParkName = null;
             _toServerParkName = null;
             _instrumentName = null;

@@ -364,7 +364,7 @@ namespace Blaise.Nuget.Api
             _dataService.MarkCaseAsProcessed(connectionModel, dataRecord, instrumentName, serverParkName);
         }
 
-        public void AddUser(ConnectionModel connectionModel, string userName, string password, string role, IList<string> serverParkNames,string defaultServerPark)
+        public void AddUser(ConnectionModel connectionModel, string userName, string password, string role, IList<string> serverParkNames, string defaultServerPark)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
             userName.ThrowExceptionIfNullOrEmpty("userName");
