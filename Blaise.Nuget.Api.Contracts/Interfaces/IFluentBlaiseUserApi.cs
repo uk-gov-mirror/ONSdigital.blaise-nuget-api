@@ -12,6 +12,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseUserApi WithServerParks(IList<string> serverParkNames);
 
+        IFluentBlaiseUserApi WithDefaultServerPark(string defaultServerPark);
+
         void Add();
 
         void Update();

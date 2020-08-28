@@ -66,13 +66,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 "ServerPark2",
             };
 
+            var defaultServerPark = "ServerPark1";
+
             const string role = "King";
 
             //act
-            _sut.AddUser(_connectionModel,_userName, _password, role, serverParkNameList);
+            _sut.AddUser(_connectionModel,_userName, _password, role, serverParkNameList, defaultServerPark);
 
             //assert
-            _userServiceMock.Verify(v => v.AddUser(_connectionModel, _userName, _password, role, serverParkNameList), Times.Once);
+            _userServiceMock.Verify(v => v.AddUser(_connectionModel, _userName, _password, role, serverParkNameList, defaultServerPark), Times.Once);
         }
 
         [Test]
@@ -85,10 +87,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 "ServerPark2",
             };
 
+            var defaultServerPark = "ServerPark1";
+
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(null, _userName, _password, role, serverParkNameList));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(null, _userName, _password, role, serverParkNameList, defaultServerPark));
             Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
         }
 
@@ -102,10 +106,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 "ServerPark2",
             };
 
+            var defaultServerPark = "ServerPark1";
+
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(_connectionModel, string.Empty, _password, role, serverParkNameList));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(_connectionModel, string.Empty, _password, role, serverParkNameList, defaultServerPark));
             Assert.AreEqual("A value for the argument 'userName' must be supplied", exception.Message);
         }
 
@@ -119,10 +125,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 "ServerPark2",
             };
 
+            var defaultServerPark = "ServerPark1";
+
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(_connectionModel, null, _password, role, serverParkNameList));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(_connectionModel, null, _password, role, serverParkNameList, defaultServerPark));
             Assert.AreEqual("userName", exception.ParamName);
         }
 
@@ -136,10 +144,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 "ServerPark2",
             };
 
+            var defaultServerPark = "ServerPark1";
+
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(_connectionModel, _userName, string.Empty, role, serverParkNameList));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(_connectionModel, _userName, string.Empty, role, serverParkNameList, defaultServerPark));
             Assert.AreEqual("A value for the argument 'password' must be supplied", exception.Message);
         }
 
@@ -153,10 +163,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 "ServerPark2",
             };
 
+            var defaultServerPark = "ServerPark1";
+
             const string role = "King";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(_connectionModel, _userName, null, role, serverParkNameList));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(_connectionModel, _userName, null, role, serverParkNameList, defaultServerPark));
             Assert.AreEqual("password", exception.ParamName);
         }
 
@@ -170,8 +182,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 "ServerPark2",
             };
 
+            var defaultServerPark = "ServerPark1";
+
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(_connectionModel, _userName, _password, string.Empty, serverParkNameList));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(_connectionModel, _userName, _password, string.Empty, serverParkNameList, defaultServerPark));
             Assert.AreEqual("A value for the argument 'role' must be supplied", exception.Message);
         }
 
@@ -185,11 +199,47 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 "ServerPark2",
             };
 
+            var defaultServerPark = "ServerPark1";
+
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(_connectionModel, _userName, _password, null, serverParkNameList));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(_connectionModel, _userName, _password, null, serverParkNameList, defaultServerPark));
             Assert.AreEqual("role", exception.ParamName);
         }
 
+        [Test]
+        public void Given_An_Empty_DefaultServerPark_When_I_Call_AddUser_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var serverParkNameList = new List<string>
+            {
+                "ServerPark1",
+                "ServerPark2",
+            };
+
+            const string role = "King";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.AddUser(_connectionModel, _userName, _password, role, serverParkNameList, string.Empty));
+            Assert.AreEqual("A value for the argument 'DefaultServerPark' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_null_DefaultServerPark_When_I_Call_AddUser_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var serverParkNameList = new List<string>
+            {
+                "ServerPark1",
+                "ServerPark2",
+            };
+
+            const string role = "King";
+
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.AddUser(_connectionModel, _userName, _password, role, serverParkNameList, null));
+            Assert.AreEqual("DefaultServerPark", exception.ParamName);
+        }
 
         [Test]
         public void When_I_Call_EditUser_Then_The_Correct_Service_Method_Is_Called()
