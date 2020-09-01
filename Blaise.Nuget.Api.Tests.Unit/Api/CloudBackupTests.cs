@@ -70,15 +70,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
 
             _fileServiceMock.Setup(f => f.GetDatabaseSourceFile(It.IsAny<string>())).Returns(databaseFileName);
 
-            _cloudStorageServiceMock.Setup(f => f.UploadToBucket(It.IsAny<string>(), It.IsAny<string>()));
+            _cloudStorageServiceMock.Setup(f => f.UploadToBucket(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
 
             //act
             _sut.BackupSurveyToBucket(_connectionModel, _serverParkName, _instrumentName, _bucketName);
 
             //assert
-            _cloudStorageServiceMock.Verify(v => v.UploadToBucket(dataFileName, _bucketName), Times.Once);
-            _cloudStorageServiceMock.Verify(v => v.UploadToBucket(metaFileName, _bucketName), Times.Once);
-            _cloudStorageServiceMock.Verify(v => v.UploadToBucket(databaseFileName, _bucketName), Times.Once);
+            _cloudStorageServiceMock.Verify(v => v.UploadToBucket(dataFileName, _bucketName, _serverParkName), Times.Once);
+            _cloudStorageServiceMock.Verify(v => v.UploadToBucket(metaFileName, _bucketName, _serverParkName), Times.Once);
+            _cloudStorageServiceMock.Verify(v => v.UploadToBucket(databaseFileName, _bucketName, _serverParkName), Times.Once);
         }
 
         [Test]
