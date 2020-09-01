@@ -518,9 +518,9 @@ namespace Blaise.Nuget.Api
             var metaFilePath = _surveyService.GetMetaFileName(connectionModel, instrumentName, serverParkName);
             var databaseSourceFilePath = _fileService.GetDatabaseSourceFile(metaFilePath);
             
-            _cloudStorageService.UploadToBucket(dataFilePath, bucketName);
-            _cloudStorageService.UploadToBucket(metaFilePath, bucketName);
-            _cloudStorageService.UploadToBucket(databaseSourceFilePath, bucketName);
+            _cloudStorageService.UploadToBucket(dataFilePath, bucketName, serverParkName);
+            _cloudStorageService.UploadToBucket(metaFilePath, bucketName, serverParkName);
+            _cloudStorageService.UploadToBucket(databaseSourceFilePath, bucketName, serverParkName);
         }
 
         public ConnectionModel GetDefaultConnectionModel()
