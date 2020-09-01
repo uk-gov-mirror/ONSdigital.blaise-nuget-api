@@ -2,6 +2,6 @@
 {
     public interface ICloudStorageService
     {
-        void UploadToBucket(string filePath, string bucketName);
+        void UploadToBucket(string filePath, string bucketName, string serverParkName);
     }
 }
