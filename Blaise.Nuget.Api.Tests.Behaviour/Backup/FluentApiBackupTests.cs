@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Contracts.Interfaces;
+﻿using System;
+using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using NUnit.Framework;
 
@@ -46,18 +47,21 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
         public void Given_I_Want_To_Backup_To_A_Bucket_When_I_Call_Backup_Then_A_Survey_Is_Backed_Up()
         {
             //arrange
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", @"");
+
             IFluentBlaiseApi sut = new FluentBlaiseApi();
 
-            //act
+            //act && assert
+
+            Assert.DoesNotThrow( () =>
             sut
                 .WithConnection(_connectionModel)
                 .WithServerPark("LocalDevelopment")
                 .WithInstrument("OPN2004A")
                 .Survey
-                .ToBucket(@"ons-blaise-opn")
-                .Backup();
-
-            //assert
+                .ToBucket(@"ons-blaise-dev-case-backup")
+                .Backup()
+            );
         }
     }
 }
