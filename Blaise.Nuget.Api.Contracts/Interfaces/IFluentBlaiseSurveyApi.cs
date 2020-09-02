@@ -7,7 +7,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
     {
         SurveyType Type { get; }
 
-        IFluentBlaiseSurveyApi ToPath(string filePath);
+        IFluentBlaiseSurveyApi ToPath(string destinationPath);
 
         IFluentBlaiseSurveyApi ToBucket(string bucketName);
 

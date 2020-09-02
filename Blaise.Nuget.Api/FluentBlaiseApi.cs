@@ -340,9 +340,9 @@ namespace Blaise.Nuget.Api
             return FieldExists(fieldNameType);
         }
         
-        public IFluentBlaiseSurveyApi ToPath(string filePath)
+        public IFluentBlaiseSurveyApi ToPath(string destinationPath)
         {
-            _destinationPath = filePath;
+            _destinationPath = destinationPath;
 
             return this;
         }
@@ -368,7 +368,7 @@ namespace Blaise.Nuget.Api
             }
             else
             {
-                _blaiseApi.BackupSurveyToBucket(_sourceConnectionModel, _serverParkName, _instrumentName, _bucketName);
+                _blaiseApi.BackupSurveyToBucket(_sourceConnectionModel, _serverParkName, _instrumentName, _bucketName, _destinationPath);
             }
 
             InitialiseSettings();

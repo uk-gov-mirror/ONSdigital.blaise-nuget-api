@@ -15,6 +15,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         private readonly string _serverParkName;
         private readonly string _destinationFilePath;
         private readonly string _bucketName;
+        private readonly string _folderPath;
 
         private FluentBlaiseApi _sut;
 
@@ -25,6 +26,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _serverParkName = "Park1";
             _destinationFilePath = "FilePath";
             _bucketName = "OpnBucket";
+            _folderPath = "FolderPath";
         }
 
         [SetUp]
@@ -136,7 +138,26 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.Backup();
 
             //assert
-            _blaiseApiMock.Verify(v => v.BackupSurveyToBucket(It.IsAny<ConnectionModel>(), _serverParkName, _instrumentName, _bucketName), Times.Once);
+            _blaiseApiMock.Verify(v => v.BackupSurveyToBucket(It.IsAny<ConnectionModel>(), _serverParkName, _instrumentName, 
+                    _bucketName, null), Times.Once);
+        }
+
+        [Test]
+        public void Given_ToBucket_AndToFolder_Steps_Are_Setup_When_I_Call_Backup_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            _sut.WithConnection(_connectionModel);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
+            _sut.Survey.ToBucket(_bucketName);
+            _sut.ToPath(_folderPath);
+
+            //act
+            _sut.Backup();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.BackupSurveyToBucket(It.IsAny<ConnectionModel>(), _serverParkName, _instrumentName, _bucketName,
+                    _folderPath), Times.Once);
         }
 
         [Test]
