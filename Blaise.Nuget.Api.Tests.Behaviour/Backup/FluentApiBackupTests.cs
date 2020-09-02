@@ -47,7 +47,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
         public void Given_I_Want_To_Backup_To_A_Bucket_When_I_Call_Backup_Then_A_Survey_Is_Backed_Up()
         {
             //arrange
-            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", @"C:\Users\Jamie\source\Keys\ons-blaise-dev-93d017495c0a.json");
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", @"");
 
             IFluentBlaiseApi sut = new FluentBlaiseApi();
 
@@ -69,7 +69,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
         public void Given_I_Want_To_Backup_To_A_Folder_In_A_Bucket_When_I_Call_Backup_Then_A_Survey_Is_Backed_Up()
         {
             //arrange
-            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", @"C:\Users\Jamie\source\Keys\ons-blaise-dev-93d017495c0a.json");
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", @"");
 
             IFluentBlaiseApi sut = new FluentBlaiseApi();
 
@@ -82,7 +82,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
                     .WithInstrument("OPN2004A")
                     .Survey
                     .ToBucket(@"ons-blaise-dev-case-backup")
-                    .ToPath("test")
+                    .ToPath("Hmm")
                     .Backup()
             );
         }
