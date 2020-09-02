@@ -24,6 +24,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         private readonly string _instrumentName;
         private readonly string _serverParkName;
         private readonly string _bucketName;
+        private readonly string _folderName;
 
         private IBlaiseApi _sut;
 
@@ -33,6 +34,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _instrumentName = "Instrument1";
             _serverParkName = "Park1";
             _bucketName = "OpnBucket";
+            _folderName = "FolderName";
         }
         [SetUp]
         public void SetUpTests()
@@ -73,12 +75,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _cloudStorageServiceMock.Setup(f => f.UploadToBucket(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
 
             //act
-            _sut.BackupSurveyToBucket(_connectionModel, _serverParkName, _instrumentName, _bucketName);
+            _sut.BackupSurveyToBucket(_connectionModel, _serverParkName, _instrumentName, _bucketName, _folderName);
 
             //assert
-            _cloudStorageServiceMock.Verify(v => v.UploadToBucket(dataFileName, _bucketName, _serverParkName), Times.Once);
-            _cloudStorageServiceMock.Verify(v => v.UploadToBucket(metaFileName, _bucketName, _serverParkName), Times.Once);
-            _cloudStorageServiceMock.Verify(v => v.UploadToBucket(databaseFileName, _bucketName, _serverParkName), Times.Once);
+            _cloudStorageServiceMock.Verify(v => v.UploadToBucket(dataFileName, _bucketName, _folderName), Times.Once);
+            _cloudStorageServiceMock.Verify(v => v.UploadToBucket(metaFileName, _bucketName, _folderName), Times.Once);
+            _cloudStorageServiceMock.Verify(v => v.UploadToBucket(databaseFileName, _bucketName, _folderName), Times.Once);
         }
 
         [Test]
@@ -86,7 +88,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         {
             //act && assert
             var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurveyToBucket(_connectionModel, string.Empty, 
-                _instrumentName, _bucketName));
+                _instrumentName, _bucketName, _folderName));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 

@@ -506,7 +506,7 @@ namespace Blaise.Nuget.Api
         }
 
         public void BackupSurveyToBucket(ConnectionModel connectionModel, string serverParkName, string instrumentName,
-            string bucketName)
+            string bucketName, string folderName = null)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
@@ -517,9 +517,9 @@ namespace Blaise.Nuget.Api
             var metaFilePath = _surveyService.GetMetaFileName(connectionModel, instrumentName, serverParkName);
             var databaseSourceFilePath = _fileService.GetDatabaseSourceFile(metaFilePath);
             
-            _cloudStorageService.UploadToBucket(dataFilePath, bucketName, serverParkName);
-            _cloudStorageService.UploadToBucket(metaFilePath, bucketName, serverParkName);
-            _cloudStorageService.UploadToBucket(databaseSourceFilePath, bucketName, serverParkName);
+            _cloudStorageService.UploadToBucket(dataFilePath, bucketName, folderName);
+            _cloudStorageService.UploadToBucket(metaFilePath, bucketName, folderName);
+            _cloudStorageService.UploadToBucket(databaseSourceFilePath, bucketName, folderName);
         }
 
         public ConnectionModel GetDefaultConnectionModel()

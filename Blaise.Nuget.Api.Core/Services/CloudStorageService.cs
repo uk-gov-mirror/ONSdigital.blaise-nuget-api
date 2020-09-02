@@ -13,7 +13,7 @@ namespace Blaise.Nuget.Api.Core.Services
             _storageClient = storageClient;
         }
 
-        public void UploadToBucket(string filePath, string bucketName, string serverParkName)
+        public void UploadToBucket(string filePath, string bucketName, string folderName)
         {
             var fileName = Path.GetFileName(filePath);
             var bucket = _storageClient.GetStorageClient();
@@ -21,7 +21,8 @@ namespace Blaise.Nuget.Api.Core.Services
             using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
             using (var streamWriter = new StreamWriter(fileStream))
             {
-                bucket.UploadObject(bucketName, $"{serverParkName}/{fileName}", null, streamWriter.BaseStream);
+                var objectName = folderName == null ? fileName : $"{folderName}/{fileName}";
+                bucket.UploadObject(bucketName, objectName, null, streamWriter.BaseStream);
             }
         }
     }
