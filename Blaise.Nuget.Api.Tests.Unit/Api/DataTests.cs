@@ -1209,7 +1209,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
 
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateNewDataRecord(null, _primaryKeyValue, fieldData));
-            Assert.AreEqual("The argument 'filePath' must be supplied", exception.ParamName);
+            Assert.AreEqual("filePath", exception.ParamName);
         }
 
         [Test]
