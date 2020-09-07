@@ -27,7 +27,7 @@ namespace Blaise.Nuget.Api.Providers
         public int ConnectionExpiresInMinutes =>
             ConvertToInt(
                 Environment.GetEnvironmentVariable("ENV_CONNECTION_EXPIRES_IN_MINUTES",
-                    EnvironmentVariableTarget.Machine) ?? ConfigurationManager.AppSettings["ConnectionExpiresInMinutes"]);
+                    EnvironmentVariableTarget.Machine) ?? (string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["ConnectionExpiresInMinutes"]) ? "30" : ConfigurationManager.AppSettings["ConnectionExpiresInMinutes"]));
 
         private static int ConvertToInt(string integer)
         {
