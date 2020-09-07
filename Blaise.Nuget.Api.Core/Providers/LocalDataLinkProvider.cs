@@ -10,15 +10,15 @@ namespace Blaise.Nuget.Api.Core.Providers
     {
         private readonly IConfigurationProvider _configurationProvider;
 
-        private readonly Dictionary<string, Tuple<IDataLink, DateTime>> _dataLinkConnections;
+        private readonly Dictionary<string, Tuple<IDataLink4, DateTime>> _dataLinkConnections;
 
         public LocalDataLinkProvider(IConfigurationProvider configurationProvider)
         {
             _configurationProvider = configurationProvider;
-            _dataLinkConnections = new Dictionary<string, Tuple<IDataLink, DateTime>>(StringComparer.OrdinalIgnoreCase);
+            _dataLinkConnections = new Dictionary<string, Tuple<IDataLink4, DateTime>>(StringComparer.OrdinalIgnoreCase);
         }
 
-        public IDataLink GetDataLink(string filePath)
+        public IDataLink4 GetDataLink(string filePath)
         {
             if (_dataLinkConnections.ContainsKey(filePath))
             {
@@ -32,11 +32,11 @@ namespace Blaise.Nuget.Api.Core.Providers
             return GetFreshConnection(filePath);
         }
 
-        private IDataLink GetFreshConnection(string filePath)
+        private IDataLink4 GetFreshConnection(string filePath)
         {
-            var dataLink = DataLinkManager.GetDataLink(filePath);
+            var dataLink = DataLinkManager.GetDataLink(filePath) as IDataLink4;
 
-            _dataLinkConnections[filePath] = new Tuple<IDataLink, DateTime>(dataLink, _configurationProvider.ConnectionExpiresInMinutes.GetExpiryDate());
+            _dataLinkConnections[filePath] = new Tuple<IDataLink4, DateTime>(dataLink, _configurationProvider.ConnectionExpiresInMinutes.GetExpiryDate());
 
             return dataLink;
         }

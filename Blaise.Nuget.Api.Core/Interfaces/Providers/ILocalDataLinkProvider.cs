@@ -5,6 +5,6 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Providers
 {
     public interface ILocalDataLinkProvider
     {
-        IDataLink GetDataLink(string fullFilePath);
+        IDataLink4 GetDataLink(string fullFilePath);
     }
 }

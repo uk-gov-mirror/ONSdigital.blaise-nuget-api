@@ -11,6 +11,8 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
     {
         IDatamodel GetDataModel(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
+        IDatamodel GetDataModel(string filePath);
+
         SurveyType GetSurveyType(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         IKey GetKey(IDatamodel dataModel, string keyName);
@@ -43,6 +45,8 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         void CreateNewDataRecord(ConnectionModel connectionModel, string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName,
             string serverParkName);
+
+        void CreateNewDataRecord(string filePath, string primaryKeyValue, Dictionary<string, string> fieldData);
 
         void UpdateDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, Dictionary<string, string> fieldData, string instrumentName,
             string serverParkName);

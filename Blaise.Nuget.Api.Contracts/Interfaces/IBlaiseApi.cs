@@ -65,6 +65,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         void CreateNewDataRecord(ConnectionModel connectionModel, string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName,
             string serverParkName);
 
+        void CreateNewDataRecord(string filePath, string primaryKeyValue, Dictionary<string, string> fieldData);
+
         void UpdateDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, Dictionary<string, string> fieldData, string instrumentName,
             string serverParkName);
 
