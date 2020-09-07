@@ -51,6 +51,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             _dataModelServiceMock = new Mock<IDataModelService>();
             _dataModelServiceMock.Setup(d => d.GetDataModel(_connectionModel, _instrumentName, _serverParkName)).Returns(_dataModelMock.Object);
+            _dataModelServiceMock.Setup(d => d.GetDataModel(_filePath)).Returns(_dataModelMock.Object);
             _dataModelServiceMock.Setup(d => d.GetSurveyType(_connectionModel, _instrumentName, _serverParkName)).Returns(_surveyType);
 
             _keyServiceMock = new Mock<IKeyService>();
@@ -102,6 +103,37 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _dataModelServiceMock.Verify(v => v.GetDataModel(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_GetDataModel_For_Local_Connection_Then_A_DataModel_Is_Returned()
+        {
+            //act
+            var result = _sut.GetDataModel(_filePath);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.IsInstanceOf<IDatamodel>(result);
+        }
+
+        [Test]
+        public void Given_I_Call_GetDataModel_For_Local_Connection_Then_The_Correct_DataModel_Is_Returned()
+        {
+            //act
+            var result = _sut.GetDataModel(_filePath);
+
+            //assert
+            Assert.AreEqual(_dataModelMock.Object, result);
+        }
+
+        [Test]
+        public void Given_I_Call_GetDataModel_For_Local_Connection_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.GetDataModel(_filePath);
+
+            //assert
+            _dataModelServiceMock.Verify(v => v.GetDataModel(_filePath), Times.Once);
         }
 
         [Test]
@@ -521,6 +553,28 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataRecordServiceMock.Verify(v => v.GetDataRecord(_dataModelMock.Object), Times.Once);
             _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, _dataModelMock.Object, _keyMock.Object, primaryKeyValue, fieldData), Times.Once);
             _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_CreateNewDataRecord_For_Local_Connection_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+            var fieldData = new Dictionary<string, string>();
+
+            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(), It.IsAny<IDatamodel>(),
+                    It.IsAny<IKey>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()))
+                .Returns(_dataRecordMock.Object);
+
+            //act
+            _sut.CreateNewDataRecord(_filePath, primaryKeyValue, fieldData);
+
+            //assert
+            _dataModelServiceMock.Verify(v => v.GetDataModel(_filePath), Times.Once);
+            _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataModelMock.Object), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_dataModelMock.Object), Times.Once);
+            _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, _dataModelMock.Object, _keyMock.Object, primaryKeyValue, fieldData), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _filePath), Times.Once);
         }
 
         [Test]

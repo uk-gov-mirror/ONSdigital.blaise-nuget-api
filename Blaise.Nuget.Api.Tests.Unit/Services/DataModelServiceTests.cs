@@ -13,13 +13,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
     public class DataModelServiceTests
     {
         private Mock<IRemoteDataLinkProvider> _remoteDataLinkProviderMock;
+        private Mock<ILocalDataLinkProvider> _localDataLinkProviderMock;
 
-        private Mock<IDataLink4> _remoteDataLinkMock;
+        private Mock<IDataLink4> _dataLinkMock;
         private Mock<IDatamodel> _dataModelMock;
 
         private readonly ConnectionModel _connectionModel;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
+        private readonly string _filePath;
 
         private DataModelService _sut;
 
@@ -28,6 +30,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _connectionModel = new ConnectionModel();
             _instrumentName = "TestInstrumentName";
             _serverParkName = "TestServerParkName";
+            _filePath = "TestFilePath";
         }
 
         [SetUp]
@@ -35,13 +38,16 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         {
             _dataModelMock = new Mock<IDatamodel>();
 
-            _remoteDataLinkMock = new Mock<IDataLink4>();
-            _remoteDataLinkMock.Setup(d => d.Datamodel).Returns(_dataModelMock.Object);
+            _dataLinkMock = new Mock<IDataLink4>();
+            _dataLinkMock.Setup(d => d.Datamodel).Returns(_dataModelMock.Object);
 
             _remoteDataLinkProviderMock = new Mock<IRemoteDataLinkProvider>();
-            _remoteDataLinkProviderMock.Setup(r => r.GetDataLink(_connectionModel, _instrumentName, _serverParkName)).Returns(_remoteDataLinkMock.Object);
-            
-            _sut = new DataModelService(_remoteDataLinkProviderMock.Object);
+            _remoteDataLinkProviderMock.Setup(r => r.GetDataLink(_connectionModel, _instrumentName, _serverParkName)).Returns(_dataLinkMock.Object);
+
+            _localDataLinkProviderMock = new Mock<ILocalDataLinkProvider>();
+            _localDataLinkProviderMock.Setup(r => r.GetDataLink(_filePath)).Returns(_dataLinkMock.Object);
+
+            _sut = new DataModelService(_remoteDataLinkProviderMock.Object, _localDataLinkProviderMock.Object);
         }
 
 
@@ -70,7 +76,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_No_DataModel_Available_When_I_Call_GetDataModel_A_NullReferenceException_Is_Thrown()
         {
             //arrange
-            _remoteDataLinkMock.Setup(d => d.Datamodel).Returns(null as IDatamodel);
+            _dataLinkMock.Setup(d => d.Datamodel).Returns(null as IDatamodel);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataModel(_connectionModel, _instrumentName, _serverParkName));
@@ -85,7 +91,50 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);
-            _remoteDataLinkMock.Verify(v => v.Datamodel, Times.AtLeastOnce);
+            _dataLinkMock.Verify(v => v.Datamodel, Times.AtLeastOnce);
+        }
+
+        [Test]
+        public void Given_I_Call_GetDataModel_For_Local_Connection_I_Get_A_DataModel_Back()
+        {
+            //act
+            var result = _sut.GetDataModel(_filePath);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.IsInstanceOf<IDatamodel>(result);
+        }
+
+        [Test]
+        public void Given_I_Call_GetDataModel_For_Local_Connection_I_Get_The_Correct_DataModel_Back()
+        {
+            //act
+            var result = _sut.GetDataModel(_filePath);
+
+            //assert
+            Assert.AreEqual(_dataModelMock.Object, result);
+        }
+
+        [Test]
+        public void Given_No_DataModel_Available_When_I_Call_GetDataModel_For_Local_Connection_A_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _dataLinkMock.Setup(d => d.Datamodel).Returns(null as IDatamodel);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataModel(_filePath));
+            Assert.AreEqual($"No datamodel was found for file '{_filePath}'", exception.Message);
+        }
+
+        [Test]
+        public void Given_I_Call_GetDataModel_For_Local_Connection_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.GetDataModel(_filePath);
+
+            //assert
+            _localDataLinkProviderMock.Verify(v => v.GetDataLink(_filePath), Times.Once);
+            _dataLinkMock.Verify(v => v.Datamodel, Times.AtLeastOnce);
         }
 
         [TestCase("Appointment", SurveyType.Appointment)]
@@ -112,7 +161,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);
-            _remoteDataLinkMock.Verify(v => v.Datamodel, Times.AtLeastOnce);
+            _dataLinkMock.Verify(v => v.Datamodel, Times.AtLeastOnce);
         }
     }
 }

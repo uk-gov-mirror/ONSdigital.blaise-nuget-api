@@ -10,10 +10,14 @@ namespace Blaise.Nuget.Api.Core.Services
     public class DataModelService : IDataModelService
     {
         private readonly IRemoteDataLinkProvider _remoteDataLinkProvider;
+        private readonly ILocalDataLinkProvider _localDataLinkProvider;
 
-        public DataModelService(IRemoteDataLinkProvider remoteDataLinkProvider)
+        public DataModelService(
+            IRemoteDataLinkProvider remoteDataLinkProvider, 
+            ILocalDataLinkProvider localDataLinkProvider)
         {
             _remoteDataLinkProvider = remoteDataLinkProvider;
+            _localDataLinkProvider = localDataLinkProvider;
         }
 
         public IDatamodel GetDataModel(ConnectionModel connectionModel, string instrumentName, string serverParkName)
@@ -23,6 +27,18 @@ namespace Blaise.Nuget.Api.Core.Services
             if (dataLink?.Datamodel == null)
             {
                 throw new NullReferenceException($"No datamodel was found for instrument '{instrumentName}' on server park '{serverParkName}'");
+            }
+
+            return dataLink.Datamodel;
+        }
+
+        public IDatamodel GetDataModel(string filePath)
+        {
+            var dataLink = _localDataLinkProvider.GetDataLink(filePath);
+
+            if (dataLink?.Datamodel == null)
+            {
+                throw new NullReferenceException($"No datamodel was found for file '{filePath}'");
             }
 
             return dataLink.Datamodel;

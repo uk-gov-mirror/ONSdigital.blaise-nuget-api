@@ -283,6 +283,15 @@ namespace Blaise.Nuget.Api
             _dataService.CreateNewDataRecord(connectionModel, primaryKeyValue, fieldData, instrumentName, serverParkName);
         }
 
+        public void CreateNewDataRecord(string filePath, string primaryKeyValue, Dictionary<string, string> fieldData)
+        {
+            filePath.ThrowExceptionIfNullOrEmpty("filePath");
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
+            fieldData.ThrowExceptionIfNull("fieldData");
+
+            _dataService.CreateNewDataRecord(filePath, primaryKeyValue, fieldData);
+        }
+
         public void UpdateDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, Dictionary<string, string> fieldData, string instrumentName, string serverParkName)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");

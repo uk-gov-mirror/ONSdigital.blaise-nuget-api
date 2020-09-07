@@ -36,6 +36,11 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
         }
 
+        public IDatamodel GetDataModel(string filePath)
+        {
+            return _dataModelService.GetDataModel(filePath);
+        }
+
         public SurveyType GetSurveyType(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             return _dataModelService.GetSurveyType(connectionModel, instrumentName, serverParkName);
@@ -175,6 +180,17 @@ namespace Blaise.Nuget.Api.Core.Services
             dataRecord = _mapperService.MapDataRecordFields(dataRecord, dataModel, key, primaryKeyValue, fieldData);
 
             WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
+        }
+
+        public void CreateNewDataRecord(string filePath, string primaryKeyValue, Dictionary<string, string> fieldData)
+        {
+            var dataModel = GetDataModel(filePath);
+            var key = GetPrimaryKey(dataModel);
+            var dataRecord = GetDataRecord(dataModel);
+
+            dataRecord = _mapperService.MapDataRecordFields(dataRecord, dataModel, key, primaryKeyValue, fieldData);
+
+            WriteDataRecord(dataRecord, filePath);
         }
 
         public void UpdateDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, Dictionary<string, string> fieldData, string instrumentName, string serverParkName)

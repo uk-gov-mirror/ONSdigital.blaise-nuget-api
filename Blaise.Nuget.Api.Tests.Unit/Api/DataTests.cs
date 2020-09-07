@@ -28,6 +28,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         private readonly string _primaryKeyValue;
         private readonly string _serverParkName;
         private readonly string _instrumentName;
+        private readonly string _filePath;
 
         private IBlaiseApi _sut;
 
@@ -37,6 +38,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _primaryKeyValue = "Key1";
             _serverParkName = "Park1";
             _instrumentName = "Instrument1";
+            _filePath = "TestFilePath";
         }
 
         [SetUp]
@@ -1171,6 +1173,73 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateNewDataRecord(_connectionModel, _primaryKeyValue, fieldData,
                 _instrumentName, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_CreateNewDataRecord_For_Local_Connection_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var fieldData = new Dictionary<string, string>();
+
+            _dataServiceMock.Setup(d => d.CreateNewDataRecord(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()));
+
+            //act
+            _sut.CreateNewDataRecord(_filePath, _primaryKeyValue, fieldData);
+
+            //assert
+            _dataServiceMock.Verify(v => v.CreateNewDataRecord(_filePath, _primaryKeyValue, fieldData), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_FilePath_When_I_Call_CreateNewDataRecord_For_Local_Connection_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange 
+            var fieldData = new Dictionary<string, string>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateNewDataRecord(string.Empty, _primaryKeyValue, fieldData));
+            Assert.AreEqual("A value for the argument 'filePath' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_FilePath_When_I_Call_CreateNewDataRecord_For_Local_Connection_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var fieldData = new Dictionary<string, string>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateNewDataRecord(null, _primaryKeyValue, fieldData));
+            Assert.AreEqual("The argument 'filePath' must be supplied", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_PrimaryKeyValue_When_I_Call_CreateNewDataRecord_For_Local_Connection_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var fieldData = new Dictionary<string, string>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateNewDataRecord(_filePath, string.Empty, fieldData));
+            Assert.AreEqual("A value for the argument 'primaryKeyValue' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_PrimaryKeyValue_When_I_Call_CreateNewDataRecord_For_Local_Connection_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var fieldData = new Dictionary<string, string>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateNewDataRecord(_filePath, null, fieldData));
+            Assert.AreEqual("primaryKeyValue", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_A_Null_Dictionary_Of_FieldData_When_I_Call_CreateNewDataRecord_For_Local_Connection_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateNewDataRecord(_filePath, _primaryKeyValue, null));
+            Assert.AreEqual("The argument 'fieldData' must be supplied", exception.ParamName);
         }
 
         [Test]
