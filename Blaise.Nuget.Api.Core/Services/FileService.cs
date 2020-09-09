@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Exceptions;
@@ -21,6 +22,11 @@ namespace Blaise.Nuget.Api.Core.Services
         public FileService(IConfigurationProvider configurationProvider)
         {
             _configurationProvider = configurationProvider;
+        }
+
+        public IEnumerable<string> GetFiles(string filePath)
+        {
+            return Directory.GetFiles(filePath);
         }
 
         public string GetDatabaseFileName(string filePath, string instrumentName)
@@ -46,18 +52,10 @@ namespace Blaise.Nuget.Api.Core.Services
             return File.Exists(Path.Combine(filePath, $"{instrumentName}.{DatabaseSourceExt}"));
         }
 
-        public void BackupDatabaseFile(string dataFileName, string metaFileName, string destinationPath)
+
+        public void DeleteDatabaseFile(string filePath, string instrumentName)
         {
-            //copy data file
-            CopyFileToDirectory(dataFileName, destinationPath);
-
-            //copy meta file
-            CopyFileToDirectory(metaFileName, destinationPath);
-
-            //copy db file
-            var databaseSourceFile = GetDatabaseSourceFile(dataFileName);
-
-            CopyFileToDirectory(databaseSourceFile, destinationPath);
+            File.Delete(Path.Combine(filePath, $"{instrumentName}.{DatabaseSourceExt}"));
         }
 
         public string CreateDatabaseFile(string metaFileName, string filePath, string instrumentName)
@@ -82,13 +80,6 @@ namespace Blaise.Nuget.Api.Core.Services
             dataInterface.SaveToFile(true);
 
             return dataInterface.FileName;
-        }
-
-        public void CopyFileToDirectory(string sourceFile, string destinationPath)
-        {
-            Directory.CreateDirectory(destinationPath);
-            var destinationFile = Path.Combine(destinationPath, Path.GetFileName(sourceFile));
-            File.Copy(sourceFile, destinationFile, true);
         }
 
         private static string GetFullFilePath(string filePath, string instrumentName, string extension)

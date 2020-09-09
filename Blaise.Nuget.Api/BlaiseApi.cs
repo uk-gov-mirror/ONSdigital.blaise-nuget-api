@@ -4,7 +4,6 @@ using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
@@ -508,28 +507,33 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
             destinationFilePath.ThrowExceptionIfNullOrEmpty("destinationFilePath");
 
-            var dataFilePath = _surveyService.GetDataFileName(connectionModel, instrumentName, serverParkName);
-            var metaFilePath = _surveyService.GetMetaFileName(connectionModel, instrumentName, serverParkName);
-            var backupFilePath = Path.Combine(destinationFilePath, instrumentName);
+            if (_fileService.DatabaseFileExists(destinationFilePath, instrumentName))
+            {
+                _fileService.DeleteDatabaseFile(destinationFilePath, instrumentName);
+            }
 
-            _fileService.BackupDatabaseFile(dataFilePath, metaFilePath, backupFilePath);
+            var metaFileName = _surveyService.GetMetaFileName(connectionModel, instrumentName, serverParkName);
+            var databaseFile =_fileService.CreateDatabaseFile(metaFileName, destinationFilePath, instrumentName);
+
+            var cases = _dataService.GetDataSet(connectionModel, instrumentName, serverParkName);
+
+            while (!cases.EndOfSet)
+            {
+                _dataService.WriteDataRecord((IDataRecord2)cases.ActiveRecord, databaseFile);
+
+                cases.MoveNext();
+            }
         }
 
-        public void BackupSurveyToBucket(ConnectionModel connectionModel, string serverParkName, string instrumentName,
-            string bucketName, string folderName = null)
+        public void BackupFilesToBucket(string filePath, string bucketName, string folderName = null)
         {
-            connectionModel.ThrowExceptionIfNull("connectionModel");
-            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+            filePath.ThrowExceptionIfNullOrEmpty("filePath");
             bucketName.ThrowExceptionIfNullOrEmpty("bucketName");
 
-            var dataFilePath = _surveyService.GetDataFileName(connectionModel, instrumentName, serverParkName);
-            var metaFilePath = _surveyService.GetMetaFileName(connectionModel, instrumentName, serverParkName);
-            var databaseSourceFilePath = _fileService.GetDatabaseSourceFile(metaFilePath);
-            
-            _cloudStorageService.UploadToBucket(dataFilePath, bucketName, folderName);
-            _cloudStorageService.UploadToBucket(metaFilePath, bucketName, folderName);
-            _cloudStorageService.UploadToBucket(databaseSourceFilePath, bucketName, folderName);
+            foreach (var file in _fileService.GetFiles(filePath))
+            {
+                _cloudStorageService.UploadToBucket(file, bucketName, folderName);
+            }
         }
 
         public ConnectionModel GetDefaultConnectionModel()
