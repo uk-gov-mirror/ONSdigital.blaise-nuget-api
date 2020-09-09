@@ -132,13 +132,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.WithServerPark(_serverParkName);
+            _sut.Survey.ToPath(_destinationFilePath);
             _sut.Survey.ToBucket(_bucketName);
 
             //act
             _sut.Backup();
 
             //assert
-            _blaiseApiMock.Verify(v => v.BackupSurveyToBucket(It.IsAny<ConnectionModel>(), _serverParkName, _instrumentName, 
+            _blaiseApiMock.Verify(v => v.BackupFilesToBucket(_destinationFilePath, 
                     _bucketName, null), Times.Once);
         }
 
@@ -149,15 +150,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.WithServerPark(_serverParkName);
-            _sut.Survey.ToBucket(_bucketName);
-            _sut.ToPath(_folderPath);
+            _sut.Survey.ToPath(_destinationFilePath);
+            _sut.Survey.ToBucket(_bucketName, _folderPath);
 
             //act
             _sut.Backup();
 
             //assert
-            _blaiseApiMock.Verify(v => v.BackupSurveyToBucket(It.IsAny<ConnectionModel>(), _serverParkName, _instrumentName, _bucketName,
-                    _folderPath), Times.Once);
+            _blaiseApiMock.Verify(v => v.BackupFilesToBucket(_destinationFilePath,
+                _bucketName, _folderPath), Times.Once);
         }
 
         [Test]
@@ -167,6 +168,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //_sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.WithServerPark(_serverParkName);
+            _sut.Survey.ToPath(_destinationFilePath);
             _sut.Survey.ToBucket(_bucketName);
 
             //act && assert
@@ -185,6 +187,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithConnection(_connectionModel);
             //_sut.WithInstrument(_instrumentName);
             _sut.WithServerPark(_serverParkName);
+            _sut.Survey.ToPath(_destinationFilePath);
             _sut.Survey.ToBucket(_bucketName);
 
             //act && assert
@@ -203,6 +206,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             //_sut.WithServerPark(_serverParkName);
+            _sut.Survey.ToPath(_destinationFilePath);
             _sut.Survey.ToBucket(_bucketName);
 
             //act && assert
@@ -212,6 +216,25 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             });
 
             Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value, check that the step has been called with a valid value for the server park", exception.Message);
+        }
+
+        [Test]
+        public void Given_ToBucket_Steps_Are_Setup_But_ToPath_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
+        {
+            //arrange
+            _sut.WithConnection(_connectionModel);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
+            //_sut.Survey.ToPath(_destinationFilePath);
+            _sut.Survey.ToBucket(_bucketName);
+
+            //act && assert
+            var exception = Assert.Throws<NullReferenceException>(() =>
+            {
+                _sut.Backup();
+            });
+
+            Assert.AreEqual("The 'ToPath' step needs to be called with a valid value, check that the step has been called with a valid value for the destination file path", exception.Message);
         }
     }
 }
