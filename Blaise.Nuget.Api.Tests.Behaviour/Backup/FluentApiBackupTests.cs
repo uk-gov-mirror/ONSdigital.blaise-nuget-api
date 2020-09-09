@@ -47,7 +47,8 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
         public void Given_I_Want_To_Backup_To_A_Bucket_When_I_Call_Backup_Then_A_Survey_Is_Backed_Up()
         {
             //arrange
-            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", @"");
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS",
+                @"");
 
             IFluentBlaiseApi sut = new FluentBlaiseApi();
 
@@ -59,7 +60,8 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
                 .WithServerPark("LocalDevelopment")
                 .WithInstrument("OPN2004A")
                 .Survey
-                .ToBucket(@"ons-blaise-dev-case-backup")
+                .ToPath(@"D:\Temp\OPN\Backup")
+                .ToBucket(@"ons-blaise-dev-jam44-case-backup")
                 .Backup()
             );
         }
@@ -81,8 +83,8 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
                     .WithServerPark("LocalDevelopment")
                     .WithInstrument("OPN2004A")
                     .Survey
-                    .ToBucket(@"ons-blaise-dev-case-backup")
-                    .ToPath("Hmm")
+                    .ToPath(@"D:\Temp\OPN\Backup")
+                    .ToBucket(@"ons-blaise-dev-case-backup", "Hmm")
                     .Backup()
             );
         }

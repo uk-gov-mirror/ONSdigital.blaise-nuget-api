@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
@@ -7,6 +6,8 @@ using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Interfaces;
 using Moq;
 using NUnit.Framework;
+using StatNeth.Blaise.API.DataLink;
+using StatNeth.Blaise.API.DataRecord;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Api
 {
@@ -62,20 +63,72 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_Valid_Parameters_When_I_Call_BackupSurvey_The_Correct_Services_Are_Called()
         {
             //arrange
-            const string dataFileName = "OPN2004A.bdix";
-            const string metaFileName = "OPN2004A.bmix";
-            var backupFilePath = Path.Combine(_destinationFilePath, _instrumentName);
+            var dataRecordMock = new Mock<IDataRecord2>();
+            var dataSetMock = new Mock<IDataSet>();
 
-            _surveyServiceMock.Setup(s => s.GetDataFileName(_connectionModel, _instrumentName, _serverParkName)).Returns(dataFileName);
+            dataSetMock.Setup(ds => ds.ActiveRecord).Returns(dataRecordMock.Object);
+            dataSetMock.Setup(ds => ds.MoveNext());
+            dataSetMock.SetupSequence(ds => ds.EndOfSet)
+                .Returns(false)
+                .Returns(true);
+
+            const string metaFileName = "OPN2004A.bmix";
+            const string dataBaseFileName = "OPN2004A.bdix";
+
             _surveyServiceMock.Setup(s => s.GetMetaFileName(_connectionModel, _instrumentName, _serverParkName)).Returns(metaFileName);
-            
-            _fileServiceMock.Setup(f => f.BackupDatabaseFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
+
+            _fileServiceMock.Setup(f => f.DatabaseFileExists(It.IsAny<string>(), It.IsAny<string>())).Returns(false);
+            _fileServiceMock.Setup(f => f.CreateDatabaseFile(It.IsAny<string>(),
+                It.IsAny<string>(), It.IsAny<string>())).Returns(dataBaseFileName);
+
+            _dataServiceMock.Setup(d => d.GetDataSet(_connectionModel, _instrumentName, _serverParkName))
+                .Returns(dataSetMock.Object);
 
             //act
             _sut.BackupSurveyToFile(_connectionModel, _serverParkName, _instrumentName, _destinationFilePath);
 
             //assert
-            _fileServiceMock.Verify(v => v.BackupDatabaseFile(dataFileName, metaFileName, backupFilePath), Times.Once);
+            _fileServiceMock.Verify(f => f.DeleteDatabaseFile(_destinationFilePath,
+                _instrumentName), Times.Never);
+
+            _fileServiceMock.Verify(f => f.CreateDatabaseFile(metaFileName, _destinationFilePath,
+                _instrumentName), Times.Once);
+
+            _dataServiceMock.Verify(ds => ds.WriteDataRecord(dataRecordMock.Object, 
+                dataBaseFileName), Times.Once);
+        }
+
+        [Test]
+        public void Given_Database_Already_Exists_In_DestinationPath_When_I_Call_BackupSurvey_The_Database_Is_Deleted()
+        {
+            //arrange
+            var dataRecordMock = new Mock<IDataRecord2>();
+            var dataSetMock = new Mock<IDataSet>();
+
+            dataSetMock.Setup(ds => ds.ActiveRecord).Returns(dataRecordMock.Object);
+            dataSetMock.Setup(ds => ds.MoveNext());
+            dataSetMock.SetupSequence(ds => ds.EndOfSet)
+                .Returns(false)
+                .Returns(true);
+
+            const string metaFileName = "OPN2004A.bmix";
+            const string dataBaseFileName = "OPN2004A.bdix";
+
+            _surveyServiceMock.Setup(s => s.GetMetaFileName(_connectionModel, _instrumentName, _serverParkName)).Returns(metaFileName);
+
+            _fileServiceMock.Setup(f => f.DatabaseFileExists(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
+            _fileServiceMock.Setup(f => f.CreateDatabaseFile(It.IsAny<string>(),
+                It.IsAny<string>(), It.IsAny<string>())).Returns(dataBaseFileName);
+
+            _dataServiceMock.Setup(d => d.GetDataSet(_connectionModel,_instrumentName, _serverParkName))
+                .Returns(dataSetMock.Object);
+
+            //act
+            _sut.BackupSurveyToFile(_connectionModel, _serverParkName, _instrumentName, _destinationFilePath);
+
+            //assert
+            _fileServiceMock.Verify(f => f.DeleteDatabaseFile(_destinationFilePath,
+                _instrumentName), Times.Once);
         }
 
         [Test]
