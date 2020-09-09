@@ -59,6 +59,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
                 .WithServerPark("LocalDevelopment")
                 .WithInstrument("OPN2004A")
                 .Survey
+                .ToPath(@"D:\Temp\OPN\Backup")
                 .ToBucket(@"ons-blaise-dev-case-backup")
                 .Backup()
             );
@@ -81,8 +82,8 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
                     .WithServerPark("LocalDevelopment")
                     .WithInstrument("OPN2004A")
                     .Survey
-                    .ToBucket(@"ons-blaise-dev-case-backup")
-                    .ToPath("Hmm")
+                    .ToPath(@"D:\Temp\OPN\Backup")
+                    .ToBucket(@"ons-blaise-dev-case-backup", "Hmm")
                     .Backup()
             );
         }
