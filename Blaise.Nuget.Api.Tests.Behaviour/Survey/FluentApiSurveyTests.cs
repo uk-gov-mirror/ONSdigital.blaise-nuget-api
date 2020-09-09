@@ -13,13 +13,13 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
         {
             _connectionModel = new ConnectionModel
             {
-                Binding = "HTTP",
-                UserName = "Root",
-                Password = "Root",
-                ServerName = "localhost",
-                Port = 8031,
-                RemotePort = 8033,
-				ConnectionExpiresInMinutes = 10
+                Binding = "",
+                UserName = "",
+                Password = "",
+                ServerName = "",
+                Port = 0,
+                RemotePort = 0,
+                ConnectionExpiresInMinutes = 0
             };
         }
 

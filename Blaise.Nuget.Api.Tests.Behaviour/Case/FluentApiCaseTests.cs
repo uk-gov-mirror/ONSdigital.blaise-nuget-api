@@ -14,15 +14,15 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
         {
             _connectionModel = new ConnectionModel
             {
-                Binding = "HTTP",
-                UserName = "Root",
-                Password = "Root",
-                ServerName = "localhost",
-                Port = 8031,
-                RemotePort = 8033,
-                ConnectionExpiresInMinutes = 60
-			};
-        }
+                Binding = "",
+                UserName = "",
+                Password = "",
+                ServerName = "",
+                Port = 0,
+                RemotePort = 0,
+                ConnectionExpiresInMinutes = 0
+            };
+		}
 
 		[Test]
         public void Given_I_Use_With_Connection_And_A_Case_That_Exists_When_I_Call_Exists_True_Is_Returned()
