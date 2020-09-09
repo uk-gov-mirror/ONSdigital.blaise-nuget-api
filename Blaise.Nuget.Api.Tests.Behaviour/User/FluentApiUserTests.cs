@@ -57,6 +57,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.User
                 .WithPassword(_password)
                 .WithRole(_role)
                 .WithServerParks(_serverParks)
+                .WithDefaultServerPark("LocalDevelopment")
                 .Add();
 
 			var result = sut
