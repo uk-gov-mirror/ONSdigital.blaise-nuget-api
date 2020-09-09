@@ -14,14 +14,14 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
         {
             _connectionModel = new ConnectionModel
             {
-                Binding = "HTTPS",
-                UserName = "blaise",
-                Password = "mbLJ3Qels4F5VvCH",
-                ServerName = "dev-jam39-client-tel.social-surveys.gcp.onsdigital.uk",
+                Binding = "HTTP",
+                UserName = "Root",
+                Password = "Root",
+                ServerName = "localhost",
                 Port = 8031,
                 RemotePort = 8033,
                 ConnectionExpiresInMinutes = 60
-            };
+			};
         }
 
 		[Test]
@@ -95,7 +95,9 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
         public void Given_Valid_Values_When_I_Call_Add_A_New_Case_Is_Added()
         {
             //arrange
-            IFluentBlaiseApi sut = new FluentBlaiseApi();
+            var primaryKey = "91000001";
+
+			IFluentBlaiseApi sut = new FluentBlaiseApi();
 
             var payload = new Dictionary<string, string>
             {
@@ -144,7 +146,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
 		        {"qdatabag.PIDNo", ""},
 		        {"qdatabag.ChkLet", "a"},
 		        {"qdatabag.Rand", ""},
-		        {"qdatabag.serial_number", "99000041"},
+		        {"qdatabag.serial_number", primaryKey},
 		        {"qdatabag.UAC1", "7896"},
 		        {"qdatabag.OSWard", ""},
 		        {"qdatabag.OSHlthAu", ""},
@@ -212,7 +214,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
 				.WithInstrument("OPN2004A")
                 .WithServerPark("LocalDevelopment")
                 .Case
-                .WithPrimaryKey("91000011")
+                .WithPrimaryKey(primaryKey)
                 .WithData(payload)
                 .Add();
 
@@ -222,20 +224,20 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
 				.WithInstrument("OPN2004A")
                 .WithServerPark("LocalDevelopment")
                 .Case
-                .WithPrimaryKey("91000011")
+                .WithPrimaryKey(primaryKey)
                 .Exists;
 
             //assert
             Assert.True(result);
 
-			//cleanup
+            //cleanup
             sut
                 .WithConnection(_connectionModel)
-				.WithInstrument("OPN2004A")
+                .WithInstrument("OPN2004A")
                 .WithServerPark("LocalDevelopment")
                 .Case
-                .WithPrimaryKey("91000011")
+                .WithPrimaryKey(primaryKey)
                 .Remove();
-		}
+        }
     }
 }
