@@ -1880,5 +1880,125 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 null, FieldNameType.WebFormStatus));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetNumberOfCases_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            _dataServiceMock.Setup(d => d.GetNumberOfCases(
+                _connectionModel, It.IsAny<string>(), It.IsAny<string>()));
+
+            //act
+            _sut.GetNumberOfCases(_connectionModel, _instrumentName, _serverParkName);
+
+            //assert
+            _dataServiceMock.Verify(v => v.GetNumberOfCases(
+                _connectionModel, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetNumberOfCases_Then_The_Expected_Value_Is_Returned()
+        {
+            //arrange
+            var numberOfCases = 5;
+            _dataServiceMock.Setup(d => d.GetNumberOfCases(
+                _connectionModel, It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(numberOfCases);
+
+            //act
+            var result =_sut.GetNumberOfCases(_connectionModel, _instrumentName, _serverParkName);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual(numberOfCases, result);
+        }
+
+        [Test]
+        public void Given_A_Null_ConnectionModel_When_I_Call_GetNumberOfCases_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetNumberOfCases(null, _instrumentName, _serverParkName));
+            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_GetNumberOfCases_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetNumberOfCases(_connectionModel, string.Empty, _serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_GetNumberOfCases_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetNumberOfCases(_connectionModel, null, _serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_GetNumberOfCases_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetNumberOfCases(_connectionModel, _instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_GetNumberOfCases_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetNumberOfCases(_connectionModel, _instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_A_File_When_I_Call_GetNumberOfCases_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var filePath = "File1.bdix";
+
+            _dataServiceMock.Setup(d => d.GetNumberOfCases(It.IsAny<string>()));
+
+            //act
+            _sut.GetNumberOfCases(filePath);
+
+            //assert
+            _dataServiceMock.Verify(v => v.GetNumberOfCases(filePath), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_File_When_I_Call_GetNumberOfCases_Then_The_Expected_Value_Is_Returned()
+        {
+            //arrange
+            var numberOfCases = 5;
+
+            _dataServiceMock.Setup(d => d.GetNumberOfCases(
+                It.IsAny<string>())).Returns(numberOfCases);
+
+            //act
+            var result = _sut.GetNumberOfCases(_filePath);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual(numberOfCases, result);
+        }
+
+        [Test]
+        public void Given_An_Empty_FilePath_When_I_Call_GetNumberOfCases_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetNumberOfCases(string.Empty));
+            Assert.AreEqual("A value for the argument 'filePath' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_FilePath_When_I_Call_GetNumberOfCases_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetNumberOfCases(null));
+            Assert.AreEqual("filePath", exception.ParamName);
+        }
     }
 }

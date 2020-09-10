@@ -262,5 +262,43 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);
             _remoteDataLinkMock.Verify(v => v.Delete(_keyMock.Object), Times.Once);
         }
+
+        [Test]
+        public void Given_I_Call_GetNumberOfRecords_I_Get_The_Correct_Number_Back()
+        {
+            //arrange
+            _dataSetMock.SetupSequence(ds => ds.EndOfSet)
+                .Returns(false)
+                .Returns(false)
+                .Returns(true);
+
+            _remoteDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
+
+            //act
+            var result = _sut.GetNumberOfRecords(_connectionModel, _instrumentName, _serverParkName);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual(2, result);
+        }
+
+        [Test]
+        public void Given_I_Call_GetNumberOfRecords_For_Local_Connection_I_Get_The_Correct_Number_Back()
+        {
+            //arrange
+            _dataSetMock.SetupSequence(ds => ds.EndOfSet)
+                .Returns(false)
+                .Returns(false)
+                .Returns(true);
+
+            _localDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
+
+            //act
+            var result = _sut.GetNumberOfRecords(_filePath);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual(2, result);
+        }
     }
 }
