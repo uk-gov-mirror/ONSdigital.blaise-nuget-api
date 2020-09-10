@@ -73,5 +73,32 @@ namespace Blaise.Nuget.Api.Core.Services
 
             dataLink.Delete(primaryKey);
         }
+
+        public int GetNumberOfRecords(ConnectionModel connectionModel, string instrumentName, string serverParkName)
+        {
+            var records = GetDataSet(connectionModel, instrumentName, serverParkName);
+
+            return GetNumberOfRecords(records);
+        }
+
+        public int GetNumberOfRecords(string filePath)
+        {
+            var records = GetDataSet(filePath);
+
+            return GetNumberOfRecords(records);
+        }
+
+        private static int GetNumberOfRecords(IDataSet records)
+        {
+            var numberOfRecords = 0;
+
+            while (!records.EndOfSet)
+            {
+                numberOfRecords++;
+                records.MoveNext();
+            }
+
+            return numberOfRecords;
+        }
     }
 }

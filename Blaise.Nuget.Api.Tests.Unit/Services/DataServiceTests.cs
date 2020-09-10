@@ -684,5 +684,57 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //assert
             _fieldServiceMock.Verify(v => v.FieldExists(_dataRecordMock.Object, fieldNameType), Times.Once);
         }
+
+        [Test]
+        public void Given_I_Call_GetNumberOfCases_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.GetNumberOfCases(_connectionModel, _instrumentName, _serverParkName);
+
+            //assert
+            _dataRecordServiceMock.Verify(v => v.GetNumberOfRecords(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_GetNumberOfCases_Then_The_Expected_Value_Is_Returned()
+        {
+            //arrange
+            var numberOfCases = 5;
+            _dataRecordServiceMock.Setup(dr => dr.GetNumberOfRecords(
+                _connectionModel, _instrumentName, _serverParkName)).Returns(numberOfCases);
+
+            //act
+            var result =_sut.GetNumberOfCases(_connectionModel, _instrumentName, _serverParkName);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual(numberOfCases, result);
+        }
+
+        [Test]
+        public void Given_A_File_I_Call_GetNumberOfCases_For_Local_Connection_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.GetNumberOfCases(_filePath);
+
+            //assert
+            _dataRecordServiceMock.Verify(v => v.GetNumberOfRecords(_filePath), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_GetNumberOfCases_For_Local_Connection_Then_The_Expected_Value_Is_Returned()
+        {
+            //arrange
+            var numberOfCases = 5;
+            _dataRecordServiceMock.Setup(dr => dr.GetNumberOfRecords(
+                _filePath)).Returns(numberOfCases);
+
+            //act
+            var result = _sut.GetNumberOfCases(_filePath);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual(numberOfCases, result);
+        }
     }
 }

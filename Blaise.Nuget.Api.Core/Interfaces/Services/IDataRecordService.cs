@@ -22,5 +22,8 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         void WriteDataRecord(IDataRecord dataRecord, string filePath);
 
         void DeleteDataRecord(ConnectionModel connectionModel, IKey primaryKey, string instrumentName, string serverParkName);
+        int GetNumberOfRecords(ConnectionModel connectionModel, string instrumentName, string serverParkName);
+
+        int GetNumberOfRecords(string filePath);
     }
 }

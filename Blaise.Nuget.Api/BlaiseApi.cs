@@ -209,13 +209,6 @@ namespace Blaise.Nuget.Api
             return _dataService.GetDataSet(filePath);
         }
 
-        public IDataRecord GetDataRecord(IDatamodel dataModel)
-        {
-            dataModel.ThrowExceptionIfNull("dataModel");
-
-            return _dataService.GetDataRecord(dataModel);
-        }
-
         public IDataSet GetDataSet(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
@@ -223,6 +216,13 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             return _dataService.GetDataSet(connectionModel, instrumentName, serverParkName);
+        }
+
+        public IDataRecord GetDataRecord(IDatamodel dataModel)
+        {
+            dataModel.ThrowExceptionIfNull("dataModel");
+
+            return _dataService.GetDataRecord(dataModel);
         }
 
         public IDataRecord GetDataRecord(ConnectionModel connectionModel, IKey key, string instrumentName, string serverParkName)
@@ -534,6 +534,22 @@ namespace Blaise.Nuget.Api
             {
                 _cloudStorageService.UploadToBucket(file, bucketName, folderName);
             }
+        }
+
+        public int GetNumberOfCases(ConnectionModel connectionModel, string instrumentName, string serverParkName)
+        {
+            connectionModel.ThrowExceptionIfNull("connectionModel");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _dataService.GetNumberOfCases(connectionModel, instrumentName, serverParkName);
+        }
+
+        public int GetNumberOfCases(string filePath)
+        {
+            filePath.ThrowExceptionIfNullOrEmpty("filePath");
+
+            return _dataService.GetNumberOfCases(filePath);
         }
 
         public ConnectionModel GetDefaultConnectionModel()
