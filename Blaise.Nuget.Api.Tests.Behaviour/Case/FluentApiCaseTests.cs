@@ -12,17 +12,8 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
 
         public FluentApiCaseTests()
         {
-            _connectionModel = new ConnectionModel
-            {
-                Binding = "",
-                UserName = "",
-                Password = "",
-                ServerName = "",
-                Port = 0,
-                RemotePort = 0,
-                ConnectionExpiresInMinutes = 0
-            };
-		}
+            _connectionModel = new ConnectionModel();
+        }
 
 		[Test]
         public void Given_I_Use_With_Connection_And_A_Case_That_Exists_When_I_Call_Exists_True_Is_Returned()
@@ -91,7 +82,107 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
 			Assert.AreEqual(exists, result);
         }
 
-		[TestCase(WebFormStatusType.NotProcessed)]
+        [TestCase(110)]
+        [TestCase(210)]
+        [TestCase(310)]
+        public void Given_A_Case_That_Exists_Wit_A_Hout_Value_When_I_Call_HasField_Then_The_Expected_Value_Is_Returned(int hOut)
+        {
+            //arrange
+            var primaryKey = "99000001";
+
+            IFluentBlaiseApi sut = new FluentBlaiseApi();
+
+            var payload = new Dictionary<string, string>
+            {
+                {"QHAdmin.HOut", hOut.ToString()}
+            };
+
+            sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .WithData(payload)
+                .Add();
+
+            //act
+            var dataRecord = sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .Get();
+
+            var result = sut
+                .Case
+                .WithDataRecord(dataRecord)
+                .HOut;
+
+            //assert
+            Assert.AreEqual(hOut, result);
+
+            //cleanup
+            sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .Remove();
+        }
+
+        [Test]
+        public void Given_A_Case_That_Exists_Without_A_Hout_Value_When_I_Call_HasField_Then_The_Expected_Value_Is_Returned()
+        {
+            //arrange
+            var primaryKey = "99000001";
+
+            IFluentBlaiseApi sut = new FluentBlaiseApi();
+
+            var payload = new Dictionary<string, string>
+            {
+                {"QID.CaseID", "54"}
+            };
+
+            sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .WithData(payload)
+                .Add();
+
+            //act
+            var dataRecord = sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .Get();
+
+            var result = sut
+                .Case
+                .WithDataRecord(dataRecord)
+                .HOut;
+
+            //assert
+            Assert.AreEqual(0, result);
+
+            //cleanup
+            sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .Remove();
+        }
+
+        [TestCase(WebFormStatusType.NotProcessed)]
 		[TestCase(WebFormStatusType.Partial)]
 		[TestCase(WebFormStatusType.Complete)]
         public void Given_A_Case_That_Exists_With_A_WebFormStatus_Value_When_I_Call_HasField_Then_The_Expected_Value_Is_Returned(WebFormStatusType statusType)
@@ -142,7 +233,56 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
                 .Remove();
 		}
 
-		[Test]
+        [Test]
+        public void Given_A_Case_That_Exists_Without_A_WebFormStatus_Value_When_I_Call_HasField_Then_The_Expected_Value_Is_Returned()
+        {
+            //arrange
+            var primaryKey = "99000001";
+
+            IFluentBlaiseApi sut = new FluentBlaiseApi();
+
+            var payload = new Dictionary<string, string>
+            {
+                {"QID.CaseID", "54"}
+            };
+
+            sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .WithData(payload)
+                .Add();
+
+            //act
+            var dataRecord = sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .Get();
+
+            var result = sut
+                .Case
+                .WithDataRecord(dataRecord)
+                .WebFormStatus;
+
+            //assert
+            Assert.AreEqual(WebFormStatusType.NotProcessed, result);
+
+            //cleanup
+            sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .Remove();
+        }
+
+        [Test]
         public void Given_Valid_Values_When_I_Call_Add_A_New_Case_Is_Added()
         {
             //arrange
