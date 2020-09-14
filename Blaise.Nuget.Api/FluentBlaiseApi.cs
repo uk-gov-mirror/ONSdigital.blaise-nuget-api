@@ -846,17 +846,7 @@ namespace Blaise.Nuget.Api
                     FieldNameType.WebFormStatus);
             }
 
-            switch (dataValue.EnumerationValue)
-            {
-                case 0:
-                    return WebFormStatusType.NotProcessed;
-                case 1:
-                    return WebFormStatusType.Complete;
-                case 2:
-                    return WebFormStatusType.Partial;
-                default:
-                    return WebFormStatusType.NotSpecified;
-            }
+            return (WebFormStatusType) dataValue.EnumerationValue;
         }
 
         private void AddCase()

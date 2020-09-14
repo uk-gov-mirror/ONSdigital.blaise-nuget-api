@@ -2,9 +2,8 @@
 {
     public enum WebFormStatusType
     {
-        NotSpecified = 0,
-        NotProcessed,
-        Complete,
-        Partial
+        NotProcessed = 0,
+        Complete = 1,
+        Partial = 2
     }
 }
