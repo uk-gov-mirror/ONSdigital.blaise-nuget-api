@@ -91,6 +91,57 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
 			Assert.AreEqual(exists, result);
         }
 
+		[TestCase(WebFormStatusType.NotProcessed)]
+		[TestCase(WebFormStatusType.Partial)]
+		[TestCase(WebFormStatusType.Complete)]
+        public void Given_A_Case_That_Exists_With_A_WebFormStatus_Value_When_I_Call_HasField_Then_The_Expected_Value_Is_Returned(WebFormStatusType statusType)
+        {
+            //arrange
+            var primaryKey = "99000001";
+
+			IFluentBlaiseApi sut = new FluentBlaiseApi();
+
+			var payload = new Dictionary<string, string>
+			{
+				{"WebFormStatus", $"{(int)statusType}"}
+			};
+
+            sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .WithData(payload)
+                .Add();
+
+			//act
+			var dataRecord = sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .Get();
+
+            var result = sut
+                .Case
+                .WithDataRecord(dataRecord)
+                .WebFormStatus;
+
+            //assert
+            Assert.AreEqual(statusType, result);
+
+            //cleanup
+            sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .Remove();
+		}
+
 		[Test]
         public void Given_Valid_Values_When_I_Call_Add_A_New_Case_Is_Added()
         {

@@ -1126,7 +1126,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         [TestCase(0, WebFormStatusType.NotProcessed)]
         [TestCase(1, WebFormStatusType.Complete)]
         [TestCase(2, WebFormStatusType.Partial)]
-        [TestCase(3, WebFormStatusType.NotSpecified)]
         public void Given_A_DataRecord_And_Case_Is_Called_When_I_Call_WebFormStatus_Then_The_Expected_Status_Is_Returned(int dataEnumerationValue, WebFormStatusType webFormStatusType)
         {
             //arrange
@@ -1173,7 +1172,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         [TestCase(0, WebFormStatusType.NotProcessed)]
         [TestCase(1, WebFormStatusType.Complete)]
         [TestCase(2, WebFormStatusType.Partial)]
-        [TestCase(3, WebFormStatusType.NotSpecified)]
         public void Given_A_PrimaryKey_And_Case_Is_Called_When_I_Call_WebFormStatus_Then_The_Expected_Status_Is_Returned(int dataEnumerationValue, WebFormStatusType webFormStatusType)
         {
             //arrange
