@@ -15,6 +15,7 @@ namespace Blaise.Nuget.Api.Contracts.Enums
         [Description("QID.Case_ID")]
         CaseId,
 
-        Version
+        [Description("Mode")]
+        Mode
     }
 }
