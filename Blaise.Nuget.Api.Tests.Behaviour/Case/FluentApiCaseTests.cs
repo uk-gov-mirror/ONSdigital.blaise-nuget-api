@@ -85,7 +85,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
         [TestCase(110)]
         [TestCase(210)]
         [TestCase(310)]
-        public void Given_A_Case_That_Exists_Wit_A_Hout_Value_When_I_Call_HasField_Then_The_Expected_Value_Is_Returned(int hOut)
+        public void Given_A_Case_That_Exists_With_A_Hout_Value_When_I_Call_HasField_Then_The_Expected_Value_Is_Returned(int hOut)
         {
             //arrange
             var primaryKey = "99000001";

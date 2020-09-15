@@ -55,6 +55,7 @@
     <Compile Include="Case\FluentApiCaseTests.cs" />
     <Compile Include="Factories\ConnectedServerFactoryTests.cs" />
     <Compile Include="Factories\RemoteDataServerFactoryTests.cs" />
+    <Compile Include="Fields\ApiFieldTests.cs" />
     <Compile Include="Handler\FluentApiHandlerUnderLoadTests.cs" />
     <Compile Include="Handler\FluentApiToFileHandlerTests.cs" />
     <Compile Include="Processor\FluentApiProcessorTests.cs" />
