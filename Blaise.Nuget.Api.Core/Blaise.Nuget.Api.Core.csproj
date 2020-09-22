@@ -85,7 +85,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\EnumExtension.cs" />
     <Compile Include="Extensions\ExpiryExtensions.cs" />
     <Compile Include="Factories\ConnectedServerFactory.cs" />
     <Compile Include="Factories\RemoteDataServerFactory.cs" />

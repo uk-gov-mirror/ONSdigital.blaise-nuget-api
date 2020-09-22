@@ -1,6 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Contracts.Extensions;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Extensions;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
@@ -92,7 +93,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             if (fieldExists)
             {
-                iFieldMock.Setup(f => f.FullName).Returns(fieldNameType.FromDescription());
+                iFieldMock.Setup(f => f.FullName).Returns(fieldNameType.FullName());
             }
             else
             {
