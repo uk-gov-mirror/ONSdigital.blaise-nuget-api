@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Contracts.Extensions;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using NUnit.Framework;
@@ -272,6 +273,104 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
 
             //assert
             Assert.AreEqual(WebFormStatusType.NotProcessed, result);
+
+            //cleanup
+            sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .Remove();
+        }
+
+        [Test]
+        public void Given_A_Case_That_Exists_With_A_CaseId_Value_When_I_Call_CaseId_Then_The_Expected_Value_Is_Returned()
+        {
+            //arrange
+            var primaryKey = "99000001";
+
+            IFluentBlaiseApi sut = new FluentBlaiseApi();
+
+            var payload = new Dictionary<string, string>
+            {
+                {FieldNameType.CaseId.FullName(), "54"}
+            };
+
+            sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .WithData(payload)
+                .Add();
+
+            //act
+            var dataRecord = sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .Get();
+
+            var result = sut
+                .Case
+                .WithDataRecord(dataRecord)
+                .CaseId;
+
+            //assert
+            Assert.AreEqual("54", result);
+
+            //cleanup
+            sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .Remove();
+        }
+
+        [Test]
+        public void Given_A_Case_That_Exists_Without_A_CaseId_Value_When_I_Call_CaseId_Then_The_Expected_Value_Is_Returned()
+        {
+            //arrange
+            var primaryKey = "99000001";
+
+            IFluentBlaiseApi sut = new FluentBlaiseApi();
+
+            var payload = new Dictionary<string, string>
+            {
+                {"QID.Case_ID", "001"}
+    };
+
+            sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .WithData(payload)
+                .Add();
+
+            //act
+            var dataRecord = sut
+                .WithConnection(_connectionModel)
+                .WithInstrument("OPN2004A")
+                .WithServerPark("LocalDevelopment")
+                .Case
+                .WithPrimaryKey(primaryKey)
+                .Get();
+
+            var result = sut
+                .Case
+                .WithDataRecord(dataRecord)
+                .CaseId;
+
+            //assert
+            Assert.AreEqual(string.Empty, result);
 
             //cleanup
             sut
