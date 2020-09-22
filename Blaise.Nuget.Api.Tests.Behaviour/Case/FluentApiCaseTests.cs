@@ -59,7 +59,8 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
         [TestCase(FieldNameType.CaseId, true)]
         [TestCase(FieldNameType.HOut, true)]
         [TestCase(FieldNameType.NotSpecified, false)]
-		public void Given_A_Case_That_Exists_When_I_Call_HasField_Then_The_Expected_Value_Is_Returned(FieldNameType fieldNameType, bool exists)
+        [TestCase(FieldNameType.Online, false)]
+        public void Given_A_Case_That_Exists_When_I_Call_HasField_Then_The_Expected_Value_Is_Returned(FieldNameType fieldNameType, bool exists)
         {
             //arrange
             IFluentBlaiseApi sut = new FluentBlaiseApi();

@@ -51,6 +51,7 @@
     <Compile Include="Enums\SurveyType.cs" />
     <Compile Include="Enums\WebFormStatusType.cs" />
     <Compile Include="Exceptions\DataNotFoundException.cs" />
+    <Compile Include="Extensions\EnumExtension.cs" />
     <Compile Include="Interfaces\IBlaiseApi.cs" />
     <Compile Include="Interfaces\IFluentBlaiseCaseApi.cs" />
     <Compile Include="Interfaces\IFluentBlaiseApi.cs" />

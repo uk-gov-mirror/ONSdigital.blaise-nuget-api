@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Enums;
+using Blaise.Nuget.Api.Contracts.Extensions;
 using Blaise.Nuget.Api.Contracts.Models;
-using Blaise.Nuget.Api.Core.Extensions;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
@@ -27,7 +27,7 @@ namespace Blaise.Nuget.Api.Core.Services
             var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
             var definitionScope = (IDefinitionScope2)dataModel;
 
-            return definitionScope.FieldExists(fieldNameType.FromDescription());
+            return definitionScope.FieldExists(fieldNameType.FullName());
         }
 
         public bool FieldExists(IDataRecord dataRecord, FieldNameType fieldNameType)
@@ -36,7 +36,7 @@ namespace Blaise.Nuget.Api.Core.Services
             var dataFields = dataRecord2.GetDataFields();
 
             return dataFields.Any(f =>
-                f.FullName.Equals(fieldNameType.FromDescription(), StringComparison.InvariantCultureIgnoreCase));
+                f.FullName.Equals(fieldNameType.FullName(), StringComparison.InvariantCultureIgnoreCase));
         }
 
         public bool CaseHasBeenCompleted(IDataRecord dataRecord)
@@ -72,7 +72,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public IField GetField(IDataRecord dataRecord, FieldNameType fieldNameType)
         {
-            return dataRecord.GetField(fieldNameType.FromDescription());
+            return dataRecord.GetField(fieldNameType.FullName());
         }
     }
 }

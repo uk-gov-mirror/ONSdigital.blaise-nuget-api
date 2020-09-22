@@ -2,11 +2,11 @@
 using System.ComponentModel;
 using System.Linq;
 
-namespace Blaise.Nuget.Api.Core.Extensions
+namespace Blaise.Nuget.Api.Contracts.Extensions
 {
     public static class EnumExtension
     {
-        public static string FromDescription(this Enum value)
+        public static string FullName(this Enum value)
         {
             var fi = value.GetType().GetField(value.ToString());
 

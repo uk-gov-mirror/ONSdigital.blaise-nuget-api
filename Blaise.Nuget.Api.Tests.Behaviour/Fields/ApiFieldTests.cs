@@ -12,16 +12,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Fields
 
         public ApiFieldTests()
         {
-            _connectionModel = new ConnectionModel
-            {
-                Binding = "HTTP",
-                UserName = "Root",
-                Password = "Root",
-                ServerName = "localhost",
-                Port = 8031,
-                RemotePort = 8033,
-                ConnectionExpiresInMinutes = 30
-            };
+            _connectionModel = new ConnectionModel();
         }
 
         [TestCase(0)]

@@ -16,6 +16,9 @@ namespace Blaise.Nuget.Api.Contracts.Enums
         CaseId,
 
         [Description("Mode")]
-        Mode
+        Mode,
+
+        [Description("QHAdmin.Online")]
+        Online,
     }
 }
