@@ -21,7 +21,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<IConnectedServer> _connectedServerMock;
         private Mock<IServerParkCollection> _serverParkCollectionMock;
 
-        private Mock<IUser2> _userMock;
+        private Mock<IUser> _user1Mock;
+        private Mock<IUser2> _user2Mock;
         private Mock<IUserServerParkCollection> _userServerParkCollectionMock;
         private Mock<IUserCollection> _userCollectionMock;
         private Mock<IUserPreferenceCollection> _userPreferenceCollectionMock;
@@ -70,15 +71,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //setup user mocks
             _userServerParkCollectionMock = new Mock<IUserServerParkCollection>();
 
-            _userMock = new Mock<IUser2>();
-            _userMock.Setup(u => u.ServerParks).Returns(_userServerParkCollectionMock.Object);
-            _userMock.Setup(u => u.Preferences).Returns(_userPreferenceCollectionMock.Object);
+            _user1Mock = new Mock<IUser>();
+            _user1Mock.Setup(u => u.Name).Returns(_userName);
 
-            var userItems = new List<IUser> { _userMock.Object };
+            _user2Mock = new Mock<IUser2>();
+            _user2Mock.Setup(u => u.ServerParks).Returns(_userServerParkCollectionMock.Object);
+            _user2Mock.Setup(u => u.Preferences).Returns(_userPreferenceCollectionMock.Object);
+
+            var userItems = new List<IUser> { _user1Mock.Object };
 
             _userCollectionMock = new Mock<IUserCollection>();
             _userCollectionMock.Setup(u => u.GetEnumerator()).Returns(() => userItems.GetEnumerator());
-            _userCollectionMock.Setup(u => u.GetItem(It.IsAny<string>())).Returns(_userMock.Object);
+            _userCollectionMock.Setup(u => u.GetItem(It.IsAny<string>())).Returns(_user2Mock.Object);
 
             //setup connection
             _connectedServerMock = new Mock<IConnectedServer>();
@@ -89,7 +93,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _connectionFactoryMock = new Mock<IConnectedServerFactory>();
             _connectionFactoryMock.Setup(c => c.GetConnection(_connectionModel)).Returns(_connectedServerMock.Object);
             _connectedServerMock.Setup(c => c.AddUser(It.IsAny<string>(), It.IsAny<SecureString>()))
-                .Returns(_userMock.Object);
+                .Returns(_user2Mock.Object);
 
             //setup password service
             _passwordServiceMock = new Mock<IPasswordService>();
@@ -127,8 +131,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             _userPreferenceCollectionMock.Verify(v => v.Add("CATI.Preferences"), Times.Once);
 
-            _userMock.VerifySet(u => u.Role = role, Times.Once);
-            _userMock.Verify(v => v.Save(), Times.Once);
+            _user2Mock.VerifySet(u => u.Role = role, Times.Once);
+            _user2Mock.Verify(v => v.Save(), Times.Once);
         }
 
         [Test]
@@ -145,7 +149,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             var defaultServerPark = "ServerPark1";
 
-            _userMock.Setup(u => u.Role).Throws(new Exception());
+            _user2Mock.Setup(u => u.Role).Throws(new Exception());
 
             //act
             _sut.AddUser(_connectionModel, _userName, _password, role, serverParkNameList, defaultServerPark);
@@ -159,7 +163,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
                 _userServerParkCollectionMock.Verify(v => v.Add(serverParkName), Times.Once);
             }
 
-            _userMock.Verify(v => v.Save(), Times.Once);
+            _user2Mock.Verify(v => v.Save(), Times.Once);
         }
 
         [Test]
@@ -180,15 +184,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //assert
             _connectedServerMock.Verify(v => v.Users.GetItem(_userName), Times.Once);
 
-            _userMock.Verify(u => u.ServerParks.Clear(), Times.Once);
+            _user2Mock.Verify(u => u.ServerParks.Clear(), Times.Once);
 
             foreach (var serverParkName in serverParkNameList)
             {
                 _userServerParkCollectionMock.Verify(v => v.Add(serverParkName), Times.Once);
             }
 
-            _userMock.VerifySet(u => u.Role = role, Times.Once);
-            _userMock.Verify(v => v.Save(), Times.Once);
+            _user2Mock.VerifySet(u => u.Role = role, Times.Once);
+            _user2Mock.Verify(v => v.Save(), Times.Once);
         }
 
         [Test]
@@ -203,7 +207,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             const string role = "King";
 
-            _userMock.Setup(u => u.Role).Throws(new Exception());
+            _user2Mock.Setup(u => u.Role).Throws(new Exception());
 
             //act
             _sut.EditUser(_connectionModel, _userName, role, serverParkNameList);
@@ -211,14 +215,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //assert
             _connectedServerMock.Verify(v => v.Users.GetItem(_userName), Times.Once);
 
-            _userMock.Verify(u => u.ServerParks.Clear(), Times.Once);
+            _user2Mock.Verify(u => u.ServerParks.Clear(), Times.Once);
 
             foreach (var serverParkName in serverParkNameList)
             {
                 _userServerParkCollectionMock.Verify(v => v.Add(serverParkName), Times.Once);
             }
 
-            _userMock.Verify(v => v.Save(), Times.Once);
+            _user2Mock.Verify(v => v.Save(), Times.Once);
         }
 
         [Test]
@@ -232,8 +236,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //assert
             _passwordServiceMock.Verify(v => v.CreateSecurePassword(_password), Times.Once);
             _connectedServerMock.Verify(v => v.Users.GetItem(_userName), Times.Once);
-            _userMock.Verify(v => v.ChangePassword(_securePassword), Times.Once);
-            _userMock.Verify(v => v.Save(), Times.Once);
+            _user2Mock.Verify(v => v.ChangePassword(_securePassword), Times.Once);
+            _user2Mock.Verify(v => v.Save(), Times.Once);
         }
 
         [TestCase("User1")]
@@ -243,7 +247,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_User_Exists_When_I_Call_UserExists_Then_True_Is_Returned(string userName)
         {
             //arrange
-            _userMock.Setup(u => u.Name).Returns(_userName);
+            _user1Mock.Setup(u => u.Name).Returns(_userName);
 
             //act
             var result = _sut.UserExists(_connectionModel, userName);
@@ -256,7 +260,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_User_Does_Not_Exist_When_I_Call_UserExists_Then_False_Is_Returned()
         {
             //arrange 
-            _userMock.Setup(u => u.Name).Returns("NotFound");
+            _user1Mock.Setup(u => u.Name).Returns("NotFound");
             
             //act
             var result = _sut.UserExists(_connectionModel, _userName);
@@ -276,23 +280,23 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_A_User_Exists_When_I_Call_GetUser_Then_The_Correct_Services_Are_Called()
+        public void Given_A_User_Exists_When_I_Call_GetUser_Then_The_Correct_User_Is_returned()
         {
             //arrange
-            _userCollectionMock.Setup(u => u.GetItem(It.IsAny<string>())).Returns(_userMock.Object);
+            _connectedServerMock.Setup(c => c.Users).Returns(_userCollectionMock.Object);
 
             //act
-            _sut.GetUser(_connectionModel, _userName);
+            var result = _sut.GetUser(_connectionModel, _userName);
 
             //assert
-            _userCollectionMock.Verify(v => v.GetItem(_userName), Times.Once);
+           Assert.AreEqual(_userName,result.Name);
         }
 
         [Test]
         public void Given_A_User_Exists_When_I_Call_GetUser_Then_An_IUser_Object_Is_Returned()
         {
             //arrange
-            _userCollectionMock.Setup(u => u.GetItem(It.IsAny<string>())).Returns(_userMock.Object);
+            _connectedServerMock.Setup(c => c.Users).Returns(_userCollectionMock.Object);
 
             //act
             var result = _sut.GetUser(_connectionModel, _userName);
@@ -306,7 +310,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_User_Does_Not_Exist_When_I_Call_GetUser_Then_A_Null_Value_Is_Returned()
         {
             //arrange
-            _userCollectionMock.Setup(u => u.GetItem(It.IsAny<string>())).Returns((IUser) null);
+            var userItems = new List<IUser>();
+
+            _userCollectionMock.Setup(u => u.GetEnumerator()).Returns(() => userItems.GetEnumerator());
+
+            _connectedServerMock.Setup(c => c.Users).Returns(_userCollectionMock.Object);
 
             //act
             var result =_sut.GetUser(_connectionModel, _userName);
