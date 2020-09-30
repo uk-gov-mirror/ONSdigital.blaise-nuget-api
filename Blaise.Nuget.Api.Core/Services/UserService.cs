@@ -76,7 +76,7 @@ namespace Blaise.Nuget.Api.Core.Services
         public IUser GetUser(ConnectionModel connectionModel, string userName)
         {
             var connection = _connectedServerFactory.GetConnection(connectionModel);
-
+            var test = connection.Users;
             return connection.Users.FirstOrDefault(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
         }
 
