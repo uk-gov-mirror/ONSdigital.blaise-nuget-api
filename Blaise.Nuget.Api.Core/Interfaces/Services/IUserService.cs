@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Models;
+using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Core.Interfaces.Services
 {
@@ -14,5 +15,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         bool UserExists(ConnectionModel connectionModel, string userName);
 
         void RemoveUser(ConnectionModel connectionModel, string userName);
+
+        IUser GetUser(ConnectionModel connectionModel, string userName);
     }
 }
