@@ -472,5 +472,39 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveUser(_connectionModel,null));
             Assert.AreEqual("userName", exception.ParamName);
         }
+
+        [Test]
+        public void When_I_Call_GetUser_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //act
+            _sut.GetUser(_connectionModel, _userName);
+
+            //assert
+            _userServiceMock.Verify(v => v.GetUser(_connectionModel, _userName), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_null_ConnectionModel_When_I_Call_GetUser_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetUser(null, _userName));
+            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_UserName_When_I_Call_GetUser_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetUser(_connectionModel, string.Empty));
+            Assert.AreEqual("A value for the argument 'userName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_null_UserName_When_I_Call_GetUser_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetUser(_connectionModel, null));
+            Assert.AreEqual("userName", exception.ParamName);
+        }
     }
 }

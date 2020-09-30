@@ -131,7 +131,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _userMock.Verify(v => v.Save(), Times.Once);
         }
 
-
         [Test]
         public void Given_An_Error_Occurs_In_Setting_The_User_Role_When_I_Call_AddUser_Then_The_User_Is_Still_Added()
         {
@@ -274,6 +273,46 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _connectedServerMock.Verify(v => v.RemoveUser(_userName), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_User_Exists_When_I_Call_GetUser_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            _userCollectionMock.Setup(u => u.GetItem(It.IsAny<string>())).Returns(_userMock.Object);
+
+            //act
+            _sut.GetUser(_connectionModel, _userName);
+
+            //assert
+            _userCollectionMock.Verify(v => v.GetItem(_userName), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_User_Exists_When_I_Call_GetUser_Then_An_IUser_Object_Is_Returned()
+        {
+            //arrange
+            _userCollectionMock.Setup(u => u.GetItem(It.IsAny<string>())).Returns(_userMock.Object);
+
+            //act
+            var result = _sut.GetUser(_connectionModel, _userName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<IUser>(result);
+        }
+
+        [Test]
+        public void Given_A_User_Does_Not_Exist_When_I_Call_GetUser_Then_A_Null_Value_Is_Returned()
+        {
+            //arrange
+            _userCollectionMock.Setup(u => u.GetItem(It.IsAny<string>())).Returns((IUser) null);
+
+            //act
+            var result =_sut.GetUser(_connectionModel, _userName);
+
+            //assert
+            Assert.IsNull(result);
         }
     }
 }

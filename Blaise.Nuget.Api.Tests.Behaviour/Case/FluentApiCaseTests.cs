@@ -392,7 +392,6 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
 
             var payload = new Dictionary<string, string>
             {
-		        {"QID.CaseID", "54"},
 		        {"QID.Case_ID", "54"},
 		        {"QID.Quota", null},
 		        {"QID.Address", "4"},

@@ -96,6 +96,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         void RemoveUser(ConnectionModel connectionModel, string userName);
 
+        IUser GetUser(ConnectionModel connectionModel, string userName);
+
         void CopyCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName,
             string sourceServerParkName, string destinationFilePath, string destinationInstrumentName);
 

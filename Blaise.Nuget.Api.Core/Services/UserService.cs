@@ -27,7 +27,7 @@ namespace Blaise.Nuget.Api.Core.Services
             var securePassword = _passwordService.CreateSecurePassword(password);
             var user = (IUser2)connection.AddUser(userName, securePassword);
             
-            AddCatiPrefrenceToUser(user, defaultServerPark);
+            AddCatiPreferenceToUser(user, defaultServerPark);
             AddServerParksToUser(user, serverParkNames);
             AssignRoleToUser(user, role);
             
@@ -73,6 +73,13 @@ namespace Blaise.Nuget.Api.Core.Services
             connection.RemoveUser(userName);
         }
 
+        public IUser GetUser(ConnectionModel connectionModel, string userName)
+        {
+            var connection = _connectedServerFactory.GetConnection(connectionModel);
+
+            return connection.Users.FirstOrDefault(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
+        }
+
         private static void AddServerParksToUser(IUser user, IEnumerable<string> serverParkNames)
         {
             foreach (var serverParkName in serverParkNames)
@@ -81,7 +88,7 @@ namespace Blaise.Nuget.Api.Core.Services
             }
         }
 
-        private void AssignRoleToUser(IUser2 user, string role)
+        private static void AssignRoleToUser(IUser2 user, string role)
         {
             try
             {
@@ -90,7 +97,7 @@ namespace Blaise.Nuget.Api.Core.Services
             catch { }
         }
 
-        private void AddCatiPrefrenceToUser(IUser2 user, string defaultServerPark)
+        private static void AddCatiPreferenceToUser(IUser2 user, string defaultServerPark)
         {
             user.Preferences.Add("CATI.Preferences");
             var catiPreference = user.Preferences.GetItem("CATI.Preferences");

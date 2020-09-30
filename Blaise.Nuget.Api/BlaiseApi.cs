@@ -417,6 +417,15 @@ namespace Blaise.Nuget.Api
             _userService.RemoveUser(connectionModel, userName);
         }
 
+        public IUser GetUser(ConnectionModel connectionModel, string userName)
+        {
+            connectionModel.ThrowExceptionIfNull("connectionModel");
+            userName.ThrowExceptionIfNullOrEmpty("userName");
+
+            return _userService.GetUser(connectionModel, userName);
+        }
+
+
         public void CopyCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
             ConnectionModel destinationConnectionModel, string destinationInstrumentName, string destinationServerParkName)
         {
