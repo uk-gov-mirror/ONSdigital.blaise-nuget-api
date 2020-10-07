@@ -16,7 +16,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         private readonly string _destinationFilePath;
         private readonly string _bucketName;
         private readonly string _folderPath;
-        private readonly string _sourceFolderPath;
 
         private FluentBlaiseApi _sut;
 
@@ -28,7 +27,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             _destinationFilePath = "FilePath";
             _bucketName = "OpnBucket";
             _folderPath = "FolderPath";
-            _sourceFolderPath = "SourceFolderPath";
         }
 
         [SetUp]
@@ -40,7 +38,23 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_ToPath_Steps_Are_Setup_But_WithConnection_Has_Not_Been_Called_When_I_Call_Backup_Then_A_NullReferenceException_Is_Thrown()
+        public void Given_ToPath_Steps_Are_Setup_When_I_Call_Backup_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            _sut.WithConnection(_connectionModel);
+            _sut.WithInstrument(_instrumentName);
+            _sut.WithServerPark(_serverParkName);
+            _sut.Survey.ToPath(_destinationFilePath);
+
+            //act
+            _sut.Backup();
+
+            //assert
+            _blaiseApiMock.Verify(v => v.BackupSurveyToFile(It.IsAny<ConnectionModel>(), _serverParkName, _instrumentName, _destinationFilePath), Times.Once);
+        }
+
+        [Test]
+        public void Given_ToPath_Steps_Are_Setup_But_WithConnection_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             //_sut.WithConnection(_connectionModel);
@@ -58,7 +72,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_ToPath_Steps_Are_Setup_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Backup_Then_A_NullReferenceException_Is_Thrown()
+        public void Given_ToPath_Steps_Are_Setup_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -76,7 +90,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_ToPath_Steps_Are_Setup_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Backup_Then_A_NullReferenceException_Is_Thrown()
+        public void Given_ToPath_Steps_Are_Setup_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -94,14 +108,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_ToPath_Steps_Are_Setup_But_WithFile_Has_Not_Been_Called_When_I_Call_Backup_Then_A_NullReferenceException_Is_Thrown()
+        public void Given_ToPath_Steps_Are_Setup_But_WithFile_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
             _sut.WithInstrument(_instrumentName);
             _sut.WithServerPark(_serverParkName);
             //_sut.Survey.ToPath(_destinationFilePath);
-            _sut.Survey.ToBucket(_bucketName);
 
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() =>
@@ -149,7 +162,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_ToBucket_Steps_Are_Setup_But_WithConnection_Has_Not_Been_Called_When_I_Call_Backup_Then_A_NullReferenceException_Is_Thrown()
+        public void Given_ToBucket_Steps_Are_Setup_But_WithConnection_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             //_sut.WithConnection(_connectionModel);
@@ -168,7 +181,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_ToBucket_Steps_Are_Setup_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Backup_Then_A_NullReferenceException_Is_Thrown()
+        public void Given_ToBucket_Steps_Are_Setup_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -187,7 +200,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_ToBucket_Steps_Are_Setup_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Backup_Then_A_NullReferenceException_Is_Thrown()
+        public void Given_ToBucket_Steps_Are_Setup_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -206,7 +219,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_ToBucket_Steps_Are_Setup_But_ToPath_Has_Not_Been_Called_When_I_Call_Backup_Then_A_NullReferenceException_Is_Thrown()
+        public void Given_ToBucket_Steps_Are_Setup_But_ToPath_Has_Not_Been_Called_When_I_Call_Backup_Then_An_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -222,65 +235,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             });
 
             Assert.AreEqual("The 'ToPath' step needs to be called with a valid value, check that the step has been called with a valid value for the destination file path", exception.Message);
-        }
-
-        [Test]
-        public void Given_ToBucket_Steps_Are_Setup_For_Settings_When_I_Call_Backup_The_Correct_Services_Are_Called()
-        {
-            //arrange
-            _sut.Settings.WithSourceFolder(_sourceFolderPath);
-            _sut.Settings.ToBucket(_bucketName, _folderPath);
-
-            //act
-            _sut.Backup();
-
-            //assert
-            _blaiseApiMock.Verify(v => v.BackupFilesToBucket(_sourceFolderPath,
-                _bucketName, _folderPath), Times.Once);
-        }
-
-        [Test]
-        public void Given_ToBucket_Steps_Are_Setup_For_Settings_But_WithSourceFolder_Has_Not_Been_Called_When_I_Call_Backup_Then_A_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            //_sut.Settings.WithSourceFolder(_sourceFolderPath);
-            _sut.Settings.ToBucket(_bucketName, _folderPath);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() =>
-            {
-                _sut.Backup();
-            });
-
-            Assert.AreEqual("The 'WithSourceFolder' step needs to be called with a valid value, check that the step has been called with a valid source path", exception.Message);
-        }
-
-        [Test]
-        public void Given_ToBucket_Steps_Are_Setup_For_Settings_But_ToBucket_Has_Not_Been_Called_When_I_Call_Backup_Then_A_NullReferenceException_Is_Thrown()
-        {
-            //arrange
-            _sut.Settings.WithSourceFolder(_sourceFolderPath);
-           // _sut.Settings.ToBucket(_bucketName, _folderPath);
-
-            //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() =>
-            {
-                _sut.Backup();
-            });
-
-            Assert.AreEqual("The 'ToBucket' step needs to be called with a valid value, check that the step has been called with a valid bucket name", exception.Message);
-        }
-
-        [Test]
-        public void Given_I_Do_Not_Specify_Surveys_or_Settings_When_I_Call_Backup_Then_Correct_Services_Then_A_NotSupportedException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<NotSupportedException>(() =>
-            {
-                _sut.Backup();
-            });
-
-            Assert.AreEqual("Backup functionality is only available for surveys and settings", exception.Message);
         }
     }
 }

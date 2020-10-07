@@ -6,6 +6,7 @@
         Case,
         ServerPark,
         Survey,
-        User
+        User,
+        Settings
     }
 }
