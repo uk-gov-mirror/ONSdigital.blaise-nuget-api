@@ -9,11 +9,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseSurveyApi ToPath(string destinationPath);
 
-        IFluentBlaiseSurveyApi ToBucket(string bucketName, string folderName = null);
+        IFluentBlaiseApi ToBucket(string bucketName, string folderName = null);
 
         bool HasField(FieldNameType fieldNameType);
-
-        void Backup();
 
         bool Exists { get; }
     }

@@ -25,9 +25,14 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseSurveyApi Survey { get; }
 
+        IFluentBlaiseSettingsApi Settings { get; }
+
         IEnumerable<ISurvey> Surveys { get; }
 
         bool Exists { get; }
+
+        void Backup();
+
 
         ConnectionModel DefaultConnection { get; }
     }
