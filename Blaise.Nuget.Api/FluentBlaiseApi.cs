@@ -12,7 +12,7 @@ using Blaise.Nuget.Api.Contracts.Models;
 
 namespace Blaise.Nuget.Api
 {
-    public class FluentBlaiseApi : IFluentBlaiseApi, IFluentBlaiseCaseApi, IFluentBlaiseSurveyApi, IFluentBlaiseUserApi, IFluentBlaiseHandler
+    public class FluentBlaiseApi : IFluentBlaiseApi, IFluentBlaiseCaseApi, IFluentBlaiseSurveyApi, IFluentBlaiseUserApi, IFluentBlaiseHandler, IFluentBlaiseSettingsApi
     {
         private readonly IBlaiseApi _blaiseApi;
 
@@ -31,7 +31,8 @@ namespace Blaise.Nuget.Api
         private string _role;
         private string _destinationPath;
         private string _bucketName;
-        private string _folderName;
+        private string _bucketFolderPath;
+        private string _sourceFolderPath;
 
         private Dictionary<string, string> _caseData;
         private IList<string> _serverParkNames;
@@ -40,8 +41,7 @@ namespace Blaise.Nuget.Api
         private CaseStatusType _statusType;
         private LastActionType _lastActionType;
         private HandleType _handleType;
-
-
+       
         private void InitialiseSettings()
         {
             _serverParkName = null;
@@ -55,7 +55,8 @@ namespace Blaise.Nuget.Api
             _toFilePath = null;
             _destinationPath = null;
             _bucketName = null;
-            _folderName = null;
+            _bucketFolderPath = null;
+            _sourceFolderPath = null;
             _userName = null;
             _password = null;
             _role = null;
@@ -301,6 +302,16 @@ namespace Blaise.Nuget.Api
             }
         }
 
+        public IFluentBlaiseSettingsApi Settings 
+        {
+            get
+            {
+                _lastActionType = LastActionType.Settings;
+
+                return this;
+            }
+        }
+
         public IEnumerable<ISurvey> Surveys
         {
             get
@@ -349,29 +360,50 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IFluentBlaiseSurveyApi ToBucket(string bucketName, string folderName = null)
+        public IFluentBlaiseSettingsApi WithSourceFolder(string folderPath)
+        {
+            _sourceFolderPath = folderPath;
+
+            return this;
+        }
+
+        public IFluentBlaiseApi ToBucket(string bucketName, string folderPath = null)
         {
             _bucketName = bucketName;
-            _folderName = folderName;
+            _bucketFolderPath = folderPath;
 
             return this;
         }
 
         public void Backup()
         {
-            ValidateSourceConnectionIsSet();
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-            ValidateDestinationPathIsSet();
-
-            _blaiseApi.BackupSurveyToFile(_sourceConnectionModel, _serverParkName, _instrumentName, _destinationPath);
-
-            if (!string.IsNullOrWhiteSpace(_bucketName))
+            if (_lastActionType == LastActionType.Settings)
             {
-                _blaiseApi.BackupFilesToBucket(_destinationPath, _bucketName, _folderName);
+                ValidateSourceFolderIsSet();
+                ValidateBucketNameIsSet();
+
+                _blaiseApi.BackupFilesToBucket(_sourceFolderPath, _bucketName, _bucketFolderPath);
+
+                InitialiseSettings();
+                return;
             }
 
-            InitialiseSettings();
+            if (_lastActionType == LastActionType.Survey)
+            {
+                ValidateSourceConnectionIsSet();
+                ValidateServerParkIsSet();
+                ValidateInstrumentIsSet();
+                ValidateDestinationPathIsSet();
+                ValidateBucketNameIsSet();
+
+                _blaiseApi.BackupSurveyToFile(_sourceConnectionModel, _serverParkName, _instrumentName, _destinationPath);
+                _blaiseApi.BackupFilesToBucket(_destinationPath, _bucketName, _bucketFolderPath);
+
+                InitialiseSettings();
+                return;
+            }
+
+            throw new NotSupportedException("Backup functionality is only available for surveys and settings");
         }
 
         public IFluentBlaiseCaseApi WithStatus(CaseStatusType statusType)
@@ -962,6 +994,22 @@ namespace Blaise.Nuget.Api
             if (!_caseData.Any())
             {
                 throw new NullReferenceException("The 'WithData' step needs to be called with a valid value, check that the step has been called with a valid set of data");
+            }
+        }
+
+        private void ValidateBucketNameIsSet()
+        {
+            if (_bucketName == null)
+            {
+                throw new NullReferenceException("The 'ToBucket' step needs to be called with a valid value, check that the step has been called with a valid bucket name");
+            }
+        }
+
+        private void ValidateSourceFolderIsSet()
+        {
+            if (_sourceFolderPath == null)
+            {
+                throw new NullReferenceException("The 'WithSourceFolder' step needs to be called with a valid value, check that the step has been called with a valid source path");
             }
         }
     }
