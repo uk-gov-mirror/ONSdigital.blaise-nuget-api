@@ -8,7 +8,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Contracts package for the API to interact with Blaise</description>
     <dependencies>
-      <group targetFramework=".NETFramework4.7.2">
+      <group targetFramework="net472">
         <dependency id="StatNeth.Blaise.API.x64" version="5.7.5" />
       </group>
     </dependencies>
