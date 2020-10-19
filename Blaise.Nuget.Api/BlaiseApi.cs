@@ -125,6 +125,10 @@ namespace Blaise.Nuget.Api
         public void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName,
             DateTime dayBatchDate)
         {
+            connectionModel.ThrowExceptionIfNull("connectionModel");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
             _surveyService.CreateDayBatch(connectionModel, instrumentName, serverParkName, dayBatchDate);
         }
 

@@ -316,5 +316,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.IsNotNull(result);
             Assert.AreEqual(dataFileName, result);
         }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_CreateDayBatch_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            var dayBatchDate = DateTime.Now;
+
+            //act
+            _sut.CreateDayBatch(_connectionModel, _instrumentName, _serverParkName, dayBatchDate);
+
+            //assert
+            _dayBatchServiceMock.Verify(v => v.CreateDayBatch(_connectionModel, _instrumentName, _serverParkName, dayBatchDate), Times.Once);
+        }
     }
 }
