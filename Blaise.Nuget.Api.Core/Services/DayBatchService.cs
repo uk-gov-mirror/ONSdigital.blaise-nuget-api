@@ -19,7 +19,9 @@ namespace Blaise.Nuget.Api.Core.Services
             var catiManagement = _catiServerProvider.GetRemoteConnection(connectionModel);
 
             catiManagement.SelectServerPark(serverParkName);
-            catiManagement.LoadCatiInstrumentManager(instrumentName).CreateDaybatch(dayBatchDate);
+            catiManagement
+                .LoadCatiInstrumentManager(instrumentName)
+                .CreateDaybatch(dayBatchDate);
         }
     }
 }
