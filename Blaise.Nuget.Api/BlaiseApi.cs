@@ -122,6 +122,16 @@ namespace Blaise.Nuget.Api
             return _surveyService.GetInstrumentId(connectionModel, instrumentName, serverParkName);
         }
 
+        public void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName,
+            DateTime dayBatchDate)
+        {
+            connectionModel.ThrowExceptionIfNull("connectionModel");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            _surveyService.CreateDayBatch(connectionModel, instrumentName, serverParkName, dayBatchDate);
+        }
+
         public IDatamodel GetDataModel(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
