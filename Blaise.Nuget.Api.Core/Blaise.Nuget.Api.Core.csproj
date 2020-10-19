@@ -87,6 +87,8 @@
   <ItemGroup>
     <Compile Include="Extensions\ExpiryExtensions.cs" />
     <Compile Include="Factories\ConnectedServerFactory.cs" />
+    <Compile Include="Interfaces\Factories\IRemoteCatiServerFactory.cs" />
+    <Compile Include="Factories\RemoteCatiServerFactory.cs" />
     <Compile Include="Factories\RemoteDataServerFactory.cs" />
     <Compile Include="Interfaces\Factories\IConnectedServerFactory.cs" />
     <Compile Include="Interfaces\Providers\IConfigurationProvider.cs" />
@@ -107,6 +109,8 @@
     <Compile Include="Interfaces\Services\ISurveyService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\CloudStorageClientProvider.cs" />
+    <Compile Include="Interfaces\Providers\IRemoteCatiServerProvider.cs" />
+    <Compile Include="Providers\RemoteCatiServerProvider.cs" />
     <Compile Include="Providers\RemoteDataLinkProvider.cs" />
     <Compile Include="Providers\LocalDataLinkProvider.cs" />
     <Compile Include="Services\CloudStorageService.cs" />
@@ -117,9 +121,11 @@
     <Compile Include="Interfaces\Services\IUserService.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Interfaces\Services\IFileService.cs" />
+    <Compile Include="Interfaces\Services\IDayBatchService.cs" />
     <Compile Include="Services\KeyService.cs" />
     <Compile Include="Services\ParkService.cs" />
     <Compile Include="Services\PasswordService.cs" />
+    <Compile Include="Services\DayBatchService.cs" />
     <Compile Include="Services\SurveyService.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>
