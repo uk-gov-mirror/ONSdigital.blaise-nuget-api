@@ -22,5 +22,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         string GetMetaFileName(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         string GetDataFileName(ConnectionModel connectionModel, string instrumentName, string serverParkName);
+
+        void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayBatchDate);
     }
 }
