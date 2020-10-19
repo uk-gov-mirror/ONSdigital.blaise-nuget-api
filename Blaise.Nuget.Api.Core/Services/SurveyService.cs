@@ -12,10 +12,14 @@ namespace Blaise.Nuget.Api.Core.Services
     public class SurveyService : ISurveyService
     {
         private readonly IParkService _parkService;
+        private readonly IDayBatchService _dayBatchService;
 
-        public SurveyService(IParkService parkService)
+        public SurveyService(
+            IParkService parkService, 
+            IDayBatchService dayBatchService)
         {
             _parkService = parkService;
+            _dayBatchService = dayBatchService;
         }
 
         public IEnumerable<string> GetSurveyNames(ConnectionModel connectionModel, string serverParkName)
@@ -98,6 +102,11 @@ namespace Blaise.Nuget.Api.Core.Services
             var configuration = GetSurveyConfiguration(survey);
 
             return configuration.DataFileName;
+        }
+
+        public void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayBatchDate)
+        {
+            _dayBatchService.CreateDayBatch(connectionModel, instrumentName, serverParkName, dayBatchDate);
         }
 
         private IConfiguration GetSurveyConfiguration(ISurvey survey)

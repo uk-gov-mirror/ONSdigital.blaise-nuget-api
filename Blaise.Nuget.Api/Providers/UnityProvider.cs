@@ -27,8 +27,8 @@ namespace Blaise.Nuget.Api.Providers
 
             //factories
             _unityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>();
-
             _unityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>();
+            _unityContainer.RegisterSingleton<IRemoteCatiServerFactory, RemoteCatiServerFactory>();
 
             //mappers
             _unityContainer.RegisterType<IDataMapperService, DataMapperService>();
@@ -36,6 +36,7 @@ namespace Blaise.Nuget.Api.Providers
             //data link providers
             _unityContainer.RegisterSingleton<ILocalDataLinkProvider, LocalDataLinkProvider>();
             _unityContainer.RegisterSingleton<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
+            _unityContainer.RegisterSingleton<IRemoteCatiServerProvider, RemoteCatiServerProvider>();
 
             //storage provider 
             _unityContainer.RegisterSingleton<IStorageClientProvider, CloudStorageClientProvider>();
@@ -51,6 +52,7 @@ namespace Blaise.Nuget.Api.Providers
             _unityContainer.RegisterType<IUserService, UserService>();
             _unityContainer.RegisterType<IFileService, FileService>();
             _unityContainer.RegisterType<ICloudStorageService, CloudStorageService>();
+            _unityContainer.RegisterType<IDayBatchService, DayBatchService>();
         }
 
         public T Resolve<T>()

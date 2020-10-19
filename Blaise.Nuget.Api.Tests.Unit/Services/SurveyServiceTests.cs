@@ -14,6 +14,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
     public class SurveyServiceTests
     {
         private Mock<IParkService> _parkServiceMock;
+        private Mock<IDayBatchService> _dayBatchServiceMock;
 
         private Mock<ISurvey> _surveyMock;
         private Mock<ISurveyCollection> _surveyCollectionMock;
@@ -56,8 +57,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, _serverParkName)).Returns(_serverParkMock.Object);
             _parkServiceMock.Setup(p => p.GetServerParkNames(_connectionModel)).Returns(new List<string> {_serverParkName});
 
+            _dayBatchServiceMock = new Mock<IDayBatchService>();
+
             //setup service under test
-            _sut = new SurveyService(_parkServiceMock.Object);
+            _sut = new SurveyService(_parkServiceMock.Object, _dayBatchServiceMock.Object);
         }
 
         [Test]

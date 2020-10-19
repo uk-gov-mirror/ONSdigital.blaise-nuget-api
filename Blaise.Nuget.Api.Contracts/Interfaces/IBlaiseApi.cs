@@ -28,6 +28,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         Guid GetInstrumentId(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
+        void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayBatchDate);
+
         IDatamodel GetDataModel(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         SurveyType GetSurveyType(ConnectionModel connectionModel, string instrumentName, string serverParkName);
