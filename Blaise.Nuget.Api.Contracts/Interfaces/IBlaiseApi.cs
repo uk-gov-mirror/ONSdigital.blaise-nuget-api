@@ -119,6 +119,6 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         int GetNumberOfCases(ConnectionModel connectionModel, string instrumentName, string serverParkName);
         int GetNumberOfCases(string filePath);
 
-        void CreateDataDeliveryFile(ConnectionModel connectionModel, string serverParkName, string instrumentName, string destinationFilePath);
+        string CreateDataDeliveryFile(ConnectionModel connectionModel, string serverParkName, string instrumentName, string destinationFilePath);
     }
 }
