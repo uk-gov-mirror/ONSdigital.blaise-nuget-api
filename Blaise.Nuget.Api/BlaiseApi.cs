@@ -571,6 +571,36 @@ namespace Blaise.Nuget.Api
             return _dataService.GetNumberOfCases(filePath);
         }
 
+        public void CreateDataDeliveryFile(ConnectionModel connectionModel, string serverParkName, string instrumentName,
+            string destinationFilePath)
+        {
+            connectionModel.ThrowExceptionIfNull("connectionModel");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+            destinationFilePath.ThrowExceptionIfNullOrEmpty("destinationFilePath");
+
+            if (_fileService.DatabaseFileExists(destinationFilePath, instrumentName))
+            {
+                _fileService.DeleteDatabaseFile(destinationFilePath, instrumentName);
+            }
+
+            var metaFileName = _surveyService.GetMetaFileName(connectionModel, instrumentName, serverParkName);
+            var databaseFile = _fileService.CreateDatabaseFile(metaFileName, destinationFilePath, instrumentName);
+
+            var cases = _dataService.GetDataSet(connectionModel, instrumentName, serverParkName);
+
+            while (!cases.EndOfSet)
+            {
+                var dataRecord = (IDataRecord2) cases.ActiveRecord;
+                if (CaseHasBeenCompleted(dataRecord))
+                {
+                    _dataService.WriteDataRecord(dataRecord, databaseFile);
+                }
+
+                cases.MoveNext();
+            }
+        }
+
         public ConnectionModel GetDefaultConnectionModel()
         {
             return _configurationProvider.GetConnectionModel();
