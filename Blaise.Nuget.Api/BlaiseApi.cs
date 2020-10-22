@@ -571,7 +571,7 @@ namespace Blaise.Nuget.Api
             return _dataService.GetNumberOfCases(filePath);
         }
 
-        public void CreateDataDeliveryFile(ConnectionModel connectionModel, string serverParkName, string instrumentName,
+        public string CreateDataDeliveryFile(ConnectionModel connectionModel, string serverParkName, string instrumentName,
             string destinationFilePath)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
@@ -599,6 +599,8 @@ namespace Blaise.Nuget.Api
 
                 cases.MoveNext();
             }
+
+            return databaseFile;
         }
 
         public ConnectionModel GetDefaultConnectionModel()
