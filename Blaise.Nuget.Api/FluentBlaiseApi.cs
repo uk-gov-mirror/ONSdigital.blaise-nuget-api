@@ -41,7 +41,9 @@ namespace Blaise.Nuget.Api
         private CaseStatusType _statusType;
         private LastActionType _lastActionType;
         private HandleType _handleType;
-       
+        private IServerPark _get;
+        private IServerPark _serverPark;
+
         private void InitialiseSettings()
         {
             _serverParkName = null;
@@ -132,7 +134,7 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IEnumerable<string> ServerParks
+        public IEnumerable<string> ServerParkNames
         {
             get
             {
@@ -143,6 +145,20 @@ namespace Blaise.Nuget.Api
                 InitialiseSettings();
 
                 return serverParkNames;
+            }
+        }
+
+        public IEnumerable<IServerPark> ServerParks
+        {
+            get
+            {
+                ValidateSourceConnectionIsSet();
+
+                var serverParks = _blaiseApi.GetServerParks(_sourceConnectionModel);
+
+                InitialiseSettings();
+
+                return serverParks;
             }
         }
 
@@ -309,6 +325,21 @@ namespace Blaise.Nuget.Api
                 _lastActionType = LastActionType.Settings;
 
                 return this;
+            }
+        }
+
+        public IServerPark ServerPark
+        {
+            get
+            {
+                ValidateSourceConnectionIsSet();
+                ValidateServerParkIsSet();
+
+                var serverPark = _blaiseApi.GetServerPark(_sourceConnectionModel, _serverParkName);
+                
+                InitialiseSettings();
+                
+                return serverPark;
             }
         }
 

@@ -14,6 +14,10 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
     {
         ConnectionModel GetDefaultConnectionModel();
 
+        IServerPark GetServerPark(ConnectionModel connectionModel, string serverParkName);
+
+        IEnumerable<IServerPark> GetServerParks(ConnectionModel connectionModel);
+
         IEnumerable<string> GetServerParkNames(ConnectionModel connectionModel);
 
         IEnumerable<string> GetSurveyNames(ConnectionModel connectionModel, string serverParkName);

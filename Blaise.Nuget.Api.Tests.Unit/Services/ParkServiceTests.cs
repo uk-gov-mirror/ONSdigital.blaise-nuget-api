@@ -164,5 +164,38 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetServerPark(_connectionModel, serverParkName));
             Assert.AreEqual($"Server park '{serverParkName}' not found", exception.Message);
         }
+
+        public void Given_I_Call_GetServerParks_Then_I_Get_A_Correct_List_Of_ServerParkNames_Returned()
+        {
+            //arrange
+            var serverParkMock1 = new Mock<IServerPark>();
+            var serverParkMock2 = new Mock<IServerPark>();
+            
+            var serverParkItems = new List<IServerPark> { serverParkMock1.Object, serverParkMock2.Object };
+
+            _serverParkCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => serverParkItems.GetEnumerator());
+
+            //act
+            var result = _sut.GetServerParks(_connectionModel).ToList();
+
+            //assert
+            Assert.NotNull(result);
+            Assert.IsInstanceOf<IEnumerable<IServerPark>>(result);
+            Assert.IsNotEmpty(result);
+            Assert.AreEqual(2, result.Count);
+        }
+
+        [Test]
+        public void Given_No_ServerParks_When_I_Call_GetServerParks_Then_A_Data_Not_Found_Exception_Is_Thrown()
+        {
+            //arrange
+            var serverParkItems = new List<IServerPark>();
+
+            _serverParkCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => serverParkItems.GetEnumerator());
+
+            //act && assert
+            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetServerParks(_connectionModel));
+            Assert.AreEqual("No server parks found", exception.Message);
+        }
     }
 }
