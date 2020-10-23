@@ -7,6 +7,7 @@ using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Interfaces;
 using Moq;
 using NUnit.Framework;
+using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Api
 {
@@ -51,6 +52,110 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 _cloudStorageServiceMock.Object,
                 _unityProviderMock.Object,
                 _configurationProviderMock.Object);
+        }
+        [Test]
+        public void When_I_Call_GetServerPark_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var serverParkName = "serverParkName";
+            var serverParkMock = new Mock<IServerPark>();
+
+            _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, serverParkName)).Returns(serverParkMock.Object);
+
+            //act
+            _sut.GetServerPark(_connectionModel, serverParkName);
+
+            //assert
+            _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void When_I_Call_GetServerPark_Then_The_Correct_ServerPark_Is_Returned()
+        {
+            //arrange
+            var serverParkName = "Park1";
+            var serverParkMock = new Mock<IServerPark>();
+
+            _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, serverParkName)).Returns(serverParkMock.Object);
+
+            //act
+            var result =_sut.GetServerPark(_connectionModel, serverParkName);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreSame(serverParkMock.Object, result);
+        }
+
+        [Test]
+        public void Given_A_Null_ConnectionModel_When_I_Call_GetServerPark_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var serverParkName = "Park1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetServerPark(null, serverParkName));
+            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_GetServerPark_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetServerPark(_connectionModel, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_GetServerPark_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetServerPark(_connectionModel, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
+        public void When_I_Call_GetServerParks_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var serverParkMock1 = new Mock<IServerPark>();
+            var serverParkMock2 = new Mock<IServerPark>();
+
+            var serverParkItems = new List<IServerPark> { serverParkMock1.Object, serverParkMock2.Object };
+
+            _parkServiceMock.Setup(p => p.GetServerParks(_connectionModel)).Returns(serverParkItems);
+
+            //act
+            _sut.GetServerParks(_connectionModel);
+
+            //assert
+            _parkServiceMock.Verify(v => v.GetServerParks(_connectionModel), Times.Once);
+        }
+
+        [Test]
+        public void When_I_Call_GetServerParks_Then_The_Correct_ServerPark_Is_Returned()
+        {
+            //arrange
+            var serverParkMock1 = new Mock<IServerPark>();
+            var serverParkMock2 = new Mock<IServerPark>();
+
+            var serverParkItems = new List<IServerPark> { serverParkMock1.Object, serverParkMock2.Object };
+
+            _parkServiceMock.Setup(p => p.GetServerParks(_connectionModel)).Returns(serverParkItems);
+
+            //act
+            var result = _sut.GetServerParks(_connectionModel);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreSame(serverParkItems, result);
+        }
+
+        [Test]
+        public void Given_A_Null_ConnectionModel_When_I_Call_GetServerParks_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetServerParks(null));
+            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
         }
 
         [Test]

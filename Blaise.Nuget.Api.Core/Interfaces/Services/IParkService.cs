@@ -11,5 +11,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         bool ServerParkExists(ConnectionModel connectionModel, string serverParkName);
 
         IServerPark GetServerPark(ConnectionModel connectionModel, string serverParkName);
+
+        IEnumerable<IServerPark> GetServerParks(ConnectionModel connectionModel);
     }
 }
