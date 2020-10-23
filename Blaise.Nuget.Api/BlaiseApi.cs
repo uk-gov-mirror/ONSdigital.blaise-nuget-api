@@ -68,6 +68,21 @@ namespace Blaise.Nuget.Api
             _configurationProvider = _unityProvider.Resolve<IConfigurationProvider>();
         }
 
+        public IServerPark GetServerPark(ConnectionModel connectionModel, string serverParkName)
+        {
+            connectionModel.ThrowExceptionIfNull("connectionModel");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _parkService.GetServerPark(connectionModel, serverParkName);
+        }
+
+        public IEnumerable<IServerPark> GetServerParks(ConnectionModel connectionModel)
+        {
+            connectionModel.ThrowExceptionIfNull("connectionModel");
+
+            return _parkService.GetServerParks(connectionModel);
+        }
+
         public IEnumerable<string> GetServerParkNames(ConnectionModel connectionModel)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
@@ -571,8 +586,7 @@ namespace Blaise.Nuget.Api
             return _dataService.GetNumberOfCases(filePath);
         }
 
-        public string CreateDataDeliveryFile(ConnectionModel connectionModel, string serverParkName, string instrumentName,
-            string destinationFilePath)
+        public string CreateDataDeliveryFile(ConnectionModel connectionModel, string serverParkName, string instrumentName, string destinationFilePath)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");

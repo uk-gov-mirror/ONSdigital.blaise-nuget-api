@@ -49,5 +49,18 @@ namespace Blaise.Nuget.Api.Core.Services
 
             return connection.GetServerPark(serverParkName);
         }
+
+        public IEnumerable<IServerPark> GetServerParks(ConnectionModel connectionModel)
+        {
+            var connection = _connectionFactory.GetConnection(connectionModel);
+            var serverParks = connection.ServerParks;
+
+            if (!serverParks.Any())
+            {
+                throw new DataNotFoundException("No server parks found");
+            }
+
+            return serverParks;
+        }
     }
 }
