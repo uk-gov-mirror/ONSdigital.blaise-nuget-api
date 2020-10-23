@@ -15,7 +15,13 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseApi WithFile(string filePath);
 
-        IEnumerable<string> ServerParks { get; }
+        IEnumerable<string> ServerParkNames { get; }
+
+        IEnumerable<IServerPark> ServerParks { get; }
+
+        IServerPark ServerPark { get; }
+
+        IEnumerable<ISurvey> Surveys { get; }
 
         IDataSet Cases { get; }
 
@@ -27,12 +33,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseSettingsApi Settings { get; }
 
-        IEnumerable<ISurvey> Surveys { get; }
-
         bool Exists { get; }
 
         void Backup();
-
 
         ConnectionModel DefaultConnection { get; }
     }
