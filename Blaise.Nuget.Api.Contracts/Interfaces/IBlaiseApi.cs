@@ -117,12 +117,10 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
             ConnectionModel destinationConnectionModel, string destinationInstrumentName, string destinationServerParkName);
 
         void RemoveCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string instrumentName, string serverParkName);
-        void BackupSurveyToFile(ConnectionModel connectionModel, string serverParkName, string instrumentName, string destinationFilePath);
+        string BackupSurveyToFile(ConnectionModel connectionModel, string serverParkName, string instrumentName, string destinationFilePath);
         void BackupFilesToBucket(string filePath, string bucketName, string folderName = null);
 
         int GetNumberOfCases(ConnectionModel connectionModel, string instrumentName, string serverParkName);
         int GetNumberOfCases(string filePath);
-
-        string CreateDataDeliveryFile(ConnectionModel connectionModel, string serverParkName, string instrumentName, string destinationFilePath);
     }
 }
