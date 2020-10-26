@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
 using StatNeth.Blaise.API.ServerManager;
-using IDatamodel = StatNeth.Blaise.API.Meta.IDatamodel;
 using Blaise.Nuget.Api.Contracts.Models;
 
 namespace Blaise.Nuget.Api.Contracts.Interfaces
@@ -34,39 +33,17 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayBatchDate);
 
-        IDatamodel GetDataModel(ConnectionModel connectionModel, string instrumentName, string serverParkName);
-
         SurveyType GetSurveyType(ConnectionModel connectionModel, string instrumentName, string serverParkName);
-
-        IKey GetKey(IDatamodel dataModel, string keyName);
-
-        IKey GetPrimaryKey(IDatamodel dataModel);
-
-        bool KeyExists(ConnectionModel connectionModel, IKey key, string instrumentName, string serverParkName);
 
         bool CaseExists(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName);
 
-        bool CaseExists(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
-
         string GetPrimaryKeyValue(IDataRecord dataRecord);
-
-        void AssignPrimaryKeyValue(IKey key, string primaryKeyValue);
 
         IDataSet GetDataSet(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         IDataSet GetDataSet(string filePath);
 
-        IDataRecord GetDataRecord(IDatamodel dataModel);
-
-        IDataRecord GetDataRecord(ConnectionModel connectionModel, IKey key, string instrumentName, string serverParkName);
-
-        IDataRecord GetDataRecord(IKey key, string filePath);
-
         IDataRecord GetDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName);
-
-        void WriteDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
-
-        void WriteDataRecord(IDataRecord dataRecord, string filePath);
 
         void CreateNewDataRecord(ConnectionModel connectionModel, string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName,
             string serverParkName);
@@ -80,17 +57,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         bool FieldExists(IDataRecord dataRecord, FieldNameType fieldNameType);
 
-        bool CaseHasBeenCompleted(IDataRecord dataRecord);
-
-        void MarkCaseAsComplete(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
-
-        bool CaseHasBeenProcessed(IDataRecord dataRecord);
-
         IDataValue GetFieldValue(IDataRecord dataRecord, FieldNameType fieldNameType);
 
         IDataValue GetFieldValue(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName, FieldNameType fieldNameType);
-
-        void MarkCaseAsProcessed(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
 
         void AddUser(ConnectionModel connectionModel, string userName, string password, string role, IList<string> serverParkNames, string defaultServerPark);
 
@@ -103,18 +72,6 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         void RemoveUser(ConnectionModel connectionModel, string userName);
 
         IUser GetUser(ConnectionModel connectionModel, string userName);
-
-        void CopyCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName,
-            string sourceServerParkName, string destinationFilePath, string destinationInstrumentName);
-
-        void CopyCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
-            ConnectionModel destinationConnectionModel, string destinationInstrumentName, string destinationServerParkName);
-
-        void MoveCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
-            string destinationFilePath, string destinationInstrumentName);
-
-        void MoveCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
-            ConnectionModel destinationConnectionModel, string destinationInstrumentName, string destinationServerParkName);
 
         void RemoveCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string instrumentName, string serverParkName);
         string BackupSurveyToFile(ConnectionModel connectionModel, string serverParkName, string instrumentName, string destinationFilePath);

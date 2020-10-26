@@ -68,15 +68,12 @@
     <Compile Include="Api\ConfigurationModelTests.cs" />
     <Compile Include="Api\CloudBackupTests.cs" />
     <Compile Include="Api\FileBackupTests.cs" />
-    <Compile Include="Api\FileHandlerTests.cs" />
-    <Compile Include="Api\ServerHandlerTests.cs" />
     <Compile Include="Api\DayBatchTests.cs" />
     <Compile Include="Api\UserTests.cs" />
     <Compile Include="Api\SurveyTests.cs" />
     <Compile Include="Api\ServerParkTests.cs" />
     <Compile Include="FluentApi\ConfigurationModelTests.cs" />
     <Compile Include="FluentApi\BackupTests.cs" />
-    <Compile Include="FluentApi\HandlerTests.cs" />
     <Compile Include="FluentApi\ServerParkTests.cs" />
     <Compile Include="FluentApi\SurveyTests.cs" />
     <Compile Include="BlaiseApiTests.cs" />

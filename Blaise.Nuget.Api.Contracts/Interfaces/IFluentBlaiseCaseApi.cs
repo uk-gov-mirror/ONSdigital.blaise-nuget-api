@@ -12,21 +12,11 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IFluentBlaiseCaseApi WithData(Dictionary<string, string> data);
 
-        IFluentBlaiseCaseApi WithStatus(CaseStatusType statusType);
-
         bool HasField(FieldNameType fieldNameType);
 
         string PrimaryKey { get; }
 
-        string CaseId { get; }
-
         decimal HOut { get; }
-
-        bool Completed { get; }
-
-        bool Processed { get; }
-
-        WebFormStatusType WebFormStatus { get; }
 
         bool Exists { get; }
 
@@ -37,9 +27,5 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         void Remove();
 
         IDataRecord Get();
-
-        IFluentBlaiseHandler Copy { get; }
-
-        IFluentBlaiseHandler Move { get; }
     }
 }

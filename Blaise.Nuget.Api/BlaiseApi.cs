@@ -1,7 +1,6 @@
 ﻿using Blaise.Nuget.Api.Helpers;
 using Blaise.Nuget.Api.Providers;
 using StatNeth.Blaise.API.DataRecord;
-using StatNeth.Blaise.API.Meta;
 using System;
 using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
@@ -147,15 +146,6 @@ namespace Blaise.Nuget.Api
             _surveyService.CreateDayBatch(connectionModel, instrumentName, serverParkName, dayBatchDate);
         }
 
-        public IDatamodel GetDataModel(ConnectionModel connectionModel, string instrumentName, string serverParkName)
-        {
-            connectionModel.ThrowExceptionIfNull("connectionModel");
-            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
-
-            return _dataService.GetDataModel(connectionModel, instrumentName, serverParkName);
-        }
-
         public SurveyType GetSurveyType(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
@@ -163,31 +153,6 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             return _dataService.GetSurveyType(connectionModel, instrumentName, serverParkName);
-        }
-
-        public IKey GetKey(IDatamodel dataModel, string keyName)
-        {
-            dataModel.ThrowExceptionIfNull("dataModel");
-            keyName.ThrowExceptionIfNullOrEmpty("keyName");
-
-            return _dataService.GetKey(dataModel, keyName);
-        }
-
-        public IKey GetPrimaryKey(IDatamodel dataModel)
-        {
-            dataModel.ThrowExceptionIfNull("dataModel");
-
-            return _dataService.GetPrimaryKey(dataModel);
-        }
-
-        public bool KeyExists(ConnectionModel connectionModel, IKey key, string instrumentName, string serverParkName)
-        {
-            connectionModel.ThrowExceptionIfNull("connectionModel");
-            key.ThrowExceptionIfNull("key");
-            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
-
-            return _dataService.KeyExists(connectionModel, key, instrumentName, serverParkName);
         }
 
         public bool CaseExists(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName)
@@ -200,31 +165,11 @@ namespace Blaise.Nuget.Api
             return _dataService.CaseExists(connectionModel, primaryKeyValue, instrumentName, serverParkName);
         }
 
-        public bool CaseExists(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
-        {
-            connectionModel.ThrowExceptionIfNull("connectionModel");
-            dataRecord.ThrowExceptionIfNull("dataRecord");
-            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
-
-            var primaryKeyValue = GetPrimaryKeyValue(dataRecord);
-
-            return _dataService.CaseExists(connectionModel, primaryKeyValue, instrumentName, serverParkName);
-        }
-
         public string GetPrimaryKeyValue(IDataRecord dataRecord)
         {
             dataRecord.ThrowExceptionIfNull("dataRecord");
 
             return _dataService.GetPrimaryKeyValue(dataRecord);
-        }
-
-        public void AssignPrimaryKeyValue(IKey key, string primaryKeyValue)
-        {
-            key.ThrowExceptionIfNull("key");
-            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKey");
-
-            _dataService.AssignPrimaryKeyValue(key, primaryKeyValue);
         }
 
         public IDataSet GetDataSet(string filePath)
@@ -243,31 +188,6 @@ namespace Blaise.Nuget.Api
             return _dataService.GetDataSet(connectionModel, instrumentName, serverParkName);
         }
 
-        public IDataRecord GetDataRecord(IDatamodel dataModel)
-        {
-            dataModel.ThrowExceptionIfNull("dataModel");
-
-            return _dataService.GetDataRecord(dataModel);
-        }
-
-        public IDataRecord GetDataRecord(ConnectionModel connectionModel, IKey key, string instrumentName, string serverParkName)
-        {
-            connectionModel.ThrowExceptionIfNull("connectionModel");
-            key.ThrowExceptionIfNull("key");
-            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
-
-            return _dataService.GetDataRecord(connectionModel, key, instrumentName, serverParkName);
-        }
-
-        public IDataRecord GetDataRecord(IKey key, string filePath)
-        {
-            key.ThrowExceptionIfNull("key");
-            filePath.ThrowExceptionIfNullOrEmpty("filePath");
-
-            return _dataService.GetDataRecord(key, filePath);
-        }
-
         public IDataRecord GetDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
@@ -276,24 +196,6 @@ namespace Blaise.Nuget.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             return _dataService.GetDataRecord(connectionModel, primaryKeyValue, instrumentName, serverParkName);
-        }
-
-        public void WriteDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
-        {
-            connectionModel.ThrowExceptionIfNull("connectionModel");
-            dataRecord.ThrowExceptionIfNull("dataRecord");
-            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
-
-            _dataService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
-        }
-
-        public void WriteDataRecord(IDataRecord dataRecord, string filePath)
-        {
-            dataRecord.ThrowExceptionIfNull("dataRecord");
-            filePath.ThrowExceptionIfNullOrEmpty("filePath");
-
-            _dataService.WriteDataRecord(dataRecord, filePath);
         }
 
         public void CreateNewDataRecord(ConnectionModel connectionModel, string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName, string serverParkName)
@@ -343,30 +245,6 @@ namespace Blaise.Nuget.Api
             return _dataService.FieldExists(dataRecord, fieldNameType);
         }
 
-        public bool CaseHasBeenCompleted(IDataRecord dataRecord)
-        {
-            dataRecord.ThrowExceptionIfNull("dataRecord");
-
-            return _dataService.CaseHasBeenCompleted(dataRecord);
-        }
-
-        public void MarkCaseAsComplete(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
-        {
-            connectionModel.ThrowExceptionIfNull("connectionModel");
-            dataRecord.ThrowExceptionIfNull("dataRecord");
-            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
-
-            _dataService.MarkCaseAsComplete(connectionModel, dataRecord, instrumentName, serverParkName);
-        }
-
-        public bool CaseHasBeenProcessed(IDataRecord dataRecord)
-        {
-            dataRecord.ThrowExceptionIfNull("dataRecord");
-
-            return _dataService.CaseHasBeenProcessed(dataRecord);
-        }
-
         public IDataValue GetFieldValue(IDataRecord dataRecord, FieldNameType fieldNameType)
         {
             dataRecord.ThrowExceptionIfNull("dataRecord");
@@ -385,16 +263,6 @@ namespace Blaise.Nuget.Api
             var dataRecord = _dataService.GetDataRecord(connectionModel, primaryKeyValue, instrumentName, serverParkName);
 
             return GetFieldValue(dataRecord, fieldNameType);
-        }
-
-        public void MarkCaseAsProcessed(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
-        {
-            connectionModel.ThrowExceptionIfNull("connectionModel");
-            dataRecord.ThrowExceptionIfNull("dataRecord");
-            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
-
-            _dataService.MarkCaseAsProcessed(connectionModel, dataRecord, instrumentName, serverParkName);
         }
 
         public void AddUser(ConnectionModel connectionModel, string userName, string password, string role, IList<string> serverParkNames, string defaultServerPark)
@@ -448,80 +316,6 @@ namespace Blaise.Nuget.Api
             userName.ThrowExceptionIfNullOrEmpty("userName");
 
             return _userService.GetUser(connectionModel, userName);
-        }
-
-
-        public void CopyCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
-            ConnectionModel destinationConnectionModel, string destinationInstrumentName, string destinationServerParkName)
-        {
-            sourceConnectionModel.ThrowExceptionIfNull("sourceConnectionModel");
-            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
-            sourceInstrumentName.ThrowExceptionIfNullOrEmpty("sourceInstrumentName");
-            sourceServerParkName.ThrowExceptionIfNullOrEmpty("sourceServerParkName");
-            destinationConnectionModel.ThrowExceptionIfNull("destinationConnectionModel");
-            destinationInstrumentName.ThrowExceptionIfNullOrEmpty("destinationInstrumentName");
-            destinationServerParkName.ThrowExceptionIfNullOrEmpty("destinationServerParkName");
-
-            var caseRecord = _dataService.GetDataRecord(sourceConnectionModel, primaryKeyValue, sourceInstrumentName, sourceServerParkName);
-
-            _dataService.WriteDataRecord(destinationConnectionModel, caseRecord, destinationInstrumentName, destinationServerParkName);
-        }
-
-        public void CopyCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
-            string destinationFilePath, string destinationInstrumentName)
-        {
-            sourceConnectionModel.ThrowExceptionIfNull("sourceConnectionModel");
-            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
-            sourceInstrumentName.ThrowExceptionIfNullOrEmpty("sourceInstrumentName");
-            sourceServerParkName.ThrowExceptionIfNullOrEmpty("sourceServerParkName");
-            destinationFilePath.ThrowExceptionIfNullOrEmpty("destinationFilePath");
-            destinationInstrumentName.ThrowExceptionIfNullOrEmpty("destinationInstrumentName");
-
-            if (!_fileService.DatabaseFileExists(destinationFilePath, destinationInstrumentName))
-            {
-                var metaFileName = _surveyService.GetMetaFileName(sourceConnectionModel, sourceInstrumentName, sourceServerParkName);
-                _fileService.CreateDatabaseFile(metaFileName, destinationFilePath, destinationInstrumentName);
-            }
-
-            var caseRecord = _dataService.GetDataRecord(sourceConnectionModel, primaryKeyValue, sourceInstrumentName, sourceServerParkName);
-            var fullFilePath = _fileService.GetDatabaseFileName(destinationFilePath, destinationInstrumentName);
-
-            _dataService.WriteDataRecord(caseRecord, fullFilePath);
-        }
-
-        public void MoveCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
-            ConnectionModel destinationConnectionModel, string destinationInstrumentName, string destinationServerParkName)
-        {
-            sourceConnectionModel.ThrowExceptionIfNull("sourceConnectionModel");
-            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
-            sourceInstrumentName.ThrowExceptionIfNullOrEmpty("sourceInstrumentName");
-            sourceServerParkName.ThrowExceptionIfNullOrEmpty("sourceServerParkName");
-            destinationConnectionModel.ThrowExceptionIfNull("destinationConnectionModel");
-            destinationInstrumentName.ThrowExceptionIfNullOrEmpty("destinationInstrumentName");
-            destinationServerParkName.ThrowExceptionIfNullOrEmpty("destinationServerParkName");
-
-            var caseRecord = _dataService.GetDataRecord(sourceConnectionModel, primaryKeyValue, sourceInstrumentName, sourceServerParkName);
-
-            _dataService.WriteDataRecord(destinationConnectionModel, caseRecord, destinationInstrumentName, destinationServerParkName);
-
-            RemoveCase(sourceConnectionModel, primaryKeyValue, sourceInstrumentName, sourceServerParkName);
-        }
-
-        public void MoveCase(ConnectionModel sourceConnectionModel, string primaryKeyValue, string sourceInstrumentName, string sourceServerParkName,
-            string destinationFilePath, string destinationInstrumentName)
-        {
-            sourceConnectionModel.ThrowExceptionIfNull("sourceConnectionModel");
-            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
-            sourceInstrumentName.ThrowExceptionIfNullOrEmpty("sourceInstrumentName");
-            sourceServerParkName.ThrowExceptionIfNullOrEmpty("sourceServerParkName");
-            destinationFilePath.ThrowExceptionIfNullOrEmpty("destinationFilePath");
-            destinationInstrumentName.ThrowExceptionIfNullOrEmpty("destinationInstrumentName");
-
-
-            CopyCase(sourceConnectionModel, primaryKeyValue, sourceInstrumentName, sourceServerParkName, destinationFilePath,
-                destinationInstrumentName);
-
-            RemoveCase(sourceConnectionModel, primaryKeyValue, sourceInstrumentName, sourceServerParkName);
         }
 
         public void RemoveCase(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName)

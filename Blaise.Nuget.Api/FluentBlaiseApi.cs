@@ -12,20 +12,16 @@ using Blaise.Nuget.Api.Contracts.Models;
 
 namespace Blaise.Nuget.Api
 {
-    public class FluentBlaiseApi : IFluentBlaiseApi, IFluentBlaiseCaseApi, IFluentBlaiseSurveyApi, IFluentBlaiseUserApi, IFluentBlaiseHandler, IFluentBlaiseSettingsApi
+    public class FluentBlaiseApi : IFluentBlaiseApi, IFluentBlaiseCaseApi, IFluentBlaiseSurveyApi, IFluentBlaiseUserApi, IFluentBlaiseSettingsApi
     {
         private readonly IBlaiseApi _blaiseApi;
 
+        private ConnectionModel _sourceConnectionModel;
         private string _serverParkName;
         private string _defaultServerPark;
-        private string _toServerParkName;
         private string _instrumentName;
-        private string _toInstrumentName;
         private string _primaryKeyValue;
-        private ConnectionModel _sourceConnectionModel;
-        private ConnectionModel _destinationConnectionModel;
         private string _filePath;
-        private string _toFilePath;
         private string _userName;
         private string _password;
         private string _role;
@@ -38,21 +34,15 @@ namespace Blaise.Nuget.Api
         private IList<string> _serverParkNames;
         private IDataRecord _caseDataRecord;
 
-        private CaseStatusType _statusType;
         private LastActionType _lastActionType;
-        private HandleType _handleType;
 
         private void InitialiseSettings()
         {
             _serverParkName = null;
             _defaultServerPark = null;
-            _toServerParkName = null;
-            _toServerParkName = null;
             _instrumentName = null;
-            _toInstrumentName = null;
             _primaryKeyValue = null;
             _filePath = null;
-            _toFilePath = null;
             _destinationPath = null;
             _bucketName = null;
             _bucketFolderPath = null;
@@ -63,11 +53,8 @@ namespace Blaise.Nuget.Api
             _serverParkNames = new List<string>();
             _caseData = new Dictionary<string, string>();
             _sourceConnectionModel = null;
-            _destinationConnectionModel = null;
             _caseDataRecord = null;
-            _statusType = CaseStatusType.NotSpecified;
             _lastActionType = LastActionType.NotSupported;
-            _handleType = HandleType.NotSupported;
         }
 
 
@@ -96,13 +83,6 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IFluentBlaiseHandler ToConnection(ConnectionModel connectionModel)
-        {
-            _destinationConnectionModel = connectionModel;
-
-            return this;
-        }
-
         public IFluentBlaiseApi WithServerPark(string serverParkName)
         {
             _lastActionType = LastActionType.ServerPark;
@@ -111,23 +91,9 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IFluentBlaiseHandler ToServerPark(string serverParkName)
-        {
-            _toServerParkName = serverParkName;
-
-            return this;
-        }
-
         public IFluentBlaiseApi WithFile(string filePath)
         {
             _filePath = filePath;
-
-            return this;
-        }
-
-        public IFluentBlaiseHandler ToFile(string filePath)
-        {
-            _toFilePath = filePath;
 
             return this;
         }
@@ -198,13 +164,6 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public IFluentBlaiseHandler ToInstrument(string instrumentName)
-        {
-            _toInstrumentName = instrumentName;
-
-            return this;
-        }
-
         public IFluentBlaiseCaseApi WithPrimaryKey(string primaryKeyValue)
         {
             _primaryKeyValue = primaryKeyValue;
@@ -268,30 +227,6 @@ namespace Blaise.Nuget.Api
             return this;
         }
 
-        public bool Processed
-        {
-            get
-            {
-                ValidateCaseDataRecordIsSet();
-                var processed = _blaiseApi.CaseHasBeenProcessed(_caseDataRecord);
-
-                InitialiseSettings();
-                return processed;
-            }
-        }
-
-        public WebFormStatusType WebFormStatus
-        {
-            get
-            {
-                var status = GetWebFormStatusType();
-
-                InitialiseSettings();
-
-                return status;
-            }
-        }
-
         public void Add()
         {
             switch (_lastActionType)
@@ -316,7 +251,7 @@ namespace Blaise.Nuget.Api
             }
         }
 
-        public IFluentBlaiseSettingsApi Settings 
+        public IFluentBlaiseSettingsApi Settings
         {
             get
             {
@@ -334,9 +269,9 @@ namespace Blaise.Nuget.Api
                 ValidateServerParkIsSet();
 
                 var serverPark = _blaiseApi.GetServerPark(_sourceConnectionModel, _serverParkName);
-                
+
                 InitialiseSettings();
-                
+
                 return serverPark;
             }
         }
@@ -381,7 +316,7 @@ namespace Blaise.Nuget.Api
         {
             return FieldExists(fieldNameType);
         }
-        
+
         public IFluentBlaiseSurveyApi ToPath(string destinationPath)
         {
             _destinationPath = destinationPath;
@@ -438,15 +373,6 @@ namespace Blaise.Nuget.Api
             throw new NotSupportedException("Backup functionality is only available for surveys and settings");
         }
 
-        public IFluentBlaiseCaseApi WithStatus(CaseStatusType statusType)
-        {
-            _lastActionType = LastActionType.Case;
-
-            _statusType = statusType;
-
-            return this;
-        }
-
         public string PrimaryKey
         {
             get
@@ -461,22 +387,7 @@ namespace Blaise.Nuget.Api
             }
         }
 
-        public string CaseId => GetCaseId();
         public decimal HOut => GetHOut();
-
-        public bool Completed
-        {
-            get
-            {
-                ValidateCaseDataRecordIsSet();
-
-                var completed = _blaiseApi.CaseHasBeenCompleted(_caseDataRecord);
-
-                InitialiseSettings();
-
-                return completed;
-            }
-        }
 
         public void Update()
         {
@@ -501,26 +412,6 @@ namespace Blaise.Nuget.Api
                     return GetCase();
                 default:
                     throw new NotSupportedException("You have not declared a step previously where this action is supported");
-            }
-        }
-
-        public IFluentBlaiseHandler Copy
-        {
-            get
-            {
-                _handleType = HandleType.Copy;
-
-                return this;
-            }
-        }
-
-        public IFluentBlaiseHandler Move
-        {
-            get
-            {
-                _handleType = HandleType.Move;
-
-                return this;
             }
         }
 
@@ -556,19 +447,6 @@ namespace Blaise.Nuget.Api
                     throw new NotSupportedException("You have not declared a step previously where this action is supported");
             }
         }
-
-        public void Handle()
-        {
-            switch (_lastActionType)
-            {
-                case LastActionType.Case:
-                    HandleCase();
-                    break;
-                default:
-                    throw new NotSupportedException("You have not declared a step previously where this action is supported");
-            }
-        }
-
         private void AddUser()
         {
             ValidateSourceConnectionIsSet();
@@ -610,16 +488,6 @@ namespace Blaise.Nuget.Api
                 }
 
                 _blaiseApi.UpdateDataRecord(_sourceConnectionModel, _caseDataRecord, _caseData, _instrumentName, _serverParkName);
-            }
-
-            if (_statusType == CaseStatusType.Completed)
-            {
-                SetStatusAsComplete();
-            }
-
-            if (_statusType == CaseStatusType.Processed)
-            {
-                SetStatusAsProcessed();
             }
 
             InitialiseSettings();
@@ -667,86 +535,6 @@ namespace Blaise.Nuget.Api
             InitialiseSettings();
         }
 
-        private void HandleCase()
-        {
-            switch (_handleType)
-            {
-                case HandleType.Copy:
-                    HandleCopy();
-                    break;
-                case HandleType.Move:
-                    HandleMove();
-                    break;
-                default:
-                    throw new NotSupportedException(
-                        "You have not declared a step previously where this action is supported");
-            }
-        }
-
-        private void HandleCopy()
-        {
-            ValidateSourceConnectionIsSet();
-            ValidateInstrumentIsSet();
-            ValidateServerParkIsSet();
-            ValidatePrimaryKeyValueIsSet();
-
-            if (!string.IsNullOrWhiteSpace(_toFilePath))
-            {
-                ValidateToInstrumentIsSet();
-                _blaiseApi.CopyCase(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName, _toFilePath,
-                    _toInstrumentName);
-
-                InitialiseSettings();
-                return;
-            }
-
-            if (_destinationConnectionModel != null)
-            {
-                ValidateToInstrumentIsSet();
-                ValidateToServerParkIsSet();
-
-                _blaiseApi.CopyCase(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName, _destinationConnectionModel,
-                    _toInstrumentName, _toServerParkName);
-
-                InitialiseSettings();
-                return;
-            }
-            InitialiseSettings();
-            throw new ArgumentException("You must specify a file with the 'ToFile' step, or a server with the 'ToServer' step before calling handle");
-        }
-
-        private void HandleMove()
-        {
-            ValidateSourceConnectionIsSet();
-            ValidateInstrumentIsSet();
-            ValidateServerParkIsSet();
-            ValidatePrimaryKeyValueIsSet();
-
-            if (!string.IsNullOrWhiteSpace(_toFilePath))
-            {
-                ValidateToInstrumentIsSet();
-                _blaiseApi.MoveCase(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName, _toFilePath,
-                    _toInstrumentName);
-
-                InitialiseSettings();
-                return;
-            }
-
-            if (_destinationConnectionModel != null)
-            {
-                ValidateToInstrumentIsSet();
-                ValidateToServerParkIsSet();
-
-                _blaiseApi.MoveCase(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName, _destinationConnectionModel,
-                    _toInstrumentName, _toServerParkName);
-
-                InitialiseSettings();
-                return;
-            }
-
-            InitialiseSettings();
-            throw new ArgumentException("You must specify a file with the 'ToFile' step, or a server with the 'ToServer' step before calling handle");
-        }
 
         private IDataSet GetCases()
         {
@@ -776,18 +564,9 @@ namespace Blaise.Nuget.Api
             ValidateSourceConnectionIsSet();
             ValidateServerParkIsSet();
             ValidateInstrumentIsSet();
+            ValidatePrimaryKeyValueIsSet();
 
-            bool caseExists;
-            if (_caseDataRecord != null)
-            {
-                caseExists = _blaiseApi.CaseExists(_sourceConnectionModel, _caseDataRecord, _instrumentName, _serverParkName);
-            }
-            else
-            {
-                ValidatePrimaryKeyValueIsSet();
-
-                caseExists = _blaiseApi.CaseExists(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName);
-            }
+            var caseExists = _blaiseApi.CaseExists(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName);
 
             InitialiseSettings();
 
@@ -849,38 +628,6 @@ namespace Blaise.Nuget.Api
             return fieldExists;
         }
 
-        private void SetStatusAsComplete()
-        {
-            ValidateSourceConnectionIsSet();
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-            ValidateCaseDataRecordIsSet();
-
-            _blaiseApi.MarkCaseAsComplete(_sourceConnectionModel, _caseDataRecord, _instrumentName, _serverParkName);
-            InitialiseSettings();
-        }
-
-        private void SetStatusAsProcessed()
-        {
-            ValidateSourceConnectionIsSet();
-            ValidateServerParkIsSet();
-            ValidateInstrumentIsSet();
-            ValidateCaseDataRecordIsSet();
-
-            _blaiseApi.MarkCaseAsProcessed(_sourceConnectionModel, _caseDataRecord, _instrumentName, _serverParkName);
-            InitialiseSettings();
-        }
-
-        private string GetCaseId()
-        {
-            ValidateCaseDataRecordIsSet();
-            var dataValue = _blaiseApi.GetFieldValue(_caseDataRecord, FieldNameType.CaseId);
-
-            InitialiseSettings();
-
-            return dataValue.ValueAsText;
-        }
-
         private decimal GetHOut()
         {
             ValidateCaseDataRecordIsSet();
@@ -889,28 +636,6 @@ namespace Blaise.Nuget.Api
             InitialiseSettings();
 
             return dataValue.IntegerValue;
-        }
-
-        private WebFormStatusType GetWebFormStatusType()
-        {
-            IDataValue dataValue;
-
-            if (_caseDataRecord != null)
-            {
-                dataValue = _blaiseApi.GetFieldValue(_caseDataRecord, FieldNameType.WebFormStatus);
-            }
-            else
-            {
-                ValidateSourceConnectionIsSet();
-                ValidateInstrumentIsSet();
-                ValidateServerParkIsSet();
-                ValidatePrimaryKeyValueIsSet();
-
-                dataValue = _blaiseApi.GetFieldValue(_sourceConnectionModel, _primaryKeyValue, _instrumentName, _serverParkName,
-                    FieldNameType.WebFormStatus);
-            }
-
-            return (WebFormStatusType) dataValue.EnumerationValue;
         }
 
         private void AddCase()
@@ -949,27 +674,11 @@ namespace Blaise.Nuget.Api
             }
         }
 
-        private void ValidateToServerParkIsSet()
-        {
-            if (string.IsNullOrWhiteSpace(_toServerParkName))
-            {
-                throw new NullReferenceException("The 'ToServerPark' step needs to be called with a valid value, check that the step has been called with a valid value for the destination name of the server park");
-            }
-        }
-
         private void ValidateInstrumentIsSet()
         {
             if (string.IsNullOrWhiteSpace(_instrumentName))
             {
                 throw new NullReferenceException("The 'WithInstrument' step needs to be called with a valid value, check that the step has been called with a valid instrument");
-            }
-        }
-
-        private void ValidateToInstrumentIsSet()
-        {
-            if (string.IsNullOrWhiteSpace(_toInstrumentName))
-            {
-                throw new NullReferenceException("The 'ToInstrument' step needs to be called with a valid value, check that the step has been called with a valid value for the destination instrument");
             }
         }
 
