@@ -41,8 +41,6 @@ namespace Blaise.Nuget.Api
         private CaseStatusType _statusType;
         private LastActionType _lastActionType;
         private HandleType _handleType;
-        private IServerPark _get;
-        private IServerPark _serverPark;
 
         private void InitialiseSettings()
         {
@@ -425,10 +423,13 @@ namespace Blaise.Nuget.Api
                 ValidateServerParkIsSet();
                 ValidateInstrumentIsSet();
                 ValidateDestinationPathIsSet();
-                ValidateBucketNameIsSet();
 
                 _blaiseApi.BackupSurveyToFile(_sourceConnectionModel, _serverParkName, _instrumentName, _destinationPath);
-                _blaiseApi.BackupFilesToBucket(_destinationPath, _bucketName, _bucketFolderPath);
+
+                if (!string.IsNullOrWhiteSpace(_bucketName))
+                {
+                    _blaiseApi.BackupFilesToBucket(_destinationPath, _bucketName, _bucketFolderPath);
+                }
 
                 InitialiseSettings();
                 return;
