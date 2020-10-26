@@ -60,43 +60,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         }
 
         [Test]
-        public void Given_Valid_Parameters_When_I_Call_BackupSurveyToFile_The_Correct_File_Is_Returned()
-        {
-            //arrange
-            var dataRecordMock = new Mock<IDataRecord2>();
-            var dataSetMock = new Mock<IDataSet>();
-
-            dataSetMock.Setup(ds => ds.ActiveRecord).Returns(dataRecordMock.Object);
-            dataSetMock.Setup(ds => ds.MoveNext());
-            dataSetMock.SetupSequence(ds => ds.EndOfSet)
-                .Returns(false)
-                .Returns(true);
-
-            _dataServiceMock.Setup(d => d.CaseHasBeenCompleted(It.IsAny<IDataRecord>())).Returns(true);
-
-            const string metaFileName = "OPN2004A.bmix";
-            const string dataBaseFileName = "OPN2004A.bdix";
-
-            _surveyServiceMock.Setup(s => s.GetMetaFileName(_connectionModel, _instrumentName, _serverParkName))
-                .Returns(metaFileName);
-
-            _fileServiceMock.Setup(f => f.DatabaseFileExists(It.IsAny<string>(), It.IsAny<string>())).Returns(false);
-            _fileServiceMock.Setup(f => f.CreateDatabaseFile(It.IsAny<string>(),
-                It.IsAny<string>(), It.IsAny<string>())).Returns(dataBaseFileName);
-
-            _dataServiceMock.Setup(d => d.GetDataSet(_connectionModel, _instrumentName, _serverParkName))
-                .Returns(dataSetMock.Object);
-
-            //act
-            var result = _sut.BackupSurveyToFile(_connectionModel, _serverParkName, _instrumentName,
-                _destinationFilePath);
-
-            //assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(dataBaseFileName, result);
-        }
-
-        [Test]
         public void Given_Valid_Parameters_When_I_Call_BackupSurvey_The_Correct_Services_Are_Called()
         {
             //arrange

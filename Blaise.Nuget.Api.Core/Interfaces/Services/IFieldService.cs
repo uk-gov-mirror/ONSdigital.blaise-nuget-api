@@ -10,14 +10,6 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         bool FieldExists(IDataRecord dataRecord, FieldNameType fieldNameType);
 
-        bool CaseHasBeenCompleted(IDataRecord dataRecord);
-
-        void MarkCaseAsComplete(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
-
-        bool CaseHasBeenProcessed(IDataRecord dataRecord);
-
-        void MarkCaseAsProcessed(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
-
         IField GetField(IDataRecord dataRecord, FieldNameType fieldNameType);
     }
 }

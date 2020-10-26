@@ -23,10 +23,6 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
             };
         }
 
-		[TestCase(FieldNameType.Completed, true)]
-        [TestCase(FieldNameType.Processed, true)]
-        [TestCase(FieldNameType.WebFormStatus, true)]
-        [TestCase(FieldNameType.CaseId, true)]
         [TestCase(FieldNameType.HOut, true)]
         [TestCase(FieldNameType.NotSpecified, false)]
 		public void Given_A_Survey_That_Exists_When_I_Call_HasField_Then_The_Expected_Value_Is_Returned(FieldNameType fieldNameType, bool exists)

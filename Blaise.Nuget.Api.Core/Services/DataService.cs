@@ -121,26 +121,6 @@ namespace Blaise.Nuget.Api.Core.Services
             return _fieldService.FieldExists(connectionModel, instrumentName, serverParkName, fieldNameType);
         }
 
-        public bool CaseHasBeenCompleted(IDataRecord dataRecord)
-        {
-            return _fieldService.CaseHasBeenCompleted(dataRecord);
-        }
-
-        public void MarkCaseAsComplete(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
-        {
-            _fieldService.MarkCaseAsComplete(connectionModel, dataRecord, instrumentName, serverParkName);
-        }
-
-        public bool CaseHasBeenProcessed(IDataRecord dataRecord)
-        {
-            return _fieldService.CaseHasBeenProcessed(dataRecord);
-        }
-
-        public void MarkCaseAsProcessed(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
-        {
-            _fieldService.MarkCaseAsProcessed(connectionModel, dataRecord, instrumentName, serverParkName);
-        }
-
         public void RemoveDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName)
         {
             var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);

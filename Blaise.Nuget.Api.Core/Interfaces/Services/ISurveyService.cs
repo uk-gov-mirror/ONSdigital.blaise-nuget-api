@@ -13,15 +13,11 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         bool SurveyExists(ConnectionModel connectionModel, string instrumentName, string serverParkName);
         IEnumerable<ISurvey> GetSurveys(ConnectionModel connectionModel, string serverParkName);
 
-        ISurvey GetSurvey(ConnectionModel connectionModel, string instrumentName, string serverParkName);
-
         IEnumerable<ISurvey> GetAllSurveys(ConnectionModel connectionModel);
 
         Guid GetInstrumentId(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         string GetMetaFileName(ConnectionModel connectionModel, string instrumentName, string serverParkName);
-
-        string GetDataFileName(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayBatchDate);
     }

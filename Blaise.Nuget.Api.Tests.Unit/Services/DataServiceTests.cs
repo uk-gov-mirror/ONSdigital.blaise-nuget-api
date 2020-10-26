@@ -405,9 +405,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _filePath), Times.Once);
         }
 
-        [TestCase(FieldNameType.Completed)]
-        [TestCase(FieldNameType.Processed)]
-        [TestCase(FieldNameType.WebFormStatus)]
+        [TestCase(FieldNameType.HOut)]
         public void Given_Valid_Arguments_When_I_Call_FieldExists_Then_The_Correct_Services_Are_Called(FieldNameType fieldNameType)
         {
             //act
@@ -426,78 +424,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
                 It.IsAny<FieldNameType>())).Returns(fieldExists);
 
             //act
-            var result = _sut.FieldExists(_connectionModel, _instrumentName, _serverParkName, FieldNameType.WebFormStatus);
+            var result = _sut.FieldExists(_connectionModel, _instrumentName, _serverParkName, FieldNameType.HOut);
 
             //assert
             Assert.AreEqual(fieldExists, result);
-        }
-
-        [Test]
-        public void Given_A_DataRecord_When_I_Call_CaseHasBeenCompleted_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.CaseHasBeenCompleted(_dataRecordMock.Object);
-
-            //assert
-            _fieldServiceMock.Verify(v => v.CaseHasBeenCompleted(_dataRecordMock.Object), Times.Once);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void Given_A_DataRecord_When_I_Call_CaseHasBeenCompleted_Then_The_Correct_Value_Is_Returned(bool caseIsComplete)
-        {
-            //arrange
-            _fieldServiceMock.Setup(f => f.CaseHasBeenCompleted(It.IsAny<IDataRecord>())).Returns(caseIsComplete);
-
-            //act
-            var result =_sut.CaseHasBeenCompleted(_dataRecordMock.Object);
-
-            //assert
-           Assert.AreEqual(caseIsComplete, result);
-        }
-
-        [Test]
-        public void Given_Valid_Arguments_When_I_Call_MarkCaseAsComplete_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.MarkCaseAsComplete(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName);
-
-            //assert
-            _fieldServiceMock.Verify(v => v.MarkCaseAsComplete(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
-        }
-
-        [Test]
-        public void Given_A_DataRecord_When_I_Call_CaseHasBeenProcessed_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.CaseHasBeenProcessed(_dataRecordMock.Object);
-
-            //assert
-            _fieldServiceMock.Verify(v => v.CaseHasBeenProcessed(_dataRecordMock.Object), Times.Once);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void Given_A_DataRecord_When_I_Call_CaseHasBeenProcessed_Then_The_Correct_Value_Is_Returned(bool caseIsProcessed)
-        {
-            //arrange
-            _fieldServiceMock.Setup(f => f.CaseHasBeenProcessed(It.IsAny<IDataRecord>())).Returns(caseIsProcessed);
-
-            //act
-            var result = _sut.CaseHasBeenProcessed(_dataRecordMock.Object);
-
-            //assert
-            Assert.AreEqual(caseIsProcessed, result);
-        }
-
-        [Test]
-        public void Given_Valid_Arguments_When_I_Call_MarkCaseAsProcessed_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.MarkCaseAsProcessed(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName);
-
-            //assert
-            _fieldServiceMock.Verify(v => v.MarkCaseAsProcessed(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -604,10 +534,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataRecordServiceMock.Verify(v => v.DeleteDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
-        [TestCase(FieldNameType.Completed)]
-        [TestCase(FieldNameType.Processed)]
-        [TestCase(FieldNameType.WebFormStatus)]
-        [TestCase(FieldNameType.CaseId)]
         [TestCase(FieldNameType.HOut)]
         public void Given_I_Call_GetFieldValue_Then_The_Correct_DataModel_Is_Returned(FieldNameType fieldNameType)
         {
@@ -625,10 +551,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.AreEqual(dataValueMock.Object, result);
         }
 
-        [TestCase(FieldNameType.Completed)]
-        [TestCase(FieldNameType.Processed)]
-        [TestCase(FieldNameType.WebFormStatus)]
-        [TestCase(FieldNameType.CaseId)]
         [TestCase(FieldNameType.HOut)]
         public void Given_I_Call_GetFieldValue_Then_The_Correct_Services_Are_Called(FieldNameType fieldNameType)
         {
@@ -646,14 +568,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _fieldServiceMock.Verify(v => v.GetField(_dataRecordMock.Object, fieldNameType), Times.Once);
         }
 
-        [TestCase(FieldNameType.Completed, true)]
-        [TestCase(FieldNameType.Completed, false)]
-        [TestCase(FieldNameType.Processed, true)]
-        [TestCase(FieldNameType.Processed, false)]
-        [TestCase(FieldNameType.WebFormStatus, true)]
-        [TestCase(FieldNameType.WebFormStatus, false)]
-        [TestCase(FieldNameType.CaseId, true)]
-        [TestCase(FieldNameType.CaseId, false)]
         [TestCase(FieldNameType.HOut, true)]
         [TestCase(FieldNameType.HOut, false)]
         public void Given_I_Call_FieldExists_Then_The_Correct_DataModel_Is_Returned(FieldNameType fieldNameType, bool exists)
@@ -668,10 +582,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.AreEqual(exists, result);
         }
 
-        [TestCase(FieldNameType.Completed)]
-        [TestCase(FieldNameType.Processed)]
-        [TestCase(FieldNameType.WebFormStatus)]
-        [TestCase(FieldNameType.CaseId)]
         [TestCase(FieldNameType.HOut)]
         public void Given_I_Call_FieldExists_Then_The_Correct_Services_Are_Called(FieldNameType fieldNameType)
         {

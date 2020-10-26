@@ -236,11 +236,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             });
             Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value, check that the step has been called with a valid instrument", exception.Message);
         }
-
-        [TestCase(FieldNameType.Completed)]
-        [TestCase(FieldNameType.Processed)]
-        [TestCase(FieldNameType.WebFormStatus)]
-        [TestCase(FieldNameType.CaseId)]
         [TestCase(FieldNameType.HOut)]
         public void Given_Valid_Arguments_When_I_Call_HasField_Then_The_Correct_Service_Method_Is_Called(FieldNameType fieldNameType)
         {
@@ -267,14 +262,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //arrange
 
             _blaiseApiMock.Setup(p => p.FieldExists(_connectionModel, _instrumentName, _serverParkName
-                ,FieldNameType.WebFormStatus)).Returns(fieldExists);
+                ,FieldNameType.HOut)).Returns(fieldExists);
 
             _sut.WithConnection(_connectionModel);
             _sut.WithServerPark(_serverParkName);
             _sut.WithInstrument(_instrumentName);
             
             //act
-            var result = _sut.Survey.HasField(FieldNameType.WebFormStatus);
+            var result = _sut.Survey.HasField(FieldNameType.HOut);
 
             //assert
             Assert.IsNotNull(result);
@@ -291,7 +286,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() =>
             {
-                var sutExists = _sut.Survey.HasField(FieldNameType.Completed);
+                var sutExists = _sut.Survey.HasField(FieldNameType.HOut);
             });
 
             Assert.AreEqual("The 'WithConnection' step needs to be called with a valid model, check that the step has been called with a valid model containing the connection properties of the blaise server you wish to connect to", exception.Message);
@@ -307,7 +302,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() =>
             {
-                var sutExists = _sut.Survey.HasField(FieldNameType.Completed);
+                var sutExists = _sut.Survey.HasField(FieldNameType.HOut);
             });
             Assert.AreEqual("The 'WithInstrument' step needs to be called with a valid value, check that the step has been called with a valid instrument", exception.Message);
         }
@@ -322,7 +317,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() =>
             {
-                var sutExists = _sut.Survey.HasField(FieldNameType.Completed);
+                var sutExists = _sut.Survey.HasField(FieldNameType.HOut);
             });
             Assert.AreEqual("The 'WithServerPark' step needs to be called with a valid value, check that the step has been called with a valid value for the server park", exception.Message);
         }
