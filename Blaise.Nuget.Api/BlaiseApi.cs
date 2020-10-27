@@ -59,7 +59,6 @@ namespace Blaise.Nuget.Api
             _surveyService = _unityProvider.Resolve<ISurveyService>();
             _userService = _unityProvider.Resolve<IUserService>();
             _fileService = _unityProvider.Resolve<IFileService>();
-
             _configurationProvider = _unityProvider.Resolve<IConfigurationProvider>();
         }
 
