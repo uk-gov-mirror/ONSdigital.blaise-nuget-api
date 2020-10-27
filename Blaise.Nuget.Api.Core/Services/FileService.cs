@@ -13,15 +13,19 @@ namespace Blaise.Nuget.Api.Core.Services
     public class FileService : IFileService
     {
         private readonly IConfigurationProvider _configurationProvider;
+        private readonly ICloudStorageService _cloudStorageService;
 
         private const string DatabaseFileNameExt = "bdix";
         private const string DatabaseSourceExt = "bdbx";
         private const string DatabaseModelExt = "bmix";
         private const string LibraryFileExt = "blix";
 
-        public FileService(IConfigurationProvider configurationProvider)
+        public FileService(
+            IConfigurationProvider configurationProvider, 
+            ICloudStorageService cloudStorageService)
         {
             _configurationProvider = configurationProvider;
+            _cloudStorageService = cloudStorageService;
         }
 
         public IEnumerable<string> GetFiles(string filePath)
@@ -29,30 +33,11 @@ namespace Blaise.Nuget.Api.Core.Services
             return Directory.GetFiles(filePath);
         }
 
-        public string GetDatabaseFileName(string filePath, string instrumentName)
-        {
-            return GetFullFilePath(filePath, instrumentName, DatabaseFileNameExt);
-        }
-
-        public string GetDatabaseSourceFile(string filePath)
-        {
-            var sourceFilePath = Path.GetDirectoryName(filePath);
-
-            if (string.IsNullOrWhiteSpace(sourceFilePath))
-            {
-                throw new NullReferenceException($"Could not find path for the file '{filePath}'");
-            }
-
-            var sourceFileName = Path.GetFileNameWithoutExtension(filePath);
-            return Path.Combine(sourceFilePath, $"{sourceFileName}.{DatabaseSourceExt}");
-        }
-
         public bool DatabaseFileExists(string filePath, string instrumentName)
         {
             return File.Exists(Path.Combine(filePath, $"{instrumentName}.{DatabaseSourceExt}"));
         }
-
-
+        
         public void DeleteDatabaseFile(string filePath, string instrumentName)
         {
             File.Delete(Path.Combine(filePath, $"{instrumentName}.{DatabaseSourceExt}"));
@@ -80,6 +65,11 @@ namespace Blaise.Nuget.Api.Core.Services
             dataInterface.SaveToFile(true);
 
             return dataInterface.FileName;
+        }
+
+        public void UploadFilesToBucket(string filePath, string bucketName, string folderName)
+        {
+            _cloudStorageService.UploadToBucket(filePath, bucketName, folderName);
         }
 
         private static string GetFullFilePath(string filePath, string instrumentName, string extension)
