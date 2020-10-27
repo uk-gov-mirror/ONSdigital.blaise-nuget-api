@@ -93,7 +93,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Add_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>();
@@ -109,7 +109,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Add_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>();
@@ -127,7 +127,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Add_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>();
@@ -145,7 +145,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Has_Not_Been_Called_When_I_Call_Add_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>();
@@ -163,7 +163,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithData_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithData_Has_Not_Been_Called_When_I_Call_Add_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -255,7 +255,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_A_FilePath_Has_Not_Been_Set_And_WithConnection_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_A_FilePath_Has_Not_Been_Set_And_WithConnection_Has_Not_Been_Called_When_I_Call_Cases_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithServerPark(_serverParkName);
@@ -271,7 +271,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_A_FilePath_Has_Not_Been_Set_And_WithServerPark_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_A_FilePath_Has_Not_Been_Set_And_WithServerPark_Has_Not_Been_Called_When_I_Call_Cases_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -288,7 +288,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_A_FilePath_Has_Not_Been_Set_And_WithInstrument_Has_Not_Been_Called_When_I_Call_Cases_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_A_FilePath_Has_Not_Been_Set_And_WithInstrument_Has_Not_Been_Called_When_I_Call_Cases_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -338,7 +338,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Has_Not_Been_Called_When_I_Call_PrimaryKey_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Has_Not_Been_Called_When_I_Call_PrimaryKey_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
 
@@ -407,7 +407,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [Test]
         public void
-            Given_WithData_Has_Been_Called_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+            Given_WithData_Has_Been_Called_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Update_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>
@@ -429,7 +429,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [Test]
         public void
-            Given_WithData_Has_Been_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+            Given_WithData_Has_Been_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Update_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>
@@ -451,7 +451,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [Test]
         public void
-            Given_WithData_Has_Been_Called_But_DataRecord_Or_PrimaryKey_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+            Given_WithData_Has_Been_Called_But_DataRecord_Or_PrimaryKey_Has_Not_Been_Called_When_I_Call_Update_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>
@@ -515,7 +515,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Is_Called_But_WithConnection_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Is_Called_But_WithConnection_Has_Not_Been_Called_When_I_Call_Exists_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             //_sut.WithConnection(_connectionModel);
@@ -532,7 +532,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Is_Called_But_WithPrimary_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Is_Called_But_WithPrimary_Has_Not_Been_Called_When_I_Call_Exists_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -551,7 +551,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [Test]
         public void
-            Given_Case_Is_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+            Given_Case_Is_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Exists_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -570,7 +570,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [Test]
         public void
-            Given_Case_Is_Called_But_WithServerPark_Has_Not_Been_Called_When_I_CallExists_Then_An_NullReferenceException_Is_Thrown()
+            Given_Case_Is_Called_But_WithServerPark_Has_Not_Been_Called_When_I_CallExists_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -588,7 +588,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_A_DataRecord_And_Case_Is_Called_But_WithConnection_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_A_DataRecord_And_Case_Is_Called_But_WithConnection_Has_Not_Been_Called_When_I_Call_Exists_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             //_sut.WithConnection(_connectionModel);
@@ -605,7 +605,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_A_DataRecord_And_Case_Is_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_A_DataRecord_And_Case_Is_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Exists_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -623,7 +623,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_A_DataRecord_And_Case_Is_Called_But_WithServerPark_Has_Not_Been_Called_When_I_CallExists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_A_DataRecord_And_Case_Is_Called_But_WithServerPark_Has_Not_Been_Called_When_I_CallExists_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -659,7 +659,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [Test]
         public void
-            Given_WithConnection_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
+            Given_WithConnection_Has_Not_Been_Called_When_I_Call_Remove_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             //_sut.WithConnection(_connectionModel);
@@ -675,7 +675,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [Test]
         public void
-            Given_WithPrimaryKey_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
+            Given_WithPrimaryKey_Has_Not_Been_Called_When_I_Call_Remove_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -692,7 +692,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [Test]
         public void
-            Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
+            Given_WithInstrument_Has_Not_Been_Called_When_I_Call_Remove_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -709,7 +709,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [Test]
         public void
-            Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
+            Given_WithServerPark_Has_Not_Been_Called_When_I_Call_Remove_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -767,7 +767,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [Test]
         public void
-            Given_Case_Is_Called_But_WithConnection_Has_Not_Been_Called_When_I_Call_Get_Then_An_NullReferenceException_Is_Thrown()
+            Given_Case_Is_Called_But_WithConnection_Has_Not_Been_Called_When_I_Call_Get_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithInstrument(_instrumentName);
@@ -784,7 +784,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [Test]
         public void
-            Given_Case_Is_Called_But_WithPrimaryKey_Has_Not_Been_Called_When_I_Call_Get_Then_An_NullReferenceException_Is_Thrown()
+            Given_Case_Is_Called_But_WithPrimaryKey_Has_Not_Been_Called_When_I_Call_Get_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -803,7 +803,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
 
         [Test]
         public void
-            Given_Case_Is_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Get_Then_An_NullReferenceException_Is_Thrown()
+            Given_Case_Is_Called_But_WithInstrument_Has_Not_Been_Called_When_I_Call_Get_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -821,7 +821,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_Case_Is_Called_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Get_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_Case_Is_Called_But_WithServerPark_Has_Not_Been_Called_When_I_Call_Get_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -858,7 +858,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithDataRecord_Has_Not_Been_Called_When_I_Call_HOut_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithDataRecord_Has_Not_Been_Called_When_I_Call_HOut_Then_A_NullReferenceException_Is_Thrown()
         {
             //act && assert
             var exception = Assert.Throws<NullReferenceException>(() =>

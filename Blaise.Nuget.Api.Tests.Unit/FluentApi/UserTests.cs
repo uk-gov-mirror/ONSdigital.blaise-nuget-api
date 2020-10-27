@@ -61,7 +61,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Add_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithUserName(_userName);
@@ -76,7 +76,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithUser_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithUser_Has_Not_Been_Called_When_I_Call_Add_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -91,7 +91,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithPassword_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithPassword_Has_Not_Been_Called_When_I_Call_Add_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -106,7 +106,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithRole_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithRole_Has_Not_Been_Called_When_I_Call_Add_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -121,7 +121,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithDefaultServerPark_Has_Not_Been_Called_When_I_Call_Add_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithDefaultServerPark_Has_Not_Been_Called_When_I_Call_Add_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -188,7 +188,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Update_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithUserName(_userName);
@@ -201,7 +201,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithUser_Has_Not_Been_Called_But_WithPassword_Has_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithUser_Has_Not_Been_Called_But_WithPassword_Has_When_I_Call_Update_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -213,7 +213,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithUser_Has_Not_Been_Called_But_WithRole_Has_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithUser_Has_Not_Been_Called_But_WithRole_Has_When_I_Call_Update_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -225,7 +225,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithUser_Has_Not_Been_Called_But_WithServerParks_Has_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithUser_Has_Not_Been_Called_But_WithServerParks_Has_When_I_Call_Update_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -237,7 +237,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithRole_Has_Not_Been_Called_But_WithServerParks_Has_When_I_Call_Update_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithRole_Has_Not_Been_Called_But_WithServerParks_Has_When_I_Call_Update_Then_A_NullReferenceException_Is_Thrown()
         {
             _sut.WithConnection(_connectionModel);
             _sut.WithUserName(_userName);
@@ -265,7 +265,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Exists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Exists_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _blaiseApiMock.Setup(p => p.UserExists(It.IsAny<ConnectionModel>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
@@ -314,7 +314,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_Remove_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithUserName(_userName);
@@ -327,7 +327,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithUser_Has_Not_Been_Called_When_I_Call_Remove_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithUser_Has_Not_Been_Called_When_I_Call_Remove_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);

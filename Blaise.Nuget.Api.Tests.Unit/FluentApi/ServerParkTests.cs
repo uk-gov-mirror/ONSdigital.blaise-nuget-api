@@ -63,7 +63,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_ServerParkNames_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_ServerParkNames_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             //_sut.WithConnection(_connectionModel);
@@ -112,7 +112,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_ServerParks_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_ServerParks_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             //_sut.WithConnection(_connectionModel);
@@ -160,7 +160,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_ServerPark_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_ServerPark_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             var serverParkName = "Park1";
@@ -178,7 +178,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_ServerPark_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithServerPark_Has_Not_Been_Called_When_I_Call_ServerPark_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             _sut.WithConnection(_connectionModel);
@@ -230,7 +230,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.FluentApi
         }
 
         [Test]
-        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_ParkExists_Then_An_NullReferenceException_Is_Thrown()
+        public void Given_WithConnection_Has_Not_Been_Called_When_I_Call_ParkExists_Then_A_NullReferenceException_Is_Thrown()
         {
             //arrange
             //_sut.WithConnection(_connectionModel);
