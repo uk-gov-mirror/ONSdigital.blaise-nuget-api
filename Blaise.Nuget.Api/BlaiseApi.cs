@@ -22,6 +22,7 @@ namespace Blaise.Nuget.Api
         private IUserService _userService;
         private IFileService _fileService;
         private IConfigurationProvider _configurationProvider;
+
         private readonly IIocProvider _unityProvider;
 
         internal BlaiseApi(
@@ -30,7 +31,6 @@ namespace Blaise.Nuget.Api
             ISurveyService surveyService,
             IUserService userService,
             IFileService fileService,
-            IIocProvider unityProvider,
             IConfigurationProvider configurationProvider)
         {
             _dataService = dataService;
@@ -38,7 +38,6 @@ namespace Blaise.Nuget.Api
             _surveyService = surveyService;
             _userService = userService;
             _fileService = fileService;
-            _unityProvider = unityProvider;
             _configurationProvider = configurationProvider;
         }
 
