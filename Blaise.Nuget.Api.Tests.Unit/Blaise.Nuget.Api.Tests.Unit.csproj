@@ -72,14 +72,7 @@
     <Compile Include="Api\UserTests.cs" />
     <Compile Include="Api\SurveyTests.cs" />
     <Compile Include="Api\ServerParkTests.cs" />
-    <Compile Include="FluentApi\ConfigurationModelTests.cs" />
-    <Compile Include="FluentApi\BackupTests.cs" />
-    <Compile Include="FluentApi\ServerParkTests.cs" />
-    <Compile Include="FluentApi\SurveyTests.cs" />
     <Compile Include="BlaiseApiTests.cs" />
-    <Compile Include="FluentApi\CaseTests.cs" />
-    <Compile Include="FluentApi\UserTests.cs" />
-    <Compile Include="FluentBlaiseApiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ConfigurationProviderTests.cs" />
     <Compile Include="Providers\RemoteCatiServerProviderTests.cs" />
