@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaise.Nuget.Api.Core", "Bl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaise.Nuget.Api.Tests.Unit", "Blaise.Nuget.Api.Tests.Unit\Blaise.Nuget.Api.Tests.Unit.csproj", "{455E87E1-3EBB-4231-9AD7-D3349B9A3D11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaise.Nuget.Api.Tests.Behaviour", "Blaise.Nuget.Api.Tests.Behaviour\Blaise.Nuget.Api.Tests.Behaviour.csproj", "{D7D3F417-43C2-40DA-A690-335B6BE8B28E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,17 +35,12 @@ Global
 		{455E87E1-3EBB-4231-9AD7-D3349B9A3D11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{455E87E1-3EBB-4231-9AD7-D3349B9A3D11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{455E87E1-3EBB-4231-9AD7-D3349B9A3D11}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D7D3F417-43C2-40DA-A690-335B6BE8B28E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D7D3F417-43C2-40DA-A690-335B6BE8B28E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7D3F417-43C2-40DA-A690-335B6BE8B28E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D7D3F417-43C2-40DA-A690-335B6BE8B28E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{455E87E1-3EBB-4231-9AD7-D3349B9A3D11} = {73B060C5-E402-440A-8030-1DF5788D7F4E}
-		{D7D3F417-43C2-40DA-A690-335B6BE8B28E} = {73B060C5-E402-440A-8030-1DF5788D7F4E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3D26DF43-DC75-4565-90B2-79895A8A0D71}
