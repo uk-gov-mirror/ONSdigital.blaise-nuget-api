@@ -16,24 +16,24 @@ namespace Blaise.Nuget.Api
 {
     public class BlaiseApi : IBlaiseApi
     {
-        private IDataService _dataService;
+        private ICaseService _caseService;
         private IParkService _parkService;
         private ISurveyService _surveyService;
         private IUserService _userService;
         private IFileService _fileService;
-        private IConfigurationProvider _configurationProvider;
 
+        private IConfigurationProvider _configurationProvider;
         private readonly IIocProvider _unityProvider;
 
         internal BlaiseApi(
-            IDataService dataService,
+            ICaseService caseService,
             IParkService parkService,
             ISurveyService surveyService,
             IUserService userService,
             IFileService fileService,
             IConfigurationProvider configurationProvider)
         {
-            _dataService = dataService;
+            _caseService = caseService;
             _parkService = parkService;
             _surveyService = surveyService;
             _userService = userService;
@@ -54,7 +54,7 @@ namespace Blaise.Nuget.Api
             _unityProvider.RegisterDependencies();
 
             //resolve dependencies
-            _dataService = _unityProvider.Resolve<IDataService>();
+            _caseService = _unityProvider.Resolve<ICaseService>();
             _parkService = _unityProvider.Resolve<IParkService>();
             _surveyService = _unityProvider.Resolve<ISurveyService>();
             _userService = _unityProvider.Resolve<IUserService>();
@@ -147,7 +147,7 @@ namespace Blaise.Nuget.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            return _dataService.GetSurveyType(connectionModel, instrumentName, serverParkName);
+            return _caseService.GetSurveyType(connectionModel, instrumentName, serverParkName);
         }
 
         public bool CaseExists(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, 
@@ -158,21 +158,21 @@ namespace Blaise.Nuget.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            return _dataService.CaseExists(connectionModel, primaryKeyValue, instrumentName, serverParkName);
+            return _caseService.CaseExists(connectionModel, primaryKeyValue, instrumentName, serverParkName);
         }
 
         public string GetPrimaryKeyValue(IDataRecord dataRecord)
         {
             dataRecord.ThrowExceptionIfNull("dataRecord");
 
-            return _dataService.GetPrimaryKeyValue(dataRecord);
+            return _caseService.GetPrimaryKeyValue(dataRecord);
         }
 
         public IDataSet GetDataSet(string filePath)
         {
             filePath.ThrowExceptionIfNullOrEmpty("filePath");
 
-            return _dataService.GetDataSet(filePath);
+            return _caseService.GetDataSet(filePath);
         }
 
         public IDataSet GetDataSet(ConnectionModel connectionModel, string instrumentName, string serverParkName)
@@ -181,7 +181,7 @@ namespace Blaise.Nuget.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            return _dataService.GetDataSet(connectionModel, instrumentName, serverParkName);
+            return _caseService.GetDataSet(connectionModel, instrumentName, serverParkName);
         }
 
         public IDataRecord GetDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, 
@@ -192,7 +192,7 @@ namespace Blaise.Nuget.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            return _dataService.GetDataRecord(connectionModel, primaryKeyValue, instrumentName, serverParkName);
+            return _caseService.GetDataRecord(connectionModel, primaryKeyValue, instrumentName, serverParkName);
         }
 
         public void CreateNewDataRecord(ConnectionModel connectionModel, string primaryKeyValue, Dictionary<string, string> fieldData, 
@@ -204,7 +204,7 @@ namespace Blaise.Nuget.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            _dataService.CreateNewDataRecord(connectionModel, primaryKeyValue, fieldData, instrumentName, serverParkName);
+            _caseService.CreateNewDataRecord(connectionModel, primaryKeyValue, fieldData, instrumentName, serverParkName);
         }
 
         public void CreateNewDataRecord(string filePath, string primaryKeyValue, Dictionary<string, string> fieldData)
@@ -213,7 +213,7 @@ namespace Blaise.Nuget.Api
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
             fieldData.ThrowExceptionIfNull("fieldData");
 
-            _dataService.CreateNewDataRecord(filePath, primaryKeyValue, fieldData);
+            _caseService.CreateNewDataRecord(filePath, primaryKeyValue, fieldData);
         }
 
         public void UpdateDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, Dictionary<string, string> fieldData,
@@ -225,7 +225,7 @@ namespace Blaise.Nuget.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            _dataService.UpdateDataRecord(connectionModel, dataRecord, fieldData, instrumentName, serverParkName);
+            _caseService.UpdateDataRecord(connectionModel, dataRecord, fieldData, instrumentName, serverParkName);
         }
 
         public bool FieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName, 
@@ -235,21 +235,21 @@ namespace Blaise.Nuget.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            return _dataService.FieldExists(connectionModel, instrumentName, serverParkName, fieldNameType);
+            return _caseService.FieldExists(connectionModel, instrumentName, serverParkName, fieldNameType);
         }
 
         public bool FieldExists(IDataRecord dataRecord, FieldNameType fieldNameType)
         {
             dataRecord.ThrowExceptionIfNull("dataRecord");
 
-            return _dataService.FieldExists(dataRecord, fieldNameType);
+            return _caseService.FieldExists(dataRecord, fieldNameType);
         }
 
         public IDataValue GetFieldValue(IDataRecord dataRecord, FieldNameType fieldNameType)
         {
             dataRecord.ThrowExceptionIfNull("dataRecord");
 
-            return _dataService.GetFieldValue(dataRecord, fieldNameType);
+            return _caseService.GetFieldValue(dataRecord, fieldNameType);
         }
 
         public IDataValue GetFieldValue(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName,
@@ -260,7 +260,7 @@ namespace Blaise.Nuget.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            var dataRecord = _dataService.GetDataRecord(connectionModel, primaryKeyValue, instrumentName, serverParkName);
+            var dataRecord = _caseService.GetDataRecord(connectionModel, primaryKeyValue, instrumentName, serverParkName);
 
             return GetFieldValue(dataRecord, fieldNameType);
         }
@@ -328,7 +328,7 @@ namespace Blaise.Nuget.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            _dataService.RemoveDataRecord(connectionModel, primaryKeyValue, instrumentName, serverParkName);
+            _caseService.RemoveDataRecord(connectionModel, primaryKeyValue, instrumentName, serverParkName);
         }
 
         public string BackupSurveyToFile(ConnectionModel connectionModel, string serverParkName, string instrumentName, 
@@ -347,11 +347,11 @@ namespace Blaise.Nuget.Api
             var metaFileName = _surveyService.GetMetaFileName(connectionModel, instrumentName, serverParkName);
             var databaseFile =_fileService.CreateDatabaseFile(metaFileName, destinationFilePath, instrumentName);
 
-            var cases = _dataService.GetDataSet(connectionModel, instrumentName, serverParkName);
+            var cases = _caseService.GetDataSet(connectionModel, instrumentName, serverParkName);
 
             while (!cases.EndOfSet)
             {
-                _dataService.WriteDataRecord((IDataRecord2)cases.ActiveRecord, databaseFile);
+                _caseService.WriteDataRecord((IDataRecord2)cases.ActiveRecord, databaseFile);
 
                 cases.MoveNext();
             }
@@ -376,14 +376,14 @@ namespace Blaise.Nuget.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            return _dataService.GetNumberOfCases(connectionModel, instrumentName, serverParkName);
+            return _caseService.GetNumberOfCases(connectionModel, instrumentName, serverParkName);
         }
 
         public int GetNumberOfCases(string filePath)
         {
             filePath.ThrowExceptionIfNullOrEmpty("filePath");
 
-            return _dataService.GetNumberOfCases(filePath);
+            return _caseService.GetNumberOfCases(filePath);
         }
 
         public ConnectionModel GetDefaultConnectionModel()

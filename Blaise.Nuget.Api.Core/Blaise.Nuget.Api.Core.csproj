@@ -100,7 +100,7 @@
     <Compile Include="Interfaces\Providers\ILocalDataLinkProvider.cs" />
     <Compile Include="Interfaces\Services\IDataModelService.cs" />
     <Compile Include="Interfaces\Services\IDataRecordService.cs" />
-    <Compile Include="Interfaces\Services\IDataService.cs" />
+    <Compile Include="Interfaces\Services\ICaseService.cs" />
     <Compile Include="Interfaces\Services\IFieldService.cs" />
     <Compile Include="Interfaces\Services\IKeyService.cs" />
     <Compile Include="Interfaces\Services\IParkService.cs" />
@@ -116,7 +116,7 @@
     <Compile Include="Services\CloudStorageService.cs" />
     <Compile Include="Services\DataModelService.cs" />
     <Compile Include="Services\DataRecordService.cs" />
-    <Compile Include="Services\DataService.cs" />
+    <Compile Include="Services\CaseService.cs" />
     <Compile Include="Services\FieldService.cs" />
     <Compile Include="Interfaces\Services\IUserService.cs" />
     <Compile Include="Services\FileService.cs" />

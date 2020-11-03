@@ -6,7 +6,7 @@ using StatNeth.Blaise.API.DataRecord;
 
 namespace Blaise.Nuget.Api.Core.Interfaces.Services
 {
-    public interface IDataService
+    public interface ICaseService
     {
         SurveyType GetSurveyType(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 

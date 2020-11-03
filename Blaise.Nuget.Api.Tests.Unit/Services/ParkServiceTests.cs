@@ -165,6 +165,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.AreEqual($"Server park '{serverParkName}' not found", exception.Message);
         }
 
+        [Test]
         public void Given_I_Call_GetServerParks_Then_I_Get_A_Correct_List_Of_ServerParkNames_Returned()
         {
             //arrange

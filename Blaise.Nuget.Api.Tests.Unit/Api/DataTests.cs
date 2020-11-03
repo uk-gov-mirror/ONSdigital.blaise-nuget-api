@@ -13,7 +13,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
 {
     public class DataTests
     {
-        private Mock<IDataService> _dataServiceMock;
+        private Mock<ICaseService> _caseServiceMock;
         private Mock<IParkService> _parkServiceMock;
         private Mock<ISurveyService> _surveyServiceMock;
         private Mock<IUserService> _userServiceMock;
@@ -40,7 +40,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         [SetUp]
         public void SetUpTests()
         {
-            _dataServiceMock = new Mock<IDataService>();
+            _caseServiceMock = new Mock<ICaseService>();
             _parkServiceMock = new Mock<IParkService>();
             _surveyServiceMock = new Mock<ISurveyService>();
             _userServiceMock = new Mock<IUserService>();
@@ -48,7 +48,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _configurationProviderMock = new Mock<IConfigurationProvider>();
 
             _sut = new BlaiseApi(
-                _dataServiceMock.Object,
+                _caseServiceMock.Object,
                 _parkServiceMock.Object,
                 _surveyServiceMock.Object,
                 _userServiceMock.Object,
@@ -60,14 +60,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_Valid_Arguments_When_I_Call_CaseExists_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            _dataServiceMock.Setup(d => d.CaseExists(It.IsAny<ConnectionModel>(),
+            _caseServiceMock.Setup(d => d.CaseExists(It.IsAny<ConnectionModel>(),
                 It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<bool>());
 
             //act
             _sut.CaseExists(_connectionModel, _primaryKeyValue, _instrumentName, _serverParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.CaseExists(_connectionModel, _primaryKeyValue, _instrumentName, _serverParkName), Times.Once);
+            _caseServiceMock.Verify(v => v.CaseExists(_connectionModel, _primaryKeyValue, _instrumentName, _serverParkName), Times.Once);
         }
 
         [TestCase(true)]
@@ -77,7 +77,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             //arrange
             var primaryKeyValue = "Key1";
 
-            _dataServiceMock.Setup(d => d.CaseExists(_connectionModel, primaryKeyValue, _instrumentName, _serverParkName)).Returns(caseExists);
+            _caseServiceMock.Setup(d => d.CaseExists(_connectionModel, primaryKeyValue, _instrumentName, _serverParkName)).Returns(caseExists);
 
             //act
             var result = _sut.CaseExists(_connectionModel, primaryKeyValue, _instrumentName, _serverParkName);
@@ -107,7 +107,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_PrimaryKeyValue_When_I_Call_CaseExists_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CaseExists(_connectionModel, (string)null, _instrumentName, _serverParkName));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CaseExists(_connectionModel, null, _instrumentName, _serverParkName));
             Assert.AreEqual("primaryKeyValue", exception.ParamName);
         }
 
@@ -153,13 +153,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
 
-            _dataServiceMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(It.IsAny<string>());
+            _caseServiceMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(It.IsAny<string>());
 
             //act
             _sut.GetPrimaryKeyValue(dataRecordMock.Object);
 
             //assert
-            _dataServiceMock.Verify(v => v.GetPrimaryKeyValue(dataRecordMock.Object), Times.Once);
+            _caseServiceMock.Verify(v => v.GetPrimaryKeyValue(dataRecordMock.Object), Times.Once);
         }
 
         [Test]
@@ -168,7 +168,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
 
-            _dataServiceMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(_primaryKeyValue);
+            _caseServiceMock.Setup(d => d.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(_primaryKeyValue);
 
             //act
             var result = _sut.GetPrimaryKeyValue(dataRecordMock.Object);
@@ -182,13 +182,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_Valid_Arguments_When_I_Call_GetDataSet_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            _dataServiceMock.Setup(d => d.GetDataSet(_connectionModel, It.IsAny<string>(), It.IsAny<string>()));
+            _caseServiceMock.Setup(d => d.GetDataSet(_connectionModel, It.IsAny<string>(), It.IsAny<string>()));
 
             //act
             _sut.GetDataSet(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.GetDataSet(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+            _caseServiceMock.Verify(v => v.GetDataSet(_connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -237,13 +237,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             //arrange
             var filePath = "File1.bdix";
 
-            _dataServiceMock.Setup(d => d.GetDataSet(It.IsAny<string>()));
+            _caseServiceMock.Setup(d => d.GetDataSet(It.IsAny<string>()));
 
             //act
             _sut.GetDataSet(filePath);
 
             //assert
-            _dataServiceMock.Verify(v => v.GetDataSet(filePath), Times.Once);
+            _caseServiceMock.Verify(v => v.GetDataSet(filePath), Times.Once);
         }
 
         [Test]
@@ -266,13 +266,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_Valid_Arguments_When_I_Call_GetDataRecord_ByPrimaryKeyValue_Then_The_Correct_Service_Method_Is_Called()
         {
 
-            _dataServiceMock.Setup(d => d.GetDataRecord(_connectionModel, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
+            _caseServiceMock.Setup(d => d.GetDataRecord(_connectionModel, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
 
             //act
             _sut.GetDataRecord(_connectionModel, _primaryKeyValue, _instrumentName, _serverParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.GetDataRecord(_connectionModel, _primaryKeyValue, _instrumentName, _serverParkName), Times.Once);
+            _caseServiceMock.Verify(v => v.GetDataRecord(_connectionModel, _primaryKeyValue, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -296,7 +296,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_PrimaryKeyValue_When_I_Call_GetDataRecord_ByPrimaryKeyValue_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetDataRecord(_connectionModel, (string)null, _instrumentName, _serverParkName));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetDataRecord(_connectionModel, null, _instrumentName, _serverParkName));
             Assert.AreEqual("primaryKeyValue", exception.ParamName);
         }
 
@@ -344,13 +344,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             //arrange
             var fieldData = new Dictionary<string, string>();
 
-            _dataServiceMock.Setup(d => d.CreateNewDataRecord(_connectionModel, It.IsAny<string>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<string>(), It.IsAny<string>()));
+            _caseServiceMock.Setup(d => d.CreateNewDataRecord(_connectionModel, It.IsAny<string>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<string>(), It.IsAny<string>()));
 
             //act
             _sut.CreateNewDataRecord(_connectionModel, _primaryKeyValue, fieldData, _instrumentName, _serverParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.CreateNewDataRecord(_connectionModel, _primaryKeyValue, fieldData, _instrumentName, _serverParkName), Times.Once);
+            _caseServiceMock.Verify(v => v.CreateNewDataRecord(_connectionModel, _primaryKeyValue, fieldData, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -450,13 +450,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             //arrange
             var fieldData = new Dictionary<string, string>();
 
-            _dataServiceMock.Setup(d => d.CreateNewDataRecord(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()));
+            _caseServiceMock.Setup(d => d.CreateNewDataRecord(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()));
 
             //act
             _sut.CreateNewDataRecord(_filePath, _primaryKeyValue, fieldData);
 
             //assert
-            _dataServiceMock.Verify(v => v.CreateNewDataRecord(_filePath, _primaryKeyValue, fieldData), Times.Once);
+            _caseServiceMock.Verify(v => v.CreateNewDataRecord(_filePath, _primaryKeyValue, fieldData), Times.Once);
         }
 
         [Test]
@@ -518,13 +518,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             var dataRecordMock = new Mock<IDataRecord>();
             var fieldData = new Dictionary<string, string>();
 
-            _dataServiceMock.Setup(d => d.UpdateDataRecord(_connectionModel, It.IsAny<IDataRecord>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<string>(), It.IsAny<string>()));
+            _caseServiceMock.Setup(d => d.UpdateDataRecord(_connectionModel, It.IsAny<IDataRecord>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<string>(), It.IsAny<string>()));
 
             //act
             _sut.UpdateDataRecord(_connectionModel, dataRecordMock.Object, fieldData, _instrumentName, _serverParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.UpdateDataRecord(_connectionModel, dataRecordMock.Object, fieldData,
+            _caseServiceMock.Verify(v => v.UpdateDataRecord(_connectionModel, dataRecordMock.Object, fieldData,
                 _instrumentName, _serverParkName), Times.Once);
         }
 
@@ -620,14 +620,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_Valid_Arguments_When_I_Call_FieldExists_Then_The_Correct_Service_Method_Is_Called(FieldNameType fieldNameType)
         {
             //arrange
-            _dataServiceMock.Setup(d => d.FieldExists(_connectionModel, It.IsAny<string>(),
+            _caseServiceMock.Setup(d => d.FieldExists(_connectionModel, It.IsAny<string>(),
                 It.IsAny<string>(), It.IsAny<FieldNameType>())).Returns(It.IsAny<bool>());
 
             //act
             _sut.FieldExists(_connectionModel, _instrumentName, _serverParkName, fieldNameType);
 
             //CompletedFieldExists
-            _dataServiceMock.Verify(v => v.FieldExists(_connectionModel, _instrumentName, _serverParkName, fieldNameType), Times.Once);
+            _caseServiceMock.Verify(v => v.FieldExists(_connectionModel, _instrumentName, _serverParkName, fieldNameType), Times.Once);
         }
 
         [TestCase(true)]
@@ -635,7 +635,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_Valid_Arguments_When_I_Call_FieldExists_Then_The_Expected_Result_Is_Returned(bool fieldExists)
         {
             //arrange
-            _dataServiceMock.Setup(d => d.FieldExists(_connectionModel, It.IsAny<string>(), It.IsAny<string>(),
+            _caseServiceMock.Setup(d => d.FieldExists(_connectionModel, It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<FieldNameType>())).Returns(fieldExists);
 
             //act
@@ -696,13 +696,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
-            _dataServiceMock.Setup(d => d.FieldExists(It.IsAny<IDataRecord>(), It.IsAny<FieldNameType>())).Returns(It.IsAny<bool>());
+            _caseServiceMock.Setup(d => d.FieldExists(It.IsAny<IDataRecord>(), It.IsAny<FieldNameType>())).Returns(It.IsAny<bool>());
 
             //act
             _sut.FieldExists(dataRecordMock.Object, fieldNameType);
 
             //CompletedFieldExists
-            _dataServiceMock.Verify(v => v.FieldExists(dataRecordMock.Object, fieldNameType), Times.Once);
+            _caseServiceMock.Verify(v => v.FieldExists(dataRecordMock.Object, fieldNameType), Times.Once);
         }
 
 
@@ -712,7 +712,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
-            _dataServiceMock.Setup(d => d.FieldExists(dataRecordMock.Object, fieldNameType)).Returns(exists);
+            _caseServiceMock.Setup(d => d.FieldExists(dataRecordMock.Object, fieldNameType)).Returns(exists);
 
             //act
             var result = _sut.FieldExists(dataRecordMock.Object, fieldNameType);
@@ -739,11 +739,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             var dataValueMock = new Mock<IDataValue>();
             var dataRecordMock = new Mock<IDataRecord>();
 
-            _dataServiceMock.Setup(d =>
+            _caseServiceMock.Setup(d =>
                     d.GetDataRecord(_connectionModel, _primaryKeyValue, _instrumentName, _serverParkName))
                 .Returns(dataRecordMock.Object);
 
-            _dataServiceMock.Setup(d => d.GetFieldValue(It.IsAny<IDataRecord>(), It.IsAny<FieldNameType>()))
+            _caseServiceMock.Setup(d => d.GetFieldValue(It.IsAny<IDataRecord>(), It.IsAny<FieldNameType>()))
                 .Returns(dataValueMock.Object);
 
             //act
@@ -820,14 +820,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_Valid_Arguments_When_I_Call_GetNumberOfCases_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            _dataServiceMock.Setup(d => d.GetNumberOfCases(
+            _caseServiceMock.Setup(d => d.GetNumberOfCases(
                 _connectionModel, It.IsAny<string>(), It.IsAny<string>()));
 
             //act
             _sut.GetNumberOfCases(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.GetNumberOfCases(
+            _caseServiceMock.Verify(v => v.GetNumberOfCases(
                 _connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
@@ -836,7 +836,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         {
             //arrange
             var numberOfCases = 5;
-            _dataServiceMock.Setup(d => d.GetNumberOfCases(
+            _caseServiceMock.Setup(d => d.GetNumberOfCases(
                 _connectionModel, It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(numberOfCases);
 
@@ -894,13 +894,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             //arrange
             var filePath = "File1.bdix";
 
-            _dataServiceMock.Setup(d => d.GetNumberOfCases(It.IsAny<string>()));
+            _caseServiceMock.Setup(d => d.GetNumberOfCases(It.IsAny<string>()));
 
             //act
             _sut.GetNumberOfCases(filePath);
 
             //assert
-            _dataServiceMock.Verify(v => v.GetNumberOfCases(filePath), Times.Once);
+            _caseServiceMock.Verify(v => v.GetNumberOfCases(filePath), Times.Once);
         }
 
         [Test]
@@ -909,7 +909,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             //arrange
             var numberOfCases = 5;
 
-            _dataServiceMock.Setup(d => d.GetNumberOfCases(
+            _caseServiceMock.Setup(d => d.GetNumberOfCases(
                 It.IsAny<string>())).Returns(numberOfCases);
 
             //act

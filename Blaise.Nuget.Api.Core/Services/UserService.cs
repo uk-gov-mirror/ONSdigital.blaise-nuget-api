@@ -76,7 +76,7 @@ namespace Blaise.Nuget.Api.Core.Services
         public IUser GetUser(ConnectionModel connectionModel, string userName)
         {
             var connection = _connectedServerFactory.GetConnection(connectionModel);
-            var test = connection.Users;
+
             return connection.Users.FirstOrDefault(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
         }
 
@@ -90,11 +90,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
         private static void AssignRoleToUser(IUser2 user, string role)
         {
-            try
-            {
-                user.Role = role; // Try to update the user's role. If an error is thrown leave it blank.
-            }
-            catch { }
+            user.Role = role;
         }
 
         private static void AddCatiPreferenceToUser(IUser2 user, string defaultServerPark)
