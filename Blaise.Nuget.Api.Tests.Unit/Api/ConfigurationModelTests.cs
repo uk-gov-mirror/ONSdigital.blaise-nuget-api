@@ -9,7 +9,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
 {
     public class ConfigurationModelTests
     {
-        private Mock<IDataService> _dataServiceMock;
+        private Mock<ICaseService> _caseServiceMock;
         private Mock<IParkService> _parkServiceMock;
         private Mock<ISurveyService> _surveyServiceMock;
         private Mock<IUserService> _userServiceMock;
@@ -27,7 +27,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         [SetUp]
         public void SetUpTests()
         {
-            _dataServiceMock = new Mock<IDataService>();
+            _caseServiceMock = new Mock<ICaseService>();
             _parkServiceMock = new Mock<IParkService>();
             _surveyServiceMock = new Mock<ISurveyService>();
             _userServiceMock = new Mock<IUserService>();
@@ -38,7 +38,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 .Returns(_connectionModel);
 
             _sut = new BlaiseApi(
-                _dataServiceMock.Object,
+                _caseServiceMock.Object,
                 _parkServiceMock.Object,
                 _surveyServiceMock.Object,
                 _userServiceMock.Object,

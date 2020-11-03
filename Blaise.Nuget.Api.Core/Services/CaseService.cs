@@ -9,7 +9,7 @@ using StatNeth.Blaise.API.Meta;
 
 namespace Blaise.Nuget.Api.Core.Services
 {
-    public class DataService : IDataService
+    public class CaseService : ICaseService
     {
         private readonly IDataModelService _dataModelService;
         private readonly IDataRecordService _dataRecordService;
@@ -17,7 +17,7 @@ namespace Blaise.Nuget.Api.Core.Services
         private readonly IFieldService _fieldService;
         private readonly IDataMapperService _mapperService;
 
-        public DataService(
+        public CaseService(
             IDataModelService dataModelService, 
             IDataRecordService dataRecordService, 
             IKeyService keyService, 

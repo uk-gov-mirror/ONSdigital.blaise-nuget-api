@@ -44,7 +44,7 @@ namespace Blaise.Nuget.Api.Providers
             //services
             _unityContainer.RegisterType<IDataModelService, DataModelService>();
             _unityContainer.RegisterType<IDataRecordService, DataRecordService>();
-            _unityContainer.RegisterType<IDataService, DataService>();
+            _unityContainer.RegisterType<ICaseService, CaseService>();
             _unityContainer.RegisterType<IFieldService, FieldService>();
             _unityContainer.RegisterType<IKeyService, KeyService>();
             _unityContainer.RegisterType<IParkService, ParkService>();

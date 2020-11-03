@@ -11,7 +11,7 @@ using StatNeth.Blaise.API.Meta;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Services
 {
-    public class DataServiceTests
+    public class CaseServiceTests
     {
         private Mock<IDataModelService> _dataModelServiceMock;
         private Mock<IKeyService> _keyServiceMock;
@@ -30,9 +30,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private readonly string _keyName;
         private readonly SurveyType _surveyType;
 
-        private DataService _sut;
+        private CaseService _sut;
 
-        public DataServiceTests()
+        public CaseServiceTests()
         {
             _connectionModel = new ConnectionModel();
             _instrumentName = "TestInstrumentName";
@@ -66,7 +66,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             _mapperServiceMock = new Mock<IDataMapperService>();
 
-            _sut = new DataService(
+            _sut = new CaseService(
                 _dataModelServiceMock.Object,
                 _dataRecordServiceMock.Object,
                 _keyServiceMock.Object,

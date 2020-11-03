@@ -14,7 +14,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
 {
     public class SurveyTests
     {
-        private Mock<IDataService> _dataServiceMock;
+        private Mock<ICaseService> _caseServiceMock;
         private Mock<IParkService> _parkServiceMock;
         private Mock<ISurveyService> _surveyServiceMock;
         private Mock<IUserService> _userServiceMock;
@@ -37,7 +37,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         [SetUp]
         public void SetUpTests()
         {
-            _dataServiceMock = new Mock<IDataService>();
+            _caseServiceMock = new Mock<ICaseService>();
             _parkServiceMock = new Mock<IParkService>();
             _surveyServiceMock = new Mock<ISurveyService>();
             _userServiceMock = new Mock<IUserService>();
@@ -45,7 +45,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _configurationProviderMock = new Mock<IConfigurationProvider>();
 
             _sut = new BlaiseApi(
-                _dataServiceMock.Object,
+                _caseServiceMock.Object,
                 _parkServiceMock.Object,
                 _surveyServiceMock.Object,
                 _userServiceMock.Object,
@@ -351,13 +351,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         [Test]
         public void Given_Valid_Instrument_AndServerPark_When_I_Call_GetSurveyType_Then_The_Correct_Service_Method_Is_Called()
         {
-            _dataServiceMock.Setup(d => d.GetSurveyType(_connectionModel, It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<SurveyType>());
+            _caseServiceMock.Setup(d => d.GetSurveyType(_connectionModel, It.IsAny<string>(), It.IsAny<string>())).Returns(It.IsAny<SurveyType>());
 
             //act
             _sut.GetSurveyType(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
-            _dataServiceMock.Verify(v => v.GetSurveyType(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+            _caseServiceMock.Verify(v => v.GetSurveyType(_connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -366,7 +366,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             //arrange
             var surveyType = SurveyType.NotMapped;
 
-            _dataServiceMock.Setup(d => d.GetSurveyType(_connectionModel, _instrumentName, _serverParkName)).Returns(surveyType);
+            _caseServiceMock.Setup(d => d.GetSurveyType(_connectionModel, _instrumentName, _serverParkName)).Returns(surveyType);
 
             //act
             var result = _sut.GetSurveyType(_connectionModel, _instrumentName, _serverParkName);
