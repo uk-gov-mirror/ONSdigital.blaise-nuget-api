@@ -13,7 +13,6 @@ namespace Blaise.Nuget.Api.Core.Services
     public class FileService : IFileService
     {
         private readonly IConfigurationProvider _configurationProvider;
-        private readonly ICloudStorageService _cloudStorageService;
 
         private const string DatabaseFileNameExt = "bdix";
         private const string DatabaseSourceExt = "bdbx";
@@ -21,16 +20,9 @@ namespace Blaise.Nuget.Api.Core.Services
         private const string LibraryFileExt = "blix";
 
         public FileService(
-            IConfigurationProvider configurationProvider, 
-            ICloudStorageService cloudStorageService)
+            IConfigurationProvider configurationProvider)
         {
             _configurationProvider = configurationProvider;
-            _cloudStorageService = cloudStorageService;
-        }
-
-        public IEnumerable<string> GetFiles(string filePath)
-        {
-            return Directory.GetFiles(filePath);
         }
 
         public bool DatabaseFileExists(string filePath, string instrumentName)
@@ -65,11 +57,6 @@ namespace Blaise.Nuget.Api.Core.Services
             dataInterface.SaveToFile(true);
 
             return dataInterface.FileName;
-        }
-
-        public void UploadFilesToBucket(string filePath, string bucketName, string folderName)
-        {
-            _cloudStorageService.UploadToBucket(filePath, bucketName, folderName);
         }
 
         private static string GetFullFilePath(string filePath, string instrumentName, string extension)

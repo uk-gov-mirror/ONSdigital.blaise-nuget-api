@@ -85,8 +85,6 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         string BackupSurveyToFile(ConnectionModel connectionModel, string serverParkName, string instrumentName,
             string destinationFilePath);
 
-        void BackupFilesToBucket(string filePath, string bucketName, string folderName = null);
-
         int GetNumberOfCases(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         int GetNumberOfCases(string filePath);

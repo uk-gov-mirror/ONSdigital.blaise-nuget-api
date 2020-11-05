@@ -359,17 +359,6 @@ namespace Blaise.Nuget.Api
             return databaseFile;
         }
 
-        public void BackupFilesToBucket(string filePath, string bucketName, string folderName = null)
-        {
-            filePath.ThrowExceptionIfNullOrEmpty("filePath");
-            bucketName.ThrowExceptionIfNullOrEmpty("bucketName");
-
-            foreach (var file in _fileService.GetFiles(filePath))
-            {
-                _fileService.UploadFilesToBucket(file, bucketName, folderName);
-            }
-        }
-
         public int GetNumberOfCases(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
