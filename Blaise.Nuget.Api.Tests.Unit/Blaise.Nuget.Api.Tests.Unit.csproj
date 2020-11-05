@@ -66,7 +66,6 @@
   <ItemGroup>
     <Compile Include="Api\DataTests.cs" />
     <Compile Include="Api\ConfigurationModelTests.cs" />
-    <Compile Include="Api\CloudBackupTests.cs" />
     <Compile Include="Api\FileBackupTests.cs" />
     <Compile Include="Api\DayBatchTests.cs" />
     <Compile Include="Api\UserTests.cs" />

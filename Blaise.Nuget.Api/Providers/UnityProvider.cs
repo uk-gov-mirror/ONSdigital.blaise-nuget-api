@@ -38,9 +38,6 @@ namespace Blaise.Nuget.Api.Providers
             _unityContainer.RegisterSingleton<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
             _unityContainer.RegisterSingleton<IRemoteCatiServerProvider, RemoteCatiServerProvider>();
 
-            //storage provider 
-            _unityContainer.RegisterSingleton<IStorageClientProvider, CloudStorageClientProvider>();
-
             //services
             _unityContainer.RegisterType<IDataModelService, DataModelService>();
             _unityContainer.RegisterType<IDataRecordService, DataRecordService>();
@@ -51,7 +48,6 @@ namespace Blaise.Nuget.Api.Providers
             _unityContainer.RegisterType<ISurveyService, SurveyService>();
             _unityContainer.RegisterType<IUserService, UserService>();
             _unityContainer.RegisterType<IFileService, FileService>();
-            _unityContainer.RegisterType<ICloudStorageService, CloudStorageService>();
             _unityContainer.RegisterType<IDayBatchService, DayBatchService>();
         }
 
