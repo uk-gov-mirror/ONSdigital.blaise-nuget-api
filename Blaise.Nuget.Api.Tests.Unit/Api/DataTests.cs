@@ -24,7 +24,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         private readonly string _primaryKeyValue;
         private readonly string _serverParkName;
         private readonly string _instrumentName;
-        private readonly string _filePath;
+        private readonly string _databaseFile;
 
         private IBlaiseApi _sut;
 
@@ -34,7 +34,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _primaryKeyValue = "Key1";
             _serverParkName = "Park1";
             _instrumentName = "Instrument1";
-            _filePath = "TestFilePath";
+            _databaseFile = "TestFile";
         }
 
         [SetUp]
@@ -235,31 +235,31 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_File_When_I_Call_GetDataSet_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            var filePath = "File1.bdix";
+            var databaseFile = "File1.bdix";
 
             _caseServiceMock.Setup(d => d.GetDataSet(It.IsAny<string>()));
 
             //act
-            _sut.GetDataSet(filePath);
+            _sut.GetDataSet(databaseFile);
 
             //assert
-            _caseServiceMock.Verify(v => v.GetDataSet(filePath), Times.Once);
+            _caseServiceMock.Verify(v => v.GetDataSet(databaseFile), Times.Once);
         }
 
         [Test]
-        public void Given_An_Empty_FilePath_When_I_Call_GetDataSet_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_DatabaseFile_When_I_Call_GetDataSet_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
             var exception = Assert.Throws<ArgumentException>(() => _sut.GetDataSet(string.Empty));
-            Assert.AreEqual("A value for the argument 'filePath' must be supplied", exception.Message);
+            Assert.AreEqual("A value for the argument 'databaseFile' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_Null_FilePath_When_I_Call_GetDataSet_Then_An_ArgumentNullException_Is_Thrown()
+        public void Given_A_Null_DatabaseFile_When_I_Call_GetDataSet_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetDataSet(null));
-            Assert.AreEqual("filePath", exception.ParamName);
+            Assert.AreEqual("databaseFile", exception.ParamName);
         }
 
         [Test]
@@ -453,10 +453,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _caseServiceMock.Setup(d => d.CreateNewDataRecord(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()));
 
             //act
-            _sut.CreateNewDataRecord(_filePath, _primaryKeyValue, fieldData);
+            _sut.CreateNewDataRecord(_databaseFile, _primaryKeyValue, fieldData);
 
             //assert
-            _caseServiceMock.Verify(v => v.CreateNewDataRecord(_filePath, _primaryKeyValue, fieldData), Times.Once);
+            _caseServiceMock.Verify(v => v.CreateNewDataRecord(_databaseFile, _primaryKeyValue, fieldData), Times.Once);
         }
 
         [Test]
@@ -467,18 +467,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
 
             //act && assert
             var exception = Assert.Throws<ArgumentException>(() => _sut.CreateNewDataRecord(string.Empty, _primaryKeyValue, fieldData));
-            Assert.AreEqual("A value for the argument 'filePath' must be supplied", exception.Message);
+            Assert.AreEqual("A value for the argument 'databaseFile' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_Null_FilePath_When_I_Call_CreateNewDataRecord_For_Local_Connection_Then_An_ArgumentNullException_Is_Thrown()
+        public void Given_A_Null_DatabaseFile_When_I_Call_CreateNewDataRecord_For_Local_Connection_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange 
             var fieldData = new Dictionary<string, string>();
 
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateNewDataRecord(null, _primaryKeyValue, fieldData));
-            Assert.AreEqual("filePath", exception.ParamName);
+            Assert.AreEqual("databaseFile", exception.ParamName);
         }
 
         [Test]
@@ -488,7 +488,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             var fieldData = new Dictionary<string, string>();
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateNewDataRecord(_filePath, string.Empty, fieldData));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateNewDataRecord(_databaseFile, string.Empty, fieldData));
             Assert.AreEqual("A value for the argument 'primaryKeyValue' must be supplied", exception.Message);
         }
 
@@ -499,7 +499,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             var fieldData = new Dictionary<string, string>();
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateNewDataRecord(_filePath, null, fieldData));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateNewDataRecord(_databaseFile, null, fieldData));
             Assert.AreEqual("primaryKeyValue", exception.ParamName);
         }
 
@@ -507,7 +507,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_Dictionary_Of_FieldData_When_I_Call_CreateNewDataRecord_For_Local_Connection_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateNewDataRecord(_filePath, _primaryKeyValue, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateNewDataRecord(_databaseFile, _primaryKeyValue, null));
             Assert.AreEqual("The argument 'fieldData' must be supplied", exception.ParamName);
         }
 
@@ -892,15 +892,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_File_When_I_Call_GetNumberOfCases_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            var filePath = "File1.bdix";
+            var databaseFile = "File1.bdix";
 
             _caseServiceMock.Setup(d => d.GetNumberOfCases(It.IsAny<string>()));
 
             //act
-            _sut.GetNumberOfCases(filePath);
+            _sut.GetNumberOfCases(databaseFile);
 
             //assert
-            _caseServiceMock.Verify(v => v.GetNumberOfCases(filePath), Times.Once);
+            _caseServiceMock.Verify(v => v.GetNumberOfCases(databaseFile), Times.Once);
         }
 
         [Test]
@@ -913,7 +913,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
                 It.IsAny<string>())).Returns(numberOfCases);
 
             //act
-            var result = _sut.GetNumberOfCases(_filePath);
+            var result = _sut.GetNumberOfCases(_databaseFile);
 
             //assert
             Assert.NotNull(result);
@@ -921,19 +921,19 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         }
 
         [Test]
-        public void Given_An_Empty_FilePath_When_I_Call_GetNumberOfCases_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_DatabaseFile_When_I_Call_GetNumberOfCases_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
             var exception = Assert.Throws<ArgumentException>(() => _sut.GetNumberOfCases(string.Empty));
-            Assert.AreEqual("A value for the argument 'filePath' must be supplied", exception.Message);
+            Assert.AreEqual("A value for the argument 'databaseFile' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_Null_FilePath_When_I_Call_GetNumberOfCases_Then_An_ArgumentNullException_Is_Thrown()
+        public void Given_A_Null_DatabaseFile_When_I_Call_GetNumberOfCases_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetNumberOfCases(null));
-            Assert.AreEqual("filePath", exception.ParamName);
+            Assert.AreEqual("databaseFile", exception.ParamName);
         }
     }
 }

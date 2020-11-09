@@ -32,13 +32,13 @@ namespace Blaise.Nuget.Api.Core.Services
             return dataLink.Datamodel;
         }
 
-        public IDatamodel GetDataModel(string filePath)
+        public IDatamodel GetDataModel(string databaseFile)
         {
-            var dataLink = _localDataLinkProvider.GetDataLink(filePath);
+            var dataLink = _localDataLinkProvider.GetDataLink(databaseFile);
 
             if (dataLink?.Datamodel == null)
             {
-                throw new NullReferenceException($"No datamodel was found for file '{filePath}'");
+                throw new NullReferenceException($"No datamodel was found for file '{databaseFile}'");
             }
 
             return dataLink.Datamodel;

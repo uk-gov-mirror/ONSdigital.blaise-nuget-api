@@ -16,16 +16,16 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         IDataSet GetDataSet(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
-        IDataSet GetDataSet(string filePath);
+        IDataSet GetDataSet(string databaseFile);
 
         IDataRecord GetDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName);
 
-        void WriteDataRecord(IDataRecord dataRecord, string filePath);
+        void WriteDataRecord(IDataRecord dataRecord, string databaseFile);
 
         void CreateNewDataRecord(ConnectionModel connectionModel, string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName,
             string serverParkName);
 
-        void CreateNewDataRecord(string filePath, string primaryKeyValue, Dictionary<string, string> fieldData);
+        void CreateNewDataRecord(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData);
 
         void UpdateDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, Dictionary<string, string> fieldData, string instrumentName,
             string serverParkName);
@@ -37,6 +37,6 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         bool FieldExists(IDataRecord dataRecord, FieldNameType fieldNameType);
 
         int GetNumberOfCases(ConnectionModel connectionModel, string instrumentName, string serverParkName);
-        int GetNumberOfCases(string filePath);
+        int GetNumberOfCases(string databaseFile);
     }
 }

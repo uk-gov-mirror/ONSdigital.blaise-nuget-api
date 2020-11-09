@@ -36,9 +36,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
         }
 
-        public IDatamodel GetDataModel(string filePath)
+        public IDatamodel GetDataModel(string databaseFile)
         {
-            return _dataModelService.GetDataModel(filePath);
+            return _dataModelService.GetDataModel(databaseFile);
         }
 
         public SurveyType GetSurveyType(ConnectionModel connectionModel, string instrumentName, string serverParkName)
@@ -76,9 +76,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataRecordService.GetDataSet(connectionModel, instrumentName, serverParkName);
         }
 
-        public IDataSet GetDataSet(string filePath)
+        public IDataSet GetDataSet(string databaseFile)
         {
-            return _dataRecordService.GetDataSet(filePath);
+            return _dataRecordService.GetDataSet(databaseFile);
         }
 
         public IDataRecord GetDataRecord(IDatamodel datamodel)
@@ -101,9 +101,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return GetDataRecord(connectionModel, primaryKey, instrumentName, serverParkName);
         }
 
-        public IDataRecord GetDataRecord(IKey key, string filePath)
+        public IDataRecord GetDataRecord(IKey key, string databaseFile)
         {
-            return _dataRecordService.GetDataRecord(key, filePath);
+            return _dataRecordService.GetDataRecord(key, databaseFile);
         }
 
         public void WriteDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
@@ -111,9 +111,9 @@ namespace Blaise.Nuget.Api.Core.Services
             _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
         }
 
-        public void WriteDataRecord(IDataRecord dataRecord, string filePath)
+        public void WriteDataRecord(IDataRecord dataRecord, string databaseFile)
         {
-            _dataRecordService.WriteDataRecord(dataRecord, filePath);
+            _dataRecordService.WriteDataRecord(dataRecord, databaseFile);
         }
 
         public bool FieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName, FieldNameType fieldNameType)
@@ -146,9 +146,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataRecordService.GetNumberOfRecords(connectionModel, instrumentName, serverParkName);
         }
 
-        public int GetNumberOfCases(string filePath)
+        public int GetNumberOfCases(string databaseFile)
         {
-            return _dataRecordService.GetNumberOfRecords(filePath);
+            return _dataRecordService.GetNumberOfRecords(databaseFile);
         }
 
         public bool CaseExists(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName)
@@ -172,15 +172,15 @@ namespace Blaise.Nuget.Api.Core.Services
             WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
         }
 
-        public void CreateNewDataRecord(string filePath, string primaryKeyValue, Dictionary<string, string> fieldData)
+        public void CreateNewDataRecord(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData)
         {
-            var dataModel = GetDataModel(filePath);
+            var dataModel = GetDataModel(databaseFile);
             var key = GetPrimaryKey(dataModel);
             var dataRecord = GetDataRecord(dataModel);
 
             dataRecord = _mapperService.MapDataRecordFields(dataRecord, dataModel, key, primaryKeyValue, fieldData);
 
-            WriteDataRecord(dataRecord, filePath);
+            WriteDataRecord(dataRecord, databaseFile);
         }
 
         public void UpdateDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, Dictionary<string, string> fieldData, string instrumentName, string serverParkName)

@@ -168,11 +168,11 @@ namespace Blaise.Nuget.Api
             return _caseService.GetPrimaryKeyValue(dataRecord);
         }
 
-        public IDataSet GetDataSet(string filePath)
+        public IDataSet GetDataSet(string databaseFile)
         {
-            filePath.ThrowExceptionIfNullOrEmpty("filePath");
+            databaseFile.ThrowExceptionIfNullOrEmpty("databaseFile");
 
-            return _caseService.GetDataSet(filePath);
+            return _caseService.GetDataSet(databaseFile);
         }
 
         public IDataSet GetDataSet(ConnectionModel connectionModel, string instrumentName, string serverParkName)
@@ -207,13 +207,13 @@ namespace Blaise.Nuget.Api
             _caseService.CreateNewDataRecord(connectionModel, primaryKeyValue, fieldData, instrumentName, serverParkName);
         }
 
-        public void CreateNewDataRecord(string filePath, string primaryKeyValue, Dictionary<string, string> fieldData)
+        public void CreateNewDataRecord(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData)
         {
-            filePath.ThrowExceptionIfNullOrEmpty("filePath");
+            databaseFile.ThrowExceptionIfNullOrEmpty("databaseFile");
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
             fieldData.ThrowExceptionIfNull("fieldData");
 
-            _caseService.CreateNewDataRecord(filePath, primaryKeyValue, fieldData);
+            _caseService.CreateNewDataRecord(databaseFile, primaryKeyValue, fieldData);
         }
 
         public void UpdateDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, Dictionary<string, string> fieldData,
@@ -368,11 +368,11 @@ namespace Blaise.Nuget.Api
             return _caseService.GetNumberOfCases(connectionModel, instrumentName, serverParkName);
         }
 
-        public int GetNumberOfCases(string filePath)
+        public int GetNumberOfCases(string databaseFile)
         {
-            filePath.ThrowExceptionIfNullOrEmpty("filePath");
+            databaseFile.ThrowExceptionIfNullOrEmpty("databaseFile");
 
-            return _caseService.GetNumberOfCases(filePath);
+            return _caseService.GetNumberOfCases(databaseFile);
         }
 
         public ConnectionModel GetDefaultConnectionModel()

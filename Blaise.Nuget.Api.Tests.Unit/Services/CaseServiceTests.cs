@@ -26,7 +26,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private readonly ConnectionModel _connectionModel;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
-        private readonly string _filePath;
+        private readonly string _databaseFile;
         private readonly string _keyName;
         private readonly SurveyType _surveyType;
 
@@ -37,7 +37,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _connectionModel = new ConnectionModel();
             _instrumentName = "TestInstrumentName";
             _serverParkName = "TestServerParkName";
-            _filePath = "c:\\filePath";
+            _databaseFile = "c:\\filePath\\opn2010.bdbx";
             _keyName = "TestKeyName";
             _surveyType = SurveyType.NotMapped;
         }
@@ -51,7 +51,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             _dataModelServiceMock = new Mock<IDataModelService>();
             _dataModelServiceMock.Setup(d => d.GetDataModel(_connectionModel, _instrumentName, _serverParkName)).Returns(_dataModelMock.Object);
-            _dataModelServiceMock.Setup(d => d.GetDataModel(_filePath)).Returns(_dataModelMock.Object);
+            _dataModelServiceMock.Setup(d => d.GetDataModel(_databaseFile)).Returns(_dataModelMock.Object);
             _dataModelServiceMock.Setup(d => d.GetSurveyType(_connectionModel, _instrumentName, _serverParkName)).Returns(_surveyType);
 
             _keyServiceMock = new Mock<IKeyService>();
@@ -109,7 +109,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataModel_For_Local_Connection_Then_A_DataModel_Is_Returned()
         {
             //act
-            var result = _sut.GetDataModel(_filePath);
+            var result = _sut.GetDataModel(_databaseFile);
 
             //assert
             Assert.NotNull(result);
@@ -120,7 +120,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataModel_For_Local_Connection_Then_The_Correct_DataModel_Is_Returned()
         {
             //act
-            var result = _sut.GetDataModel(_filePath);
+            var result = _sut.GetDataModel(_databaseFile);
 
             //assert
             Assert.AreEqual(_dataModelMock.Object, result);
@@ -130,10 +130,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataModel_For_Local_Connection_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.GetDataModel(_filePath);
+            _sut.GetDataModel(_databaseFile);
 
             //assert
-            _dataModelServiceMock.Verify(v => v.GetDataModel(_filePath), Times.Once);
+            _dataModelServiceMock.Verify(v => v.GetDataModel(_databaseFile), Times.Once);
         }
 
         [Test]
@@ -318,10 +318,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_File_I_Call_GetDataSet_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.GetDataSet(_filePath);
+            _sut.GetDataSet(_databaseFile);
 
             //assert
-            _dataRecordServiceMock.Verify(v => v.GetDataSet(_filePath), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.GetDataSet(_databaseFile), Times.Once);
         }
 
         [Test]
@@ -376,13 +376,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_A_Filepath_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
+        public void Given_A_DatabaseFile_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.GetDataRecord(_keyMock.Object, _filePath);
+            _sut.GetDataRecord(_keyMock.Object, _databaseFile);
 
             //assert
-            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_keyMock.Object, _filePath), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_keyMock.Object, _databaseFile), Times.Once);
         }
 
         [Test]
@@ -396,13 +396,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_A_Filepath_When_I_Call_WriteDataRecord_Then_The_Correct_Services_Are_Called()
+        public void Given_A_DatabseFile_When_I_Call_WriteDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.WriteDataRecord(_dataRecordMock.Object, _filePath);
+            _sut.WriteDataRecord(_dataRecordMock.Object, _databaseFile);
 
             //assert
-            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _filePath), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _databaseFile), Times.Once);
         }
 
         [TestCase(FieldNameType.HOut)]
@@ -497,14 +497,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
                 .Returns(_dataRecordMock.Object);
 
             //act
-            _sut.CreateNewDataRecord(_filePath, primaryKeyValue, fieldData);
+            _sut.CreateNewDataRecord(_databaseFile, primaryKeyValue, fieldData);
 
             //assert
-            _dataModelServiceMock.Verify(v => v.GetDataModel(_filePath), Times.Once);
+            _dataModelServiceMock.Verify(v => v.GetDataModel(_databaseFile), Times.Once);
             _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataModelMock.Object), Times.Once);
             _dataRecordServiceMock.Verify(v => v.GetDataRecord(_dataModelMock.Object), Times.Once);
             _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, _dataModelMock.Object, _keyMock.Object, primaryKeyValue, fieldData), Times.Once);
-            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _filePath), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _databaseFile), Times.Once);
         }
 
         [Test]
@@ -625,10 +625,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_File_I_Call_GetNumberOfCases_For_Local_Connection_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.GetNumberOfCases(_filePath);
+            _sut.GetNumberOfCases(_databaseFile);
 
             //assert
-            _dataRecordServiceMock.Verify(v => v.GetNumberOfRecords(_filePath), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.GetNumberOfRecords(_databaseFile), Times.Once);
         }
 
         [Test]
@@ -637,10 +637,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //arrange
             var numberOfCases = 5;
             _dataRecordServiceMock.Setup(dr => dr.GetNumberOfRecords(
-                _filePath)).Returns(numberOfCases);
+                _databaseFile)).Returns(numberOfCases);
 
             //act
-            var result = _sut.GetNumberOfCases(_filePath);
+            var result = _sut.GetNumberOfCases(_databaseFile);
 
             //assert
             Assert.NotNull(result);
