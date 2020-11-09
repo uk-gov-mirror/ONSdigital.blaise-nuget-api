@@ -25,14 +25,14 @@ namespace Blaise.Nuget.Api.Core.Services
             _configurationProvider = configurationProvider;
         }
 
-        public bool DatabaseFileExists(string filePath, string instrumentName)
+        public bool DatabaseFileExists(string databaseFile, string instrumentName)
         {
-            return File.Exists(Path.Combine(filePath, $"{instrumentName}.{DatabaseSourceExt}"));
+            return File.Exists(Path.Combine(databaseFile, $"{instrumentName}.{DatabaseSourceExt}"));
         }
         
-        public void DeleteDatabaseFile(string filePath, string instrumentName)
+        public void DeleteDatabaseFile(string databaseFile, string instrumentName)
         {
-            File.Delete(Path.Combine(filePath, $"{instrumentName}.{DatabaseSourceExt}"));
+            File.Delete(Path.Combine(databaseFile, $"{instrumentName}.{DatabaseSourceExt}"));
         }
 
         public string CreateDatabaseFile(string metaFileName, string filePath, string instrumentName)

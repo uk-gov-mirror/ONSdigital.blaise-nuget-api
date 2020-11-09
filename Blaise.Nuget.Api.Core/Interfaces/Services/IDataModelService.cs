@@ -8,7 +8,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
     {
         IDatamodel GetDataModel(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
-        IDatamodel GetDataModel(string filePath);
+        IDatamodel GetDataModel(string databaseFile);
 
         SurveyType GetSurveyType(ConnectionModel connectionModel, string instrumentName, string serverParkName);
     }
