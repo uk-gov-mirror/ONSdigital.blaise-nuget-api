@@ -8,6 +8,6 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         void DeleteDatabaseFile(string databaseFile, string instrumentName);
 
-        string CreateDatabaseFile(string metaFileName, string filePath, string instrumentName);
+        string CreateDatabaseFile(string metaFileName, string outputPath, string instrumentName);
     }
 }

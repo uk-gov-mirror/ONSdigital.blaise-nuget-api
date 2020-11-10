@@ -1,6 +1,5 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Exceptions;
@@ -29,18 +28,18 @@ namespace Blaise.Nuget.Api.Core.Services
         {
             return File.Exists(Path.Combine(databaseFile, $"{instrumentName}.{DatabaseSourceExt}"));
         }
-        
+
         public void DeleteDatabaseFile(string databaseFile, string instrumentName)
         {
             File.Delete(Path.Combine(databaseFile, $"{instrumentName}.{DatabaseSourceExt}"));
         }
 
-        public string CreateDatabaseFile(string metaFileName, string filePath, string instrumentName)
+        public string CreateDatabaseFile(string metaFileName, string outputPath, string instrumentName)
         {
-            CopyLibraryFiles(_configurationProvider.LibraryDirectory, filePath);
+            CopyLibraryFiles(_configurationProvider.LibraryDirectory, outputPath);
 
-            Directory.CreateDirectory(filePath);
-            var fileNameToCopy = GetFullFilePath(filePath, instrumentName, DatabaseModelExt);
+            Directory.CreateDirectory(outputPath);
+            var fileNameToCopy = GetFullFilePath(outputPath, instrumentName, DatabaseModelExt);
             File.Copy(metaFileName, fileNameToCopy, true);
 
             var dataInterface = DataInterfaceManager.GetDataInterface();
@@ -48,15 +47,34 @@ namespace Blaise.Nuget.Api.Core.Services
             dataInterface.ConnectionInfo.DataProviderType = DataProviderType.BlaiseDataProviderForDotNET;
             dataInterface.DataPartitionType = DataPartitionType.Stream;
             var connectionBuilder = DataInterfaceManager.GetBlaiseConnectionStringBuilder();
-            connectionBuilder.DataSource = GetFullFilePath(filePath, instrumentName, DatabaseSourceExt);
+            connectionBuilder.DataSource = GetFullFilePath(outputPath, instrumentName, DatabaseSourceExt);
             dataInterface.ConnectionInfo.SetConnectionString(connectionBuilder.ConnectionString);
-            dataInterface.DatamodelFileName = GetFullFilePath(filePath, instrumentName, DatabaseModelExt);
-            dataInterface.FileName = GetFullFilePath(filePath, instrumentName, DatabaseFileNameExt);
+            dataInterface.DatamodelFileName = GetFullFilePath(outputPath, instrumentName, DatabaseModelExt);
+            dataInterface.FileName = GetFullFilePath(outputPath, instrumentName, DatabaseFileNameExt);
             dataInterface.CreateTableDefinitions();
             dataInterface.CreateDatabaseObjects(null, true);
             dataInterface.SaveToFile(true);
 
+            //yuck!
+            OverwriteDatabaseFileToAvoidFixedDirectoryIssue(metaFileName, outputPath, instrumentName);
+                
             return dataInterface.FileName;
+        }
+
+        //fml
+        private static void OverwriteDatabaseFileToAvoidFixedDirectoryIssue(string metaFileName, string filePath, string instrumentName)
+        {
+            var sourcePath = Path.GetDirectoryName(metaFileName);
+
+            if (string.IsNullOrWhiteSpace(sourcePath))
+            {
+                throw new ArgumentException($"Could not find the path of the file '{metaFileName}'");
+            }
+
+            var sourceDatabaseFile = GetFullFilePath(sourcePath, instrumentName, DatabaseFileNameExt);
+            var destDatabaseFile = GetFullFilePath(filePath, instrumentName, DatabaseFileNameExt);
+
+            File.Copy(sourceDatabaseFile, destDatabaseFile, true);
         }
 
         private static string GetFullFilePath(string filePath, string instrumentName, string extension)
@@ -84,7 +102,7 @@ namespace Blaise.Nuget.Api.Core.Services
             {
                 if (FileIsLocked(libraryFile))
                 {
-                   throw new AccessViolationException($"Could not copy file {libraryFile} as it is locked");
+                    throw new AccessViolationException($"Could not copy file {libraryFile} as it is locked");
                 }
 
                 var destinationFile = Path.Combine(destinationPath, Path.GetFileName(libraryFile));
