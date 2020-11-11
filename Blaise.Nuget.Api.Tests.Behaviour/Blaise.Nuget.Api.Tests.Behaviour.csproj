@@ -8,8 +8,8 @@
     <ProjectGuid>{F5F7F6A0-7D9A-47E6-B4A8-7493E70C2C5E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Blaise.Nuget.Api.Tests.Behavior</RootNamespace>
-    <AssemblyName>Blaise.Nuget.Api.Tests.Behavior</AssemblyName>
+    <RootNamespace>Blaise.Nuget.Api.Tests.Behaviour</RootNamespace>
+    <AssemblyName>Blaise.Nuget.Api.Tests.Behaviour</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

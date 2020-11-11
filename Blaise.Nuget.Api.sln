@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaise.Nuget.Api.Core", "Bl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaise.Nuget.Api.Tests.Unit", "Blaise.Nuget.Api.Tests.Unit\Blaise.Nuget.Api.Tests.Unit.csproj", "{455E87E1-3EBB-4231-9AD7-D3349B9A3D11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaise.Nuget.Api.Tests.Behavior", "Blaise.Nuget.Api.Tests.Behavior\Blaise.Nuget.Api.Tests.Behavior.csproj", "{F5F7F6A0-7D9A-47E6-B4A8-7493E70C2C5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaise.Nuget.Api.Tests.Behaviour", "Blaise.Nuget.Api.Tests.Behaviour\Blaise.Nuget.Api.Tests.Behaviour.csproj", "{F5F7F6A0-7D9A-47E6-B4A8-7493E70C2C5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
