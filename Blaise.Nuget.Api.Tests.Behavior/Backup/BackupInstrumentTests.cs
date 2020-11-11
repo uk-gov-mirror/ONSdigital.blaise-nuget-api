@@ -11,6 +11,7 @@ namespace Blaise.Nuget.Api.Tests.Behavior.Backup
             _sut = new BlaiseApi();
         }
 
+        [Ignore("")]
         [Test]
         public void Given_A_Valid_Instrument_When_I_Call_BackupToFile_Then_An_Instrument_Is_Backed_Up_To_File()
         {
