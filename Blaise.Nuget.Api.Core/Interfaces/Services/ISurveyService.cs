@@ -7,7 +7,8 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 {
     public interface ISurveyService
     {
-
+        void InstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentPath);
+        void UninstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentName);
         IEnumerable<string> GetSurveyNames(ConnectionModel connectionModel, string serverParkName);
 
         bool SurveyExists(ConnectionModel connectionModel, string instrumentName, string serverParkName);

@@ -26,6 +26,10 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IEnumerable<ISurvey> GetAllSurveys(ConnectionModel connectionModel);
 
+        void InstallSurvey(ConnectionModel connectionModel, string serverParkName, string fullInstrumentFilePath);
+
+        void UninstallSurvey(ConnectionModel connectionModel, string serverParkName, string instrumentName);
+
         bool ServerParkExists(ConnectionModel connectionModel, string serverParkName);
 
         Guid GetInstrumentId(ConnectionModel connectionModel, string instrumentName, string serverParkName);
