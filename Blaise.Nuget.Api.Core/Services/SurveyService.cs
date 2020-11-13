@@ -22,6 +22,31 @@ namespace Blaise.Nuget.Api.Core.Services
             _dayBatchService = dayBatchService;
         }
 
+        public void InstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentPath)
+        {
+            var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
+
+            serverPark.InstallSurvey(instrumentPath);
+        }
+
+        public void InstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentPath, string layoutSetGroupName,
+                                        string dataEntrySettingName, DataOverwriteMode dataOverwriteMode)
+        {
+            var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
+            serverPark.InstallSurvey(instrumentPath, layoutSetGroupName, dataEntrySettingName, dataOverwriteMode);
+        }
+
+        public void UninstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentName)
+        {
+            var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
+            var instrumentGuid = GetInstrumentId(connectionModel, instrumentName, serverParkName);
+            if(instrumentGuid == null)
+            {
+                throw new DataNotFoundException($"The instrument '{instrumentName}' not found on '{serverParkName}'");
+            }
+            serverPark.RemoveSurvey(instrumentGuid);
+        }
+
         public IEnumerable<string> GetSurveyNames(ConnectionModel connectionModel, string serverParkName)
         {
             var surveys = GetSurveys(connectionModel, serverParkName);

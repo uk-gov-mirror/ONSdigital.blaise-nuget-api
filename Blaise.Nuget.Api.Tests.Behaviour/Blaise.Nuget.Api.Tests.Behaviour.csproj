@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Backup\BackupInstrumentTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Survey\SurveyTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -79,6 +80,10 @@
     <ProjectReference Include="..\Blaise.Nuget.Api.Contracts\Blaise.Nuget.Api.Contracts.csproj">
       <Project>{246051e9-49be-4001-9508-b73839d28dc9}</Project>
       <Name>Blaise.Nuget.Api.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Blaise.Nuget.Api.Core\Blaise.Nuget.Api.Core.csproj">
+      <Project>{0229D577-14D0-4B08-95CB-55EDC837BC0D}</Project>
+      <Name>Blaise.Nuget.Api.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Blaise.Nuget.Api\Blaise.Nuget.Api.csproj">
       <Project>{0e6396dc-d598-4027-a384-15fc543d23b0}</Project>

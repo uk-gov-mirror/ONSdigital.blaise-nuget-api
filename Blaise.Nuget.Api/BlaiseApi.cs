@@ -105,6 +105,23 @@ namespace Blaise.Nuget.Api
             return _surveyService.GetSurveys(connectionModel, serverParkName);
         }
 
+        public void InstallSurvey(ConnectionModel connectionModel, string serverParkName, string fullInstrumentFilePath)
+        {
+            connectionModel.ThrowExceptionIfNull("connectionModel");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            _surveyService.InstallInstrument(connectionModel, serverParkName, fullInstrumentFilePath);
+        }
+
+        public void UninstallSurvey(ConnectionModel connectionModel, string serverParkName, string instrumentName)
+        {
+            connectionModel.ThrowExceptionIfNull("connectionModel");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+
+            _surveyService.UninstallInstrument(connectionModel, serverParkName, instrumentName);
+        }
+
         public bool ServerParkExists(ConnectionModel connectionModel, string serverParkName)
         {
             connectionModel.ThrowExceptionIfNull("connectionModel");
