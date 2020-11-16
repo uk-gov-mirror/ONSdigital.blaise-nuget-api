@@ -1,5 +1,4 @@
 ﻿using System;
-using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
@@ -13,7 +12,7 @@ namespace Blaise.Nuget.Api.Core.Services
         private readonly ILocalDataLinkProvider _localDataLinkProvider;
 
         public DataModelService(
-            IRemoteDataLinkProvider remoteDataLinkProvider, 
+            IRemoteDataLinkProvider remoteDataLinkProvider,
             ILocalDataLinkProvider localDataLinkProvider)
         {
             _remoteDataLinkProvider = remoteDataLinkProvider;
@@ -42,21 +41,6 @@ namespace Blaise.Nuget.Api.Core.Services
             }
 
             return dataLink.Datamodel;
-        }
-
-        public SurveyType GetSurveyType(ConnectionModel connectionModel, string instrumentName, string serverParkName)
-        {
-            var dataModel = GetDataModel(connectionModel, instrumentName, serverParkName);
-
-            switch (dataModel.Name)
-            {
-                case "Appointment":
-                    return SurveyType.Appointment;
-                case "CatiDial":
-                    return SurveyType.CatiDial;
-                default:
-                    return SurveyType.NotMapped;
-            }
         }
     }
 }

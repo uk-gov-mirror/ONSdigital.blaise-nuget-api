@@ -28,7 +28,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private readonly string _serverParkName;
         private readonly string _databaseFile;
         private readonly string _keyName;
-        private readonly SurveyType _surveyType;
+
 
         private CaseService _sut;
 
@@ -39,7 +39,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _serverParkName = "TestServerParkName";
             _databaseFile = "c:\\filePath\\opn2010.bdbx";
             _keyName = "TestKeyName";
-            _surveyType = SurveyType.NotMapped;
         }
 
         [SetUp]
@@ -52,7 +51,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataModelServiceMock = new Mock<IDataModelService>();
             _dataModelServiceMock.Setup(d => d.GetDataModel(_connectionModel, _instrumentName, _serverParkName)).Returns(_dataModelMock.Object);
             _dataModelServiceMock.Setup(d => d.GetDataModel(_databaseFile)).Returns(_dataModelMock.Object);
-            _dataModelServiceMock.Setup(d => d.GetSurveyType(_connectionModel, _instrumentName, _serverParkName)).Returns(_surveyType);
 
             _keyServiceMock = new Mock<IKeyService>();
             _keyServiceMock.Setup(d => d.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName)).Returns(true);
@@ -135,38 +133,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //assert
             _dataModelServiceMock.Verify(v => v.GetDataModel(_databaseFile), Times.Once);
         }
-
-        [Test]
-        public void Given_I_Call_GetSurveyType_Then_A_SurveyType_Is_Returned()
-        {
-            //act
-            var result = _sut.GetSurveyType(_connectionModel, _instrumentName, _serverParkName);
-
-            //assert
-            Assert.NotNull(result);
-            Assert.IsInstanceOf<SurveyType>(result);
-        }
-
-        [Test]
-        public void Given_I_Call_GetSurveyType_Then_The_Correct_SurveyType_Is_Returned()
-        {
-            //act
-            var result = _sut.GetSurveyType(_connectionModel, _instrumentName, _serverParkName);
-
-            //assert
-            Assert.AreEqual(_surveyType, result);
-        }
-
-        [Test]
-        public void Given_I_Call_GetSurveyType_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.GetSurveyType(_connectionModel, _instrumentName, _serverParkName);
-
-            //assert
-            _dataModelServiceMock.Verify(v => v.GetSurveyType(_connectionModel, _instrumentName, _serverParkName), Times.Once);
-        }
-
+        
         [Test]
         public void Given_I_Call_GetKey_Then_A_Key_Is_Returned()
         {

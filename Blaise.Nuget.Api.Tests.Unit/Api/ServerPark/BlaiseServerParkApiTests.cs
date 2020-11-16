@@ -2,28 +2,21 @@
 using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
-using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.ServerManager;
 
-namespace Blaise.Nuget.Api.Tests.Unit.Api
+namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
 {
-    public class ServerParkTests
+    public class BlaiseServerParkApiTests
     {
-        private Mock<ICaseService> _caseServiceMock;
         private Mock<IParkService> _parkServiceMock;
-        private Mock<ISurveyService> _surveyServiceMock;
-        private Mock<IUserService> _userServiceMock;
-        private Mock<IFileService> _fileServiceMock;
-        private Mock<IConfigurationProvider> _configurationProviderMock;
-
         private readonly ConnectionModel _connectionModel;
 
-        private IBlaiseApi _sut;
+        private IBlaiseServerParkApi _sut;
 
-        public ServerParkTests()
+        public BlaiseServerParkApiTests()
         {
             _connectionModel = new ConnectionModel();
         }
@@ -31,20 +24,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         [SetUp]
         public void SetUpTests()
         {
-            _caseServiceMock = new Mock<ICaseService>();
             _parkServiceMock = new Mock<IParkService>();
-            _surveyServiceMock = new Mock<ISurveyService>();
-            _userServiceMock = new Mock<IUserService>();
-            _fileServiceMock = new Mock<IFileService>();
-            _configurationProviderMock = new Mock<IConfigurationProvider>();
-
-            _sut = new BlaiseApi(
-                _caseServiceMock.Object,
+            _sut = new BlaiseServerParkApi(
                 _parkServiceMock.Object,
-                _surveyServiceMock.Object,
-                _userServiceMock.Object,
-                _fileServiceMock.Object,
-                _configurationProviderMock.Object);
+                _connectionModel);
         }
         [Test]
         public void When_I_Call_GetServerPark_Then_The_Correct_Service_Method_Is_Called()
@@ -56,7 +39,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, serverParkName)).Returns(serverParkMock.Object);
 
             //act
-            _sut.GetServerPark(_connectionModel, serverParkName);
+            _sut.GetServerPark(serverParkName);
 
             //assert
             _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, serverParkName), Times.Once);
@@ -72,7 +55,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, serverParkName)).Returns(serverParkMock.Object);
 
             //act
-            var result =_sut.GetServerPark(_connectionModel, serverParkName);
+            var result =_sut.GetServerPark(serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -80,21 +63,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         }
 
         [Test]
-        public void Given_A_Null_ConnectionModel_When_I_Call_GetServerPark_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange
-            var serverParkName = "Park1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetServerPark(null, serverParkName));
-            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
-        }
-
-        [Test]
         public void Given_An_Empty_ServerParkName_When_I_Call_GetServerPark_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.GetServerPark(_connectionModel, string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetServerPark(string.Empty));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
@@ -102,7 +74,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_ServerParkName_When_I_Call_GetServerPark_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetServerPark(_connectionModel, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetServerPark(null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
@@ -118,7 +90,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _parkServiceMock.Setup(p => p.GetServerParks(_connectionModel)).Returns(serverParkItems);
 
             //act
-            _sut.GetServerParks(_connectionModel);
+            _sut.GetServerParks();
 
             //assert
             _parkServiceMock.Verify(v => v.GetServerParks(_connectionModel), Times.Once);
@@ -136,7 +108,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _parkServiceMock.Setup(p => p.GetServerParks(_connectionModel)).Returns(serverParkItems);
 
             //act
-            var result = _sut.GetServerParks(_connectionModel);
+            var result = _sut.GetServerParks();
 
             //assert
             Assert.NotNull(result);
@@ -144,28 +116,20 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         }
 
         [Test]
-        public void Given_A_Null_ConnectionModel_When_I_Call_GetServerParks_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetServerParks(null));
-            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
-        }
-
-        [Test]
-        public void When_I_Call_GetServerParkNames_Then_The_Correct_Service_Method_Is_Called()
+        public void When_I_Call_GetNamesOfServerParks_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
             _parkServiceMock.Setup(p => p.GetServerParkNames(_connectionModel)).Returns(It.IsAny<List<string>>());
 
             //act
-            _sut.GetServerParkNames(_connectionModel);
+            _sut.GetNamesOfServerParks();
 
             //assert
             _parkServiceMock.Verify(v => v.GetServerParkNames(_connectionModel), Times.Once);
         }
 
         [Test]
-        public void When_I_Call_GetServerParkNames_Then_The_Expected_Server_Park_Names_Are_Returned()
+        public void When_I_Call_GetNamesOfServerParks_Then_The_Expected_Server_Park_Names_Are_Returned()
         {
             //arrange
             var serverParksNames = new List<string> { "Park1", "Park2" };
@@ -173,19 +137,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _parkServiceMock.Setup(p => p.GetServerParkNames(_connectionModel)).Returns(serverParksNames);
 
             //act
-            var result = _sut.GetServerParkNames(_connectionModel);
+            var result = _sut.GetNamesOfServerParks();
 
             //assert
             Assert.IsNotNull(result);
             Assert.AreSame(serverParksNames, result);
-        }
-
-        [Test]
-        public void Given_A_Null_ConnectionModel_When_I_Call_GetServerParkNames_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetServerParkNames(null));
-            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
         }
 
         [Test]
@@ -197,7 +153,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _parkServiceMock.Setup(p => p.ServerParkExists(_connectionModel, It.IsAny<string>())).Returns(It.IsAny<bool>());
 
             //act
-            _sut.ServerParkExists(_connectionModel, serverParkName);
+            _sut.ServerParkExists(serverParkName);
 
             //assert
             _parkServiceMock.Verify(v => v.ServerParkExists(_connectionModel, serverParkName), Times.Once);
@@ -213,7 +169,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
             _parkServiceMock.Setup(p => p.ServerParkExists(_connectionModel, serverParkName)).Returns(serverParkExists);
 
             //act
-            var result = _sut.ServerParkExists(_connectionModel, serverParkName);
+            var result = _sut.ServerParkExists(serverParkName);
 
             //assert
             Assert.IsNotNull(result);
@@ -221,21 +177,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         }
 
         [Test]
-        public void Given_A_Null_ConnectionModel_When_I_Call_ServerParkExists_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange
-            var serverParkName = "Park1";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ServerParkExists(null, serverParkName));
-            Assert.AreEqual("The argument 'connectionModel' must be supplied", exception.ParamName);
-        }
-
-        [Test]
         public void Given_An_Empty_ServerParkName_When_I_Call_ServerParkExists_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.ServerParkExists(_connectionModel, string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.ServerParkExists(string.Empty));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
@@ -243,7 +188,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api
         public void Given_A_Null_ServerParkName_When_I_Call_ServerParkExists_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ServerParkExists(_connectionModel, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ServerParkExists(null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
     }
