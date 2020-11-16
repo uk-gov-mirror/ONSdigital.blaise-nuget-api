@@ -34,7 +34,7 @@ namespace Blaise.Nuget.Api
             _connectionModel = connectionModel ?? configurationProvider.GetConnectionModel();
         }
 
-        public bool SurveyExistsOnServerPark(string instrumentName, string serverParkName)
+        public bool SurveyExists(string instrumentName, string serverParkName)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
@@ -42,26 +42,26 @@ namespace Blaise.Nuget.Api
             return _surveyService.SurveyExists(_connectionModel, instrumentName, serverParkName);
         }
 
-        public IEnumerable<ISurvey> GetSurveysInstalled()
+        public IEnumerable<ISurvey> GetSurveysAcrossServerParks()
         {
             return _surveyService.GetAllSurveys(_connectionModel);
         }
 
-        public IEnumerable<ISurvey> GetSurveysInstalledOnServerPark(string serverParkName)
+        public IEnumerable<ISurvey> GetSurveys(string serverParkName)
         { 
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             return _surveyService.GetSurveys(_connectionModel, serverParkName);
         }
 
-        public IEnumerable<string> GetNamesOfSurveysInstalledOnServerPark(string serverParkName)
+        public IEnumerable<string> GetNamesOfSurveys(string serverParkName)
         {
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             return _surveyService.GetSurveyNames(_connectionModel, serverParkName);
         }
 
-        public Guid GetIdOfSurveyInstalledOnServerPark(string instrumentName, string serverParkName)
+        public Guid GetIdOfSurvey(string instrumentName, string serverParkName)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
@@ -69,7 +69,7 @@ namespace Blaise.Nuget.Api
             return _surveyService.GetInstrumentId(_connectionModel, instrumentName, serverParkName);
         }
 
-        public void InstallSurveyOnServerPark(string serverParkName, string instrumentFile)
+        public void InstallSurvey(string serverParkName, string instrumentFile)
         {
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
             instrumentFile.ThrowExceptionIfNullOrEmpty("instrumentFile");
@@ -77,7 +77,7 @@ namespace Blaise.Nuget.Api
             _surveyService.InstallInstrument(_connectionModel, serverParkName, instrumentFile);
         }
 
-        public void UninstallSurveyFromServerPark(string serverParkName, string instrumentName)
+        public void UninstallSurvey(string serverParkName, string instrumentName)
         {
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
@@ -85,7 +85,7 @@ namespace Blaise.Nuget.Api
             _surveyService.UninstallInstrument(_connectionModel, serverParkName, instrumentName);
         }
 
-        public void CreateDayBatchForSurveyInstalledOnServerPark(string instrumentName, string serverParkName, DateTime dayBatchDate)
+        public void CreateDayBatch(string instrumentName, string serverParkName, DateTime dayBatchDate)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
