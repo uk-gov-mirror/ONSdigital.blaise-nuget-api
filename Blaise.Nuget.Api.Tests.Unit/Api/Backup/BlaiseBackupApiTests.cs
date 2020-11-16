@@ -7,7 +7,7 @@ using NUnit.Framework;
 using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 
-namespace Blaise.Nuget.Api.Tests.Unit.Backup
+namespace Blaise.Nuget.Api.Tests.Unit.Api.Backup
 {
     public class BlaiseBackupApiTests
     {

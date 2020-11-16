@@ -41,11 +41,6 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataModelService.GetDataModel(databaseFile);
         }
 
-        public SurveyType GetSurveyType(ConnectionModel connectionModel, string instrumentName, string serverParkName)
-        {
-            return _dataModelService.GetSurveyType(connectionModel, instrumentName, serverParkName);
-        }
-
         public IKey GetKey(IDatamodel dataModel, string keyName)
         {
             return _keyService.GetKey(dataModel, keyName);

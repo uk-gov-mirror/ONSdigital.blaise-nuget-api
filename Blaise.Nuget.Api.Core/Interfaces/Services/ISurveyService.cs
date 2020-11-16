@@ -7,8 +7,6 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 {
     public interface ISurveyService
     {
-        void InstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentPath);
-        void UninstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentName);
         IEnumerable<string> GetSurveyNames(ConnectionModel connectionModel, string serverParkName);
 
         bool SurveyExists(ConnectionModel connectionModel, string instrumentName, string serverParkName);
@@ -19,6 +17,10 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         Guid GetInstrumentId(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         string GetMetaFileName(ConnectionModel connectionModel, string instrumentName, string serverParkName);
+        
+        void InstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentFile);
+        
+        void UninstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentName);
 
         void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayBatchDate);
     }

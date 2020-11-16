@@ -1,25 +1,18 @@
-﻿using Blaise.Nuget.Api.Core.Interfaces;
-using Blaise.Nuget.Api.Core.Interfaces.Services;
-using Blaise.Nuget.Api.Core.Services;
+﻿using System.Linq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
 {
     public class SurveyTests
     {
-        private readonly BlaiseApi _sut;
+        private readonly BlaiseSurveyApi _sut;
 
         private readonly string serverParkName = "LocalDevelopment";
         private readonly string fullInstrumentPath = @"C:\Users\User\Downloads\OPN2101A.zip";
         private readonly string surveyName = "OPN2101A";
         public SurveyTests()
         {
-            _sut = new BlaiseApi();
+            _sut = new BlaiseSurveyApi();
         }
 
         [Test]
@@ -29,27 +22,27 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
             
 
             //act
-            _sut.InstallSurvey(_sut.GetDefaultConnectionModel(), serverParkName, fullInstrumentPath);
+            _sut.InstallSurveyOnServerPark(serverParkName, fullInstrumentPath);
 
             //assert
-            var surveys = _sut.GetAllSurveys(_sut.GetDefaultConnectionModel()).ToList();
-            Assert.IsNotNull(surveys.Where(s => s.Name == surveyName).First());
+            var surveys = _sut.GetSurveysInstalledOnServerPark(serverParkName).ToList();
+            Assert.IsNotNull(surveys.First(s => s.Name == surveyName));
         }
 
         [Test]
         public void Given_An_Instrument_Is_Installed_It_Gets_Unistalled_From_The_Server_Park()
         {
             //arrange
-            _sut.InstallSurvey(_sut.GetDefaultConnectionModel(), serverParkName, fullInstrumentPath);
-            var surveys = _sut.GetAllSurveys(_sut.GetDefaultConnectionModel()).ToList();
-            Assert.IsNotNull(surveys.Where(s => s.Name == surveyName).First());
+            _sut.InstallSurveyOnServerPark(serverParkName, fullInstrumentPath);
+            var surveys = _sut.GetSurveysInstalledOnServerPark(serverParkName).ToList();
+            Assert.IsNotNull(surveys.First(s => s.Name == surveyName));
 
-            //act
-            _sut.UninstallSurvey(_sut.GetDefaultConnectionModel(), serverParkName, surveyName);
+            //act_sut.GetDefaultConnectionModel(), 
+            _sut.UninstallSurveyFromServerPark(serverParkName, surveyName);
 
             //assert
-            var surveysInstalled = _sut.GetAllSurveys(_sut.GetDefaultConnectionModel()).ToList();
-            Assert.IsNull(surveysInstalled.Where(s => s.Name == surveyName).FirstOrDefault());
+            var surveysInstalled = _sut.GetSurveysInstalledOnServerPark(serverParkName).ToList();
+            Assert.IsNull(surveysInstalled.FirstOrDefault(s => s.Name == surveyName));
         }
     }
 }

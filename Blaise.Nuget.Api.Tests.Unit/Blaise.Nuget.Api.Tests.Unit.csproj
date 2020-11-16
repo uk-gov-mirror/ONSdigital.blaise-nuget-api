@@ -64,13 +64,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\DataTests.cs" />
-    <Compile Include="Api\ConfigurationModelTests.cs" />
-    <Compile Include="Api\FileBackupTests.cs" />
-    <Compile Include="Api\DayBatchTests.cs" />
-    <Compile Include="Api\UserTests.cs" />
-    <Compile Include="Api\SurveyTests.cs" />
-    <Compile Include="Api\ServerParkTests.cs" />
+    <Compile Include="Api\Case\BlaiseCaseApiTests.cs" />
+    <Compile Include="Api\Backup\BlaiseBackupApiTests.cs" />
+    <Compile Include="Api\User\BlaiseUserApiTests.cs" />
+    <Compile Include="Api\Survey\BlaiseSurveyApiTests.cs" />
+    <Compile Include="Api\ServerPark\BlaiseServerParkApiTests.cs" />
     <Compile Include="BlaiseApiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ConfigurationProviderTests.cs" />

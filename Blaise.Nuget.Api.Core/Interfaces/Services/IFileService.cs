@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Blaise.Nuget.Api.Core.Interfaces.Services
+﻿namespace Blaise.Nuget.Api.Core.Interfaces.Services
 {
     public interface IFileService
     {

@@ -8,8 +8,6 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 {
     public interface ICaseService
     {
-        SurveyType GetSurveyType(ConnectionModel connectionModel, string instrumentName, string serverParkName);
-
         bool CaseExists(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName);
 
         string GetPrimaryKeyValue(IDataRecord dataRecord);

@@ -1,5 +1,4 @@
 ﻿using System;
-using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Services;
@@ -134,33 +133,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _localDataLinkProviderMock.Verify(v => v.GetDataLink(_databaseFile), Times.Once);
-            _dataLinkMock.Verify(v => v.Datamodel, Times.AtLeastOnce);
-        }
-
-        [TestCase("Appointment", SurveyType.Appointment)]
-        [TestCase("CatiDial", SurveyType.CatiDial)]
-        [TestCase("",SurveyType.NotMapped)]
-        [TestCase("Other", SurveyType.NotMapped)]
-        public void Given_I_Call_GetSurveyType_I_Get_The_Correct_Type_Back(string caseName, SurveyType surveyType)
-        {
-            //arrange
-            _dataModelMock.Setup(d => d.Name).Returns(caseName);
-
-            //act
-            var result = _sut.GetSurveyType(_connectionModel, _instrumentName, _serverParkName);
-
-            //assert
-            Assert.AreEqual(surveyType, result);
-        }
-
-        [Test]
-        public void Given_I_Call_GetSurveyType_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.GetSurveyType(_connectionModel, _instrumentName, _serverParkName);
-
-            //assert
-            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);
             _dataLinkMock.Verify(v => v.Datamodel, Times.AtLeastOnce);
         }
     }

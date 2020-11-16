@@ -4,11 +4,11 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
 {
     public class BackupInstrumentTests
     {
-        private readonly BlaiseApi _sut;
+        private readonly BlaiseBackupApi _sut;
 
         public BackupInstrumentTests()
         {
-            _sut = new BlaiseApi();
+            _sut = new BlaiseBackupApi();
         }
 
         //[Ignore("")]
@@ -21,7 +21,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
             var outputPath = @"d:\temp\backup";
 
             //act
-            _sut.BackupSurveyToFile(_sut.GetDefaultConnectionModel(), serverParkName, instrumentName, outputPath);
+            _sut.BackupSurveyToFile(serverParkName, instrumentName, outputPath);
 
             //arrange
         }
