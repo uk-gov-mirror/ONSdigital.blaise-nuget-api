@@ -6,20 +6,20 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IBlaiseSurveyApi
     {
-        bool SurveyExistsOnServerPark(string instrumentName, string serverParkName);
+        bool SurveyExists(string instrumentName, string serverParkName);
 
-        IEnumerable<ISurvey> GetSurveysInstalled();
+        IEnumerable<ISurvey> GetSurveysAcrossServerParks();
 
-        IEnumerable<ISurvey> GetSurveysInstalledOnServerPark(string serverParkName);
+        IEnumerable<ISurvey> GetSurveys(string serverParkName);
 
-        IEnumerable<string> GetNamesOfSurveysInstalledOnServerPark(string serverParkName);
+        IEnumerable<string> GetNamesOfSurveys(string serverParkName);
 
-        Guid GetIdOfSurveyInstalledOnServerPark(string instrumentName, string serverParkName);
+        Guid GetIdOfSurvey(string instrumentName, string serverParkName);
 
-        void InstallSurveyOnServerPark(string serverParkName, string instrumentFile);
+        void InstallSurvey(string serverParkName, string instrumentFile);
 
-        void UninstallSurveyFromServerPark(string serverParkName, string instrumentName);
+        void UninstallSurvey(string serverParkName, string instrumentName);
 
-        void CreateDayBatchForSurveyInstalledOnServerPark(string instrumentName, string serverParkName, DateTime dayBatchDate);
+        void CreateDayBatch(string instrumentName, string serverParkName, DateTime dayBatchDate);
     }
 }

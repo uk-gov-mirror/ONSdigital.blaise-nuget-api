@@ -50,8 +50,7 @@ namespace Blaise.Nuget.Api
             return _parkService.GetServerParkNames(_connectionModel);
         }
 
-       
-        public bool ServerParkExists(string serverParkName)
+       public bool ServerParkExists(string serverParkName)
         {
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
