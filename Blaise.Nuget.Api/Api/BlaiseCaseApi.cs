@@ -1,15 +1,15 @@
-﻿using Blaise.Nuget.Api.Helpers;
-using Blaise.Nuget.Api.Providers;
-using StatNeth.Blaise.API.DataRecord;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
-using StatNeth.Blaise.API.DataLink;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
+using Blaise.Nuget.Api.Helpers;
+using Blaise.Nuget.Api.Providers;
+using StatNeth.Blaise.API.DataLink;
+using StatNeth.Blaise.API.DataRecord;
 
-namespace Blaise.Nuget.Api
+namespace Blaise.Nuget.Api.Api
 {
     public class BlaiseCaseApi : IBlaiseCaseApi
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blaise.Nuget.Api.Api;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
@@ -40,7 +41,23 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
                 _caseServiceMock.Object,
                 _connectionModel);
         }
-        
+
+        [Test]
+        public void Given_No_ConnectionModel_When_I_Instantiate_BlaiseCaseApi_No_Exceptions_Are_Thrown()
+        {
+            //act && assert
+            // ReSharper disable once ObjectCreationAsStatement
+            Assert.DoesNotThrow(() => new BlaiseCaseApi());
+        }
+
+        [Test]
+        public void Given_A_ConnectionModel_When_I_Instantiate_BlaiseCaseApi_No_Exceptions_Are_Thrown()
+        {
+            //act && assert
+            // ReSharper disable once ObjectCreationAsStatement
+            Assert.DoesNotThrow(() => new BlaiseCaseApi(new ConnectionModel()));
+        }
+
         [Test]
         public void Given_Valid_Arguments_When_I_Call_CaseExists_Then_The_Correct_Service_Method_Is_Called()
         {

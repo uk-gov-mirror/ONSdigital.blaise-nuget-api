@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blaise.Nuget.Api.Api;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
@@ -24,6 +25,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.User
             _userName = "User1";
             _password = "Password1";
         }
+
         [SetUp]
         public void SetUpTests()
         {
@@ -32,6 +34,22 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.User
             _sut = new BlaiseUserApi(
                 _userServiceMock.Object,
                 _connectionModel);
+        }
+
+        [Test]
+        public void Given_No_ConnectionModel_When_I_Instantiate_BlaiseUserApi_No_Exceptions_Are_Thrown()
+        {
+            //act && assert
+            // ReSharper disable once ObjectCreationAsStatement
+            Assert.DoesNotThrow(() => new BlaiseUserApi());
+        }
+
+        [Test]
+        public void Given_A_ConnectionModel_When_I_Instantiate_BlaiseUserApi_No_Exceptions_Are_Thrown()
+        {
+            //act && assert
+            // ReSharper disable once ObjectCreationAsStatement
+            Assert.DoesNotThrow(() => new BlaiseUserApi(new ConnectionModel()));
         }
 
         [Test]

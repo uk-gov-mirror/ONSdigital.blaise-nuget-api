@@ -1,4 +1,5 @@
 ﻿using System;
+using Blaise.Nuget.Api.Api;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
@@ -41,6 +42,22 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Backup
                 _surveyServiceMock.Object,
                 _fileServiceMock.Object,
                 _connectionModel);
+        }
+
+        [Test]
+        public void Given_No_ConnectionModel_When_I_Instantiate_BlaiseBackupApi_No_Exceptions_Are_Thrown()
+        {
+            //act && assert
+            // ReSharper disable once ObjectCreationAsStatement
+            Assert.DoesNotThrow(() => new BlaiseBackupApi());
+        }
+
+        [Test]
+        public void Given_A_ConnectionModel_When_I_Instantiate_BlaiseBackupApi_No_Exceptions_Are_Thrown()
+        {
+            //act && assert
+            // ReSharper disable once ObjectCreationAsStatement
+            // Assert.DoesNotThrow(() => new BlaiseBackupApi(new ConnectionModel()));
         }
 
         [Test]

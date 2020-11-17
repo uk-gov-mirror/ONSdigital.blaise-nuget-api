@@ -19,7 +19,5 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         void InstallSurvey(string serverParkName, string instrumentFile);
 
         void UninstallSurvey(string serverParkName, string instrumentName);
-
-        void CreateDayBatch(string instrumentName, string serverParkName, DateTime dayBatchDate);
     }
 }
