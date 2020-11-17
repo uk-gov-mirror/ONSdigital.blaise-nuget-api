@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Blaise.Nuget.Api.Api;
 using NUnit.Framework;
 
 namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
@@ -15,7 +16,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
             _sut = new BlaiseSurveyApi();
         }
 
-        [Ignore("")]
+        [Ignore("Integration")]
         [Test]
         public void Given_I_Have_A_Valid_Instrument_It_Gets_Installed_On_A_Server_Park()
         {
@@ -30,7 +31,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
             Assert.IsNotNull(surveys.First(s => s.Name == surveyName));
         }
 
-        [Ignore("")]
+        [Ignore("Integration")]
         [Test]
         public void Given_An_Instrument_Is_Installed_It_Gets_Uninstalled_From_The_Server_Park()
         {

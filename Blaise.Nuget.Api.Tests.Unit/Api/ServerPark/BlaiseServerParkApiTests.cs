@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blaise.Nuget.Api.Api;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
@@ -29,6 +30,23 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
                 _parkServiceMock.Object,
                 _connectionModel);
         }
+
+        [Test]
+        public void Given_No_ConnectionModel_When_I_Instantiate_BlaiseServerParkApi_No_Exceptions_Are_Thrown()
+        {
+            //act && assert
+            // ReSharper disable once ObjectCreationAsStatement
+            Assert.DoesNotThrow(() => new BlaiseServerParkApi());
+        }
+
+        [Test]
+        public void Given_A_ConnectionModel_When_I_Instantiate_BlaiseServerParkApi_No_Exceptions_Are_Thrown()
+        {
+            //act && assert
+            // ReSharper disable once ObjectCreationAsStatement
+            Assert.DoesNotThrow(() => new BlaiseServerParkApi(new ConnectionModel()));
+        }
+
         [Test]
         public void When_I_Call_GetServerPark_Then_The_Correct_Service_Method_Is_Called()
         {

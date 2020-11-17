@@ -1,14 +1,14 @@
-﻿using Blaise.Nuget.Api.Helpers;
-using Blaise.Nuget.Api.Providers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
+using Blaise.Nuget.Api.Helpers;
+using Blaise.Nuget.Api.Providers;
 using StatNeth.Blaise.API.ServerManager;
 
-namespace Blaise.Nuget.Api
+namespace Blaise.Nuget.Api.Api
 {
     public class BlaiseSurveyApi : IBlaiseSurveyApi
     {
@@ -83,14 +83,6 @@ namespace Blaise.Nuget.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
 
             _surveyService.UninstallInstrument(_connectionModel, serverParkName, instrumentName);
-        }
-
-        public void CreateDayBatch(string instrumentName, string serverParkName, DateTime dayBatchDate)
-        {
-            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
-
-            _surveyService.CreateDayBatch(_connectionModel, instrumentName, serverParkName, dayBatchDate);
         }
     }
 }

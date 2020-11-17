@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Blaise.Nuget.Api.Api;
+using NUnit.Framework;
 
 namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
 {
@@ -11,7 +12,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
             _sut = new BlaiseBackupApi();
         }
 
-        [Ignore("")]
+        [Ignore("Integration")]
         [Test]
         public void Given_A_Valid_Instrument_When_I_Call_BackupToFile_Then_An_Instrument_Is_Backed_Up_To_File()
         {
