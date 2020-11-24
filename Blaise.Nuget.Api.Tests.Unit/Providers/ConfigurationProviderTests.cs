@@ -1,4 +1,5 @@
 ﻿using Blaise.Nuget.Api.Contracts.Models;
+using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Providers;
 using NUnit.Framework;
 
@@ -10,14 +11,19 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
         /// Please ensure the app.config in the test project has values that relate to the tests
         /// </summary>
 
+        private IConfigurationProvider _sut;
+
+        [SetUp]
+        public void SetUpTests()
+        {
+            _sut = new ConfigurationProvider();
+        }
+
         [Test]
         public void Given_AppConfig_Values_Are_Set_When_I_Call_GetConnectionModel_I_Get_A_ConnectionModel_Back()
         {
-            //arrange
-            var sut = new ConfigurationProvider();
-
             //act
-            var result = sut.GetConnectionModel();
+            var result = _sut.GetConnectionModel();
 
             //assert
             Assert.NotNull(result);
@@ -33,11 +39,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
         [Test]
         public void Given_LibraryDirectory_Value_Is_Set_When_I_Call_LibraryDirectory_I_Get_The_Correct_Value_Back()
         {
-            //arrange
-            var sut = new ConfigurationProvider();
-
             //act
-            var result = sut.LibraryDirectory;
+            var result = _sut.LibraryDirectory;
 
             //assert
             Assert.NotNull(result);
@@ -47,11 +50,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
         [Test]
         public void Given_ConnectionExpiresInMinutes_Value_Is_Set_When_I_Call_ConnectionExpiresInMinutes_I_Get_The_Correct_Value_Back()
         {
-            //arrange
-            var sut = new ConfigurationProvider();
-
             //act
-            var result = sut.ConnectionExpiresInMinutes;
+            var result = _sut.ConnectionExpiresInMinutes;
 
             //assert
             Assert.NotNull(result);

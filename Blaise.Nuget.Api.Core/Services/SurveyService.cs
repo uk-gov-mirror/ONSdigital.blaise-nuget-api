@@ -104,12 +104,27 @@ namespace Blaise.Nuget.Api.Core.Services
             return configuration.DataFileName;
         }
 
+        public void InstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentFile)
+        {
+            var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
+
+            serverPark.InstallSurvey(instrumentFile);
+        }
+
+        public void UninstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentName)
+        {
+            var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
+            var instrumentId = GetInstrumentId(connectionModel, instrumentName, serverParkName);
+
+            serverPark.RemoveSurvey(instrumentId);
+        }
+
         public void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayBatchDate)
         {
             _dayBatchService.CreateDayBatch(connectionModel, instrumentName, serverParkName, dayBatchDate);
         }
 
-        private IConfiguration GetSurveyConfiguration(ISurvey survey)
+        private static IConfiguration GetSurveyConfiguration(ISurvey survey)
         {
             var configuration = survey.Configuration.Configurations.FirstOrDefault();
 

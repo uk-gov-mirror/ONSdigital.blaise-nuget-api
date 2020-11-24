@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Blaise.Nuget.Api.Tests.Behavioural")]
+[assembly: AssemblyTitle("Blaise.Nuget.Api.Tests.Behavior")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Blaise.Nuget.Api.Tests.Behavioural")]
+[assembly: AssemblyProduct("Blaise.Nuget.Api.Tests.Behavior")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("d7d3f417-43c2-40da-a690-335b6be8b28e")]
+[assembly: Guid("f5f7f6a0-7d9a-47e6-b4a8-7493e70c2c5e")]
 
 // Version information for an assembly consists of the following four values:
 //

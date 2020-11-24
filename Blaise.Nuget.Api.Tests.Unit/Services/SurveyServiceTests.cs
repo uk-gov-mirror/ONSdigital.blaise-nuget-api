@@ -329,5 +329,30 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //assert
             _dayBatchServiceMock.Verify(v => v.CreateDayBatch(_connectionModel, _instrumentName, _serverParkName, dayBatchDate), Times.Once);
         }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_InstallInstrument_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            var instrumentFile = @"d:\\opn2101a.pkg";
+
+            //act
+            _sut.InstallInstrument(_connectionModel, _serverParkName, instrumentFile);
+
+            //assert
+            _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, _serverParkName), Times.Once);
+            _serverParkMock.Verify(v => v.InstallSurvey(instrumentFile), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Instrument_Exists_When_I_Call_UninstallInstrument_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.UninstallInstrument(_connectionModel, _serverParkName, _instrumentName);
+
+            //assert
+            _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, _serverParkName), Times.AtLeastOnce);
+            _serverParkMock.Verify(v => v.RemoveSurvey(_instrumentId), Times.Once);
+        }
     }
 }

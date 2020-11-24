@@ -18,25 +18,25 @@ namespace Blaise.Nuget.Api.Core.Providers
             _dataLinkConnections = new Dictionary<string, Tuple<IDataLink4, DateTime>>(StringComparer.OrdinalIgnoreCase);
         }
 
-        public IDataLink4 GetDataLink(string filePath)
+        public IDataLink4 GetDataLink(string databaseFile)
         {
-            if (_dataLinkConnections.ContainsKey(filePath))
+            if (_dataLinkConnections.ContainsKey(databaseFile))
             {
-                var (dataLink, expiryDate) = _dataLinkConnections[filePath];
+                var (dataLink, expiryDate) = _dataLinkConnections[databaseFile];
 
                 return expiryDate.HasExpired()
-                    ? GetFreshConnection(filePath)
-                    : dataLink ?? GetFreshConnection(filePath);
+                    ? GetFreshConnection(databaseFile)
+                    : dataLink ?? GetFreshConnection(databaseFile);
             }
 
-            return GetFreshConnection(filePath);
+            return GetFreshConnection(databaseFile);
         }
 
-        private IDataLink4 GetFreshConnection(string filePath)
+        private IDataLink4 GetFreshConnection(string databaseFile)
         {
-            var dataLink = DataLinkManager.GetDataLink(filePath) as IDataLink4;
+            var dataLink = DataLinkManager.GetDataLink(databaseFile) as IDataLink4;
 
-            _dataLinkConnections[filePath] = new Tuple<IDataLink4, DateTime>(dataLink, _configurationProvider.ConnectionExpiresInMinutes.GetExpiryDate());
+            _dataLinkConnections[databaseFile] = new Tuple<IDataLink4, DateTime>(dataLink, _configurationProvider.ConnectionExpiresInMinutes.GetExpiryDate());
 
             return dataLink;
         }
