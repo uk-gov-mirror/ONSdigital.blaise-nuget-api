@@ -26,7 +26,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private readonly ConnectionModel _connectionModel;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
-        private readonly string _filePath;
+        private readonly string _databaseFile;
         private readonly Guid _instrumentId;
 
         private DataRecordService _sut;
@@ -36,7 +36,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _connectionModel = new ConnectionModel();
             _instrumentName = "TestInstrumentName";
             _serverParkName = "TestServerParkName";
-            _filePath = "c:\\filePath";
+            _databaseFile = "c:\\filePath\\opn2010.dbdx";
             _instrumentId = Guid.NewGuid();
         }
 
@@ -60,7 +60,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkProviderMock.Setup(r => r.GetDataLink(_connectionModel, _instrumentName, _serverParkName)).Returns(_remoteDataLinkMock.Object);
 
             _localDataLinkProviderMock = new Mock<ILocalDataLinkProvider>();
-            _localDataLinkProviderMock.Setup(r => r.GetDataLink(_filePath)).Returns(_localDataLinkMock.Object);
+            _localDataLinkProviderMock.Setup(r => r.GetDataLink(_databaseFile)).Returns(_localDataLinkMock.Object);
 
             _sut = new DataRecordService(
                 _remoteDataLinkProviderMock.Object,
@@ -116,7 +116,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _localDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
 
             //act
-            var result = _sut.GetDataSet(_filePath);
+            var result = _sut.GetDataSet(_databaseFile);
 
             //assert
             Assert.NotNull(result);
@@ -130,7 +130,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _localDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
 
             //act
-            var result = _sut.GetDataSet(_filePath);
+            var result = _sut.GetDataSet(_databaseFile);
 
             //assert
             Assert.NotNull(result);
@@ -144,10 +144,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _localDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
 
             //act
-            _sut.GetDataSet(_filePath);
+            _sut.GetDataSet(_databaseFile);
 
             //assert
-            _localDataLinkProviderMock.Verify(v => v.GetDataLink(_filePath), Times.Once);
+            _localDataLinkProviderMock.Verify(v => v.GetDataLink(_databaseFile), Times.Once);
             _localDataLinkMock.Verify(v => v.Read(null), Times.Once);
         }
 
@@ -194,13 +194,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_A_FilePath_When_I_Call_GetDataRecord_I_Get_The_Correct_DataRecord_Back()
+        public void Given_A_DatabaseFile_When_I_Call_GetDataRecord_I_Get_The_Correct_DataRecord_Back()
         {
             //arrange
             _localDataLinkMock.Setup(d => d.ReadRecord(It.IsAny<IKey>())).Returns(_dataRecordMock.Object);
 
             //act
-            var result = _sut.GetDataRecord(_keyMock.Object, _filePath);
+            var result = _sut.GetDataRecord(_keyMock.Object, _databaseFile);
 
             //assert
             Assert.NotNull(result);
@@ -208,16 +208,16 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_A_FilePath_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
+        public void Given_A_DatabaseFile_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //arrange
             _localDataLinkMock.Setup(d => d.ReadRecord(It.IsAny<IKey>())).Returns(It.IsAny<IDataRecord>());
 
             //act
-            _sut.GetDataRecord(_keyMock.Object, _filePath);
+            _sut.GetDataRecord(_keyMock.Object, _databaseFile);
 
             //assert
-            _localDataLinkProviderMock.Verify(v => v.GetDataLink(_filePath), Times.Once);
+            _localDataLinkProviderMock.Verify(v => v.GetDataLink(_databaseFile), Times.Once);
             _localDataLinkMock.Verify(v => v.ReadRecord(_keyMock.Object), Times.Once);
         }
 
@@ -236,16 +236,16 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_A_FilePath_When_I_Call_WriteDataRecord_Then_The_Correct_Services_Are_Called()
+        public void Given_A_DatabaseFile_When_I_Call_WriteDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //arrange
             _localDataLinkMock.Setup(d => d.Write(It.IsAny<IDataRecord>()));
 
             //act
-            _sut.WriteDataRecord(_dataRecordMock.Object, _filePath);
+            _sut.WriteDataRecord(_dataRecordMock.Object, _databaseFile);
 
             //assert
-            _localDataLinkProviderMock.Verify(v => v.GetDataLink(_filePath), Times.Once);
+            _localDataLinkProviderMock.Verify(v => v.GetDataLink(_databaseFile), Times.Once);
             _localDataLinkMock.Verify(v => v.Write(_dataRecordMock.Object), Times.Once);
         }
 
@@ -294,7 +294,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _localDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
 
             //act
-            var result = _sut.GetNumberOfRecords(_filePath);
+            var result = _sut.GetNumberOfRecords(_databaseFile);
 
             //assert
             Assert.NotNull(result);

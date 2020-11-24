@@ -47,18 +47,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\FieldNameType.cs" />
-    <Compile Include="Enums\CaseStatusType.cs" />
-    <Compile Include="Enums\SurveyType.cs" />
-    <Compile Include="Enums\WebFormStatusType.cs" />
     <Compile Include="Exceptions\DataNotFoundException.cs" />
     <Compile Include="Extensions\EnumExtension.cs" />
-    <Compile Include="Interfaces\IBlaiseApi.cs" />
-    <Compile Include="Interfaces\IFluentBlaiseCaseApi.cs" />
-    <Compile Include="Interfaces\IFluentBlaiseApi.cs" />
-    <Compile Include="Interfaces\IFluentBlaiseHandler.cs" />
-    <Compile Include="Interfaces\IFluentBlaiseSettingsApi.cs" />
-    <Compile Include="Interfaces\IFluentBlaiseUserApi.cs" />
-    <Compile Include="Interfaces\IFluentBlaiseSurveyApi.cs" />
+    <Compile Include="Interfaces\IBlaiseBackupApi.cs" />
+    <Compile Include="Interfaces\IBlaiseCaseApi.cs" />
+    <Compile Include="Interfaces\IBlaiseServerParkApi.cs" />
+    <Compile Include="Interfaces\IBlaiseCatiApi.cs" />
+    <Compile Include="Interfaces\IBlaiseSurveyApi.cs" />
+    <Compile Include="Interfaces\IBlaiseUserApi.cs" />
     <Compile Include="Models\ConnectionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
