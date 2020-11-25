@@ -9,6 +9,7 @@ using System.Linq;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
+using Blaise.Nuget.Api.Contracts.Extensions;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Services
 {
@@ -56,7 +57,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             _parkServiceMock = new Mock<IParkService>();
             _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, _serverParkName)).Returns(_serverParkMock.Object);
-            _parkServiceMock.Setup(p => p.GetServerParkNames(_connectionModel)).Returns(new List<string> {_serverParkName});
+            _parkServiceMock.Setup(p => p.GetServerParkNames(_connectionModel)).Returns(new List<string> { _serverParkName });
 
             _dayBatchServiceMock = new Mock<IDayBatchService>();
 
@@ -229,7 +230,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var survey1Mock = new Mock<ISurvey>();
             survey1Mock.Setup(s => s.Name).Returns(instrumentName);
             survey1Mock.Setup(s => s.Status).Returns(surveyStatus);
-            
+
             var surveyItems = new List<ISurvey> { survey1Mock.Object };
             _surveyCollectionMock = new Mock<ISurveyCollection>();
             _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => surveyItems.GetEnumerator());
@@ -262,6 +263,38 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.AreEqual($"No survey found for instrument name '{instrument2Name}'", exception.Message);
         }
 
+        [TestCase("CATI", SurveyInterviewType.Cati)]
+        [TestCase("CAPI", SurveyInterviewType.Capi)]
+        [TestCase("CAWI", SurveyInterviewType.Cawi)]
+        public void Given_Survey_Exists_When_I_Call_GetSurveyInterviewType_Then_The_Correct_SurveyInterviewType_Is_Returned(
+            string interviewType, SurveyInterviewType surveyInterviewType)
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+            var surveyMock = new Mock<ISurvey>();
+            surveyMock.Setup(s => s.Name).Returns(instrumentName);
+
+            var surveyItems = new List<ISurvey> { surveyMock.Object };
+            _surveyCollectionMock = new Mock<ISurveyCollection>();
+            _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => surveyItems.GetEnumerator());
+            _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
+
+            var iConfigurationMock = new Mock<IConfiguration>();
+            iConfigurationMock.Setup(c => c.InitialLayoutSetGroupName).Returns(interviewType);
+            iConfigurationMock.Setup(c => c.InstrumentName).Returns(instrumentName);
+            List<IConfiguration> configurations = new List<IConfiguration> { iConfigurationMock.Object };
+
+            var machineConfigurationMock = new Mock<IMachineConfigurationCollection>();
+            machineConfigurationMock.Setup(m => m.Configurations).Returns(configurations);
+            surveyMock.Setup(s => s.Configuration).Returns(machineConfigurationMock.Object);
+
+            //act
+            var result = _sut.GetSurveyInterviewType(_connectionModel, instrumentName, _serverParkName);
+
+            //assert
+            Assert.AreEqual(surveyInterviewType, result);
+        }
+
         [Test]
         public void Given_I_Call_GetAllSurveys_Then_I_Get_A_Correct_List_Of_Surveys_Returned()
         {
@@ -274,7 +307,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var survey3Mock = new Mock<ISurvey>();
 
             var survey1Items = new List<ISurvey> { survey1Mock.Object, survey2Mock.Object };
-            var survey2Items = new List<ISurvey> { survey3Mock.Object};
+            var survey2Items = new List<ISurvey> { survey3Mock.Object };
 
             var surveyCollection1Mock = new Mock<ISurveyCollection>();
             surveyCollection1Mock.Setup(s => s.GetEnumerator()).Returns(() => survey1Items.GetEnumerator());
@@ -285,7 +318,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var serverPark1Mock = new Mock<IServerPark>();
             serverPark1Mock.Setup(s => s.Name).Returns(serverPark1Name);
             serverPark1Mock.Setup(s => s.Surveys).Returns(surveyCollection1Mock.Object);
-            
+
             var serverPark2Mock = new Mock<IServerPark>();
             serverPark2Mock.Setup(s => s.Name).Returns(serverPark2Name);
             serverPark2Mock.Setup(s => s.Surveys).Returns(surveyCollection2Mock.Object);
@@ -335,7 +368,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var instrumentName = "InstrumentThatDoesNotExist";
 
             //act && assert
-           var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetInstrumentId(_connectionModel, instrumentName, _serverParkName));
+            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetInstrumentId(_connectionModel, instrumentName, _serverParkName));
             Assert.AreEqual($"Instrument '{instrumentName}' not found on server park '{_serverParkName}'", exception.Message);
         }
 
@@ -409,11 +442,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var instrumentFile = @"d:\\opn2101a.pkg";
 
             //act
-            _sut.InstallInstrument(_connectionModel, _serverParkName, instrumentFile);
+            _sut.InstallInstrument(_connectionModel, _serverParkName, instrumentFile, SurveyInterviewType.Cati);
 
             //assert
             _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, _serverParkName), Times.Once);
-            _serverParkMock.Verify(v => v.InstallSurvey(instrumentFile), Times.Once);
+            _serverParkMock.Verify(v => v.InstallSurvey(instrumentFile, SurveyInterviewType.Cati.FullName(),
+                                        SurveyDataEntryType.StrictInterviewing.FullName(), DataOverwriteMode.Always), Times.Once);
         }
 
         [Test]

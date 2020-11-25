@@ -1,9 +1,9 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Exceptions;
+using Blaise.Nuget.Api.Contracts.Extensions;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Extensions;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
@@ -70,6 +70,19 @@ namespace Blaise.Nuget.Api.Core.Services
             return survey.Status.ToEnum<SurveyStatusType>();
         }
 
+        public SurveyInterviewType GetSurveyInterviewType(ConnectionModel connectionModel, string instrumentName, string serverParkName)
+        {
+            var survey = GetSurvey(connectionModel, instrumentName, serverParkName);
+            var configuration = survey.Configuration.Configurations.FirstOrDefault(c => c.InstrumentName == instrumentName);
+
+            if (configuration == null)
+            {
+                throw new SurveyConfigurationException($"No configuration found for the instrument name '{instrumentName}'");
+            }
+
+            return configuration.InitialLayoutSetGroupName.ToEnum<SurveyInterviewType>();
+        }
+
         public IEnumerable<ISurvey> GetAllSurveys(ConnectionModel connectionModel)
         {
             var surveyList = new List<ISurvey>();
@@ -113,11 +126,13 @@ namespace Blaise.Nuget.Api.Core.Services
             return configuration.DataFileName;
         }
 
-        public void InstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentFile)
+        public void InstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentFile,
+            SurveyInterviewType surveyInterviewType)
         {
             var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
 
-            serverPark.InstallSurvey(instrumentFile);
+            serverPark.InstallSurvey(instrumentFile, surveyInterviewType.FullName(), 
+                                        SurveyDataEntryType.StrictInterviewing.ToString(), DataOverwriteMode.Always);
         }
 
         public void UninstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentName)
@@ -143,6 +158,6 @@ namespace Blaise.Nuget.Api.Core.Services
             }
 
             return configuration;
-        }
+        }     
     }
 }
