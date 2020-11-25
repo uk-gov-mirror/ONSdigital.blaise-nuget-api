@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Blaise.Nuget.Api.Api;
+using Blaise.Nuget.Api.Contracts.Enums;
 using NUnit.Framework;
 using StatNeth.Blaise.API.ServerManager;
 
@@ -10,14 +11,14 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
         private readonly BlaiseSurveyApi _sut;
 
         private readonly string serverParkName = "LocalDevelopment";
-        private readonly string fullInstrumentPath = @"C:\Users\User\Downloads\OPN2101A.zip";
-        private readonly string surveyName = "OPN2101A";
+        private readonly string fullInstrumentPath = @"C:\Users\User\Desktop\OPN2004A.zip";
+        private readonly string surveyName = "OPN2004A";
         public SurveyTests()
         {
             _sut = new BlaiseSurveyApi();
         }
 
-        [Ignore("Integration")]
+        //[Ignore("Integration")]
         [Test]
         public void Given_I_Have_A_Valid_Instrument_It_Gets_Installed_On_A_Server_Park()
         {
@@ -25,7 +26,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
             
 
             //act
-            _sut.InstallSurvey(serverParkName, fullInstrumentPath);
+            _sut.InstallSurvey(serverParkName, fullInstrumentPath, SurveyInterviewType.Cati);
 
             //assert
             var surveys = _sut.GetSurveys(serverParkName).ToList();
@@ -37,7 +38,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
         public void Given_An_Instrument_Is_Installed_It_Gets_Uninstalled_From_The_Server_Park()
         {
             //arrange
-            _sut.InstallSurvey(serverParkName, fullInstrumentPath);
+            _sut.InstallSurvey(serverParkName, fullInstrumentPath, SurveyInterviewType.Cati);
             var surveys = _sut.GetSurveys(serverParkName).ToList();
             Assert.IsNotNull(surveys.First(s => s.Name == surveyName));
 
@@ -51,7 +52,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
 
         [Ignore("Integration")]
         [Test]
-        public void Given_An_Instrument_Is_Installed_When_I_Call_GetSurveyStatus_The_Correct_Status_Is_Returned()
+        public void Given_An_Instrument_Is_Installed_When_I_Call_GetSurvey_The_Correct_Survey_Is_Returned()
         {
             //act
             var result =_sut.GetSurvey(surveyName, serverParkName);
@@ -61,6 +62,20 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
             Assert.IsInstanceOf<ISurvey>(result);
 
             Assert.AreEqual(surveyName, result.Name);
+        }
+
+        //[Ignore("Integration")]
+        [Test]
+        public void Given_An_Instrument_Is_Installed_When_I_Call_GetSurveyInterviewType_The_Correct_Type_Is_Returned()
+        {
+            //act
+            var result = _sut.GetSurveyInterviewType(surveyName, serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<SurveyInterviewType>(result);
+
+            Assert.AreEqual(SurveyInterviewType.Cati, result);
         }
     }
 }

@@ -19,9 +19,11 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         IEnumerable<string> GetNamesOfSurveys(string serverParkName);
 
+        SurveyInterviewType GetSurveyInterviewType(string instrumentName, string serverParkName);
+
         Guid GetIdOfSurvey(string instrumentName, string serverParkName);
 
-        void InstallSurvey(string serverParkName, string instrumentFile);
+        void InstallSurvey(string serverParkName, string instrumentFile, SurveyInterviewType surveyInterviewType);
 
         void UninstallSurvey(string serverParkName, string instrumentName);
     }

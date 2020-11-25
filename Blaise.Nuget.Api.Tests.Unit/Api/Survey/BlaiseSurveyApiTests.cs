@@ -440,17 +440,20 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
         
-        [Test]
-        public void Given_Valid_Arguments_When_I_Call_InstallSurvey_Then_The_Correct_Service_Method_Is_Called()
+        [TestCase(SurveyInterviewType.Cati)]
+        [TestCase(SurveyInterviewType.Cawi)]
+        [TestCase(SurveyInterviewType.Capi)]
+        public void Given_Valid_Arguments_When_I_Call_InstallSurvey_Then_The_Correct_Service_Method_Is_Called(SurveyInterviewType surveyInterviewType)
         {
             //arrange
             var instrumentFile = @"d:\\opn2101a.pkg";
 
             //act
-            _sut.InstallSurvey(_serverParkName, instrumentFile);
+            _sut.InstallSurvey(_serverParkName, instrumentFile, surveyInterviewType);
 
             //assert
-            _surveyServiceMock.Verify(v => v.InstallInstrument(_connectionModel, _serverParkName, instrumentFile), Times.Once);
+            _surveyServiceMock.Verify(v => v.InstallInstrument(_connectionModel, _serverParkName, instrumentFile,
+                                        surveyInterviewType), Times.Once);
         }
 
         [Test]
@@ -460,7 +463,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
             var instrumentFile = @"d:\\opn2101a.pkg";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.InstallSurvey(string.Empty, instrumentFile));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.InstallSurvey(string.Empty, 
+                                                                        instrumentFile, SurveyInterviewType.Cati));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
@@ -471,7 +475,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
             var instrumentFile = @"d:\\opn2101a.pkg";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.InstallSurvey(null, instrumentFile));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.InstallSurvey(null, instrumentFile, 
+                                                                            SurveyInterviewType.Cati));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
@@ -479,7 +484,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
         public void Given_An_Empty_instrumentFile_When_I_Call_InstallSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.InstallSurvey(_serverParkName, string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.InstallSurvey(_serverParkName, string.Empty, 
+                                                                        SurveyInterviewType.Cati));
             Assert.AreEqual("A value for the argument 'instrumentFile' must be supplied", exception.Message);
         }
 
@@ -487,7 +493,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
         public void Given_A_Null_instrumentFile_When_I_Call_InstallSurvey_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.InstallSurvey(_serverParkName, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.InstallSurvey(_serverParkName, null, 
+                                                                            SurveyInterviewType.Cati));
             Assert.AreEqual("instrumentFile", exception.ParamName);
         }
 
@@ -531,6 +538,55 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.UninstallSurvey(_serverParkName, null));
             Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [TestCase(SurveyInterviewType.Cati)]
+        [TestCase(SurveyInterviewType.Capi)]
+        [TestCase(SurveyInterviewType.Cawi)]
+        public void Given_Valid_Arguments_When_I_Call_GetSurveyInterviewType_Then_The_Expected_Result_Is_Returned(SurveyInterviewType surveyInterviewType)
+        {
+            //arrange
+            _surveyServiceMock.Setup(p => p.GetSurveyInterviewType(_connectionModel, _instrumentName, _serverParkName)).Returns(surveyInterviewType);
+
+            //act            
+            var result = _sut.GetSurveyInterviewType(_instrumentName, _serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<SurveyInterviewType>(result);
+            Assert.AreEqual(surveyInterviewType, result);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_GetSurveyInterviewType_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyInterviewType(string.Empty, _serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_GetSurveyInterviewType_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyInterviewType(null, _serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_GetSurveyInterviewType_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyInterviewType(_instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_GetSurveyInterviewType_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyInterviewType(_instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
         }
     }
 }

@@ -23,10 +23,12 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         string GetMetaFileName(ConnectionModel connectionModel, string instrumentName, string serverParkName);
         
-        void InstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentFile);
+        void InstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentFile,
+            SurveyInterviewType surveyInterviewType);
         
         void UninstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentName);
 
         void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayBatchDate);
+        SurveyInterviewType GetSurveyInterviewType(ConnectionModel connectionModel, string instrumentName, string serverParkName);
     }
 }

@@ -6,7 +6,7 @@ namespace Blaise.Nuget.Api.Core.Extensions
     {
         public static T ToEnum<T>(this string value) where T : struct
         {
-            Enum.TryParse(value, out T status);
+            Enum.TryParse(value, true, out T status);
             return status;
         }
     }
