@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
@@ -52,6 +53,22 @@ namespace Blaise.Nuget.Api.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             return _surveyService.GetSurveys(_connectionModel, serverParkName);
+        }
+
+        public ISurvey GetSurvey(string instrumentName, string serverParkName)
+        {
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _surveyService.GetSurvey(_connectionModel, instrumentName, serverParkName);
+        }
+
+        public SurveyStatusType GetSurveyStatus(string instrumentName, string serverParkName)
+        {
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _surveyService.GetSurveyStatus(_connectionModel, instrumentName, serverParkName);
         }
 
         public IEnumerable<string> GetNamesOfSurveys(string serverParkName)

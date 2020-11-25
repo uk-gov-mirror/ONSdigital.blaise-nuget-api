@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Api;
+using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
@@ -199,6 +200,131 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
         {
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveys(null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetSurvey_Then_The_Correct_Service_Method_Is_Called()
+        {
+            _surveyServiceMock.Setup(p => p.GetSurvey(_connectionModel, It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(It.IsAny<ISurvey>());
+
+            //act
+            _sut.GetSurvey(_instrumentName, _serverParkName);
+
+            //assert
+            _surveyServiceMock.Verify(v => v.GetSurvey(_connectionModel, _instrumentName,_serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetSurvey_Then_The_Expected_Result_Is_Returned()
+        {
+            //arrange
+            var survey1Mock = new Mock<ISurvey>();
+
+            _surveyServiceMock.Setup(p => p.GetSurvey(_connectionModel, _instrumentName,_serverParkName)).Returns(survey1Mock.Object);
+
+            //act            
+            var result = _sut.GetSurvey(_instrumentName, _serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<ISurvey>(result);
+            Assert.AreSame(survey1Mock.Object, result);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_GetSurvey_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurvey(string.Empty, _serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_GetSurvey_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurvey(null, _serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_GetSurvey_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurvey(_instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_GetSurvey_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurvey(_instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetSurveyStatus_Then_The_Correct_Service_Method_Is_Called()
+        {
+            _surveyServiceMock.Setup(p => p.GetSurveyStatus(_connectionModel, It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(It.IsAny<SurveyStatusType>());
+
+            //act
+            _sut.GetSurveyStatus(_instrumentName, _serverParkName);
+
+            //assert
+            _surveyServiceMock.Verify(v => v.GetSurveyStatus(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [TestCase(SurveyStatusType.Active)]
+        [TestCase(SurveyStatusType.Inactive)]
+        [TestCase(SurveyStatusType.Installing)]
+        [TestCase(SurveyStatusType.Other)]
+        public void Given_Valid_Arguments_When_I_Call_GetSurveyStatus_Then_The_Expected_Result_Is_Returned(SurveyStatusType surveyStatusType)
+        {
+            //arrange
+            _surveyServiceMock.Setup(p => p.GetSurveyStatus(_connectionModel, _instrumentName, _serverParkName)).Returns(surveyStatusType);
+
+            //act            
+            var result = _sut.GetSurveyStatus(_instrumentName, _serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<SurveyStatusType>(result);
+            Assert.AreEqual(surveyStatusType, result);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_GetSurveyStatus_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyStatus(string.Empty, _serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_GetSurveyStatus_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyStatus(null, _serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_GetSurveyStatus_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyStatus(_instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_GetSurveyStatus_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyStatus(_instrumentName, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
