@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\FieldNameType.cs" />
+    <Compile Include="Enums\SurveyStatusType.cs" />
     <Compile Include="Exceptions\DataNotFoundException.cs" />
     <Compile Include="Extensions\EnumExtension.cs" />
     <Compile Include="Interfaces\IBlaiseBackupApi.cs" />

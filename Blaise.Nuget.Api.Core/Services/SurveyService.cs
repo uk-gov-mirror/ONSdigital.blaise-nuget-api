@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Exceptions;
 using Blaise.Nuget.Api.Contracts.Models;
+using Blaise.Nuget.Api.Core.Extensions;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.ServerManager;
 
@@ -59,6 +61,13 @@ namespace Blaise.Nuget.Api.Core.Services
             }
 
             return survey;
+        }
+
+        public SurveyStatusType GetSurveyStatus(ConnectionModel connectionModel, string instrumentName, string serverParkName)
+        {
+            var survey = GetSurvey(connectionModel, instrumentName, serverParkName);
+
+            return survey.Status.ToEnum<SurveyStatusType>();
         }
 
         public IEnumerable<ISurvey> GetAllSurveys(ConnectionModel connectionModel)

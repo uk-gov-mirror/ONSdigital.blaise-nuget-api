@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\ExpiryExtensions.cs" />
     <Compile Include="Factories\ConnectedServerFactory.cs" />
     <Compile Include="Interfaces\Factories\IRemoteCatiServerFactory.cs" />
