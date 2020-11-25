@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Blaise.Nuget.Api.Api;
 using NUnit.Framework;
+using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
 {
@@ -40,12 +41,26 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
             var surveys = _sut.GetSurveys(serverParkName).ToList();
             Assert.IsNotNull(surveys.First(s => s.Name == surveyName));
 
-            //act_sut.GetDefaultConnectionModel(), 
+            //act_
             _sut.UninstallSurvey(serverParkName, surveyName);
 
             //assert
             var surveysInstalled = _sut.GetSurveys(serverParkName).ToList();
             Assert.IsNull(surveysInstalled.FirstOrDefault(s => s.Name == surveyName));
+        }
+
+        [Ignore("Integration")]
+        [Test]
+        public void Given_An_Instrument_Is_Installed_When_I_Call_GetSurveyStatus_The_Correct_Status_Is_Returned()
+        {
+            //act
+            var result =_sut.GetSurvey(surveyName, serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<ISurvey>(result);
+
+            Assert.AreEqual(surveyName, result.Name);
         }
     }
 }
