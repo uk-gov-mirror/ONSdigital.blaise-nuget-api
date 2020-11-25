@@ -6,6 +6,7 @@ using StatNeth.Blaise.API.ServerManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 
@@ -168,26 +169,97 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_A_Survey_Exists_When_I_Call_GetSurvey_Then_I_Get_The_Expected_Survey_Back()
+        public void Given_I_Call_GetSurvey_Then_I_Get_The_Correct_Survey_Returned()
         {
+            //arrange
+            var instrument1Name = "Instrument1";
+            var survey1Mock = new Mock<ISurvey>();
+            survey1Mock.Setup(s => s.Name).Returns(instrument1Name);
+
+            var instrument2Name = "Instrument2";
+            var survey2Mock = new Mock<ISurvey>();
+            survey2Mock.Setup(s => s.Name).Returns(instrument2Name);
+
+            var surveyItems = new List<ISurvey> { survey1Mock.Object, survey2Mock.Object };
+            _surveyCollectionMock = new Mock<ISurveyCollection>();
+            _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => surveyItems.GetEnumerator());
+            _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
+
             //act
-            var result = _sut.GetSurvey(_connectionModel, _instrumentName, _serverParkName);
+            var result = _sut.GetSurvey(_connectionModel, instrument1Name, _serverParkName);
 
             //assert
             Assert.NotNull(result);
             Assert.IsInstanceOf<ISurvey>(result);
-            Assert.AreEqual(_surveyMock.Object, result);
+            Assert.AreSame(survey1Mock.Object, result);
+            Assert.AreEqual(instrument1Name, result.Name);
         }
 
         [Test]
-        public void Given_A_Survey_Does_Not_Exist_When_I_Call_GetSurveys_Then_A_Data_Not_Found_Exception_Is_Thrown()
+        public void Given_Survey_Does_Not_Exist_When_I_Call_GetSurvey_Then_A_Data_Not_Found_Exception_Is_Thrown()
         {
             //arrange
-            _surveyMock.Setup(s => s.Name).Returns("DoesNotExist");
+            var instrument1Name = "Instrument1";
+            var survey1Mock = new Mock<ISurvey>();
+            survey1Mock.Setup(s => s.Name).Returns(instrument1Name);
+
+            var instrument2Name = "Instrument2";
+
+            var surveyItems = new List<ISurvey> { survey1Mock.Object };
+            _surveyCollectionMock = new Mock<ISurveyCollection>();
+            _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => surveyItems.GetEnumerator());
+            _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
 
             //act && assert
-            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetSurvey(_connectionModel, _instrumentName, _serverParkName));
-            Assert.AreEqual($"No survey found for instrument name '{_instrumentName}'", exception.Message);
+            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetSurvey(_connectionModel, instrument2Name, _serverParkName));
+            Assert.AreEqual($"No survey found for instrument name '{instrument2Name}'", exception.Message);
+        }
+
+        [TestCase("Installing", SurveyStatusType.Installing)]
+        [TestCase("Active", SurveyStatusType.Active)]
+        [TestCase("Inactive", SurveyStatusType.Inactive)]
+        [TestCase("Errored", SurveyStatusType.Other)]
+        [TestCase("Error", SurveyStatusType.Other)]
+        [TestCase("", SurveyStatusType.Other)]
+
+        public void Given_Survey_Exists_When_I_Call_GetSurveyStatus_The_Correct_Status_Is_Returned(string surveyStatus, SurveyStatusType surveyStatusType)
+        {
+            //arrange
+            var instrumentName = "Instrument1";
+            var survey1Mock = new Mock<ISurvey>();
+            survey1Mock.Setup(s => s.Name).Returns(instrumentName);
+            survey1Mock.Setup(s => s.Status).Returns(surveyStatus);
+            
+            var surveyItems = new List<ISurvey> { survey1Mock.Object };
+            _surveyCollectionMock = new Mock<ISurveyCollection>();
+            _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => surveyItems.GetEnumerator());
+            _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
+
+            //act
+            var result = _sut.GetSurveyStatus(_connectionModel, instrumentName, _serverParkName);
+
+            //assert
+            Assert.AreEqual(surveyStatusType, result);
+        }
+
+        [Test]
+        public void Given_Survey_Does_Not_Exist_When_I_Call_GetSurveyStatus_Then_A_Data_Not_Found_Exception_Is_Thrown()
+        {
+            //arrange
+            var instrument1Name = "Instrument1";
+            var survey1Mock = new Mock<ISurvey>();
+            survey1Mock.Setup(s => s.Name).Returns(instrument1Name);
+
+            var instrument2Name = "Instrument2";
+
+            var surveyItems = new List<ISurvey> { survey1Mock.Object };
+            _surveyCollectionMock = new Mock<ISurveyCollection>();
+            _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => surveyItems.GetEnumerator());
+            _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
+
+            //act && assert
+            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetSurveyStatus(_connectionModel, instrument2Name, _serverParkName));
+            Assert.AreEqual($"No survey found for instrument name '{instrument2Name}'", exception.Message);
         }
 
         [Test]
