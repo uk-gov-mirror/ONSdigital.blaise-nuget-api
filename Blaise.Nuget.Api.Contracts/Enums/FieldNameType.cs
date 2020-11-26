@@ -9,5 +9,8 @@ namespace Blaise.Nuget.Api.Contracts.Enums
 
         [Description("Mode")]
         Mode,
+
+        [Description("QDataBag.TelNo")]
+        TelNo,
     }
 }
