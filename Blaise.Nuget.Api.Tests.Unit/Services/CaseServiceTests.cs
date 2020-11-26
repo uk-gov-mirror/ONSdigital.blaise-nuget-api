@@ -373,6 +373,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [TestCase(FieldNameType.HOut)]
+        [TestCase(FieldNameType.Mode)]
+        [TestCase(FieldNameType.TelNo)]
         public void Given_Valid_Arguments_When_I_Call_FieldExists_Then_The_Correct_Services_Are_Called(FieldNameType fieldNameType)
         {
             //act
@@ -502,6 +504,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [TestCase(FieldNameType.HOut)]
+        [TestCase(FieldNameType.Mode)]
+        [TestCase(FieldNameType.TelNo)]
         public void Given_I_Call_GetFieldValue_Then_The_Correct_DataModel_Is_Returned(FieldNameType fieldNameType)
         {
             //arrange
@@ -519,6 +523,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [TestCase(FieldNameType.HOut)]
+        [TestCase(FieldNameType.Mode)]
+        [TestCase(FieldNameType.TelNo)]
         public void Given_I_Call_GetFieldValue_Then_The_Correct_Services_Are_Called(FieldNameType fieldNameType)
         {
             //arrange
@@ -537,6 +543,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
         [TestCase(FieldNameType.HOut, true)]
         [TestCase(FieldNameType.HOut, false)]
+        [TestCase(FieldNameType.Mode, true)]
+        [TestCase(FieldNameType.Mode, false)]
+        [TestCase(FieldNameType.TelNo, true)]
+        [TestCase(FieldNameType.TelNo, false)]
         public void Given_I_Call_FieldExists_Then_The_Correct_DataModel_Is_Returned(FieldNameType fieldNameType, bool exists)
         {
             //arrange
@@ -550,6 +560,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [TestCase(FieldNameType.HOut)]
+        [TestCase(FieldNameType.Mode)]
+        [TestCase(FieldNameType.TelNo)]
         public void Given_I_Call_FieldExists_Then_The_Correct_Services_Are_Called(FieldNameType fieldNameType)
         {
             //arrange

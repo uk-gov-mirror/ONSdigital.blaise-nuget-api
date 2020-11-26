@@ -569,6 +569,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
         [TestCase(FieldNameType.HOut)]
+        [TestCase(FieldNameType.Mode)]
+        [TestCase(FieldNameType.TelNo)]
         public void Given_Valid_Arguments_When_I_Call_FieldExists_Then_The_Correct_Service_Method_Is_Called(FieldNameType fieldNameType)
         {
             //arrange
@@ -635,6 +637,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         }
 
         [TestCase(FieldNameType.HOut)]
+        [TestCase(FieldNameType.Mode)]
+        [TestCase(FieldNameType.TelNo)]
         public void Given_A_DataRecord_When_I_Call_FieldExists_Then_The_Correct_Service_Method_Is_Called(FieldNameType fieldNameType)
         {
             //arrange
@@ -651,6 +655,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
 
         [TestCase(FieldNameType.HOut, true)]
         [TestCase(FieldNameType.HOut, false)]
+        [TestCase(FieldNameType.Mode, true)]
+        [TestCase(FieldNameType.Mode, false)]
+        [TestCase(FieldNameType.TelNo, true)]
+        [TestCase(FieldNameType.TelNo, false)]
         public void Given_A_DataRecord_When_I_Call_FieldExists_Then_The_Expected_Result_Is_Returned(FieldNameType fieldNameType, bool exists)
         {
             //arrange
@@ -673,9 +681,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
         }
 
-
-       
         [TestCase(FieldNameType.HOut)]
+        [TestCase(FieldNameType.Mode)]
+        [TestCase(FieldNameType.TelNo)]
         public void Given_A_PrimaryKeyValue_When_I_Call_GetFieldValue_Then_The_Correct_Value(FieldNameType fieldNameType)
         {
             //arrange
