@@ -5,6 +5,7 @@
         Other = 0,
         Installing,
         Active,
-        Inactive
+        Inactive,
+        Erroneous
     }
 }
