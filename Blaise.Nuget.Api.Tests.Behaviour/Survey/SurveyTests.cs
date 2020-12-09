@@ -11,8 +11,8 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
         private readonly BlaiseSurveyApi _sut;
 
         private readonly string serverParkName = "LocalDevelopment";
-        private readonly string fullInstrumentPath = @"C:\Users\User\Desktop\OPN2004A.zip";
-        private readonly string surveyName = "OPN2004A";
+        private readonly string fullInstrumentPath = @"C:\Users\User\Desktop\OPN2101A.zip";
+        private readonly string surveyName = "OPN2101A";
         public SurveyTests()
         {
             _sut = new BlaiseSurveyApi();
@@ -64,7 +64,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
             Assert.AreEqual(surveyName, result.Name);
         }
 
-        //[Ignore("Integration")]
+        [Ignore("Integration")]
         [Test]
         public void Given_An_Instrument_Is_Installed_When_I_Call_GetSurveyInterviewType_The_Correct_Type_Is_Returned()
         {
@@ -76,6 +76,28 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
             Assert.IsInstanceOf<SurveyInterviewType>(result);
 
             Assert.AreEqual(SurveyInterviewType.Cati, result);
+        }
+
+        [Ignore("Integration")]
+        [Test]
+        public void Given_An_Instrument_Is_Installed_When_I_Call_Deactivate_Then_The_Survey_Is_Deactivated()
+        {
+            //act
+            _sut.DeactivateSurvey(surveyName, serverParkName);
+
+            //assert
+            Assert.AreEqual(SurveyStatusType.Inactive, _sut.GetSurveyStatus(surveyName, serverParkName));
+        }
+
+        [Ignore("Integration")]
+        [Test]
+        public void Given_An_Instrument_Is_Installed_When_I_Call_Activate_Then_The_Survey_Is_Activated()
+        {
+            //act
+            _sut.ActivateSurvey(surveyName, serverParkName);
+
+            //assert
+            Assert.AreEqual(SurveyStatusType.Active, _sut.GetSurveyStatus(surveyName, serverParkName));
         }
     }
 }
