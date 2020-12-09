@@ -589,5 +589,99 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyInterviewType(_instrumentName, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_ActivateSurvey_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var surveyMock = new Mock<ISurvey>();
+
+            _surveyServiceMock.Setup(p => p.GetSurvey(_connectionModel, _instrumentName,_serverParkName)).Returns(surveyMock.Object);
+
+            //act
+            _sut.ActivateSurvey(_instrumentName, _serverParkName);
+
+            //assert
+            surveyMock.Verify(v => v.Activate(), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_instrumentName_When_I_Call_ActivateSurvey_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.ActivateSurvey(string.Empty, _serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_instrumentName_When_I_Call_ActivateSurvey_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ActivateSurvey(null, _serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_ActivateSurvey_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.ActivateSurvey(_instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_ActivateSurvey_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ActivateSurvey(_instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+ [Test]
+        public void Given_Valid_Arguments_When_I_Call_DeactivateSurvey_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var surveyMock = new Mock<ISurvey>();
+
+            _surveyServiceMock.Setup(p => p.GetSurvey(_connectionModel, _instrumentName,_serverParkName)).Returns(surveyMock.Object);
+
+            //act
+            _sut.DeactivateSurvey(_instrumentName, _serverParkName);
+
+            //assert
+            surveyMock.Verify(v => v.Deactivate(), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_instrumentName_When_I_Call_DeactivateSurvey_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.DeactivateSurvey(string.Empty, _serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_instrumentName_When_I_Call_DeactivateSurvey_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.DeactivateSurvey(null, _serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_DeactivateSurvey_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.DeactivateSurvey(_instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_DeactivateSurvey_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.DeactivateSurvey(_instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
     }
 }
