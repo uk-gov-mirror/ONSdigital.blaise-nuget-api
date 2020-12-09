@@ -11,18 +11,18 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
             string serverParkName);
 
         string GetPrimaryKeyValue(IDataRecord dataRecord);
-        IDataSet GetDataSet(string databaseFile);
-        IDataSet GetDataSet(string instrumentName, string serverParkName);
+        IDataSet GetCases(string databaseFile);
+        IDataSet GetCases(string instrumentName, string serverParkName);
 
-        IDataRecord GetDataRecord(string primaryKeyValue, string instrumentName, 
+        IDataRecord GetCase(string primaryKeyValue, string instrumentName, 
             string serverParkName);
 
-        void CreateNewDataRecord(string primaryKeyValue, Dictionary<string, string> fieldData, 
+        void CreateCase(string primaryKeyValue, Dictionary<string, string> fieldData, 
             string instrumentName, string serverParkName);
 
-        void CreateNewDataRecord(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData);
+        void CreateCase(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData);
 
-        void UpdateDataRecord(IDataRecord dataRecord, Dictionary<string, string> fieldData,
+        void UpdateCase(IDataRecord dataRecord, Dictionary<string, string> fieldData,
             string instrumentName, string serverParkName);
 
         bool FieldExists(string instrumentName, string serverParkName, FieldNameType fieldNameType);

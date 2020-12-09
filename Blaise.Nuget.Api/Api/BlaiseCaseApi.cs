@@ -52,14 +52,14 @@ namespace Blaise.Nuget.Api.Api
             return _caseService.GetPrimaryKeyValue(dataRecord);
         }
 
-        public IDataSet GetDataSet(string databaseFile)
+        public IDataSet GetCases(string databaseFile)
         {
             databaseFile.ThrowExceptionIfNullOrEmpty("databaseFile");
 
             return _caseService.GetDataSet(databaseFile);
         }
 
-        public IDataSet GetDataSet(string instrumentName, string serverParkName)
+        public IDataSet GetCases(string instrumentName, string serverParkName)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
@@ -67,7 +67,7 @@ namespace Blaise.Nuget.Api.Api
             return _caseService.GetDataSet(_connectionModel, instrumentName, serverParkName);
         }
 
-        public IDataRecord GetDataRecord(string primaryKeyValue, string instrumentName, 
+        public IDataRecord GetCase(string primaryKeyValue, string instrumentName, 
             string serverParkName)
         {
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
@@ -77,7 +77,7 @@ namespace Blaise.Nuget.Api.Api
             return _caseService.GetDataRecord(_connectionModel, primaryKeyValue, instrumentName, serverParkName);
         }
 
-        public void CreateNewDataRecord(string primaryKeyValue, Dictionary<string, string> fieldData, 
+        public void CreateCase(string primaryKeyValue, Dictionary<string, string> fieldData, 
             string instrumentName, string serverParkName)
         {
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
@@ -88,7 +88,7 @@ namespace Blaise.Nuget.Api.Api
             _caseService.CreateNewDataRecord(_connectionModel, primaryKeyValue, fieldData, instrumentName, serverParkName);
         }
 
-        public void CreateNewDataRecord(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData)
+        public void CreateCase(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData)
         {
             databaseFile.ThrowExceptionIfNullOrEmpty("databaseFile");
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
@@ -97,7 +97,7 @@ namespace Blaise.Nuget.Api.Api
             _caseService.CreateNewDataRecord(databaseFile, primaryKeyValue, fieldData);
         }
 
-        public void UpdateDataRecord(IDataRecord dataRecord, Dictionary<string, string> fieldData,
+        public void UpdateCase(IDataRecord dataRecord, Dictionary<string, string> fieldData,
             string instrumentName, string serverParkName)
         {
             dataRecord.ThrowExceptionIfNull("dataRecord");
