@@ -109,5 +109,19 @@ namespace Blaise.Nuget.Api.Api
 
             _surveyService.UninstallInstrument(_connectionModel, serverParkName, instrumentName);
         }
+
+        public void ActivateSurvey(string instrumentName, string serverParkName)
+        {
+            var survey = GetSurvey(instrumentName, serverParkName);
+
+            survey.Activate();
+        }
+
+        public void DeactivateSurvey(string instrumentName, string serverParkName)
+        {
+            var survey = GetSurvey(instrumentName, serverParkName);
+
+            survey.Deactivate();
+        }
     }
 }
