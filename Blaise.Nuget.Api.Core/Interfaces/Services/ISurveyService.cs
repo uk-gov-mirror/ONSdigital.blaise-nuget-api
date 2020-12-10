@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Models;
+using StatNeth.Blaise.API.Cati.Specification;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Core.Interfaces.Services
@@ -18,6 +19,9 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         SurveyStatusType GetSurveyStatus(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         IEnumerable<ISurvey> GetAllSurveys(ConnectionModel connectionModel);
+
+        List<DateTime> GetSurveyDays(ConnectionModel connectionModel, string serverParkName,
+            string instrumentName);
 
         Guid GetInstrumentId(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 

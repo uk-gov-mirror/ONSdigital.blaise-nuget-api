@@ -7,6 +7,7 @@ using Blaise.Nuget.Api.Contracts.Extensions;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Extensions;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
+using StatNeth.Blaise.API.Cati.Specification;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Core.Services
@@ -148,6 +149,11 @@ namespace Blaise.Nuget.Api.Core.Services
             _dayBatchService.CreateDayBatch(connectionModel, instrumentName, serverParkName, dayBatchDate);
         }
 
+        public List<DateTime> GetSurveyDays(ConnectionModel connectionModel, string serverParkName, string instrumentName)
+        {
+            return _dayBatchService.GetSurveyDays(connectionModel, instrumentName, serverParkName);
+        }
+
         private static IConfiguration GetSurveyConfiguration(ISurvey survey)
         {
             var configuration = survey.Configuration.Configurations.FirstOrDefault();
@@ -158,6 +164,6 @@ namespace Blaise.Nuget.Api.Core.Services
             }
 
             return configuration;
-        }     
+        }
     }
 }

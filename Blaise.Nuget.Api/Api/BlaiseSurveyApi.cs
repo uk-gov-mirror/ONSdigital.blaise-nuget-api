@@ -7,6 +7,7 @@ using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Helpers;
 using Blaise.Nuget.Api.Providers;
+using StatNeth.Blaise.API.Cati.Specification;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Api
@@ -84,6 +85,14 @@ namespace Blaise.Nuget.Api.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             return _surveyService.GetSurveyNames(_connectionModel, serverParkName);
+        }
+
+        public List<DateTime> GetSurveyDays(string instrumentName, string serverParkName)
+        {
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _surveyService.GetSurveyDays(_connectionModel, serverParkName, instrumentName);
         }
 
         public Guid GetIdOfSurvey(string instrumentName, string serverParkName)

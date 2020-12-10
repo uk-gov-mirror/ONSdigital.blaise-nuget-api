@@ -683,5 +683,41 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.DeactivateSurvey(_instrumentName, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetSurveyDays_Then_The_Expected_Result_Is_Returned()
+        {
+            var surveyDays = new List<DateTime>
+            {
+                new DateTime(2020, 12, 10), 
+                new DateTime(2020, 12, 11)
+            };
+            //arrange
+            _surveyServiceMock.Setup(p => p.GetSurveyDays(_connectionModel, _serverParkName, _instrumentName)).Returns(surveyDays);
+
+            //act            
+            var result = _sut.GetSurveyDays(_instrumentName, _serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<List<DateTime>>(result);
+            Assert.AreEqual(surveyDays, result);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_GetSurveyDays_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyDays(_instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_GetSurveyDays_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyDays(_instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
     }
 }
