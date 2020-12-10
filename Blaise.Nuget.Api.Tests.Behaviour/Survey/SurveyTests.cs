@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Blaise.Nuget.Api.Api;
 using Blaise.Nuget.Api.Contracts.Enums;
 using NUnit.Framework;
@@ -98,6 +99,14 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
 
             //assert
             Assert.AreEqual(SurveyStatusType.Active, _sut.GetSurveyStatus(surveyName, serverParkName));
+        }
+
+        [Ignore("Integration")]
+        [Test]
+        public void Given_An_Instrument_Is_Installed_And_Has_SurveyDays_When_I_Call_GetSurveyDays_They_Are_Returned()
+        {
+            var result = _sut.GetSurveyDays(surveyName, serverParkName);
+            Assert.NotNull(result);
         }
     }
 }
