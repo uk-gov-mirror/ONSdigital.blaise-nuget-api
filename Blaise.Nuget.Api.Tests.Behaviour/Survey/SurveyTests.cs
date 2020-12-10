@@ -50,7 +50,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
             Assert.IsNull(surveysInstalled.FirstOrDefault(s => s.Name == surveyName));
         }
 
-        //[Ignore("Integration")]
+        [Ignore("Integration")]
         [Test]
         public void Given_An_Instrument_Is_Installed_When_I_Call_GetSurvey_The_Correct_Survey_Is_Returned()
         {
