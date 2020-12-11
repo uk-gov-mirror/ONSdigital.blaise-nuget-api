@@ -37,9 +37,6 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
             //act
             var result = _sut.GetCase(_primaryKey,  instrumentName, serverParkName);
 
-            var fields = result.Fields.Select(f => f.FullName.Contains("tel"));
-            var fields2 = result.Fields.Select(f => f.FullName.Contains("Tel"));
-
             //arrange
             Assert.AreEqual(_primaryKey, _sut.GetPrimaryKeyValue(result));
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
-using StatNeth.Blaise.API.Cati.Specification;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Contracts.Interfaces
@@ -22,13 +21,11 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         SurveyInterviewType GetSurveyInterviewType(string instrumentName, string serverParkName);
 
-        List<DateTime> GetSurveyDays(string instrumentName, string serverParkName);
-
         Guid GetIdOfSurvey(string instrumentName, string serverParkName);
 
-        void InstallSurvey(string serverParkName, string instrumentFile, SurveyInterviewType surveyInterviewType);
+        void InstallSurvey(string instrumentFile, SurveyInterviewType surveyInterviewType, string serverParkName);
 
-        void UninstallSurvey(string serverParkName, string instrumentName);
+        void UninstallSurvey(string instrumentName, string serverParkName);
 
         void ActivateSurvey(string instrumentName, string serverParkName);
 
