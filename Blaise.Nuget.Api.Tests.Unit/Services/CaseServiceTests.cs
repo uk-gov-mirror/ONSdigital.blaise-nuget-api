@@ -363,7 +363,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_A_DatabseFile_When_I_Call_WriteDataRecord_Then_The_Correct_Services_Are_Called()
+        public void Given_A_DatabaseFile_When_I_Call_WriteDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act
             _sut.WriteDataRecord(_dataRecordMock.Object, _databaseFile);

@@ -7,7 +7,6 @@ using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Helpers;
 using Blaise.Nuget.Api.Providers;
-using StatNeth.Blaise.API.Cati.Specification;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Api
@@ -87,14 +86,6 @@ namespace Blaise.Nuget.Api.Api
             return _surveyService.GetSurveyNames(_connectionModel, serverParkName);
         }
 
-        public List<DateTime> GetSurveyDays(string instrumentName, string serverParkName)
-        {
-            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
-
-            return _surveyService.GetSurveyDays(_connectionModel, serverParkName, instrumentName);
-        }
-
         public Guid GetIdOfSurvey(string instrumentName, string serverParkName)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
@@ -103,20 +94,20 @@ namespace Blaise.Nuget.Api.Api
             return _surveyService.GetInstrumentId(_connectionModel, instrumentName, serverParkName);
         }
 
-        public void InstallSurvey(string serverParkName, string instrumentFile, SurveyInterviewType surveyInterviewType)
+        public void InstallSurvey(string instrumentFile, SurveyInterviewType surveyInterviewType, string serverParkName)
         {
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
             instrumentFile.ThrowExceptionIfNullOrEmpty("instrumentFile");
-
-            _surveyService.InstallInstrument(_connectionModel, serverParkName, instrumentFile, surveyInterviewType);
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+            
+            _surveyService.InstallInstrument(_connectionModel, instrumentFile, surveyInterviewType, serverParkName);
         }
 
-        public void UninstallSurvey(string serverParkName, string instrumentName)
+        public void UninstallSurvey(string instrumentName, string serverParkName)
         {
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-
-            _surveyService.UninstallInstrument(_connectionModel, serverParkName, instrumentName);
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+            
+            _surveyService.UninstallInstrument(_connectionModel, instrumentName, serverParkName);
         }
 
         public void ActivateSurvey(string instrumentName, string serverParkName)
