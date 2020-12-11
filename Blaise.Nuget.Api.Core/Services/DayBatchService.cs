@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
-using StatNeth.Blaise.API.Cati.Specification;
 
 namespace Blaise.Nuget.Api.Core.Services
 {
@@ -33,13 +33,13 @@ namespace Blaise.Nuget.Api.Core.Services
             var catiManagement = _catiServerProvider.GetRemoteConnection(connectionModel);
 
             catiManagement.SelectServerPark(serverParkName);
-            ISurveyDayCollection surveyDateCollection = catiManagement
+
+            var surveyDateCollection = catiManagement
                 .LoadCatiInstrumentManager(instrumentName).Specification.SurveyDays;
 
-            foreach (var surveyDay in surveyDateCollection)
-            {
-                surveyDays.Add(surveyDay.Date);
-            }
+            if (surveyDateCollection == null || surveyDateCollection.Count == 0) return surveyDays;
+
+            surveyDays.AddRange(surveyDateCollection.Select(surveyDay => surveyDay.Date));
 
             return surveyDays;
         }
