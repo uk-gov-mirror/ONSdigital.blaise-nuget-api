@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Blaise.Nuget.Api.Api;
 using Blaise.Nuget.Api.Contracts.Enums;
 using NUnit.Framework;
@@ -27,7 +26,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
             
 
             //act
-            _sut.InstallSurvey(serverParkName, fullInstrumentPath, SurveyInterviewType.Cati);
+            _sut.InstallSurvey(fullInstrumentPath, SurveyInterviewType.Cati, serverParkName);
 
             //assert
             var surveys = _sut.GetSurveys(serverParkName).ToList();
@@ -39,7 +38,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
         public void Given_An_Instrument_Is_Installed_It_Gets_Uninstalled_From_The_Server_Park()
         {
             //arrange
-            _sut.InstallSurvey(serverParkName, fullInstrumentPath, SurveyInterviewType.Cati);
+            _sut.InstallSurvey(fullInstrumentPath, SurveyInterviewType.Cati, serverParkName);
             var surveys = _sut.GetSurveys(serverParkName).ToList();
             Assert.IsNotNull(surveys.First(s => s.Name == surveyName));
 
@@ -99,14 +98,6 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
 
             //assert
             Assert.AreEqual(SurveyStatusType.Active, _sut.GetSurveyStatus(surveyName, serverParkName));
-        }
-
-        [Ignore("Integration")]
-        [Test]
-        public void Given_An_Instrument_Is_Installed_And_Has_SurveyDays_When_I_Call_GetSurveyDays_They_Are_Returned()
-        {
-            var result = _sut.GetSurveyDays(surveyName, serverParkName);
-            Assert.NotNull(result);
         }
     }
 }
