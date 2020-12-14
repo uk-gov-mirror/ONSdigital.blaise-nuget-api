@@ -94,20 +94,20 @@ namespace Blaise.Nuget.Api.Api
             return _surveyService.GetInstrumentId(_connectionModel, instrumentName, serverParkName);
         }
 
-        public void InstallSurvey(string serverParkName, string instrumentFile, SurveyInterviewType surveyInterviewType)
+        public void InstallSurvey(string instrumentFile, SurveyInterviewType surveyInterviewType, string serverParkName)
         {
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
             instrumentFile.ThrowExceptionIfNullOrEmpty("instrumentFile");
-
-            _surveyService.InstallInstrument(_connectionModel, serverParkName, instrumentFile, surveyInterviewType);
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+            
+            _surveyService.InstallInstrument(_connectionModel, instrumentFile, surveyInterviewType, serverParkName);
         }
 
-        public void UninstallSurvey(string serverParkName, string instrumentName)
+        public void UninstallSurvey(string instrumentName, string serverParkName)
         {
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
-
-            _surveyService.UninstallInstrument(_connectionModel, serverParkName, instrumentName);
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+            
+            _surveyService.UninstallInstrument(_connectionModel, instrumentName, serverParkName);
         }
 
         public void ActivateSurvey(string instrumentName, string serverParkName)

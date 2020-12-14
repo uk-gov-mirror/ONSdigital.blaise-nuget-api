@@ -14,14 +14,12 @@ namespace Blaise.Nuget.Api.Core.Services
     public class SurveyService : ISurveyService
     {
         private readonly IParkService _parkService;
-        private readonly IDayBatchService _dayBatchService;
 
         public SurveyService(
-            IParkService parkService, 
-            IDayBatchService dayBatchService)
+            IParkService parkService 
+            )
         {
             _parkService = parkService;
-            _dayBatchService = dayBatchService;
         }
 
         public IEnumerable<string> GetSurveyNames(ConnectionModel connectionModel, string serverParkName)
@@ -126,8 +124,8 @@ namespace Blaise.Nuget.Api.Core.Services
             return configuration.DataFileName;
         }
 
-        public void InstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentFile,
-            SurveyInterviewType surveyInterviewType)
+        public void InstallInstrument(ConnectionModel connectionModel, string instrumentFile,
+            SurveyInterviewType surveyInterviewType, string serverParkName)
         {
             var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
 
@@ -135,17 +133,12 @@ namespace Blaise.Nuget.Api.Core.Services
                                         SurveyDataEntryType.StrictInterviewing.ToString(), DataOverwriteMode.Always);
         }
 
-        public void UninstallInstrument(ConnectionModel connectionModel, string serverParkName, string instrumentName)
+        public void UninstallInstrument(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
             var instrumentId = GetInstrumentId(connectionModel, instrumentName, serverParkName);
 
             serverPark.RemoveSurvey(instrumentId);
-        }
-
-        public void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayBatchDate)
-        {
-            _dayBatchService.CreateDayBatch(connectionModel, instrumentName, serverParkName, dayBatchDate);
         }
 
         private static IConfiguration GetSurveyConfiguration(ISurvey survey)
@@ -158,6 +151,6 @@ namespace Blaise.Nuget.Api.Core.Services
             }
 
             return configuration;
-        }     
+        }
     }
 }

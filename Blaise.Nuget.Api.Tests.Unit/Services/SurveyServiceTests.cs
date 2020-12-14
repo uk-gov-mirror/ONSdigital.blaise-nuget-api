@@ -16,7 +16,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
     public class SurveyServiceTests
     {
         private Mock<IParkService> _parkServiceMock;
-        private Mock<IDayBatchService> _dayBatchServiceMock;
 
         private Mock<ISurvey> _surveyMock;
         private Mock<ISurveyCollection> _surveyCollectionMock;
@@ -58,11 +57,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _parkServiceMock = new Mock<IParkService>();
             _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, _serverParkName)).Returns(_serverParkMock.Object);
             _parkServiceMock.Setup(p => p.GetServerParkNames(_connectionModel)).Returns(new List<string> { _serverParkName });
-
-            _dayBatchServiceMock = new Mock<IDayBatchService>();
-
-            //setup service under test
-            _sut = new SurveyService(_parkServiceMock.Object, _dayBatchServiceMock.Object);
+            
+            _sut = new SurveyService(_parkServiceMock.Object);
         }
 
         [Test]
@@ -423,26 +419,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_CreateDayBatch_Then_The_Correct_Services_Are_Called()
-        {
-            //arrange
-            var dayBatchDate = DateTime.Now;
-
-            //act
-            _sut.CreateDayBatch(_connectionModel, _instrumentName, _serverParkName, dayBatchDate);
-
-            //assert
-            _dayBatchServiceMock.Verify(v => v.CreateDayBatch(_connectionModel, _instrumentName, _serverParkName, dayBatchDate), Times.Once);
-        }
-
-        [Test]
         public void Given_Valid_Arguments_When_I_Call_InstallInstrument_Then_The_Correct_Services_Are_Called()
         {
             //arrange
             var instrumentFile = @"d:\\opn2101a.pkg";
 
             //act
-            _sut.InstallInstrument(_connectionModel, _serverParkName, instrumentFile, SurveyInterviewType.Cati);
+            _sut.InstallInstrument(_connectionModel, instrumentFile, SurveyInterviewType.Cati, _serverParkName);
 
             //assert
             _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, _serverParkName), Times.Once);
@@ -454,7 +437,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_An_Instrument_Exists_When_I_Call_UninstallInstrument_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.UninstallInstrument(_connectionModel, _serverParkName, _instrumentName);
+            _sut.UninstallInstrument(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, _serverParkName), Times.AtLeastOnce);

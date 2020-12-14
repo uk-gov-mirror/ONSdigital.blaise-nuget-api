@@ -26,7 +26,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
             
 
             //act
-            _sut.InstallSurvey(serverParkName, fullInstrumentPath, SurveyInterviewType.Cati);
+            _sut.InstallSurvey(fullInstrumentPath, SurveyInterviewType.Cati, serverParkName);
 
             //assert
             var surveys = _sut.GetSurveys(serverParkName).ToList();
@@ -38,7 +38,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
         public void Given_An_Instrument_Is_Installed_It_Gets_Uninstalled_From_The_Server_Park()
         {
             //arrange
-            _sut.InstallSurvey(serverParkName, fullInstrumentPath, SurveyInterviewType.Cati);
+            _sut.InstallSurvey(fullInstrumentPath, SurveyInterviewType.Cati, serverParkName);
             var surveys = _sut.GetSurveys(serverParkName).ToList();
             Assert.IsNotNull(surveys.First(s => s.Name == surveyName));
 
