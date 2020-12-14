@@ -450,11 +450,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
             var instrumentFile = @"d:\\opn2101a.pkg";
 
             //act
-            _sut.InstallSurvey(_serverParkName, instrumentFile, surveyInterviewType);
+            _sut.InstallSurvey(instrumentFile, surveyInterviewType, _serverParkName);
 
             //assert
-            _surveyServiceMock.Verify(v => v.InstallInstrument(_connectionModel, _serverParkName, instrumentFile,
-                                        surveyInterviewType), Times.Once);
+            _surveyServiceMock.Verify(v => v.InstallInstrument(_connectionModel, instrumentFile,
+                                        surveyInterviewType, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -464,8 +464,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
             var instrumentFile = @"d:\\opn2101a.pkg";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.InstallSurvey(string.Empty, 
-                                                                        instrumentFile, SurveyInterviewType.Cati));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.InstallSurvey( 
+                                                                        instrumentFile, SurveyInterviewType.Cati, string.Empty));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
@@ -476,8 +476,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
             var instrumentFile = @"d:\\opn2101a.pkg";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.InstallSurvey(null, instrumentFile, 
-                                                                            SurveyInterviewType.Cati));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.InstallSurvey(instrumentFile, 
+                                                                            SurveyInterviewType.Cati, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
@@ -485,8 +485,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
         public void Given_An_Empty_instrumentFile_When_I_Call_InstallSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.InstallSurvey(_serverParkName, string.Empty, 
-                                                                        SurveyInterviewType.Cati));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.InstallSurvey(string.Empty, 
+                                                                        SurveyInterviewType.Cati, _serverParkName));
             Assert.AreEqual("A value for the argument 'instrumentFile' must be supplied", exception.Message);
         }
 
@@ -494,8 +494,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
         public void Given_A_Null_instrumentFile_When_I_Call_InstallSurvey_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.InstallSurvey(_serverParkName, null, 
-                                                                            SurveyInterviewType.Cati));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.InstallSurvey( null, 
+                                                                            SurveyInterviewType.Cati, _serverParkName));
             Assert.AreEqual("instrumentFile", exception.ParamName);
         }
 
@@ -503,17 +503,17 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
         public void Given_Valid_Arguments_When_I_Call_UninstallSurvey_Then_The_Correct_Service_Method_Is_Called()
         {
             //act
-            _sut.UninstallSurvey(_serverParkName, _instrumentName);
+            _sut.UninstallSurvey(_instrumentName, _serverParkName);
 
             //assert
-            _surveyServiceMock.Verify(v => v.UninstallInstrument(_connectionModel, _serverParkName, _instrumentName), Times.Once);
+            _surveyServiceMock.Verify(v => v.UninstallInstrument(_connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
         public void Given_An_Empty_ServerParkName_When_I_Call_UninstallSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.UninstallSurvey(string.Empty, _instrumentName));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.UninstallSurvey(_instrumentName, string.Empty));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
@@ -521,7 +521,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
         public void Given_A_Null_ServerParkName_When_I_Call_UninstallSurvey_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UninstallSurvey(null, _instrumentName));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UninstallSurvey(_instrumentName, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
@@ -529,7 +529,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
         public void Given_An_Empty_instrumentName_When_I_Call_UninstallSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.UninstallSurvey(_serverParkName, string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.UninstallSurvey(string.Empty, _serverParkName));
             Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
         }
 
@@ -537,7 +537,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
         public void Given_A_Null_instrumentName_When_I_Call_UninstallSurvey_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UninstallSurvey(_serverParkName, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UninstallSurvey(null, _serverParkName));
             Assert.AreEqual("instrumentName", exception.ParamName);
         }
 

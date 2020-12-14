@@ -11,7 +11,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
 {
     public class BlaiseCatiApiTests
     {
-        private Mock<ISurveyService> _surveyServiceMock;
+        private Mock<IDayBatchService> _dayBatchServiceMock;
 
         private readonly string _serverParkName;
         private readonly string _instrumentName;
@@ -29,9 +29,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
         [SetUp]
         public void SetUpTests()
         {
-            _surveyServiceMock = new Mock<ISurveyService>();
+            _dayBatchServiceMock = new Mock<IDayBatchService>();
 
-            _sut = new BlaiseCatiApi(_surveyServiceMock.Object, _connectionModel);
+            _sut = new BlaiseCatiApi(_dayBatchServiceMock.Object, _connectionModel);
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
             _sut.CreateDayBatch(_instrumentName, _serverParkName, dayBatchDate);
 
             //assert
-            _surveyServiceMock.Verify(v => v.CreateDayBatch(_connectionModel, _instrumentName, _serverParkName, dayBatchDate), Times.Once);
+            _dayBatchServiceMock.Verify(v => v.CreateDayBatch(_connectionModel, _instrumentName, _serverParkName, dayBatchDate), Times.Once);
         }
 
         [Test]
@@ -104,6 +104,74 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
 
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateDayBatch(_instrumentName, null, dayBatchDate));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetSurveyDays_Then_The_Expected_Result_Is_Returned()
+        {
+            var surveyDays = new List<DateTime>
+            {
+                new DateTime(2020, 12, 10),
+                new DateTime(2020, 12, 11)
+            };
+            //arrange
+            _dayBatchServiceMock.Setup(p => p.GetSurveyDays(_connectionModel, _instrumentName, _serverParkName)).Returns(surveyDays);
+
+            //act            
+            var result = _sut.GetSurveyDays(_instrumentName, _serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<List<DateTime>>(result);
+            Assert.AreEqual(surveyDays, result);
+        }
+
+        [Test]
+        public void Given_There_Are_No_SurveyDays_In_The_Instrument_When_I_Call_GetSurveyDays_Then_A_Blank_List_Is_Returned()
+        {
+            var surveyDays = new List<DateTime>();
+            //arrange
+            _dayBatchServiceMock.Setup(p => p.GetSurveyDays(_connectionModel, _instrumentName, _serverParkName)).Returns(surveyDays);
+
+            //act            
+            var result = _sut.GetSurveyDays(_instrumentName, _serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<List<DateTime>>(result);
+            Assert.AreEqual(surveyDays, result);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_GetSurveyDays_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyDays(string.Empty, _serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_GetSurveyDays_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyDays(null, _serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_GetSurveyDays_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetSurveyDays(_instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_GetSurveyDays_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetSurveyDays(_instrumentName, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
     }

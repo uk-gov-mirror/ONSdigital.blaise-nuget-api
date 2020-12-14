@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
@@ -10,14 +11,14 @@ namespace Blaise.Nuget.Api.Api
 {
     public class BlaiseCatiApi : IBlaiseCatiApi
     {
-        private readonly ISurveyService _surveyService;
+        private readonly IDayBatchService _dayBatchService;
         private readonly ConnectionModel _connectionModel;
 
         internal BlaiseCatiApi(
-            ISurveyService surveyService,
+            IDayBatchService dayBatchService,
             ConnectionModel connectionModel)
         {
-            _surveyService = surveyService;
+            _dayBatchService = dayBatchService;
             _connectionModel = connectionModel;
         }
 
@@ -26,7 +27,7 @@ namespace Blaise.Nuget.Api.Api
             var unityProvider = new UnityProvider();
             unityProvider.RegisterDependencies();
 
-            _surveyService = unityProvider.Resolve<ISurveyService>();
+            _dayBatchService = unityProvider.Resolve<IDayBatchService>();
             
             var configurationProvider = unityProvider.Resolve<IConfigurationProvider>();
             _connectionModel = connectionModel ?? configurationProvider.GetConnectionModel();
@@ -37,7 +38,15 @@ namespace Blaise.Nuget.Api.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            _surveyService.CreateDayBatch(_connectionModel, instrumentName, serverParkName, dayBatchDate);
+            _dayBatchService.CreateDayBatch(_connectionModel, instrumentName, serverParkName, dayBatchDate);
+        }
+
+        public List<DateTime> GetSurveyDays(string instrumentName, string serverParkName)
+        {
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _dayBatchService.GetSurveyDays(_connectionModel, instrumentName, serverParkName);
         }
     }
 }
