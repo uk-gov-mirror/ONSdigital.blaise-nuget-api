@@ -1,6 +1,6 @@
 ﻿using System;
 using Blaise.Nuget.Api.Contracts.Models;
-using Blaise.Nuget.Api.Core.Interfaces.Providers;
+using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Core.Services;
 using Moq;
@@ -12,10 +12,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 {
     public class DayBatchServiceTests
     {
-        private Mock<IRemoteCatiServerProvider> _remoteCatiProviderMock;
+        private Mock<ICatiManagementServerFactory> _catiFactoryMock;
         private Mock<IRemoteCatiManagementServer> _catiManagementServerMock;
         private Mock<ISurveyDayCollection> _surveyDayCollection;
-        private Mock<IDayBatchService> _dayBatchServiceMock;
 
 
         private readonly ConnectionModel _connectionModel;
@@ -41,14 +40,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _catiManagementServerMock.Setup(c => c.LoadCatiInstrumentManager(It.IsAny<string>()).CreateDaybatch(It.IsAny<DateTime>()));
             _catiManagementServerMock.Setup(c => c.LoadCatiInstrumentManager(It.IsAny<string>()).Specification.SurveyDays).Returns(_surveyDayCollection.Object);
 
-            _remoteCatiProviderMock = new Mock<IRemoteCatiServerProvider>();
-            _remoteCatiProviderMock.Setup(r => r.GetRemoteConnection(_connectionModel))
+            _catiFactoryMock = new Mock<ICatiManagementServerFactory>();
+            _catiFactoryMock.Setup(r => r.GetConnection(_connectionModel))
                 .Returns(_catiManagementServerMock.Object);
 
-            _dayBatchServiceMock = new Mock<IDayBatchService>();
-
             //setup service under test
-            _sut = new DayBatchService(_remoteCatiProviderMock.Object);
+            _sut = new DayBatchService(_catiFactoryMock.Object);
         }
 
         [Test]
@@ -61,7 +58,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _sut.CreateDayBatch(_connectionModel, _instrumentName, _serverParkName, dayBatchDate);
 
             //assert
-            _remoteCatiProviderMock.Verify(v => v.GetRemoteConnection(_connectionModel), Times.Once);
+            _catiFactoryMock.Verify(v => v.GetConnection(_connectionModel), Times.Once);
             _catiManagementServerMock.Verify(v => v.SelectServerPark(_serverParkName), Times.Once);
             _catiManagementServerMock.Verify(v => v
                 .LoadCatiInstrumentManager(_instrumentName)
@@ -77,7 +74,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _sut.GetSurveyDays(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
-            _remoteCatiProviderMock.Verify(v => v.GetRemoteConnection(_connectionModel), Times.Once);
+            _catiFactoryMock.Verify(v => v.GetConnection(_connectionModel), Times.Once);
             _catiManagementServerMock.Verify(v => v.SelectServerPark(_serverParkName), Times.Once);
             _catiManagementServerMock.Verify(v => v
                 .LoadCatiInstrumentManager(_instrumentName).Specification.SurveyDays, Times.Once);
