@@ -27,25 +27,30 @@ namespace Blaise.Nuget.Api.Providers
 
         public int ConnectionExpiresInMinutes =>
             ConvertToInt(
-                GetEnvironmentVariable("ENV_CONNECTION_EXPIRES_IN_MINUTES") ?? 
-                (string.IsNullOrWhiteSpace(GetLocalVariable("ConnectionExpiresInMinutes")) 
+                GetEnvironmentVariable("ENV_CONNECTION_EXPIRES_IN_MINUTES") ??
+                (string.IsNullOrWhiteSpace(GetLocalVariable("ConnectionExpiresInMinutes"))
                     ? "30" : GetLocalVariable("ConnectionExpiresInMinutes")));
 
-        private string GetEnvironmentVariable(string variableName)
+        private static string GetEnvironmentVariable(string variableName)
         {
             return Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine);
         }
 
-        private string GetLocalVariable(string variableName)
+        private static string GetLocalVariable(string variableName)
         {
             var variable = ConfigurationManager.AppSettings[variableName];
             variable.ThrowExceptionIfNullOrEmpty(variableName);
             return variable;
         }
 
-        private static int ConvertToInt(string integer)
+        private static int ConvertToInt(string variableName)
         {
-            return int.Parse(integer);
+            if (int.TryParse(variableName, out var result))
+            {
+                return result;
+            }
+
+            throw new ArgumentException($"Variable '{variableName}' is not in an integer format");
         }
     }
 }
