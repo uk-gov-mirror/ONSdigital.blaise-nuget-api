@@ -15,7 +15,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Cati
             _sut = new BlaiseCatiApi();
         }
 
-        //[Ignore("Integration")]
+        [Ignore("Integration")]
         [Test]
         public void Given_An_Instrument_Is_Installed_And_Has_SurveyDays_When_I_Call_GetSurveyDays_They_Are_Returned()
         {

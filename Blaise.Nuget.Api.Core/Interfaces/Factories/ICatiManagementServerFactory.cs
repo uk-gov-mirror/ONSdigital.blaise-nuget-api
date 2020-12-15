@@ -3,7 +3,7 @@ using StatNeth.Blaise.API.Cati.Runtime;
 
 namespace Blaise.Nuget.Api.Core.Interfaces.Factories
 {
-    public interface IRemoteCatiServerFactory
+    public interface ICatiManagementServerFactory
     {
         IRemoteCatiManagementServer GetConnection(ConnectionModel connectionModel);
     }

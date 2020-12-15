@@ -28,7 +28,7 @@ namespace Blaise.Nuget.Api.Providers
             //factories
             _unityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>();
             _unityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>();
-            _unityContainer.RegisterSingleton<IRemoteCatiServerFactory, RemoteCatiServerFactory>();
+            _unityContainer.RegisterSingleton<ICatiManagementServerFactory, CatiManagementServerFactory>();
 
             //mappers
             _unityContainer.RegisterType<IDataMapperService, DataMapperService>();
@@ -36,7 +36,6 @@ namespace Blaise.Nuget.Api.Providers
             //data link providers
             _unityContainer.RegisterSingleton<ILocalDataLinkProvider, LocalDataLinkProvider>();
             _unityContainer.RegisterSingleton<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
-            _unityContainer.RegisterSingleton<IRemoteCatiServerProvider, RemoteCatiServerProvider>();
 
             //services
             _unityContainer.RegisterType<IDataModelService, DataModelService>();
