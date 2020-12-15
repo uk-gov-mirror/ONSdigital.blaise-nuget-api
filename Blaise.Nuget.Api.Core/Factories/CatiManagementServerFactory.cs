@@ -8,13 +8,13 @@ using StatNeth.Blaise.API.Cati.Runtime;
 
 namespace Blaise.Nuget.Api.Core.Factories
 {
-    public class RemoteCatiServerFactory : IRemoteCatiServerFactory
+    public class CatiManagementServerFactory : ICatiManagementServerFactory
     {
         private readonly IPasswordService _passwordService;
 
         private readonly Dictionary<string, Tuple<IRemoteCatiManagementServer, DateTime>> _remoteDataServers;
 
-        public RemoteCatiServerFactory(IPasswordService passwordService)
+        public CatiManagementServerFactory(IPasswordService passwordService)
         {
             _passwordService = passwordService;
             _remoteDataServers = new Dictionary<string, Tuple<IRemoteCatiManagementServer, DateTime>>(StringComparer.OrdinalIgnoreCase);
