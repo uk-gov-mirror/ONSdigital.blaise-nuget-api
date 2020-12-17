@@ -4,7 +4,7 @@ using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
-using Blaise.Nuget.Api.Helpers;
+using Blaise.Nuget.Api.Extensions;
 using Blaise.Nuget.Api.Providers;
 using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;

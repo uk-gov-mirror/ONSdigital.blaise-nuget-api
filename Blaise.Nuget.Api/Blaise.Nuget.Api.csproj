@@ -82,7 +82,7 @@
     <Compile Include="Api\BlaiseBackupApi.cs" />
     <Compile Include="Api\BlaiseSurveyApi.cs" />
     <Compile Include="Api\BlaiseCaseApi.cs" />
-    <Compile Include="Helpers\ParameterValidationHelper.cs" />
+    <Compile Include="Extensions\ArgumentValidationExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\BlaiseConfigurationProvider.cs" />
     <Compile Include="Interfaces\IIocProvider.cs" />
