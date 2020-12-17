@@ -2,7 +2,7 @@
 using System.Configuration;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
-using Blaise.Nuget.Api.Helpers;
+using Blaise.Nuget.Api.Extensions;
 
 namespace Blaise.Nuget.Api.Providers
 {

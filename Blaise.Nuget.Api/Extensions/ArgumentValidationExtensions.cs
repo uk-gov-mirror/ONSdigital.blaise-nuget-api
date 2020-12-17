@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Blaise.Nuget.Api.Helpers
+namespace Blaise.Nuget.Api.Extensions
 {
-    internal static class ParameterValidationHelper
+    internal static class ArgumentValidationExtensions
     {
         public static void ThrowExceptionIfNullOrEmpty(this string parameter, string parameterName)
         {
