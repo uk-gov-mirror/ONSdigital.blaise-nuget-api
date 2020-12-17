@@ -75,6 +75,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\BlaiseRoleApi.cs" />
     <Compile Include="Api\BlaiseServerParkApi.cs" />
     <Compile Include="Api\BlaiseCatiApi.cs" />
     <Compile Include="Api\BlaiseHealthApi.cs" />
