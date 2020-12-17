@@ -33,6 +33,7 @@ namespace Blaise.Nuget.Api.Providers
 
             //mappers
             _unityContainer.RegisterType<IDataMapperService, DataMapperService>();
+            _unityContainer.RegisterType<IRolePermissionMapper, RolePermissionMapper>();
 
             //data link providers
             _unityContainer.RegisterSingleton<ILocalDataLinkProvider, LocalDataLinkProvider>();
