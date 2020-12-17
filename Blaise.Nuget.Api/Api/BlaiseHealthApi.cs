@@ -1,11 +1,12 @@
-﻿using Blaise.Nuget.Api.Contracts.Models;
+﻿using Blaise.Nuget.Api.Contracts.Interfaces;
+using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Providers;
 
 namespace Blaise.Nuget.Api.Api
 {
-    public class BlaiseHealthApi 
+    public class BlaiseHealthApi : IBlaiseHealthApi
     {
         private readonly IConnectedServerFactory _connectedServerFactory;
         private readonly IRemoteDataServerFactory _remoteDataServerFactory;

@@ -1,5 +1,6 @@
 ﻿using System;
 using Blaise.Nuget.Api.Api;
+using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Moq;
@@ -21,7 +22,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Health
         private Mock<IRemoteDataServer> _remoteDataServerMock;
         private Mock<IRemoteCatiManagementServer> _remoteCatiManagementServerMock;
 
-        private BlaiseHealthApi _sut;
+        private IBlaiseHealthApi _sut;
 
         [SetUp]
         public void SetUpTests()
