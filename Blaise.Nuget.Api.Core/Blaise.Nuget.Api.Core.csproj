@@ -48,7 +48,9 @@
   <ItemGroup>
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\ExpiryExtensions.cs" />
+    <Compile Include="Factories\SecurityManagerFactory.cs" />
     <Compile Include="Factories\ConnectedServerFactory.cs" />
+    <Compile Include="Interfaces\Factories\ISecurityManagerFactory.cs" />
     <Compile Include="Interfaces\Factories\ICatiManagementServerFactory.cs" />
     <Compile Include="Factories\CatiManagementServerFactory.cs" />
     <Compile Include="Factories\RemoteDataServerFactory.cs" />
@@ -78,11 +80,13 @@
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Interfaces\Services\IFileService.cs" />
     <Compile Include="Interfaces\Services\IDayBatchService.cs" />
+    <Compile Include="Interfaces\Services\IRoleService.cs" />
     <Compile Include="Services\KeyService.cs" />
     <Compile Include="Services\ParkService.cs" />
     <Compile Include="Services\PasswordService.cs" />
     <Compile Include="Services\DayBatchService.cs" />
     <Compile Include="Services\SurveyService.cs" />
+    <Compile Include="Services\RoleService.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
