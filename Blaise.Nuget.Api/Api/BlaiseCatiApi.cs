@@ -29,7 +29,7 @@ namespace Blaise.Nuget.Api.Api
 
             _dayBatchService = unityProvider.Resolve<IDayBatchService>();
             
-            var configurationProvider = unityProvider.Resolve<IConfigurationProvider>();
+            var configurationProvider = unityProvider.Resolve<IBlaiseConfigurationProvider>();
             _connectionModel = connectionModel ?? configurationProvider.GetConnectionModel();
         }
         

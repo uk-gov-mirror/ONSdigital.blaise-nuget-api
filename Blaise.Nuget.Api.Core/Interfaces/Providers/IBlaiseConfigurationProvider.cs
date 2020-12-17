@@ -2,7 +2,7 @@
 
 namespace Blaise.Nuget.Api.Core.Interfaces.Providers
 {
-    public interface IConfigurationProvider
+    public interface IBlaiseConfigurationProvider
     {
         ConnectionModel GetConnectionModel();
 

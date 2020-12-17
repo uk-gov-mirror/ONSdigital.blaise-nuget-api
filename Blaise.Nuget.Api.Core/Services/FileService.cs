@@ -11,7 +11,7 @@ namespace Blaise.Nuget.Api.Core.Services
 {
     public class FileService : IFileService
     {
-        private readonly IConfigurationProvider _configurationProvider;
+        private readonly IBlaiseConfigurationProvider _configurationProvider;
 
         private const string DatabaseFileNameExt = "bdix";
         private const string DatabaseSourceExt = "bdbx";
@@ -19,7 +19,7 @@ namespace Blaise.Nuget.Api.Core.Services
         private const string LibraryFileExt = "blix";
 
         public FileService(
-            IConfigurationProvider configurationProvider)
+            IBlaiseConfigurationProvider configurationProvider)
         {
             _configurationProvider = configurationProvider;
         }

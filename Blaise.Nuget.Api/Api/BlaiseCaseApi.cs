@@ -31,7 +31,7 @@ namespace Blaise.Nuget.Api.Api
 
            _caseService = unityProvider.Resolve<ICaseService>();
 
-           var configurationProvider = unityProvider.Resolve<IConfigurationProvider>();
+           var configurationProvider = unityProvider.Resolve<IBlaiseConfigurationProvider>();
            _connectionModel = connectionModel ?? configurationProvider.GetConnectionModel();
         }
 

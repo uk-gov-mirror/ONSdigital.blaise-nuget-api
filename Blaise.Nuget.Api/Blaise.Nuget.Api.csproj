@@ -84,7 +84,7 @@
     <Compile Include="Api\BlaiseCaseApi.cs" />
     <Compile Include="Helpers\ParameterValidationHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\ConfigurationProvider.cs" />
+    <Compile Include="Providers\BlaiseConfigurationProvider.cs" />
     <Compile Include="Interfaces\IIocProvider.cs" />
     <Compile Include="Providers\UnityProvider.cs" />
   </ItemGroup>

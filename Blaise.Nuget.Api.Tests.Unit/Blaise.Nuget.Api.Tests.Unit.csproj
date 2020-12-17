@@ -72,7 +72,7 @@
     <Compile Include="Api\Survey\BlaiseSurveyApiTests.cs" />
     <Compile Include="Api\ServerPark\BlaiseServerParkApiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\ConfigurationProviderTests.cs" />
+    <Compile Include="Providers\BlaiseConfigurationProviderTests.cs" />
     <Compile Include="Services\DayBatchServiceTests.cs" />
     <Compile Include="Services\DataRecordServiceTests.cs" />
     <Compile Include="Services\FieldServiceTests.cs" />
