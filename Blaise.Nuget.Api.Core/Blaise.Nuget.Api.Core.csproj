@@ -69,6 +69,9 @@
     <Compile Include="Interfaces\Services\IPasswordService.cs" />
     <Compile Include="Interfaces\Factories\IRemoteDataServerFactory.cs" />
     <Compile Include="Interfaces\Services\ISurveyService.cs" />
+    <Compile Include="Interfaces\Mappers\IRolePermissionMapper.cs" />
+    <Compile Include="Mappers\RolePermissionMapper.cs" />
+    <Compile Include="Models\ActionPermissionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\RemoteDataLinkProvider.cs" />
     <Compile Include="Providers\LocalDataLinkProvider.cs" />
