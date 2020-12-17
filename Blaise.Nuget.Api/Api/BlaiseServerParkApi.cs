@@ -29,7 +29,7 @@ namespace Blaise.Nuget.Api.Api
 
             _parkService = unityProvider.Resolve<IParkService>();
 
-            var configurationProvider = unityProvider.Resolve<IConfigurationProvider>();
+            var configurationProvider = unityProvider.Resolve<IBlaiseConfigurationProvider>();
             _connectionModel = connectionModel ?? configurationProvider.GetConnectionModel();
         }
 

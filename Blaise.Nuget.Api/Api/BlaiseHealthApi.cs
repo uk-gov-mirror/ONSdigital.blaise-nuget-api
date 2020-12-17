@@ -35,7 +35,7 @@ namespace Blaise.Nuget.Api.Api
             _remoteDataServerFactory = unityProvider.Resolve<IRemoteDataServerFactory>();
             _catiManagementServerFactory = unityProvider.Resolve<ICatiManagementServerFactory>();
 
-            var configurationProvider = unityProvider.Resolve<IConfigurationProvider>();
+            var configurationProvider = unityProvider.Resolve<IBlaiseConfigurationProvider>();
             _connectionModel = connectionModel ?? configurationProvider.GetConnectionModel();
         }
 

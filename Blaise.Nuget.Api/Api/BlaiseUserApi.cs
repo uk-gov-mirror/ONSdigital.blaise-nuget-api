@@ -30,7 +30,7 @@ namespace Blaise.Nuget.Api.Api
             //resolve dependencies
             _userService = unityProvider.Resolve<IUserService>();
 
-            var configurationProvider = unityProvider.Resolve<IConfigurationProvider>();
+            var configurationProvider = unityProvider.Resolve<IBlaiseConfigurationProvider>();
             _connectionModel = connectionModel ?? configurationProvider.GetConnectionModel();
         }
 

@@ -6,7 +6,7 @@ using Blaise.Nuget.Api.Helpers;
 
 namespace Blaise.Nuget.Api.Providers
 {
-    public class ConfigurationProvider : IConfigurationProvider
+    public class BlaiseConfigurationProvider : IBlaiseConfigurationProvider
     {
         public ConnectionModel GetConnectionModel()
         {

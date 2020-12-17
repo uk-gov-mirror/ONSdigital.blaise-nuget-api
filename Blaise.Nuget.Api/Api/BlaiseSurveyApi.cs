@@ -31,7 +31,7 @@ namespace Blaise.Nuget.Api.Api
 
             _surveyService = unityProvider.Resolve<ISurveyService>();
             
-            var configurationProvider = unityProvider.Resolve<IConfigurationProvider>();
+            var configurationProvider = unityProvider.Resolve<IBlaiseConfigurationProvider>();
             _connectionModel = connectionModel ?? configurationProvider.GetConnectionModel();
         }
 

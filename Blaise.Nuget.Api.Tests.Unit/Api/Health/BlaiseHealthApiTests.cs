@@ -50,6 +50,22 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Health
         }
 
         [Test]
+        public void Given_No_ConnectionModel_When_I_Instantiate_BlaiseCaseApi_No_Exceptions_Are_Thrown()
+        {
+            //act && assert
+            // ReSharper disable once ObjectCreationAsStatement
+            Assert.DoesNotThrow(() => new BlaiseHealthApi());
+        }
+
+        [Test]
+        public void Given_A_ConnectionModel_When_I_Instantiate_BlaiseCaseApi_No_Exceptions_Are_Thrown()
+        {
+            //act && assert
+            // ReSharper disable once ObjectCreationAsStatement
+            Assert.DoesNotThrow(() => new BlaiseHealthApi(new ConnectionModel()));
+
+        }
+        [Test]
         public void Given_A_Valid_ConnectionModel_When_I_Call_ConnectionModelIsHealthy_Then_True_Is_Returned()
         {
             //act

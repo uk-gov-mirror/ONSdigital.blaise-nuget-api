@@ -8,11 +8,11 @@ namespace Blaise.Nuget.Api.Core.Providers
 {
     public class LocalDataLinkProvider : ILocalDataLinkProvider
     {
-        private readonly IConfigurationProvider _configurationProvider;
+        private readonly IBlaiseConfigurationProvider _configurationProvider;
 
         private readonly Dictionary<string, Tuple<IDataLink4, DateTime>> _dataLinkConnections;
 
-        public LocalDataLinkProvider(IConfigurationProvider configurationProvider)
+        public LocalDataLinkProvider(IBlaiseConfigurationProvider configurationProvider)
         {
             _configurationProvider = configurationProvider;
             _dataLinkConnections = new Dictionary<string, Tuple<IDataLink4, DateTime>>(StringComparer.OrdinalIgnoreCase);

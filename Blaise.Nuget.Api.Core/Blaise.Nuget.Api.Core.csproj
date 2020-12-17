@@ -53,7 +53,7 @@
     <Compile Include="Factories\CatiManagementServerFactory.cs" />
     <Compile Include="Factories\RemoteDataServerFactory.cs" />
     <Compile Include="Interfaces\Factories\IConnectedServerFactory.cs" />
-    <Compile Include="Interfaces\Providers\IConfigurationProvider.cs" />
+    <Compile Include="Interfaces\Providers\IBlaiseConfigurationProvider.cs" />
     <Compile Include="Mappers\DataMapperService.cs" />
     <Compile Include="Interfaces\Mappers\IDataMapperService.cs" />
     <Compile Include="Interfaces\Providers\IRemoteDataLinkProvider.cs" />

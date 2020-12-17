@@ -20,7 +20,7 @@ namespace Blaise.Nuget.Api.Providers
             _unityContainer = new UnityContainer();
 
             // configuration provider
-            _unityContainer.RegisterSingleton<IConfigurationProvider, ConfigurationProvider>();
+            _unityContainer.RegisterSingleton<IBlaiseConfigurationProvider, BlaiseConfigurationProvider>();
 
             //password service
             _unityContainer.RegisterType<IPasswordService, PasswordService>();
