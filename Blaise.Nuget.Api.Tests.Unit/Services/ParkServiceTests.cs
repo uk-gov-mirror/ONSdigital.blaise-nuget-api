@@ -91,7 +91,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_No_ServerParks_When_I_Call_GetServerParkNames_Then_A_Data_Not_Found_Exception_Is_Thrown()
+        public void Given_No_ServerParks_When_I_Call_GetServerParkNames_Then_A_DataNotFoundException_Is_Thrown()
         {
             //arrange
             var serverParkItems = new List<IServerPark>();
