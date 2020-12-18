@@ -32,7 +32,26 @@ namespace Blaise.Nuget.Api.Api
             var configurationProvider = unityProvider.Resolve<IBlaiseConfigurationProvider>();
             _connectionModel = connectionModel ?? configurationProvider.GetConnectionModel();
         }
-        
+
+        public IEnumerable<IRole> GetRoles()
+        {
+            return _roleService.GetRoles(_connectionModel);
+        }
+
+        public IRole GetRole(string name)
+        {
+            name.ThrowExceptionIfNullOrEmpty("name");
+
+            return _roleService.GetRole(_connectionModel, name);
+        }
+
+        public bool RoleExists(string name)
+        {
+            name.ThrowExceptionIfNullOrEmpty("name");
+
+            return _roleService.RoleExists(_connectionModel, name);
+        }
+
         public void AddRole(string name, string description, IEnumerable<string> permissions)
         {
             name.ThrowExceptionIfNullOrEmpty("name");
@@ -41,9 +60,18 @@ namespace Blaise.Nuget.Api.Api
             _roleService.AddRole(_connectionModel, name, description, permissions);
         }
 
-        public IEnumerable<IRole> GetRoles()
+        public void RemoveRole(string name)
         {
-            return _roleService.GetRoles(_connectionModel);
+            name.ThrowExceptionIfNullOrEmpty("name");
+
+            _roleService.RemoveRole(_connectionModel, name);
+        }
+
+        public void UpdateRolePermissions(string name, IEnumerable<string> permissions)
+        {
+            name.ThrowExceptionIfNullOrEmpty("name");
+
+            _roleService.UpdateRolePermissions(_connectionModel, name, permissions);
         }
     }
 }

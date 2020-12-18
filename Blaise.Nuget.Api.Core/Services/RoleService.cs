@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Blaise.Nuget.Api.Contracts.Exceptions;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Mappers;
@@ -20,6 +22,33 @@ namespace Blaise.Nuget.Api.Core.Services
             _mapper = mapper;
         }
 
+        public IEnumerable<IRole> GetRoles(ConnectionModel connectionModel)
+        {
+            var connection = _securityManagerFactory.GetConnection(connectionModel);
+
+            return connection.GetRoles();
+        }
+
+        public IRole GetRole(ConnectionModel connectionModel, string name)
+        {
+            var roles = GetRoles(connectionModel);
+            var role = roles.FirstOrDefault(r => r.Name == name);
+
+            if (role == null)
+            {
+                throw new DataNotFoundException($"The role '{name}' was not found");
+            }
+
+            return role;
+        }
+
+        public bool RoleExists(ConnectionModel connectionModel, string name)
+        {
+            var roles = GetRoles(connectionModel);
+
+            return roles.Any(r => r.Name == name);
+        }
+
         public void AddRole(ConnectionModel connectionModel, string name, string description, IEnumerable<string> permissions)
         {
             var connection = _securityManagerFactory.GetConnection(connectionModel);
@@ -30,11 +59,22 @@ namespace Blaise.Nuget.Api.Core.Services
             connection.UpdateRolePermissions(roleId, actionPermissions);
         }
 
-        public IEnumerable<IRole> GetRoles(ConnectionModel connectionModel)
+        public void RemoveRole(ConnectionModel connectionModel, string name)
         {
+            var role = GetRole(connectionModel, name);
             var connection = _securityManagerFactory.GetConnection(connectionModel);
 
-            return connection.GetRoles();
+            connection.RemoveRole(role.Id);
+        }
+
+        public void UpdateRolePermissions(ConnectionModel connectionModel, string name, IEnumerable<string> permissions)
+        {
+            var role = GetRole(connectionModel, name);
+            var actionPermissions = _mapper.MapToActionPermissionModels(permissions);
+
+            var connection = _securityManagerFactory.GetConnection(connectionModel);
+
+            connection.UpdateRolePermissions(role.Id, actionPermissions);
         }
     }
 }
