@@ -82,11 +82,35 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.AreSame(role2Mock.Object, result);
         }
 
+        [TestCase("NAME1")]
+        [TestCase("NaME1")]
+        [TestCase("NAMe1")]
+        [TestCase("name1")]
+        [TestCase("Name1")]
+        public void Given_I_Call_GetRole_Then_The_Correct_Role_Is_Returned_Regardless_Of_Case(string name)
+        {
+            //arrange
+            var role1Name = "Name1";
+            var role1Mock = new Mock<IRole>();
+            role1Mock.Setup(r => r.Name).Returns(role1Name);
+
+            var roles = new List<IRole> { role1Mock.Object };
+
+            _securityServerMock.Setup(s => s.GetRoles()).Returns(roles);
+
+            //act
+            var result = _sut.GetRole(_connectionModel, name);
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreSame(role1Mock.Object, result);
+        }
+
         [Test]
         public void Given_The_Role_Does_Not_Exist_When_I_Call_GetRole_Then_A_DataNotFoundException_Is_Thrown()
         {
             //arrange
             var roleMock = new Mock<IRole>();
+            roleMock.Setup(r => r.Name).Returns("Found");
             var roles = new List<IRole> { roleMock.Object };
 
             _securityServerMock.Setup(s => s.GetRoles()).Returns(roles);
@@ -96,8 +120,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.AreEqual("The role 'NotFound' was not found", exception.Message);
         }
 
-        [TestCase]
-        public void Given_A_Role_Exists_When_I_Call_RoleExists_Then_True_Is_Returned()
+        [TestCase("NAME1")]
+        [TestCase("NaME1")]
+        [TestCase("NAMe1")]
+        [TestCase("name1")]
+        [TestCase("Name1")]
+        public void Given_A_Role_Exists_When_I_Call_RoleExists_Then_True_Is_Returned(string name)
         {
             //arrange
             var role1Name = "Name1";
@@ -109,7 +137,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _securityServerMock.Setup(s => s.GetRoles()).Returns(roles);
             
             //act
-            var result = _sut.RoleExists(_connectionModel, role1Name);
+            var result = _sut.RoleExists(_connectionModel, name);
 
             //assert
             Assert.IsNotNull(result);
@@ -121,6 +149,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         {
             //arrange
             var roleMock = new Mock<IRole>();
+            roleMock.Setup(r => r.Name).Returns("Found");
             var roles = new List<IRole> { roleMock.Object };
 
             _securityServerMock.Setup(s => s.GetRoles()).Returns(roles);
@@ -181,6 +210,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         {
             //arrange
             var roleMock = new Mock<IRole>();
+            roleMock.Setup(r => r.Name).Returns("Found");
             var roles = new List<IRole> { roleMock.Object };
 
             _securityServerMock.Setup(s => s.GetRoles()).Returns(roles);

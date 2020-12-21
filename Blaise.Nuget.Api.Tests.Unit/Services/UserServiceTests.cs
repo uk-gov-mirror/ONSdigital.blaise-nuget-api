@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security;
 using Blaise.Nuget.Api.Contracts.Models;
@@ -279,6 +278,21 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _connectedServerMock.Verify(v => v.RemoveUser(_userName), Times.Once);
         }
 
+        
+        [Test]
+        public void Given_I_Call_GetUser_Then_An_IUser_Object_Is_Returned()
+        {
+            //arrange
+            _connectedServerMock.Setup(c => c.Users).Returns(_userCollectionMock.Object);
+
+            //act
+            var result = _sut.GetUser(_connectionModel, _userName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<IUser>(result);
+        }
+
         [Test]
         public void Given_A_User_Exists_When_I_Call_GetUser_Then_The_Correct_User_Is_returned()
         {
@@ -290,20 +304,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
            Assert.AreEqual(_userName,result.Name);
-        }
-
-        [Test]
-        public void Given_A_User_Exists_When_I_Call_GetUser_Then_An_IUser_Object_Is_Returned()
-        {
-            //arrange
-            _connectedServerMock.Setup(c => c.Users).Returns(_userCollectionMock.Object);
-
-            //act
-            var result = _sut.GetUser(_connectionModel, _userName);
-
-            //assert
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOf<IUser>(result);
         }
 
         [Test]
@@ -321,6 +321,33 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             Assert.IsNull(result);
+        }
+
+        [Test]
+        public void Given_I_Call_GetUsers_Then_A_List_Of_IUser_Objects_Are_Returned()
+        {
+            //arrange
+            _connectedServerMock.Setup(c => c.Users).Returns(_userCollectionMock.Object);
+
+            //act
+            var result = _sut.GetUsers(_connectionModel);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<IEnumerable<IUser>>(result);
+        }
+
+        [Test]
+        public void Given_Users_Exist_When_I_Call_GetUsers_Then_The_Correct_List_Of_Users_Are_returned()
+        {
+            //arrange
+            _connectedServerMock.Setup(c => c.Users).Returns(_userCollectionMock.Object);
+
+            //act
+            var result = _sut.GetUsers(_connectionModel);
+
+            //assert
+            Assert.AreSame(_userCollectionMock.Object,result);
         }
     }
 }
