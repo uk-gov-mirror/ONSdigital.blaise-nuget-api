@@ -6,6 +6,7 @@ using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Moq;
 using NUnit.Framework;
+using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Api.User
 {
@@ -410,13 +411,20 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.User
         }
 
         [Test]
-        public void When_I_Call_GetUser_Then_The_Correct_Service_Method_Is_Called()
+        public void When_I_Call_GetUser_Then_The_Correct_UserDto_Is_Returned()
         {
+            //arrange
+            var userMock = new Mock<IUser>();
+
+            _userServiceMock.Setup(u => u.GetUser(_connectionModel, _userName)).Returns(userMock.Object);
+
             //act
-            _sut.GetUser(_userName);
+            var result = _sut.GetUser(_userName);
 
             //assert
-            _userServiceMock.Verify(v => v.GetUser(_connectionModel, _userName), Times.Once);
+           Assert.IsNotNull(result);
+           Assert.IsInstanceOf<IUser>(result);
+           Assert.AreSame(userMock.Object, result);
         }
 
         [Test]
@@ -433,6 +441,24 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.User
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetUser(null));
             Assert.AreEqual("userName", exception.ParamName);
+        }
+
+        [Test]
+        public void When_I_Call_GetUsers_Then_The_Correct_List_Of_UserDto_Are_Returned()
+        {
+            //arrange
+            var userMock = new Mock<IUser>();
+            var userList = new List<IUser>{userMock.Object};
+
+            _userServiceMock.Setup(u => u.GetUsers(_connectionModel)).Returns(userList);
+
+            //act
+            var result = _sut.GetUsers();
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<IEnumerable<IUser>>(result);
+            Assert.AreSame(userList, result);
         }
     }
 }

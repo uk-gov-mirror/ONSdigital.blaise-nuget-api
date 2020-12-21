@@ -81,5 +81,10 @@ namespace Blaise.Nuget.Api.Api
 
             return _userService.GetUser(_connectionModel, userName);
         }
+
+        public IEnumerable<IUser> GetUsers()
+        {
+            return _userService.GetUsers(_connectionModel);
+        }
     }
 }

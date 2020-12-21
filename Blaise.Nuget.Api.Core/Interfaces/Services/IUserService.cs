@@ -17,5 +17,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         void RemoveUser(ConnectionModel connectionModel, string userName);
 
         IUser GetUser(ConnectionModel connectionModel, string userName);
+
+        IEnumerable<IUser> GetUsers(ConnectionModel connectionModel);
     }
 }

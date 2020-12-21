@@ -80,6 +80,13 @@ namespace Blaise.Nuget.Api.Core.Services
             return connection.Users.FirstOrDefault(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
         }
 
+        public IEnumerable<IUser> GetUsers(ConnectionModel connectionModel)
+        {
+            var connection = _connectedServerFactory.GetConnection(connectionModel);
+
+            return connection.Users;
+        }
+
         private static void AddServerParksToUser(IUser user, IEnumerable<string> serverParkNames)
         {
             foreach (var serverParkName in serverParkNames)

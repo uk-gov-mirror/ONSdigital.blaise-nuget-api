@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Exceptions;
 using Blaise.Nuget.Api.Contracts.Models;
@@ -32,7 +33,7 @@ namespace Blaise.Nuget.Api.Core.Services
         public IRole GetRole(ConnectionModel connectionModel, string name)
         {
             var roles = GetRoles(connectionModel);
-            var role = roles.FirstOrDefault(r => r.Name == name);
+            var role = roles.FirstOrDefault(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
             if (role == null)
             {
@@ -46,7 +47,7 @@ namespace Blaise.Nuget.Api.Core.Services
         {
             var roles = GetRoles(connectionModel);
 
-            return roles.Any(r => r.Name == name);
+            return roles.Any(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
         public void AddRole(ConnectionModel connectionModel, string name, string description, IEnumerable<string> permissions)

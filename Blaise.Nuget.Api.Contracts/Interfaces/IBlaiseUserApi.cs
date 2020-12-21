@@ -15,5 +15,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         bool UserExists(string userName);
         void RemoveUser(string userName);
         IUser GetUser(string userName);
+
+        IEnumerable<IUser> GetUsers();
     }
 }
