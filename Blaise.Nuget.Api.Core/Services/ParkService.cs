@@ -6,6 +6,7 @@ using StatNeth.Blaise.API.ServerManager;
 using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Models;
+using StatNeth.Blaise.Administer.Deploy.ServiceContract;
 
 namespace Blaise.Nuget.Api.Core.Services
 {
@@ -42,7 +43,7 @@ namespace Blaise.Nuget.Api.Core.Services
         {
             var connection = _connectionFactory.GetConnection(connectionModel);
 
-            if(!ServerParkExists(connectionModel, serverParkName))
+            if (!ServerParkExists(connectionModel, serverParkName))
             {
                 throw new DataNotFoundException($"Server park '{serverParkName}' not found");
             }
@@ -61,6 +62,41 @@ namespace Blaise.Nuget.Api.Core.Services
             }
 
             return serverParks;
+        }
+
+        public void RegisterMachineOnServerPark(ConnectionModel connectionModel,
+            string serverParkName, string machineName)
+        {
+            var deployService = new DeployService();
+            Console.WriteLine("Created Deploy service class");
+
+            var logicalRoots = deployService
+                .GetRemoteLogicalRoots(machineName, 8031);
+
+            Console.WriteLine("Obtained logical roots");
+
+            var logicalRoot = logicalRoots.FirstOrDefault();
+            if (logicalRoot == null)
+            {
+                throw new Exception("No logical root");
+            }
+            Console.WriteLine($"Obtained first logical root '{logicalRoot.Name}', '{logicalRoot.Location}'");
+
+            var roles = deployService
+                .GetRemoteDefinedRoles2(machineName, 8031, "http");
+
+            Console.WriteLine("Obtained logical roles");
+
+            foreach (var role in roles)
+            {
+                Console.WriteLine($"Obtained logical role '{role.Name}'");
+            }
+            
+            var serverPark = GetServerPark(connectionModel, serverParkName);
+            serverPark.AddMachine(
+                machineName,
+                logicalRoot.Location,
+                roles.Select(r => r.Name).ToArray());
         }
     }
 }
