@@ -15,8 +15,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<ICatiManagementServerFactory> _catiFactoryMock;
         private Mock<IRemoteCatiManagementServer> _catiManagementServerMock;
         private Mock<ISurveyDayCollection> _surveyDayCollection;
-
-
+        
         private readonly ConnectionModel _connectionModel;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
@@ -68,8 +67,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         [Test]
         public void Given_I_Call_SetSurveyDay_Then_The_Correct_Services_Are_Called()
         {
-            //arrange
-
             //act
             _sut.SetSurveyDay(_connectionModel, _instrumentName, _serverParkName, DateTime.Today);
 
@@ -106,8 +103,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         [Test]
         public void Given_I_Call_GetSurveyDays_Then_The_Correct_Services_Are_Called()
         {
-            //arrange
-
             //act
             _sut.GetSurveyDays(_connectionModel, _instrumentName, _serverParkName);
 

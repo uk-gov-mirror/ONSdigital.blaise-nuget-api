@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Blaise.Nuget.Api.Api;
 using NUnit.Framework;
 
