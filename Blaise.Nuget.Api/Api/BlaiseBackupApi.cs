@@ -3,6 +3,7 @@ using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Extensions;
+using Blaise.Nuget.Api.Interfaces;
 using Blaise.Nuget.Api.Providers;
 using StatNeth.Blaise.API.DataRecord;
 
@@ -29,7 +30,7 @@ namespace Blaise.Nuget.Api.Api
 
         public BlaiseBackupApi(ConnectionModel connectionModel = null)
         {
-            var unityProvider = new UnityProvider();
+            IIocProvider unityProvider = new UnityProvider();
             unityProvider.RegisterDependencies();
 
             _caseService = unityProvider.Resolve<ICaseService>();
