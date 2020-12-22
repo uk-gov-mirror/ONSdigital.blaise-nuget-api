@@ -67,6 +67,8 @@ namespace Blaise.Nuget.Api.Core.Services
         public void RegisterMachineOnServerPark(ConnectionModel connectionModel,
             string serverParkName, string machineName)
         {
+            Console.WriteLine("Attempt to create Deploy service class");
+
             var deployService = new DeployService();
             Console.WriteLine("Created Deploy service class");
 
