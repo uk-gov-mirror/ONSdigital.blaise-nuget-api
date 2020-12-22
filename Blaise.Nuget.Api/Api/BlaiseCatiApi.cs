@@ -78,7 +78,7 @@ namespace Blaise.Nuget.Api.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            _dayBatchService.SetSurveyDays(_connectionModel, instrumentName, serverParkName, surveyDays);
+            _dayBatchService.RemoveSurveyDays(_connectionModel, instrumentName, serverParkName, surveyDays);
         }
     }
 }
