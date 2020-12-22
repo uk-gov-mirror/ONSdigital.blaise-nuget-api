@@ -14,7 +14,10 @@ namespace Blaise.Nuget.Api.Core.Mappers
             foreach (var permission in permissions)
             {
                 actionPermissions.Add(new ActionPermissionModel
-                { Action = permission, Permission = PermissionStatus.Allowed});
+                {
+                    Action = permission, 
+                    Permission = PermissionStatus.Allowed
+                });
             }
 
             return actionPermissions;

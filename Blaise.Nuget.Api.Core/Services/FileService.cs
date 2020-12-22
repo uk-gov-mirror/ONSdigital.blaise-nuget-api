@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Exceptions;
@@ -57,7 +56,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
             //yuck!
             OverwriteDatabaseFileToAvoidFixedDirectoryIssue(metaFileName, outputPath, instrumentName);
-                
+
             return dataInterface.FileName;
         }
 
