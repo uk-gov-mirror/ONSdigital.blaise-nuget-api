@@ -34,6 +34,7 @@ namespace Blaise.Nuget.Api.Core.Mappers
                     var item = dataRecord.GetField(field.Key);
                     item.DataValue.Assign(field.Value);
                 }
+                // ReSharper disable once EmptyGeneralCatchClause
                 catch
                 {
                 }

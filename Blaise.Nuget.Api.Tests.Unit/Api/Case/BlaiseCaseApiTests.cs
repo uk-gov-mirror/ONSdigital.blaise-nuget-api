@@ -249,9 +249,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_GetCase_ByPrimaryKeyValue_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Valid_Arguments_When_I_Call_GetCase_Then_The_Correct_Service_Method_Is_Called()
         {
-
+            //arrange
             _caseServiceMock.Setup(d => d.GetDataRecord(_connectionModel, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
 
             //act
@@ -262,7 +262,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         }
 
         [Test]
-        public void Given_An_Empty_PrimaryKeyValue_When_I_Call_GetCase_ByPrimaryKeyValue_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_PrimaryKeyValue_When_I_Call_GetCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
             var exception = Assert.Throws<ArgumentException>(() => _sut.GetCase(string.Empty, _instrumentName, _serverParkName));
@@ -270,7 +270,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         }
 
         [Test]
-        public void Given_A_Null_PrimaryKeyValue_When_I_Call_GetCase_ByPrimaryKeyValue_Then_An_ArgumentNullException_Is_Thrown()
+        public void Given_A_Null_PrimaryKeyValue_When_I_Call_GetCase_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetCase(null, _instrumentName, _serverParkName));
@@ -278,7 +278,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         }
 
         [Test]
-        public void Given_An_Empty_InstrumentName_When_I_Call_GetCase_ByPrimaryKeyValue_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_InstrumentName_When_I_Call_GetCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
             var exception = Assert.Throws<ArgumentException>(() => _sut.GetCase(_primaryKeyValue,
@@ -287,7 +287,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         }
 
         [Test]
-        public void Given_A_Null_InstrumentName_When_I_Call_GetCase_ByPrimaryKeyValue_Then_An_ArgumentNullException_Is_Thrown()
+        public void Given_A_Null_InstrumentName_When_I_Call_GetCase_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
             var primaryKeyValue = "Key1";
@@ -298,7 +298,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         }
 
         [Test]
-        public void Given_An_Empty_ServerParkName_When_I_Call_GetCase_ByPrimaryKeyValue_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_ServerParkName_When_I_Call_GetCase_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
             var exception = Assert.Throws<ArgumentException>(() => _sut.GetCase(_primaryKeyValue,
@@ -307,7 +307,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         }
 
         [Test]
-        public void Given_A_Null_ServerParkName_When_I_Call_GetCase_ByPrimaryKeyValue_Then_An_ArgumentNullException_Is_Thrown()
+        public void Given_A_Null_ServerParkName_When_I_Call_GetCase_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetCase(_primaryKeyValue,
@@ -684,6 +684,37 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         [TestCase(FieldNameType.HOut)]
         [TestCase(FieldNameType.Mode)]
         [TestCase(FieldNameType.TelNo)]
+        public void Given_A_DataRecord_When_I_Call_GetFieldValue_Then_The_Correct_Value(FieldNameType fieldNameType)
+        {
+            //arrange
+            var dataValueMock = new Mock<IDataValue>();
+            var dataRecordMock = new Mock<IDataRecord>();
+
+            _caseServiceMock.Setup(d => d.GetFieldValue(dataRecordMock.Object, fieldNameType))
+                .Returns(dataValueMock.Object);
+
+            //act
+            var result = _sut.GetFieldValue(dataRecordMock.Object, fieldNameType);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(dataValueMock.Object, result);
+        }
+
+        [Test]
+        public void Given_A_Null_DataRecord_When_I_Call_GetFieldValue_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var fieldValueType = FieldNameType.HOut;
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetFieldValue(null, fieldValueType));
+            Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
+        }
+        
+        [TestCase(FieldNameType.HOut)]
+        [TestCase(FieldNameType.Mode)]
+        [TestCase(FieldNameType.TelNo)]
         public void Given_A_PrimaryKeyValue_When_I_Call_GetFieldValue_Then_The_Correct_Value(FieldNameType fieldNameType)
         {
             //arrange
@@ -783,7 +814,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
                 .Returns(numberOfCases);
 
             //act
-            var result =_sut.GetNumberOfCases(_instrumentName, _serverParkName);
+            var result = _sut.GetNumberOfCases(_instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -868,6 +899,70 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetNumberOfCases(null));
             Assert.AreEqual("databaseFile", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_RemoveCase_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //act
+            _sut.RemoveCase(_primaryKeyValue, _instrumentName, _serverParkName);
+
+            //assert
+            _caseServiceMock.Verify(v => v.RemoveDataRecord(_connectionModel, _primaryKeyValue, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_PrimaryKeyValue_When_I_Call_RemoveCase_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.RemoveCase(string.Empty, _instrumentName, _serverParkName));
+            Assert.AreEqual("A value for the argument 'primaryKeyValue' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_PrimaryKeyValue_When_I_Call_RemoveCase_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveCase(null, _instrumentName, _serverParkName));
+            Assert.AreEqual("primaryKeyValue", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_RemoveCase_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.RemoveCase(_primaryKeyValue,
+                string.Empty, _serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_RemoveCase_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var primaryKeyValue = "Key1";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveCase(primaryKeyValue, null, _serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_RemoveCase_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.RemoveCase(_primaryKeyValue,
+                _instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_RemoveCase_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveCase(_primaryKeyValue,
+                _instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
         }
     }
 }
