@@ -28,16 +28,17 @@ namespace Blaise.Nuget.Api.Core.Providers
 
         public IDataLink4 GetDataLink(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            if (_dataLinkConnections.ContainsKey(new Tuple<string, string>(instrumentName, serverParkName)))
+            if (!_dataLinkConnections.ContainsKey(new Tuple<string, string>(instrumentName, serverParkName)))
             {
-                var (dataLink, expiryDate) = _dataLinkConnections[new Tuple<string, string>(instrumentName, serverParkName)];
-
-                return expiryDate.HasExpired()
-                    ? GetFreshConnection(connectionModel, instrumentName, serverParkName)
-                    : dataLink ?? GetFreshConnection(connectionModel, instrumentName, serverParkName);
+                return GetFreshConnection(connectionModel, instrumentName, serverParkName);
             }
 
-            return GetFreshConnection(connectionModel, instrumentName, serverParkName);
+            var (dataLink, expiryDate) = _dataLinkConnections[new Tuple<string, string>(instrumentName, serverParkName)];
+
+            return expiryDate.HasExpired()
+                ? GetFreshConnection(connectionModel, instrumentName, serverParkName)
+                : dataLink ?? GetFreshConnection(connectionModel, instrumentName, serverParkName);
+
         }
 
         private IDataLink4 GetFreshConnection(ConnectionModel connectionModel, string instrumentName, string serverParkName)

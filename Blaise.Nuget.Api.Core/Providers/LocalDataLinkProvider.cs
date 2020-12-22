@@ -20,16 +20,16 @@ namespace Blaise.Nuget.Api.Core.Providers
 
         public IDataLink4 GetDataLink(string databaseFile)
         {
-            if (_dataLinkConnections.ContainsKey(databaseFile))
+            if (!_dataLinkConnections.ContainsKey(databaseFile))
             {
-                var (dataLink, expiryDate) = _dataLinkConnections[databaseFile];
-
-                return expiryDate.HasExpired()
-                    ? GetFreshConnection(databaseFile)
-                    : dataLink ?? GetFreshConnection(databaseFile);
+                return GetFreshConnection(databaseFile);
             }
 
-            return GetFreshConnection(databaseFile);
+            var (dataLink, expiryDate) = _dataLinkConnections[databaseFile];
+
+            return expiryDate.HasExpired()
+                ? GetFreshConnection(databaseFile)
+                : dataLink ?? GetFreshConnection(databaseFile);
         }
 
         private IDataLink4 GetFreshConnection(string databaseFile)

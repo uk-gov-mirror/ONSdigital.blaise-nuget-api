@@ -22,16 +22,16 @@ namespace Blaise.Nuget.Api.Core.Factories
 
         public IConnectedServer GetConnection(ConnectionModel connectionModel)
         {
-            if (_connectedServers.ContainsKey(connectionModel.ServerName))
+            if (!_connectedServers.ContainsKey(connectionModel.ServerName))
             {
-                var (connectedServer, expiryDate) = _connectedServers[connectionModel.ServerName];
-
-                return expiryDate.HasExpired()
-                    ? GetFreshServerConnection(connectionModel)
-                    : connectedServer ?? GetFreshServerConnection(connectionModel);
+                return GetFreshServerConnection(connectionModel);
             }
+            
+            var (connectedServer, expiryDate) = _connectedServers[connectionModel.ServerName];
 
-            return GetFreshServerConnection(connectionModel);
+            return expiryDate.HasExpired()
+                ? GetFreshServerConnection(connectionModel)
+                : connectedServer ?? GetFreshServerConnection(connectionModel);
         }
 
         private IConnectedServer GetFreshServerConnection(ConnectionModel connectionModel)
