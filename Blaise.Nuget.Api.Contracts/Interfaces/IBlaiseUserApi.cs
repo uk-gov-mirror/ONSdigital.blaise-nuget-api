@@ -1,21 +1,26 @@
 ﻿using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Models;
 using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IBlaiseUserApi
     {
+        IEnumerable<IUser> GetUsers();
+
+        IUser GetUser(string userName);
+
+        bool UserExists(string userName);
+
         void AddUser(string userName, string password, 
             string role, IList<string> serverParkNames, string defaultServerPark);
 
-        void EditUser(string userName, string role, 
-            IList<string> serverParkNames);
+        void UpdatePassword(string userName, string password);
 
-        void ChangePassword(string userName, string password);
-        bool UserExists(string userName);
+        void UpdateRole(string userName, string role);
+
+        void UpdateServerParks(string userName, IEnumerable<string> serverParkNames, string defaultServerPark);
+
         void RemoveUser(string userName);
-        IUser GetUser(string userName);
-
-        IEnumerable<IUser> GetUsers();
     }
 }
