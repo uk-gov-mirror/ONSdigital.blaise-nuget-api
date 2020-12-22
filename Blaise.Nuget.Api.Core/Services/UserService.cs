@@ -21,42 +21,18 @@ namespace Blaise.Nuget.Api.Core.Services
             _passwordService = passwordService;
         }
 
-        public void AddUser(ConnectionModel connectionModel, string userName, string password, string role, IEnumerable<string> serverParkNames, string defaultServerPark)
+        public IEnumerable<IUser> GetUsers(ConnectionModel connectionModel)
         {
             var connection = _connectedServerFactory.GetConnection(connectionModel);
-            var securePassword = _passwordService.CreateSecurePassword(password);
-            var user = (IUser2)connection.AddUser(userName, securePassword);
-            
-            AddCatiPreferenceToUser(user, defaultServerPark);
-            AddServerParksToUser(user, serverParkNames);
-            AssignRoleToUser(user, role);
-            
-            user.Save();
+
+            return connection.Users;
         }
 
-        public void EditUser(ConnectionModel connectionModel, string userName, string role, IEnumerable<string> serverParkNames)
+        public IUser GetUser(ConnectionModel connectionModel, string userName)
         {
             var connection = _connectedServerFactory.GetConnection(connectionModel);
-            var user = (IUser2)connection.Users.GetItem(userName);
-            
 
-            user.ServerParks.Clear();
-
-            AddServerParksToUser(user, serverParkNames);
-            AssignRoleToUser(user, role);
-
-            user.Save();
-        }
-
-        public void ChangePassword(ConnectionModel connectionModel, string userName, string password)
-        {
-            var connection = _connectedServerFactory.GetConnection(connectionModel);
-            var securePassword = _passwordService.CreateSecurePassword(password);
-
-            var user = (IUser2)connection.Users.GetItem(userName);
-
-            user.ChangePassword(securePassword);
-            user.Save();
+            return connection.Users.GetItem(userName);
         }
 
         public bool UserExists(ConnectionModel connectionModel, string userName)
@@ -66,25 +42,52 @@ namespace Blaise.Nuget.Api.Core.Services
             return connection.Users.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
         }
 
+        public void AddUser(ConnectionModel connectionModel, string userName, string password, string role, IEnumerable<string> serverParkNames, string defaultServerPark)
+        {
+            var connection = _connectedServerFactory.GetConnection(connectionModel);
+            var securePassword = _passwordService.CreateSecurePassword(password);
+            var user = (IUser2)connection.AddUser(userName, securePassword);
+            
+            AssignRoleToUser(user, role);
+            AddServerParksToUser(user, serverParkNames);
+            AddCatiPreferenceToUser(user, defaultServerPark);
+            
+            user.Save();
+        }
+
+        public void UpdatePassword(ConnectionModel connectionModel, string userName, string password)
+        {
+            var securePassword = _passwordService.CreateSecurePassword(password);
+            var user = (IUser2) GetUser(connectionModel, userName);
+
+            user.ChangePassword(securePassword);
+            user.Save();
+        }
+
+        public void UpdateRole(ConnectionModel connectionModel, string userName, string role)
+        {
+            var user = (IUser2) GetUser(connectionModel, userName);
+
+            AssignRoleToUser(user, role);
+            user.Save();
+        }
+
+        public void UpdateServerParks(ConnectionModel connectionModel, string userName,
+            IEnumerable<string> serverParkNames, string defaultServerPark)
+        {
+            var user = (IUser2) GetUser(connectionModel, userName);
+
+            user.ServerParks.Clear();
+            AddServerParksToUser(user, serverParkNames);
+            AddCatiPreferenceToUser(user, defaultServerPark);
+            user.Save();
+        }
+
         public void RemoveUser(ConnectionModel connectionModel, string userName)
         {
             var connection = _connectedServerFactory.GetConnection(connectionModel);
 
             connection.RemoveUser(userName);
-        }
-
-        public IUser GetUser(ConnectionModel connectionModel, string userName)
-        {
-            var connection = _connectedServerFactory.GetConnection(connectionModel);
-
-            return connection.Users.FirstOrDefault(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
-        }
-
-        public IEnumerable<IUser> GetUsers(ConnectionModel connectionModel)
-        {
-            var connection = _connectedServerFactory.GetConnection(connectionModel);
-
-            return connection.Users;
         }
 
         private static void AddServerParksToUser(IUser user, IEnumerable<string> serverParkNames)

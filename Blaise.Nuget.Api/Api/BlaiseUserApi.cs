@@ -34,6 +34,26 @@ namespace Blaise.Nuget.Api.Api
             _connectionModel = connectionModel ?? configurationProvider.GetConnectionModel();
         }
 
+        
+        public IEnumerable<IUser> GetUsers()
+        {
+            return _userService.GetUsers(_connectionModel);
+        }
+
+        public IUser GetUser(string userName)
+        {
+            userName.ThrowExceptionIfNullOrEmpty("userName");
+
+            return _userService.GetUser(_connectionModel, userName);
+        }
+
+        public bool UserExists(string userName)
+        {
+            userName.ThrowExceptionIfNullOrEmpty("userName");
+
+            return _userService.UserExists(_connectionModel, userName);
+        }
+
         public void AddUser(string userName, string password, 
             string role, IList<string> serverParkNames, string defaultServerPark)
         {
@@ -50,22 +70,32 @@ namespace Blaise.Nuget.Api.Api
             userName.ThrowExceptionIfNullOrEmpty("userName");
             role.ThrowExceptionIfNullOrEmpty("role");
 
-            _userService.EditUser(_connectionModel, userName, role, serverParkNames);
+            //_userService.EditUser(_connectionModel, userName, role, serverParkNames);
         }
 
-        public void ChangePassword(string userName, string password)
+        public void UpdatePassword(string userName, string password)
         {
             userName.ThrowExceptionIfNullOrEmpty("userName");
             password.ThrowExceptionIfNullOrEmpty("password");
 
-            _userService.ChangePassword(_connectionModel, userName, password);
+            _userService.UpdatePassword(_connectionModel, userName, password);
         }
 
-        public bool UserExists(string userName)
+        public void UpdateRole(string userName, string role)
         {
             userName.ThrowExceptionIfNullOrEmpty("userName");
+            role.ThrowExceptionIfNullOrEmpty("role");
 
-            return _userService.UserExists(_connectionModel, userName);
+            _userService.UpdateRole(_connectionModel, userName, role);
+        }
+
+        public void UpdateServerParks(string userName, IEnumerable<string> serverParkNames,
+            string defaultServerPark)
+        {
+            userName.ThrowExceptionIfNullOrEmpty("userName");
+            defaultServerPark.ThrowExceptionIfNullOrEmpty("defaultServerPark");
+
+            _userService.UpdateServerParks(_connectionModel, userName, serverParkNames, defaultServerPark);
         }
 
         public void RemoveUser(string userName)
@@ -73,18 +103,6 @@ namespace Blaise.Nuget.Api.Api
             userName.ThrowExceptionIfNullOrEmpty("userName");
 
             _userService.RemoveUser(_connectionModel, userName);
-        }
-
-        public IUser GetUser(string userName)
-        {
-            userName.ThrowExceptionIfNullOrEmpty("userName");
-
-            return _userService.GetUser(_connectionModel, userName);
-        }
-
-        public IEnumerable<IUser> GetUsers()
-        {
-            return _userService.GetUsers(_connectionModel);
         }
     }
 }
