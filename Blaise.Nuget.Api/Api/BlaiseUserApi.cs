@@ -65,14 +65,6 @@ namespace Blaise.Nuget.Api.Api
             _userService.AddUser(_connectionModel, userName, password, role, serverParkNames, defaultServerPark);
         }
 
-        public void EditUser(string userName, string role, IList<string> serverParkNames)
-        {
-            userName.ThrowExceptionIfNullOrEmpty("userName");
-            role.ThrowExceptionIfNullOrEmpty("role");
-
-            //_userService.EditUser(_connectionModel, userName, role, serverParkNames);
-        }
-
         public void UpdatePassword(string userName, string password)
         {
             userName.ThrowExceptionIfNullOrEmpty("userName");
