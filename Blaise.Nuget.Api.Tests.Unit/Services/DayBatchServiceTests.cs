@@ -112,5 +112,41 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _catiManagementServerMock.Verify(v => v
                 .LoadCatiInstrumentManager(_instrumentName).Specification.SurveyDays, Times.Once);
         }
+
+        [Test]
+        public void Given_I_Call_RemoveSurveyDay_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.RemoveSurveyDay(_connectionModel, _instrumentName, _serverParkName, DateTime.Today);
+
+            //assert
+            _catiFactoryMock.Verify(v => v.GetConnection(_connectionModel), Times.Once);
+            _catiManagementServerMock.Verify(v => v.SelectServerPark(_serverParkName), Times.Once);
+            _catiManagementServerMock.Verify(v => v
+                .LoadCatiInstrumentManager(_instrumentName).Specification.SurveyDays.RemoveSurveyDay(DateTime.Today), Times.Once);
+            _catiManagementServerMock.Verify(v => v
+                .LoadCatiInstrumentManager(_instrumentName).SaveSpecification(), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_RemoveSurveyDays_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            var surveyDays = new List<DateTime>
+            {
+                DateTime.Today,
+                DateTime.Today.AddDays(1)
+            };
+            //act
+            _sut.RemoveSurveyDays(_connectionModel, _instrumentName, _serverParkName, surveyDays);
+
+            //assert
+            _catiFactoryMock.Verify(v => v.GetConnection(_connectionModel), Times.Once);
+            _catiManagementServerMock.Verify(v => v.SelectServerPark(_serverParkName), Times.Once);
+            _catiManagementServerMock.Verify(v => v
+                .LoadCatiInstrumentManager(_instrumentName).Specification.SurveyDays.RemoveSurveyDays(surveyDays), Times.Once);
+            _catiManagementServerMock.Verify(v => v
+                .LoadCatiInstrumentManager(_instrumentName).SaveSpecification(), Times.Once);
+        }
     }
 }

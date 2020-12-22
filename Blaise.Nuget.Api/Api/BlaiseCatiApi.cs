@@ -65,6 +65,20 @@ namespace Blaise.Nuget.Api.Api
             _dayBatchService.SetSurveyDays(_connectionModel, instrumentName, serverParkName, surveyDays);
         }
 
-      
+        public void RemoveSurveyDay(string instrumentName, string serverParkName, DateTime surveyDay)
+        {
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            _dayBatchService.RemoveSurveyDay(_connectionModel, instrumentName, serverParkName, surveyDay);
+        }
+
+        public void RemoveSurveyDays(string instrumentName, string serverParkName, List<DateTime> surveyDays)
+        {
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            _dayBatchService.SetSurveyDays(_connectionModel, instrumentName, serverParkName, surveyDays);
+        }
     }
 }
