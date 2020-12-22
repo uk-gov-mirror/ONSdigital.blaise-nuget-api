@@ -22,16 +22,16 @@ namespace Blaise.Nuget.Api.Core.Factories
 
         public IRemoteCatiManagementServer GetConnection(ConnectionModel connectionModel)
         {
-            if (_remoteDataServers.ContainsKey(connectionModel.ServerName))
+            if (!_remoteDataServers.ContainsKey(connectionModel.ServerName))
             {
-                var (remoteServer, expiryDate) = _remoteDataServers[connectionModel.ServerName];
-
-                return expiryDate.HasExpired()
-                    ? GetFreshServerConnection(connectionModel)
-                    : remoteServer ?? GetFreshServerConnection(connectionModel);
+                return GetFreshServerConnection(connectionModel);
             }
 
-            return GetFreshServerConnection(connectionModel);
+            var (remoteServer, expiryDate) = _remoteDataServers[connectionModel.ServerName];
+
+            return expiryDate.HasExpired()
+                ? GetFreshServerConnection(connectionModel)
+                : remoteServer ?? GetFreshServerConnection(connectionModel);
         }
 
         private IRemoteCatiManagementServer GetFreshServerConnection(ConnectionModel connectionModel)

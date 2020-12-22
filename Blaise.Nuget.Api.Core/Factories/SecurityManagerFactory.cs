@@ -23,16 +23,17 @@ namespace Blaise.Nuget.Api.Core.Factories
 
         public ISecurityServer GetConnection(ConnectionModel connectionModel)
         {
-            if (_securityServers.ContainsKey(connectionModel.ServerName))
+            if (!_securityServers.ContainsKey(connectionModel.ServerName))
             {
-                var (remoteServer, expiryDate) = _securityServers[connectionModel.ServerName];
+                return GetFreshServerConnection(connectionModel);
 
-                return expiryDate.HasExpired()
-                    ? GetFreshServerConnection(connectionModel)
-                    : remoteServer ?? GetFreshServerConnection(connectionModel);
             }
+            
+            var (remoteServer, expiryDate) = _securityServers[connectionModel.ServerName];
 
-            return GetFreshServerConnection(connectionModel);
+            return expiryDate.HasExpired()
+                ? GetFreshServerConnection(connectionModel)
+                : remoteServer ?? GetFreshServerConnection(connectionModel);
         }
 
         private ISecurityServer GetFreshServerConnection(ConnectionModel connectionModel)

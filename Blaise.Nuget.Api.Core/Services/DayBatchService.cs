@@ -4,6 +4,7 @@ using System.Linq;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
+using StatNeth.Blaise.API.Cati.Runtime;
 
 namespace Blaise.Nuget.Api.Core.Services
 {
@@ -18,9 +19,8 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayBatchDate)
         {
-            var catiManagement = _catiServerFactory.GetConnection(connectionModel);
+            var catiManagement = GetCatiManagementForServerPark(connectionModel, serverParkName);
 
-            catiManagement.SelectServerPark(serverParkName);
             catiManagement
                 .LoadCatiInstrumentManager(instrumentName)
                 .CreateDaybatch(dayBatchDate);
@@ -29,15 +29,14 @@ namespace Blaise.Nuget.Api.Core.Services
         public List<DateTime> GetSurveyDays(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             var surveyDays = new List<DateTime>();
-
-            var catiManagement = _catiServerFactory.GetConnection(connectionModel);
-
-            catiManagement.SelectServerPark(serverParkName);
-
+            var catiManagement = GetCatiManagementForServerPark(connectionModel, serverParkName);
             var surveyDateCollection = catiManagement
                 .LoadCatiInstrumentManager(instrumentName).Specification.SurveyDays;
 
-            if (surveyDateCollection == null || surveyDateCollection.Count == 0) return surveyDays;
+            if (surveyDateCollection == null || surveyDateCollection.Count == 0)
+            {
+                return surveyDays;
+            }
 
             surveyDays.AddRange(surveyDateCollection.Select(surveyDay => surveyDay.Date));
 
@@ -46,11 +45,9 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public void SetSurveyDay(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayToAdd)
         {
-            var catiManagement = _catiServerFactory.GetConnection(connectionModel);
-
-            catiManagement.SelectServerPark(serverParkName);
-
+            var catiManagement = GetCatiManagementForServerPark(connectionModel, serverParkName);
             var catiManager = catiManagement.LoadCatiInstrumentManager(instrumentName);
+            
             catiManager.Specification.SurveyDays
                 .AddSurveyDay(dayToAdd);
 
@@ -59,15 +56,22 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public void SetSurveyDays(ConnectionModel connectionModel, string instrumentName, string serverParkName, List<DateTime> daysToAdd)
         {
-            var catiManagement = _catiServerFactory.GetConnection(connectionModel);
-
-            catiManagement.SelectServerPark(serverParkName);
-
+            var catiManagement = GetCatiManagementForServerPark(connectionModel, serverParkName);
             var catiManager = catiManagement.LoadCatiInstrumentManager(instrumentName);
+
             catiManager.Specification.SurveyDays
                 .AddSurveyDays(daysToAdd);
             
             catiManager.SaveSpecification();
+        }
+
+        private IRemoteCatiManagementServer GetCatiManagementForServerPark(ConnectionModel connectionModel, string serverParkName)
+        {
+            var catiManagement = _catiServerFactory.GetConnection(connectionModel);
+
+            catiManagement.SelectServerPark(serverParkName);
+
+            return catiManagement;
         }
     }
 }
