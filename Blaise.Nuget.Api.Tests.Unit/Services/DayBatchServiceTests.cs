@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Services;
@@ -14,8 +15,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<ICatiManagementServerFactory> _catiFactoryMock;
         private Mock<IRemoteCatiManagementServer> _catiManagementServerMock;
         private Mock<ISurveyDayCollection> _surveyDayCollection;
-
-
+        
         private readonly ConnectionModel _connectionModel;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
@@ -65,10 +65,44 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_GetSurveyDays_Then_The_Correct_Services_Are_Called()
+        public void Given_I_Call_SetSurveyDay_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.SetSurveyDay(_connectionModel, _instrumentName, _serverParkName, DateTime.Today);
+
+            //assert
+            _catiFactoryMock.Verify(v => v.GetConnection(_connectionModel), Times.Once);
+            _catiManagementServerMock.Verify(v => v.SelectServerPark(_serverParkName), Times.Once);
+            _catiManagementServerMock.Verify(v => v
+                .LoadCatiInstrumentManager(_instrumentName).Specification.SurveyDays.AddSurveyDay(DateTime.Today), Times.Once);
+            _catiManagementServerMock.Verify(v => v
+                .LoadCatiInstrumentManager(_instrumentName).SaveSpecification(), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_SetSurveyDays_Then_The_Correct_Services_Are_Called()
         {
             //arrange
+            var surveyDays = new List<DateTime>
+            {
+                DateTime.Today,
+                DateTime.Today.AddDays(1)
+            };
+            //act
+            _sut.SetSurveyDays(_connectionModel, _instrumentName, _serverParkName, surveyDays);
 
+            //assert
+            _catiFactoryMock.Verify(v => v.GetConnection(_connectionModel), Times.Once);
+            _catiManagementServerMock.Verify(v => v.SelectServerPark(_serverParkName), Times.Once);
+            _catiManagementServerMock.Verify(v => v
+                .LoadCatiInstrumentManager(_instrumentName).Specification.SurveyDays.AddSurveyDays(surveyDays), Times.Once);
+            _catiManagementServerMock.Verify(v => v
+                .LoadCatiInstrumentManager(_instrumentName).SaveSpecification(), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_GetSurveyDays_Then_The_Correct_Services_Are_Called()
+        {
             //act
             _sut.GetSurveyDays(_connectionModel, _instrumentName, _serverParkName);
 
