@@ -43,25 +43,49 @@ namespace Blaise.Nuget.Api.Core.Services
             return surveyDays;
         }
 
-        public void SetSurveyDay(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayToAdd)
+        public void SetSurveyDay(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime surveyDay)
         {
             var catiManagement = GetCatiManagementForServerPark(connectionModel, serverParkName);
             var catiManager = catiManagement.LoadCatiInstrumentManager(instrumentName);
             
             catiManager.Specification.SurveyDays
-                .AddSurveyDay(dayToAdd);
+                .AddSurveyDay(surveyDay);
 
             catiManager.SaveSpecification();
         }
 
-        public void SetSurveyDays(ConnectionModel connectionModel, string instrumentName, string serverParkName, List<DateTime> daysToAdd)
+        public void SetSurveyDays(ConnectionModel connectionModel, string instrumentName, string serverParkName, List<DateTime> surveyDays)
         {
             var catiManagement = GetCatiManagementForServerPark(connectionModel, serverParkName);
             var catiManager = catiManagement.LoadCatiInstrumentManager(instrumentName);
 
             catiManager.Specification.SurveyDays
-                .AddSurveyDays(daysToAdd);
+                .AddSurveyDays(surveyDays);
             
+            catiManager.SaveSpecification();
+        }
+
+        public void RemoveSurveyDay(ConnectionModel connectionModel, string instrumentName, string serverParkName,
+            DateTime surveyDay)
+        {
+            var catiManagement = GetCatiManagementForServerPark(connectionModel, serverParkName);
+            var catiManager = catiManagement.LoadCatiInstrumentManager(instrumentName);
+
+            catiManager.Specification.SurveyDays
+                .RemoveSurveyDay(surveyDay);
+
+            catiManager.SaveSpecification();
+        }
+
+        public void RemoveSurveyDays(ConnectionModel connectionModel, string instrumentName, string serverParkName,
+            List<DateTime> surveyDays)
+        {
+            var catiManagement = GetCatiManagementForServerPark(connectionModel, serverParkName);
+            var catiManager = catiManagement.LoadCatiInstrumentManager(instrumentName);
+
+            catiManager.Specification.SurveyDays
+                .RemoveSurveyDays(surveyDays);
+
             catiManager.SaveSpecification();
         }
 
