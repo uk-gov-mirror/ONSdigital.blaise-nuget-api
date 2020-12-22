@@ -43,5 +43,31 @@ namespace Blaise.Nuget.Api.Core.Services
 
             return surveyDays;
         }
+
+        public void SetSurveyDay(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayToAdd)
+        {
+            var catiManagement = _catiServerFactory.GetConnection(connectionModel);
+
+            catiManagement.SelectServerPark(serverParkName);
+
+            var catiManager = catiManagement.LoadCatiInstrumentManager(instrumentName);
+            catiManager.Specification.SurveyDays
+                .AddSurveyDay(dayToAdd);
+
+            catiManager.SaveSpecification();
+        }
+
+        public void SetSurveyDays(ConnectionModel connectionModel, string instrumentName, string serverParkName, List<DateTime> daysToAdd)
+        {
+            var catiManagement = _catiServerFactory.GetConnection(connectionModel);
+
+            catiManagement.SelectServerPark(serverParkName);
+
+            var catiManager = catiManagement.LoadCatiInstrumentManager(instrumentName);
+            catiManager.Specification.SurveyDays
+                .AddSurveyDays(daysToAdd);
+            
+            catiManager.SaveSpecification();
+        }
     }
 }

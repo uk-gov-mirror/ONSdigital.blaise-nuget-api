@@ -390,13 +390,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.User
         [Test]
         public void Given_An_Empty_Role_When_I_Call_UpdateRole_Then_An_ArgumentException_Is_Thrown()
         {
-            //arrange
-            var serverParkNameList = new List<string>
-            {
-                "ServerPark1",
-                "ServerPark2",
-            };
-
             //act && assert
             var exception = Assert.Throws<ArgumentException>(() => _sut.UpdateRole(_userName, string.Empty));
             Assert.AreEqual("A value for the argument 'role' must be supplied", exception.Message);

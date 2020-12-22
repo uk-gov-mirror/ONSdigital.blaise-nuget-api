@@ -8,5 +8,9 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
     {
         void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayBatchDate);
         List<DateTime> GetSurveyDays(ConnectionModel connectionModel, string instrumentName, string serverParkName);
+
+        void SetSurveyDay(ConnectionModel connectionModel, string instrumentName, string serverParkName,
+            DateTime surveyDay);
+        void SetSurveyDays(ConnectionModel connectionModel, string instrumentName, string serverParkName, List<DateTime> surveyDays);
     }
 }
