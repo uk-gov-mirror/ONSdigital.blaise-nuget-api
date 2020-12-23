@@ -110,7 +110,7 @@ namespace Blaise.Nuget.Api.Core.Services
             var serverPark = GetServerPark(connectionModel, serverParkName);
             serverPark.AddMachine(
                 machineName,
-                logicalRoot.Location,
+                logicalRoot.Name,
                 roles.Select(r => r.Name).ToArray());
         }
     }
