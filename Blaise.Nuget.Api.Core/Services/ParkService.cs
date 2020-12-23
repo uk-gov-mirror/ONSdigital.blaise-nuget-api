@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Models;
 using StatNeth.Blaise.Administer.Deploy.ServiceContract;
+using StatNeth.Blaise.Administer.Deploy.IServiceContract;
+using StatNeth.Blaise.Security.ClientProxy;
 
 namespace Blaise.Nuget.Api.Core.Services
 {
@@ -67,13 +69,23 @@ namespace Blaise.Nuget.Api.Core.Services
         public void RegisterMachineOnServerPark(ConnectionModel connectionModel,
             string serverParkName, string machineName)
         {
-            Console.WriteLine("Attempt to create Deploy service class");
+            Console.WriteLine("Attempt to get blaise tokens");
 
-            var deployService = new DeployService();
-            Console.WriteLine("Created Deploy service class");
+            var securePassword = new PasswordService().CreateSecurePassword(connectionModel.Password);
+            var blaiseTokens = TokenProvider.GetBlaiseTokens(
+                connectionModel.Binding,
+                connectionModel.ServerName,
+                connectionModel.Port,
+                connectionModel.UserName,
+                securePassword);
 
-            var logicalRoots = deployService
-                .GetRemoteLogicalRoots(machineName, 8031);
+            var clientProxy = new StatNeth.Blaise.Administer.Deploy.ClientProxy.DeployServiceClientProxy(
+                connectionModel.Binding,
+                connectionModel.ServerName,
+                connectionModel.Port,
+                blaiseTokens);
+
+            var logicalRoots = clientProxy.GetRemoteLogicalRoots(machineName, 8031);
 
             Console.WriteLine("Obtained logical roots");
 
@@ -84,7 +96,7 @@ namespace Blaise.Nuget.Api.Core.Services
             }
             Console.WriteLine($"Obtained first logical root '{logicalRoot.Name}', '{logicalRoot.Location}'");
 
-            var roles = deployService
+            var roles = clientProxy
                 .GetRemoteDefinedRoles2(machineName, 8031, "http");
 
             Console.WriteLine("Obtained logical roles");

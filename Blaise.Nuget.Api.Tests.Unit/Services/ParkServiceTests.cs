@@ -1,4 +1,5 @@
-﻿using Blaise.Nuget.Api.Contracts.Exceptions;
+﻿using System;
+using Blaise.Nuget.Api.Contracts.Exceptions;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Services;
 using Moq;
@@ -7,6 +8,16 @@ using StatNeth.Blaise.API.ServerManager;
 using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Models;
+using Blaise.Nuget.Api.Core.Extensions;
+using StatNeth.Blaise.Administer.Deploy.IServiceContract;
+using StatNeth.Blaise.Administer.Deploy.Security;
+using StatNeth.Blaise.Administer.Deploy.ServiceContract;
+using StatNeth.Blaise.API.Security;
+using StatNeth.Blaise.Layout.RenderDefinition;
+using StatNeth.Blaise.Security;
+using StatNeth.Blaise.Security.ClientProxy;
+using StatNeth.Blaise.Security.ServiceHelper;
+using StatNeth.Blaise.Shared.API;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Services
 {
@@ -197,6 +208,49 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //act && assert
             var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetServerParks(_connectionModel));
             Assert.AreEqual("No server parks found", exception.Message);
+        }
+
+        [Ignore("")]
+        [Test]
+        public void CreateDeployService()
+        {
+            var connectionModel = new ConnectionModel
+            {
+                ServerName = "localhost",
+                Binding = "http",
+                UserName = "Root",
+                Password = "Root",
+                Port = 8031,
+                RemotePort = 8033,
+                ConnectionExpiresInMinutes = 30
+            };
+            var passwordService = new PasswordService();
+            var securePassword = passwordService.CreateSecurePassword(connectionModel.Password);
+
+            var securityServer = SecurityManager.Connect(
+                connectionModel.ServerName,
+                connectionModel.Port,
+                connectionModel.UserName,
+                securePassword,
+                connectionModel.Binding.ToEnum<ClientPreferredBinding>());
+
+            var blaiseTokens = TokenProvider.GetBlaiseTokens(
+                connectionModel.Binding,
+                connectionModel.ServerName,
+                connectionModel.Port,
+                connectionModel.UserName,
+                securePassword);
+
+
+            var test = new StatNeth.Blaise.Administer.Deploy.ClientProxy.DeployServiceClientProxy(
+                "http",
+                "localhost",
+                8031,
+                blaiseTokens);
+
+            var roots = test.GetRemoteLogicalRoots(connectionModel.ServerName, connectionModel.Port);
+
+            //var test = deployService.GetLogicalRoots();
         }
     }
 }
