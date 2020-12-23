@@ -89,21 +89,22 @@ namespace Blaise.Nuget.Api.Core.Services
 
             Console.WriteLine("Obtained logical roots");
 
-            var logicalRoot = logicalRoots.FirstOrDefault();
+            var logicalRoot = logicalRoots.FirstOrDefault(lr => 
+                lr.Name.Equals("default", StringComparison.CurrentCultureIgnoreCase));
             if (logicalRoot == null)
             {
                 throw new Exception("No logical root");
             }
-            Console.WriteLine($"Obtained first logical root '{logicalRoot.Name}', '{logicalRoot.Location}'");
+            Console.WriteLine($"Obtained default logical root '{logicalRoot.Name}', '{logicalRoot.Location}'");
 
             var roles = clientProxy
                 .GetRemoteDefinedRoles2(machineName, 8031, "http");
 
-            Console.WriteLine("Obtained logical roles");
+            Console.WriteLine("Obtained roles");
 
             foreach (var role in roles)
             {
-                Console.WriteLine($"Obtained logical role '{role.Name}'");
+                Console.WriteLine($"Obtained role '{role.Name}'");
             }
             
             var serverPark = GetServerPark(connectionModel, serverParkName);
