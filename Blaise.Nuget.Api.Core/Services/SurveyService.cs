@@ -13,10 +13,10 @@ namespace Blaise.Nuget.Api.Core.Services
 {
     public class SurveyService : ISurveyService
     {
-        private readonly IParkService _parkService;
+        private readonly IServerParkService _parkService;
 
         public SurveyService(
-            IParkService parkService 
+            IServerParkService parkService 
             )
         {
             _parkService = parkService;

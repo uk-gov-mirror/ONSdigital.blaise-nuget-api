@@ -1,5 +1,4 @@
-﻿using System;
-using Blaise.Nuget.Api.Contracts.Exceptions;
+﻿using Blaise.Nuget.Api.Contracts.Exceptions;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Services;
 using Moq;
@@ -8,20 +7,10 @@ using StatNeth.Blaise.API.ServerManager;
 using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Models;
-using Blaise.Nuget.Api.Core.Extensions;
-using StatNeth.Blaise.Administer.Deploy.IServiceContract;
-using StatNeth.Blaise.Administer.Deploy.Security;
-using StatNeth.Blaise.Administer.Deploy.ServiceContract;
-using StatNeth.Blaise.API.Security;
-using StatNeth.Blaise.Layout.RenderDefinition;
-using StatNeth.Blaise.Security;
-using StatNeth.Blaise.Security.ClientProxy;
-using StatNeth.Blaise.Security.ServiceHelper;
-using StatNeth.Blaise.Shared.API;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Services
 {
-    public class ParkServiceTests
+    public class ServerParkServiceTests
     {
         private Mock<IConnectedServerFactory> _connectionFactoryMock;
 
@@ -32,9 +21,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private readonly ConnectionModel _connectionModel;
         private string _serverParkName;
 
-        private ParkService _sut;
+        private ServerParkService _sut;
 
-        public ParkServiceTests()
+        public ServerParkServiceTests()
         {
             _connectionModel = new ConnectionModel();
         }
@@ -62,7 +51,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _connectionFactoryMock.Setup(c => c.GetConnection(_connectionModel)).Returns(_connectedServerMock.Object);
 
             //setup service under test
-            _sut = new ParkService(_connectionFactoryMock.Object);
+            _sut = new ServerParkService(_connectionFactoryMock.Object);
         }
 
         [Test]
@@ -152,7 +141,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.IsFalse(result);
         }
 
-
         [Test]
         public void Given_A_ServerPark_Exists_When_I_Call_GetServerPark_Then_I_Get_A_ServerPark_Returned()
         {
@@ -210,47 +198,21 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.AreEqual("No server parks found", exception.Message);
         }
 
-        [Ignore("")]
-        [Test]
-        public void CreateDeployService()
+       [Test]
+       public void Given_Valid_Arguments_I_Call_RegisterMachineOnServerPark_Then_The_Correct_Method_Is_Called()
         {
-            var connectionModel = new ConnectionModel
-            {
-                ServerName = "localhost",
-                Binding = "http",
-                UserName = "Root",
-                Password = "Root",
-                Port = 8031,
-                RemotePort = 8033,
-                ConnectionExpiresInMinutes = 30
-            };
-            var passwordService = new PasswordService();
-            var securePassword = passwordService.CreateSecurePassword(connectionModel.Password);
+            //arrange
+            var machineName = "Gusty01";
+            var logicalRootName = "Default";
+            var roles = new List<string> {"Web", "Cati"};
+            var rolesArray = roles.ToArray();
 
-            var securityServer = SecurityManager.Connect(
-                connectionModel.ServerName,
-                connectionModel.Port,
-                connectionModel.UserName,
-                securePassword,
-                connectionModel.Binding.ToEnum<ClientPreferredBinding>());
+            //act
+            _sut.RegisterMachineOnServerPark(_connectionModel, _serverParkName, machineName,
+                logicalRootName, roles);
 
-            var blaiseTokens = TokenProvider.GetBlaiseTokens(
-                connectionModel.Binding,
-                connectionModel.ServerName,
-                connectionModel.Port,
-                connectionModel.UserName,
-                securePassword);
-
-
-            var test = new StatNeth.Blaise.Administer.Deploy.ClientProxy.DeployServiceClientProxy(
-                "http",
-                "localhost",
-                8031,
-                blaiseTokens);
-
-            var roots = test.GetRemoteLogicalRoots(connectionModel.ServerName, connectionModel.Port);
-
-            //var test = deployService.GetLogicalRoots();
+            //assert
+            _serverParkMock.Verify(v => v.AddMachine("Gusty01", "Default", rolesArray), Times.Once);
         }
     }
 }

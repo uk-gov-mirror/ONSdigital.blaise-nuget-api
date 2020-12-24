@@ -4,7 +4,7 @@ using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Core.Interfaces.Services
 {
-    public interface IParkService
+    public interface IServerParkService
     {
         IEnumerable<string> GetServerParkNames(ConnectionModel connectionModel);
 
@@ -14,7 +14,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         IEnumerable<IServerPark> GetServerParks(ConnectionModel connectionModel);
 
-        void RegisterMachineOnServerPark(ConnectionModel connectionModel,
-            string serverParkName, string machineName);
+        void RegisterMachineOnServerPark(ConnectionModel connectionModel,string serverParkName, 
+            string machineName, string logicalRootName, IEnumerable<string> roles);
     }
 }

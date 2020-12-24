@@ -85,7 +85,7 @@
     <Compile Include="Services\SurveyServiceTests.cs" />
     <Compile Include="Providers\RemoteDataLinkProviderTests.cs" />
     <Compile Include="Services\CaseServiceTests.cs" />
-    <Compile Include="Services\ParkServiceTests.cs" />
+    <Compile Include="Services\ServerParkServiceTests.cs" />
     <Compile Include="Services\PasswordServiceTests.cs" />
     <Compile Include="Services\UserServiceTests.cs" />
   </ItemGroup>

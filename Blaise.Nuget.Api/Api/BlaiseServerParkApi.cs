@@ -11,11 +11,11 @@ namespace Blaise.Nuget.Api.Api
 {
     public class BlaiseServerParkApi : IBlaiseServerParkApi
     {
-        private readonly IParkService _parkService;
+        private readonly IServerParkService _parkService;
         private readonly ConnectionModel _connectionModel;
 
         internal BlaiseServerParkApi(
-            IParkService parkService,
+            IServerParkService parkService,
             ConnectionModel connectionModel)
         {
             _parkService = parkService;
@@ -27,7 +27,7 @@ namespace Blaise.Nuget.Api.Api
             var unityProvider = new UnityProvider();
             unityProvider.RegisterDependencies();
 
-            _parkService = unityProvider.Resolve<IParkService>();
+            _parkService = unityProvider.Resolve<IServerParkService>();
 
             var configurationProvider = unityProvider.Resolve<IBlaiseConfigurationProvider>();
             _connectionModel = connectionModel ?? configurationProvider.GetConnectionModel();
@@ -50,17 +50,23 @@ namespace Blaise.Nuget.Api.Api
             return _parkService.GetServerParkNames(_connectionModel);
         }
 
-       public bool ServerParkExists(string serverParkName)
+        public bool ServerParkExists(string serverParkName)
         {
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
             return _parkService.ServerParkExists(_connectionModel, serverParkName);
         }
 
-       public void RegisterMachineOnServerPark(string serverParkName, string machineName)
-       {
-           _parkService.RegisterMachineOnServerPark(_connectionModel,
-               serverParkName, machineName);
-       }
+        public void RegisterMachineOnServerPark(string serverParkName, string machineName,
+            string logicalRootName, IEnumerable<string> roles)
+        {
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+            machineName.ThrowExceptionIfNullOrEmpty("machineName");
+            logicalRootName.ThrowExceptionIfNullOrEmpty("logicalRootName");
+            roles.ThrowExceptionIfNullOrEmpty("roles");
+
+            _parkService.RegisterMachineOnServerPark(_connectionModel,
+                serverParkName, machineName, logicalRootName, roles);
+        }
     }
 }
