@@ -45,7 +45,7 @@ namespace Blaise.Nuget.Api.Providers
             _unityContainer.RegisterType<ICaseService, CaseService>();
             _unityContainer.RegisterType<IFieldService, FieldService>();
             _unityContainer.RegisterType<IKeyService, KeyService>();
-            _unityContainer.RegisterType<IParkService, ParkService>();
+            _unityContainer.RegisterType<IServerParkService, ServerParkService>();
             _unityContainer.RegisterType<ISurveyService, SurveyService>();
             _unityContainer.RegisterType<IUserService, UserService>();
             _unityContainer.RegisterType<IFileService, FileService>();

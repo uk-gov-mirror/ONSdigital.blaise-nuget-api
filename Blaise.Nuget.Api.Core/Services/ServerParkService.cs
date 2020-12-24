@@ -6,17 +6,14 @@ using StatNeth.Blaise.API.ServerManager;
 using System.Collections.Generic;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Models;
-using StatNeth.Blaise.Administer.Deploy.ServiceContract;
-using StatNeth.Blaise.Administer.Deploy.IServiceContract;
-using StatNeth.Blaise.Security.ClientProxy;
 
 namespace Blaise.Nuget.Api.Core.Services
 {
-    public class ParkService : IParkService
+    public class ServerParkService : IServerParkService
     {
         private readonly IConnectedServerFactory _connectionFactory;
 
-        public ParkService(IConnectedServerFactory connectionFactory)
+        public ServerParkService(IConnectedServerFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
         }
@@ -67,51 +64,13 @@ namespace Blaise.Nuget.Api.Core.Services
         }
 
         public void RegisterMachineOnServerPark(ConnectionModel connectionModel,
-            string serverParkName, string machineName)
-        {
-            Console.WriteLine("Attempt to get blaise tokens");
-
-            var securePassword = new PasswordService().CreateSecurePassword(connectionModel.Password);
-            var blaiseTokens = TokenProvider.GetBlaiseTokens(
-                connectionModel.Binding,
-                connectionModel.ServerName,
-                connectionModel.Port,
-                connectionModel.UserName,
-                securePassword);
-
-            var clientProxy = new StatNeth.Blaise.Administer.Deploy.ClientProxy.DeployServiceClientProxy(
-                connectionModel.Binding,
-                connectionModel.ServerName,
-                connectionModel.Port,
-                blaiseTokens);
-
-            var logicalRoots = clientProxy.GetRemoteLogicalRoots(machineName, 8031);
-
-            Console.WriteLine("Obtained logical roots");
-
-            var logicalRoot = logicalRoots.FirstOrDefault(lr => 
-                lr.Name.Equals("default", StringComparison.CurrentCultureIgnoreCase));
-            if (logicalRoot == null)
-            {
-                throw new Exception("No logical root");
-            }
-            Console.WriteLine($"Obtained default logical root '{logicalRoot.Name}', '{logicalRoot.Location}'");
-
-            var roles = clientProxy
-                .GetRemoteDefinedRoles2(machineName, 8031, "http");
-
-            Console.WriteLine("Obtained roles");
-
-            foreach (var role in roles)
-            {
-                Console.WriteLine($"Obtained role '{role.Name}'");
-            }
-            
+            string serverParkName, string machineName, string logicalRootName, IEnumerable<string> roles)
+        {           
             var serverPark = GetServerPark(connectionModel, serverParkName);
             serverPark.AddMachine(
                 machineName,
-                logicalRoot.Name,
-                roles.Select(r => r.Name).ToArray());
+                logicalRootName,
+                roles.ToArray());
         }
     }
 }
