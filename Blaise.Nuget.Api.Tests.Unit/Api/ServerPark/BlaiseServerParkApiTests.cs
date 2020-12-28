@@ -255,6 +255,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.RegisterMachineOnServerPark(null,
                 machineName, logicalRootName, roles));
+            Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
         [Test]

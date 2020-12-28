@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
@@ -63,6 +64,8 @@ namespace Blaise.Nuget.Api.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
             machineName.ThrowExceptionIfNullOrEmpty("machineName");
             logicalRootName.ThrowExceptionIfNullOrEmpty("logicalRootName");
+
+            roles = roles.ToList();
             roles.ThrowExceptionIfNullOrEmpty("roles");
 
             _parkService.RegisterMachineOnServerPark(_connectionModel,
