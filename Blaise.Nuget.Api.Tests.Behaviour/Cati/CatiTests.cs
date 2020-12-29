@@ -56,5 +56,49 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Cati
             Assert.IsTrue(result.Contains(DateTime.Today));
             Assert.IsTrue(result.Contains(DateTime.Today.AddDays(1)));
         }
+
+        [Ignore("Integration")]
+        [Test]
+        public void Given_An_Instrument_Is_Installed_And_A_SurveyDay_When_RemoveSurveyDay_Is_Called_The_SurveyDays_Are_Removed()
+        {
+            //Arrange
+            var surveyDay = DateTime.Today;
+
+            _sut.SetSurveyDay(surveyName, serverParkName, surveyDay);
+            var surveyDays = _sut.GetSurveyDays(surveyName, serverParkName);
+
+            Assert.IsTrue(surveyDays.Contains(DateTime.Today));
+
+            //Act
+            _sut.RemoveSurveyDay(surveyName, serverParkName, surveyDay);
+
+            //Assert
+            var result = _sut.GetSurveyDays(surveyName, serverParkName);
+            Assert.IsFalse(result.Contains(DateTime.Today));
+        }
+
+        [Ignore("Integration")]
+        [Test]
+        public void Given_An_Instrument_Is_Installed_And_Has_Multiple_SurveyDays_When_RemoveSurveyDays_Is_Called_The_SurveyDays_Are_Removed()
+        {
+            //Arrange
+            var daysToAdd = new List<DateTime>
+            {
+                DateTime.Today,
+                DateTime.Today.AddDays(1)
+            };
+            _sut.SetSurveyDays(surveyName, serverParkName, daysToAdd);
+            var surveyDays = _sut.GetSurveyDays(surveyName, serverParkName);
+            Assert.IsTrue(surveyDays.Contains(DateTime.Today));
+            Assert.IsTrue(surveyDays.Contains(DateTime.Today.AddDays(1)));
+
+            //Act
+            _sut.RemoveSurveyDays(surveyName, serverParkName, daysToAdd);
+
+            //Assert
+            var result = _sut.GetSurveyDays(surveyName, serverParkName);
+            Assert.IsFalse(result.Contains(DateTime.Today));
+            Assert.IsFalse(result.Contains(DateTime.Today.AddDays(1)));
+        }
     }
 }
