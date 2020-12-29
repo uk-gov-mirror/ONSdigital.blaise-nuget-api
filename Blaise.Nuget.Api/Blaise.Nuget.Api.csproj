@@ -80,7 +80,7 @@
     <Compile Include="Api\BlaiseCatiApi.cs" />
     <Compile Include="Api\BlaiseHealthApi.cs" />
     <Compile Include="Api\BlaiseUserApi.cs" />
-    <Compile Include="Api\BlaiseBackupApi.cs" />
+    <Compile Include="Api\BlaiseFileApi.cs" />
     <Compile Include="Api\BlaiseSurveyApi.cs" />
     <Compile Include="Api\BlaiseCaseApi.cs" />
     <Compile Include="Extensions\ConfigurationExtensions.cs" />
