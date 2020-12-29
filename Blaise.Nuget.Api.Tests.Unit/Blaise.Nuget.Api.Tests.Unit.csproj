@@ -65,7 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Case\BlaiseCaseApiTests.cs" />
-    <Compile Include="Api\Backup\BlaiseBackupApiTests.cs" />
+    <Compile Include="Api\File\BlaiseFileApiTests.cs" />
     <Compile Include="Api\Cati\BlaiseCatiApiTests.cs" />
     <Compile Include="Api\Health\BlaiseHealthApiTests.cs" />
     <Compile Include="Api\Role\BlaiseRoleApiTests.cs" />

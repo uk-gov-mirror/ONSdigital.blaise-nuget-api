@@ -68,7 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Backup\BackupInstrumentTests.cs" />
+    <Compile Include="File\CreateInstrumentFileTests.cs" />
     <Compile Include="Case\GetCaseTests.cs" />
     <Compile Include="Case\CreateCaseTests.cs" />
     <Compile Include="Cati\CatiTests.cs" />

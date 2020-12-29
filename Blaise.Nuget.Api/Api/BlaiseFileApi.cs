@@ -9,14 +9,14 @@ using StatNeth.Blaise.API.DataRecord;
 
 namespace Blaise.Nuget.Api.Api
 {
-    public class BlaiseBackupApi : IBlaiseBackupApi
+    public class BlaiseFileApi : IBlaiseFileApi
     {
         private readonly ICaseService _caseService;
         private readonly ISurveyService _surveyService;
         private readonly IFileService _fileService;
         private readonly ConnectionModel _connectionModel;
 
-        internal BlaiseBackupApi(
+        internal BlaiseFileApi(
             ICaseService caseService,
             ISurveyService surveyService,
             IFileService fileService,
@@ -28,7 +28,7 @@ namespace Blaise.Nuget.Api.Api
             _connectionModel = connectionModel;
         }
 
-        public BlaiseBackupApi(ConnectionModel connectionModel = null)
+        public BlaiseFileApi(ConnectionModel connectionModel = null)
         {
             IIocProvider unityProvider = new UnityProvider();
             unityProvider.RegisterDependencies();
@@ -41,7 +41,7 @@ namespace Blaise.Nuget.Api.Api
             _connectionModel = connectionModel ?? configurationProvider.GetConnectionModel();
         }
 
-        public string BackupSurveyToFile(string serverParkName, string instrumentName, string destinationFilePath)
+        public string CreateInstrumentFile(string serverParkName, string instrumentName, string destinationFilePath)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
