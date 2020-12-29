@@ -8,9 +8,9 @@ using NUnit.Framework;
 using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 
-namespace Blaise.Nuget.Api.Tests.Unit.Api.Backup
+namespace Blaise.Nuget.Api.Tests.Unit.Api.File
 {
-    public class BlaiseBackupApiTests
+    public class BlaiseFileApiTests
     {
         private Mock<ICaseService> _caseServiceMock;
         private Mock<ISurveyService> _surveyServiceMock;
@@ -21,9 +21,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Backup
         private readonly string _serverParkName;
         private readonly string _destinationFilePath;
 
-        private IBlaiseBackupApi _sut;
+        private IBlaiseFileApi _sut;
 
-        public BlaiseBackupApiTests()
+        public BlaiseFileApiTests()
         {
             _connectionModel = new ConnectionModel();
             _instrumentName = "Instrument1";
@@ -37,7 +37,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Backup
             _surveyServiceMock = new Mock<ISurveyService>();
             _fileServiceMock = new Mock<IFileService>();
 
-            _sut = new BlaiseBackupApi(
+            _sut = new BlaiseFileApi(
                 _caseServiceMock.Object,
                 _surveyServiceMock.Object,
                 _fileServiceMock.Object,
@@ -45,23 +45,23 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Backup
         }
 
         [Test]
-        public void Given_No_ConnectionModel_When_I_Instantiate_BlaiseBackupApi_No_Exceptions_Are_Thrown()
+        public void Given_No_ConnectionModel_When_I_Instantiate_BlaiseFileApi_No_Exceptions_Are_Thrown()
         {
             //act && assert
             // ReSharper disable once ObjectCreationAsStatement
-            Assert.DoesNotThrow(() => new BlaiseBackupApi());
+            Assert.DoesNotThrow(() => new BlaiseFileApi());
         }
 
         [Test]
-        public void Given_A_ConnectionModel_When_I_Instantiate_BlaiseBackupApi_No_Exceptions_Are_Thrown()
+        public void Given_A_ConnectionModel_When_I_Instantiate_BlaiseFileApi_No_Exceptions_Are_Thrown()
         {
             //act && assert
             // ReSharper disable once ObjectCreationAsStatement
-            // Assert.DoesNotThrow(() => new BlaiseBackupApi(new ConnectionModel()));
+            Assert.DoesNotThrow(() => new BlaiseFileApi(new ConnectionModel()));
         }
 
         [Test]
-        public void Given_Valid_Parameters_When_I_Call_BackupSurveyToFile_The_Correct_Services_Are_Called()
+        public void Given_Valid_Parameters_When_I_Call_CreateInstrumentFile_The_Correct_Services_Are_Called()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord2>();
@@ -86,7 +86,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Backup
                 .Returns(dataSetMock.Object);
 
             //act
-            _sut.BackupSurveyToFile(_serverParkName, _instrumentName, _destinationFilePath);
+            _sut.CreateInstrumentFile(_serverParkName, _instrumentName, _destinationFilePath);
 
             //assert
             _fileServiceMock.Verify(f => f.DeleteDatabaseFile(_destinationFilePath,
@@ -100,7 +100,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Backup
         }
 
         [Test]
-        public void Given_Database_Already_Exists_In_DestinationPath_When_I_Call_BackupSurveyToFile_The_Database_Is_Deleted()
+        public void Given_Database_Already_Exists_In_DestinationPath_When_I_Call_CreateInstrumentFile_The_Database_Is_Deleted()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord2>();
@@ -125,7 +125,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Backup
                 .Returns(dataSetMock.Object);
 
             //act
-            _sut.BackupSurveyToFile(_serverParkName, _instrumentName, _destinationFilePath);
+            _sut.CreateInstrumentFile(_serverParkName, _instrumentName, _destinationFilePath);
 
             //assert
             _fileServiceMock.Verify(f => f.DeleteDatabaseFile(_destinationFilePath,
@@ -133,55 +133,55 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Backup
         }
 
         [Test]
-        public void Given_An_Empty_ServerParkName_When_I_Call_BackupSurveyToFile_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_ServerParkName_When_I_Call_CreateInstrumentFile_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurveyToFile(string.Empty, 
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateInstrumentFile(string.Empty, 
                 _instrumentName, _destinationFilePath));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_Null_ServerParkName_When_I_Call_BackupSurveyToFile_Then_An_ArgumentException_Is_Thrown()
+        public void Given_A_Null_ServerParkName_When_I_Call_CreateInstrumentFile_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.BackupSurveyToFile(null, 
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateInstrumentFile(null, 
                 _instrumentName, _destinationFilePath));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
         [Test]
-        public void Given_An_Empty_InstrumentName_When_I_Call_BackupSurveyToFile_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_InstrumentName_When_I_Call_CreateInstrumentFile_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurveyToFile(_serverParkName,
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateInstrumentFile(_serverParkName,
                 string.Empty, _destinationFilePath));
             Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_Null_InstrumentName_When_I_Call_BackupSurveyToFile_Then_An_ArgumentException_Is_Thrown()
+        public void Given_A_Null_InstrumentName_When_I_Call_CreateInstrumentFile_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.BackupSurveyToFile(_serverParkName, 
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateInstrumentFile(_serverParkName, 
                 null, _destinationFilePath));
             Assert.AreEqual("instrumentName", exception.ParamName);
         }
 
         [Test]
-        public void Given_An_Empty_DestinationFilePath_When_I_Call_BackupSurveyToFile_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_DestinationFilePath_When_I_Call_CreateInstrumentFile_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.BackupSurveyToFile(_serverParkName, 
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateInstrumentFile(_serverParkName, 
                 _instrumentName, string.Empty));
             Assert.AreEqual("A value for the argument 'destinationFilePath' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_Null_DestinationFilePath_When_I_Call_BackupSurveyToFile_Then_An_ArgumentException_Is_Thrown()
+        public void Given_A_Null_DestinationFilePath_When_I_Call_CreateInstrumentFile_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.BackupSurveyToFile(_serverParkName, 
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateInstrumentFile(_serverParkName, 
                 _instrumentName, null));
             Assert.AreEqual("destinationFilePath", exception.ParamName);
         }
