@@ -1,7 +1,7 @@
 ﻿using Blaise.Nuget.Api.Api;
 using NUnit.Framework;
 
-namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
+namespace Blaise.Nuget.Api.Tests.Behaviour.File
 {
     public class CreateInstrumentFileTests
     {
@@ -24,7 +24,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Backup
             //act
             _sut.CreateInstrumentFile(serverParkName, instrumentName, outputPath);
 
-            //arrange
+            //assert
         }
     }
 }

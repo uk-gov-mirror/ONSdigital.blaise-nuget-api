@@ -8,7 +8,7 @@ using NUnit.Framework;
 using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
 
-namespace Blaise.Nuget.Api.Tests.Unit.Api.Backup
+namespace Blaise.Nuget.Api.Tests.Unit.Api.File
 {
     public class BlaiseFileApiTests
     {
@@ -45,7 +45,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Backup
         }
 
         [Test]
-        public void Given_No_ConnectionModel_When_I_Instantiate_BlaiseBackupApi_No_Exceptions_Are_Thrown()
+        public void Given_No_ConnectionModel_When_I_Instantiate_BlaiseFileApi_No_Exceptions_Are_Thrown()
         {
             //act && assert
             // ReSharper disable once ObjectCreationAsStatement
@@ -53,11 +53,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Backup
         }
 
         [Test]
-        public void Given_A_ConnectionModel_When_I_Instantiate_BlaiseBackupApi_No_Exceptions_Are_Thrown()
+        public void Given_A_ConnectionModel_When_I_Instantiate_BlaiseFileApi_No_Exceptions_Are_Thrown()
         {
             //act && assert
             // ReSharper disable once ObjectCreationAsStatement
-            // Assert.DoesNotThrow(() => new BlaiseBackupApi(new ConnectionModel()));
+            Assert.DoesNotThrow(() => new BlaiseFileApi(new ConnectionModel()));
         }
 
         [Test]
