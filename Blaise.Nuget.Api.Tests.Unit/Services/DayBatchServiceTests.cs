@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Blaise.Nuget.Api.Contracts.Exceptions;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Services;
@@ -15,10 +16,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<ICatiManagementServerFactory> _catiFactoryMock;
         private Mock<IRemoteCatiManagementServer> _catiManagementServerMock;
         private Mock<ISurveyDayCollection> _surveyDayCollection;
-        
+
         private readonly ConnectionModel _connectionModel;
         private readonly string _instrumentName;
         private readonly string _serverParkName;
+        private readonly DateTime _surveyDay;
 
         private DayBatchService _sut;
 
@@ -27,12 +29,19 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _connectionModel = new ConnectionModel();
             _instrumentName = "TestInstrumentName";
             _serverParkName = "TestServerParkName";
+
+            _surveyDay = DateTime.Today;
         }
 
         [SetUp]
         public void SetUpTests()
         {
+            var surveyDayMock = new Mock<ISurveyDay>();
+            surveyDayMock.Setup(d => d.Date).Returns(_surveyDay);
+            var surveyDays = new List<ISurveyDay> { surveyDayMock.Object };
+
             _surveyDayCollection = new Mock<ISurveyDayCollection>();
+            _surveyDayCollection.Setup(s => s.GetEnumerator()).Returns(surveyDays.GetEnumerator());
 
             _catiManagementServerMock = new Mock<IRemoteCatiManagementServer>();
             _catiManagementServerMock.Setup(c => c.SelectServerPark(It.IsAny<string>()));
@@ -48,10 +57,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_CreateDayBatch_Then_The_Correct_Services_Are_Called()
+        public void Given_A_Survey_Day_Exists_For_Day_Batch_Date_When_I_Call_CreateDayBatch_Then_The_Correct_Services_Are_Called()
         {
             //arrange
-            var dayBatchDate = DateTime.Now;
+            var dayBatchDate = _surveyDay;
 
             //act
             _sut.CreateDayBatch(_connectionModel, _instrumentName, _serverParkName, dayBatchDate);
@@ -62,6 +71,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _catiManagementServerMock.Verify(v => v
                 .LoadCatiInstrumentManager(_instrumentName)
                 .CreateDaybatch(dayBatchDate), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_Survey_Day_Does_Not_Exist_For_Day_Batch_Date_When_I_Call_CreateDayBatch_Then_A_DataNotFoundException_Is_Thrown()
+        {
+            //arrange
+            var dayBatchDate = _surveyDay.AddDays(1);
+
+            //act && assert
+            var exception = Assert.Throws<DataNotFoundException>(() => _sut.CreateDayBatch(_connectionModel, _instrumentName, _serverParkName, dayBatchDate));
+            Assert.AreEqual($"A survey day does not exist for the required daybatch date '{dayBatchDate.Date}'", exception.Message);
+
         }
 
         [Test]
