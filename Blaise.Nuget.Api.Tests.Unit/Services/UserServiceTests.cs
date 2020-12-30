@@ -192,11 +192,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var serverParkNameList = new List<string>
             {
                 "ServerPark1",
-                "ServerPark2",
+                "ServerPark2"
             };
 
-            var defaultServerPark = "ServerPark1";
-
+            const string defaultServerPark = "ServerPark1";
             const string role = "King";
 
             //act
@@ -224,12 +223,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var serverParkNameList = new List<string>
             {
                 "ServerPark1",
-                "ServerPark2",
+                "ServerPark2"
             };
 
             const string role = "King";
-
-            var defaultServerPark = "ServerPark1";
+            const string defaultServerPark = "ServerPark1";
 
             _userMock.As<IUser2>().Setup(u => u.Role).Throws(new Exception());
 
@@ -284,7 +282,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var serverParkNameList = new List<string>
             {
                 "ServerPark1",
-                "ServerPark2",
+                "ServerPark2"
             };
 
             const string defaultServerPark = "ServerPark2";

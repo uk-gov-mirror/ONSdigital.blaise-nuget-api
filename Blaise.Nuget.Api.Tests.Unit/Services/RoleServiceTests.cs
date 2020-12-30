@@ -63,11 +63,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetRole_Then_The_Correct_Role_Is_Returned()
         {
             //arrange
-            var role1Name = "Name1";
+            const string role1Name = "Name1";
             var role1Mock = new Mock<IRole>();
             role1Mock.Setup(r => r.Name).Returns(role1Name);
 
-            var role2Name = "Name2";
+            const string role2Name = "Name2";
             var role2Mock = new Mock<IRole>();
             role2Mock.Setup(r => r.Name).Returns(role2Name);
             var roles = new List<IRole> { role1Mock.Object, role2Mock.Object };
@@ -90,7 +90,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetRole_Then_The_Correct_Role_Is_Returned_Regardless_Of_Case(string name)
         {
             //arrange
-            var role1Name = "Name1";
+            const string role1Name = "Name1";
             var role1Mock = new Mock<IRole>();
             role1Mock.Setup(r => r.Name).Returns(role1Name);
 
@@ -128,7 +128,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_Role_Exists_When_I_Call_RoleExists_Then_True_Is_Returned(string name)
         {
             //arrange
-            var role1Name = "Name1";
+            const string role1Name = "Name1";
             var role1Mock = new Mock<IRole>();
             role1Mock.Setup(r => r.Name).Returns(role1Name);
 
@@ -166,12 +166,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_AddRole_Then_The_Correct_Services_Are_Called()
         {
             //arrange
-            var name = "Admin";
-            var description = "Test";
+            const string name = "Admin";
+            const string description = "Test";
             var permissions = new List<string> { "Permission1" };
             var actionPermissions = new List<ActionPermissionModel> { new ActionPermissionModel() };
 
-            var roleId = 1;
+            const int roleId = 1;
             _securityServerMock.Setup(s => s.AddRole(name, description)).Returns(roleId);
             _mapperMock.Setup(m => m.MapToActionPermissionModels(permissions)).Returns(actionPermissions);
 
@@ -188,8 +188,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_Role_Exists_When_I_Call_RemoveRole_Then_The_Role_Is_Removed()
         {
             //arrange
-            var role1Name = "Name1";
-            var role1Id = 123;
+            const string role1Name = "Name1";
+            const int role1Id = 123;
             var role1Mock = new Mock<IRole>();
             role1Mock.Setup(r => r.Name).Returns(role1Name);
             role1Mock.Setup(r => r.Id).Returns(role1Id);
@@ -224,8 +224,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_Role_Exists_When_I_Call_UpdateRolePermissions_Then_The_Permissions_Of_The_Role_Are_Updated()
         {
             //arrange
-            var role1Name = "Name1";
-            var role1Id = 123;
+            const string role1Name = "Name1";
+            const int role1Id = 123;
             var role1Mock = new Mock<IRole>();
             role1Mock.Setup(r => r.Name).Returns(role1Name);
             role1Mock.Setup(r => r.Id).Returns(role1Id);
@@ -252,7 +252,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_Role_Does_Not_Exist_When_I_Call_UpdateRolePermissions_Then_A_DataNotFoundException_Is_Thrown()
         {
             //arrange
-            var role1Name = "Name1";
+            const string role1Name = "Name1";
             var role1Mock = new Mock<IRole>();
             role1Mock.Setup(r => r.Name).Returns(role1Name);
 

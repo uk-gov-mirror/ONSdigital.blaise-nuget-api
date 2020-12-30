@@ -9,8 +9,8 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Cati
     {
         private readonly BlaiseCatiApi _sut;
 
-        private readonly string serverParkName = "LocalDevelopment";
-        private readonly string surveyName = "OPN2101A";
+        private const string ServerParkName = "LocalDevelopment";
+        private const string SurveyName = "OPN2101A";
 
         public CatiTests()
         {
@@ -21,7 +21,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Cati
         [Test]
         public void Given_An_Instrument_Is_Installed_And_Has_SurveyDays_When_I_Call_GetSurveyDays_They_Are_Returned()
         {
-            var result = _sut.GetSurveyDays(surveyName, serverParkName);
+            var result = _sut.GetSurveyDays(SurveyName, ServerParkName);
             Assert.NotNull(result);
         }
 
@@ -30,10 +30,10 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Cati
         public void Given_An_Instrument_Is_Installed_And_A_SurveyDay_is_Added_The_Survey_Day_Is_Returned()
         {
             //Act
-            _sut.SetSurveyDay(surveyName, serverParkName, DateTime.Today);
+            _sut.SetSurveyDay(SurveyName, ServerParkName, DateTime.Today);
 
             //Assert
-            var result = _sut.GetSurveyDays(surveyName, serverParkName);
+            var result = _sut.GetSurveyDays(SurveyName, ServerParkName);
             Assert.IsTrue(result.Contains(DateTime.Today));
         }
 
@@ -49,10 +49,10 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Cati
             };
 
             //Act
-            _sut.SetSurveyDays(surveyName, serverParkName, daysToAdd);
+            _sut.SetSurveyDays(SurveyName, ServerParkName, daysToAdd);
 
             //Assert
-            var result = _sut.GetSurveyDays(surveyName, serverParkName);
+            var result = _sut.GetSurveyDays(SurveyName, ServerParkName);
             Assert.IsTrue(result.Contains(DateTime.Today));
             Assert.IsTrue(result.Contains(DateTime.Today.AddDays(1)));
         }
@@ -64,16 +64,16 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Cati
             //Arrange
             var surveyDay = DateTime.Today;
 
-            _sut.SetSurveyDay(surveyName, serverParkName, surveyDay);
-            var surveyDays = _sut.GetSurveyDays(surveyName, serverParkName);
+            _sut.SetSurveyDay(SurveyName, ServerParkName, surveyDay);
+            var surveyDays = _sut.GetSurveyDays(SurveyName, ServerParkName);
 
             Assert.IsTrue(surveyDays.Contains(DateTime.Today));
 
             //Act
-            _sut.RemoveSurveyDay(surveyName, serverParkName, surveyDay);
+            _sut.RemoveSurveyDay(SurveyName, ServerParkName, surveyDay);
 
             //Assert
-            var result = _sut.GetSurveyDays(surveyName, serverParkName);
+            var result = _sut.GetSurveyDays(SurveyName, ServerParkName);
             Assert.IsFalse(result.Contains(DateTime.Today));
         }
 
@@ -87,16 +87,16 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Cati
                 DateTime.Today,
                 DateTime.Today.AddDays(1)
             };
-            _sut.SetSurveyDays(surveyName, serverParkName, daysToAdd);
-            var surveyDays = _sut.GetSurveyDays(surveyName, serverParkName);
+            _sut.SetSurveyDays(SurveyName, ServerParkName, daysToAdd);
+            var surveyDays = _sut.GetSurveyDays(SurveyName, ServerParkName);
             Assert.IsTrue(surveyDays.Contains(DateTime.Today));
             Assert.IsTrue(surveyDays.Contains(DateTime.Today.AddDays(1)));
 
             //Act
-            _sut.RemoveSurveyDays(surveyName, serverParkName, daysToAdd);
+            _sut.RemoveSurveyDays(SurveyName, ServerParkName, daysToAdd);
 
             //Assert
-            var result = _sut.GetSurveyDays(surveyName, serverParkName);
+            var result = _sut.GetSurveyDays(SurveyName, ServerParkName);
             Assert.IsFalse(result.Contains(DateTime.Today));
             Assert.IsFalse(result.Contains(DateTime.Today.AddDays(1)));
         }

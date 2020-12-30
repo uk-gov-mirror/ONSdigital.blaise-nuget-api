@@ -66,7 +66,7 @@ namespace Blaise.Nuget.Api.Core.Services
         public void RegisterMachineOnServerPark(ConnectionModel connectionModel,
             string serverParkName, string machineName, string logicalRootName, IEnumerable<string> roles)
         {           
-            IServerPark3 serverPark = (IServerPark3)GetServerPark(connectionModel, serverParkName);
+            var serverPark = (IServerPark3)GetServerPark(connectionModel, serverParkName);
             serverPark.AddMachine(
                 machineName,
                 logicalRootName,

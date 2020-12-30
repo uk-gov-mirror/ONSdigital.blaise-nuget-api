@@ -23,12 +23,12 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Case
         public void Given_Valid_Arguments_When_I_Call_CreateCase_Then_The_Case_Is_Created()
         {
             //arrange
-            var serverParkName = "LocalDevelopment";
-            var instrumentName = "OPN2101A";
+            const string serverParkName = "LocalDevelopment";
+            const string instrumentName = "OPN2101A";
             var fieldData = new Dictionary<string, string>
             {
                 {FieldNameType.HOut.FullName(), "110"},
-                {FieldNameType.TelNo.FullName(), "07000000000"},
+                {FieldNameType.TelNo.FullName(), "07000000000"}
             };
 
             //act

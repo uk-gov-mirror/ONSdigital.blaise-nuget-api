@@ -235,7 +235,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetPrimaryKeyValue_Then_The_Correct_Key_Is_Returned()
         {
             //act
-            var primaryKey = "Key1";
+            const string primaryKey = "Key1";
             _keyServiceMock.Setup(k => k.GetPrimaryKeyValue(It.IsAny<IDataRecord>())).Returns(primaryKey);
 
             var result = _sut.GetPrimaryKeyValue(_dataRecordMock.Object);
@@ -261,7 +261,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_AssignPrimaryKeyValue_Then_The_Correct_Services_Are_Called()
         {
             //arrange
-            var primaryKeyValue = "Key1";
+            const string primaryKeyValue = "Key1";
             _keyServiceMock.Setup(k => k.AssignPrimaryKeyValue(It.IsAny<IKey>(), It.IsAny<string>()));
             //act
 
@@ -403,7 +403,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_Valid_Arguments_When_I_Call_CaseExists_Then_The_Correct_Services_Are_Called()
         {
             //arrange
-            var primaryKeyValue = "Key1";
+            const string primaryKeyValue = "Key1";
 
             //act
             _sut.CaseExists(_connectionModel, primaryKeyValue, _instrumentName, _serverParkName);
@@ -420,7 +420,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_Valid_Arguments_When_I_Call_CaseExists_Then_The_Expected_Value_Is_Returned(bool caseExists)
         {
             //arrange
-            var primaryKeyValue = "Key1";
+            const string primaryKeyValue = "Key1";
+
             _keyServiceMock.Setup(k => k.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName))
                 .Returns(caseExists);
 
@@ -436,7 +437,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_Valid_Arguments_When_I_Call_CreateNewDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //arrange
-            var primaryKeyValue = "Key1";
+            const string primaryKeyValue = "Key1";
             var fieldData = new Dictionary<string, string>();
 
             _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(), It.IsAny<IDatamodel>(),
@@ -458,7 +459,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_Valid_Arguments_When_I_Call_CreateNewDataRecord_For_Local_Connection_Then_The_Correct_Services_Are_Called()
         {
             //arrange
-            var primaryKeyValue = "Key1";
+            const string primaryKeyValue = "Key1";
             var fieldData = new Dictionary<string, string>();
 
             _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(), It.IsAny<IDatamodel>(),
@@ -588,7 +589,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetNumberOfCases_Then_The_Expected_Value_Is_Returned()
         {
             //arrange
-            var numberOfCases = 5;
+            const int numberOfCases = 5;
+
             _dataRecordServiceMock.Setup(dr => dr.GetNumberOfRecords(
                 _connectionModel, _instrumentName, _serverParkName)).Returns(numberOfCases);
 
@@ -614,7 +616,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetNumberOfCases_For_Local_Connection_Then_The_Expected_Value_Is_Returned()
         {
             //arrange
-            var numberOfCases = 5;
+            const int numberOfCases = 5;
+
             _dataRecordServiceMock.Setup(dr => dr.GetNumberOfRecords(
                 _databaseFile)).Returns(numberOfCases);
 

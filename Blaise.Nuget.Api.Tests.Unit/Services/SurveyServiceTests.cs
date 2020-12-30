@@ -94,7 +94,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_No_Surveys_Are_On_A_ServerPark_When_I_Call_GetSurveyNames_Then_A_Data_Not_Found_Exception_Is_Thrown()
         {
             //arrange
-            var serverParkName = "ServerParkDoesNotExist";
+            const string serverParkName = "ServerParkDoesNotExist";
             var surveyItems = new List<ISurvey>();
 
             _surveyCollectionMock = new Mock<ISurveyCollection>();
@@ -151,7 +151,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_No_Surveys_Are_On_A_ServerPark_When_I_Call_GetSurveys_Then_A_Data_Not_Found_Exception_Is_Thrown()
         {
             //arrange
-            var serverParkName = "ServerParkDoesNotExist";
+            const string serverParkName = "ServerParkDoesNotExist";
             var surveyItems = new List<ISurvey>();
 
             _surveyCollectionMock = new Mock<ISurveyCollection>();
@@ -169,11 +169,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetSurvey_Then_I_Get_The_Correct_Survey_Returned()
         {
             //arrange
-            var instrument1Name = "Instrument1";
+            const string instrument1Name = "Instrument1";
             var survey1Mock = new Mock<ISurvey>();
             survey1Mock.Setup(s => s.Name).Returns(instrument1Name);
 
-            var instrument2Name = "Instrument2";
+            const string instrument2Name = "Instrument2";
             var survey2Mock = new Mock<ISurvey>();
             survey2Mock.Setup(s => s.Name).Returns(instrument2Name);
 
@@ -196,11 +196,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_Survey_Does_Not_Exist_When_I_Call_GetSurvey_Then_A_Data_Not_Found_Exception_Is_Thrown()
         {
             //arrange
-            var instrument1Name = "Instrument1";
+            const string instrument1Name = "Instrument1";
             var survey1Mock = new Mock<ISurvey>();
             survey1Mock.Setup(s => s.Name).Returns(instrument1Name);
 
-            var instrument2Name = "Instrument2";
+            const string instrument2Name = "Instrument2";
 
             var surveyItems = new List<ISurvey> { survey1Mock.Object };
             _surveyCollectionMock = new Mock<ISurveyCollection>();
@@ -222,7 +222,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_Survey_Exists_When_I_Call_GetSurveyStatus_The_Correct_Status_Is_Returned(string surveyStatus, SurveyStatusType surveyStatusType)
         {
             //arrange
-            var instrumentName = "Instrument1";
+            const string instrumentName = "Instrument1";
             var survey1Mock = new Mock<ISurvey>();
             survey1Mock.Setup(s => s.Name).Returns(instrumentName);
             survey1Mock.Setup(s => s.Status).Returns(surveyStatus);
@@ -243,11 +243,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_Survey_Does_Not_Exist_When_I_Call_GetSurveyStatus_Then_A_Data_Not_Found_Exception_Is_Thrown()
         {
             //arrange
-            var instrument1Name = "Instrument1";
+            const string instrument1Name = "Instrument1";
             var survey1Mock = new Mock<ISurvey>();
             survey1Mock.Setup(s => s.Name).Returns(instrument1Name);
 
-            var instrument2Name = "Instrument2";
+            const string instrument2Name = "Instrument2";
 
             var surveyItems = new List<ISurvey> { survey1Mock.Object };
             _surveyCollectionMock = new Mock<ISurveyCollection>();
@@ -266,7 +266,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             string interviewType, SurveyInterviewType surveyInterviewType)
         {
             //arrange
-            var instrumentName = "Instrument1";
+            const string instrumentName = "Instrument1";
             var surveyMock = new Mock<ISurvey>();
             surveyMock.Setup(s => s.Name).Returns(instrumentName);
 
@@ -278,7 +278,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var iConfigurationMock = new Mock<IConfiguration>();
             iConfigurationMock.Setup(c => c.InitialLayoutSetGroupName).Returns(interviewType);
             iConfigurationMock.Setup(c => c.InstrumentName).Returns(instrumentName);
-            List<IConfiguration> configurations = new List<IConfiguration> { iConfigurationMock.Object };
+            var configurations = new List<IConfiguration> { iConfigurationMock.Object };
 
             var machineConfigurationMock = new Mock<IMachineConfigurationCollection>();
             machineConfigurationMock.Setup(m => m.Configurations).Returns(configurations);
@@ -295,8 +295,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetAllSurveys_Then_I_Get_A_Correct_List_Of_Surveys_Returned()
         {
             //arrange
-            var serverPark1Name = "ServerPark1";
-            var serverPark2Name = "ServerPark2";
+            const string serverPark1Name = "ServerPark1";
+            const string serverPark2Name = "ServerPark2";
 
             var survey1Mock = new Mock<ISurvey>();
             var survey2Mock = new Mock<ISurvey>();
@@ -361,7 +361,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetInstrumentId_And_The_Instrument_DoesNot_Exist_Then_An_ArgumentOutOfRangeException_Is_Thrown()
         {
             //arrange
-            var instrumentName = "InstrumentThatDoesNotExist";
+            const string instrumentName = "InstrumentThatDoesNotExist";
 
             //act && assert
             var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetInstrumentId(_connectionModel, instrumentName, _serverParkName));
@@ -372,7 +372,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetMetaFileName_Then_The_Correct_Name_Is_Returned()
         {
             //arrange
-            var metaFileName = "MetaFileName";
+            const string metaFileName = "MetaFileName";
 
             var configurationMock = new Mock<IConfiguration>();
             configurationMock.Setup(c => c.MetaFileName).Returns(metaFileName);
@@ -397,7 +397,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataFileName_Then_The_Correct_Name_Is_Returned()
         {
             //arrange
-            var dataFileName = "DataFileName";
+            const string dataFileName = "DataFileName";
 
             var configurationMock = new Mock<IConfiguration>();
             configurationMock.Setup(c => c.DataFileName).Returns(dataFileName);
@@ -422,7 +422,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_Valid_Arguments_When_I_Call_InstallInstrument_Then_The_Correct_Services_Are_Called()
         {
             //arrange
-            var instrumentFile = @"d:\\opn2101a.pkg";
+            const string instrumentFile = @"d:\\opn2101a.pkg";
 
             //act
             _sut.InstallInstrument(_connectionModel, instrumentFile, SurveyInterviewType.Cati, _serverParkName);
