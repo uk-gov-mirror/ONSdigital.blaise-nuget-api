@@ -7,9 +7,9 @@ namespace Blaise.Nuget.Api.Core.Services
     {
         public SecureString CreateSecurePassword(string password)
         {
-            char[] passwordChars = password.ToCharArray();
-            SecureString securePassword = new SecureString();
-            foreach (char c in passwordChars)
+            var passwordChars = password.ToCharArray();
+            var securePassword = new SecureString();
+            foreach (var c in passwordChars)
 
             {
                 securePassword.AppendChar(c);

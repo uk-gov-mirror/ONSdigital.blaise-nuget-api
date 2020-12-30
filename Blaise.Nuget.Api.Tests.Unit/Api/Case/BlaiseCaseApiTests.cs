@@ -77,7 +77,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         public void Given_Valid_Arguments_When_I_Call_CaseExists_Then_The_Expected_Result_Is_Returned(bool caseExists)
         {
             //arrange
-            var primaryKeyValue = "Key1";
+            const string primaryKeyValue = "Key1";
 
             _caseServiceMock.Setup(d => d.CaseExists(_connectionModel, primaryKeyValue, _instrumentName, _serverParkName)).Returns(caseExists);
 
@@ -221,7 +221,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         public void Given_A_File_When_I_Call_GetCases_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            var databaseFile = "File1.bdix";
+            const string databaseFile = "File1.bdix";
 
             _caseServiceMock.Setup(d => d.GetDataSet(It.IsAny<string>()));
 
@@ -290,7 +290,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         public void Given_A_Null_InstrumentName_When_I_Call_GetCase_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
-            var primaryKeyValue = "Key1";
+            const string primaryKeyValue = "Key1";
 
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetCase(primaryKeyValue, null, _serverParkName));
@@ -705,7 +705,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         public void Given_A_Null_DataRecord_When_I_Call_GetFieldValue_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
-            var fieldValueType = FieldNameType.HOut;
+            const FieldNameType fieldValueType = FieldNameType.HOut;
 
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetFieldValue(null, fieldValueType));
@@ -808,7 +808,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         public void Given_Valid_Arguments_When_I_Call_GetNumberOfCases_Then_The_Expected_Value_Is_Returned()
         {
             //arrange
-            var numberOfCases = 5;
+            const int numberOfCases = 5;
             _caseServiceMock.Setup(d => d.GetNumberOfCases(
                 _connectionModel, It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(numberOfCases);
@@ -857,7 +857,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         public void Given_A_File_When_I_Call_GetNumberOfCases_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            var databaseFile = "File1.bdix";
+            const string databaseFile = "File1.bdix";
 
             _caseServiceMock.Setup(d => d.GetNumberOfCases(It.IsAny<string>()));
 
@@ -872,7 +872,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         public void Given_A_File_When_I_Call_GetNumberOfCases_Then_The_Expected_Value_Is_Returned()
         {
             //arrange
-            var numberOfCases = 5;
+            const int numberOfCases = 5;
 
             _caseServiceMock.Setup(d => d.GetNumberOfCases(
                 It.IsAny<string>())).Returns(numberOfCases);
@@ -940,7 +940,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         public void Given_A_Null_InstrumentName_When_I_Call_RemoveCase_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
-            var primaryKeyValue = "Key1";
+            const string primaryKeyValue = "Key1";
 
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveCase(primaryKeyValue, null, _serverParkName));

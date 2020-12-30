@@ -13,18 +13,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
     public class BlaiseServerParkApiTests
     {
         private Mock<IServerParkService> _parkServiceMock;
-        private readonly ConnectionModel _connectionModel;
+        private ConnectionModel _connectionModel;
+
+        private string _serverParkName;
 
         private IBlaiseServerParkApi _sut;
-
-        public BlaiseServerParkApiTests()
-        {
-            _connectionModel = new ConnectionModel();
-        }
 
         [SetUp]
         public void SetUpTests()
         {
+            _connectionModel = new ConnectionModel();
+            _serverParkName = "serverParkName";
+
             _parkServiceMock = new Mock<IServerParkService>();
             _sut = new BlaiseServerParkApi(
                 _parkServiceMock.Object,
@@ -51,29 +51,27 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
         public void When_I_Call_GetServerPark_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            var serverParkName = "serverParkName";
             var serverParkMock = new Mock<IServerPark>();
 
-            _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, serverParkName)).Returns(serverParkMock.Object);
+            _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, _serverParkName)).Returns(serverParkMock.Object);
 
             //act
-            _sut.GetServerPark(serverParkName);
+            _sut.GetServerPark(_serverParkName);
 
             //assert
-            _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, serverParkName), Times.Once);
+            _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, _serverParkName), Times.Once);
         }
 
         [Test]
         public void When_I_Call_GetServerPark_Then_The_Correct_ServerPark_Is_Returned()
         {
             //arrange
-            var serverParkName = "Park1";
             var serverParkMock = new Mock<IServerPark>();
 
-            _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, serverParkName)).Returns(serverParkMock.Object);
+            _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, _serverParkName)).Returns(serverParkMock.Object);
 
             //act
-            var result = _sut.GetServerPark(serverParkName);
+            var result = _sut.GetServerPark(_serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -166,15 +164,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
         public void Given_Valid_Arguments_When_I_Call_ServerParkExists_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            var serverParkName = "Park1";
-
             _parkServiceMock.Setup(p => p.ServerParkExists(_connectionModel, It.IsAny<string>())).Returns(It.IsAny<bool>());
 
             //act
-            _sut.ServerParkExists(serverParkName);
+            _sut.ServerParkExists(_serverParkName);
 
             //assert
-            _parkServiceMock.Verify(v => v.ServerParkExists(_connectionModel, serverParkName), Times.Once);
+            _parkServiceMock.Verify(v => v.ServerParkExists(_connectionModel, _serverParkName), Times.Once);
         }
 
         [TestCase(true)]
@@ -182,12 +178,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
         public void Given_Valid_Arguments_When_I_Call_ServerParkExists_Then_The_Expected_Result_Is_Returned(bool serverParkExists)
         {
             //arrange
-            var serverParkName = "Park1";
-
-            _parkServiceMock.Setup(p => p.ServerParkExists(_connectionModel, serverParkName)).Returns(serverParkExists);
+            _parkServiceMock.Setup(p => p.ServerParkExists(_connectionModel, _serverParkName)).Returns(serverParkExists);
 
             //act
-            var result = _sut.ServerParkExists(serverParkName);
+            var result = _sut.ServerParkExists(_serverParkName);
 
             //assert
             Assert.IsNotNull(result);
@@ -214,19 +208,18 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
         public void Given_Valid_Arguments_When_I_Call_RegisterMachineOnServerPark_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
-            var serverParkName = "Park1";
-            var machineName = "Gusty01";
-            var logicalRootName = "Default";
+            const string machineName = "Gusty01";
+            const string logicalRootName = "Default";
             var roles = new List<string> { "Web", "Cati" };
 
             _parkServiceMock.Setup(p => p.RegisterMachineOnServerPark(_connectionModel, It.IsAny<string>(),
                 It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>()));
 
             //act
-            _sut.RegisterMachineOnServerPark(serverParkName, machineName, logicalRootName, roles);
+            _sut.RegisterMachineOnServerPark(_serverParkName, machineName, logicalRootName, roles);
 
             //assert
-            _parkServiceMock.Verify(v => v.RegisterMachineOnServerPark(_connectionModel, serverParkName,
+            _parkServiceMock.Verify(v => v.RegisterMachineOnServerPark(_connectionModel, _serverParkName,
                 machineName, logicalRootName, roles), Times.Once);
         }
 
@@ -234,8 +227,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
         public void Given_An_Empty_ServerParkName_When_I_Call_RegisterMachineOnServerPark_Then_An_ArgumentException_Is_Thrown()
         {
             //arrange
-            var machineName = "Gusty01";
-            var logicalRootName = "Default";
+            const string machineName = "Gusty01";
+            const string logicalRootName = "Default";
             var roles = new List<string> { "Web", "Cati" };
 
             //act && assert
@@ -248,8 +241,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
         public void Given_A_Null_ServerParkName_When_I_Call_RegisterMachineOnServerPark_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
-            var machineName = "Gusty01";
-            var logicalRootName = "Default";
+            const string machineName = "Gusty01";
+            const string logicalRootName = "Default";
             var roles = new List<string> { "Web", "Cati" };
 
             //act && assert
@@ -262,12 +255,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
         public void Given_An_Empty_MachineName_When_I_Call_RegisterMachineOnServerPark_Then_An_ArgumentException_Is_Thrown()
         {
             //arrange
-            var serverParkName = "Park1";
-            var logicalRootName = "Default";
+            const string logicalRootName = "Default";
             var roles = new List<string> { "Web", "Cati" };
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.RegisterMachineOnServerPark(serverParkName,
+            var exception = Assert.Throws<ArgumentException>(() => _sut.RegisterMachineOnServerPark(_serverParkName,
                 string.Empty, logicalRootName, roles));
             Assert.AreEqual("A value for the argument 'machineName' must be supplied", exception.Message);
         }
@@ -276,12 +268,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
         public void Given_A_Null_MachineName_When_I_Call_RegisterMachineOnServerPark_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
-            var serverParkName = "Park1";
-            var logicalRootName = "Default";
+            const string logicalRootName = "Default";
             var roles = new List<string> { "Web", "Cati" };
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RegisterMachineOnServerPark(serverParkName,
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RegisterMachineOnServerPark(_serverParkName,
                 null, logicalRootName, roles));
             Assert.AreEqual("machineName", exception.ParamName);
         }
@@ -290,12 +281,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
         public void Given_An_Empty_LogicalRootName_When_I_Call_RegisterMachineOnServerPark_Then_An_ArgumentException_Is_Thrown()
         {
             //arrange
-            var serverParkName = "Park1";
-            var machineName = "Gusty01";
+            const string machineName = "Gusty01";
             var roles = new List<string> { "Web", "Cati" };
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.RegisterMachineOnServerPark(serverParkName,
+            var exception = Assert.Throws<ArgumentException>(() => _sut.RegisterMachineOnServerPark(_serverParkName,
                 machineName, string.Empty, roles));
             Assert.AreEqual("A value for the argument 'logicalRootName' must be supplied", exception.Message);
         }
@@ -304,12 +294,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
         public void Given_A_Null_LogicalRootName_When_I_Call_RegisterMachineOnServerPark_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
-            var serverParkName = "Park1";
-            var machineName = "Gusty01";
+            const string machineName = "Gusty01";
             var roles = new List<string> { "Web", "Cati" };
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RegisterMachineOnServerPark(serverParkName,
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RegisterMachineOnServerPark(_serverParkName,
                 machineName, null, roles));
             Assert.AreEqual("logicalRootName", exception.ParamName);
         }
@@ -318,12 +307,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
         public void Given_An_Empty_List_Of_Roles_When_I_Call_RegisterMachineOnServerPark_Then_An_ArgumentException_Is_Thrown()
         {
             //arrange
-            var serverParkName = "Park1";
-            var machineName = "Gusty01";
-            var logicalRootName = "Default";
+            const string machineName = "Gusty01";
+            const string logicalRootName = "Default";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.RegisterMachineOnServerPark(serverParkName,
+            var exception = Assert.Throws<ArgumentException>(() => _sut.RegisterMachineOnServerPark(_serverParkName,
                 machineName, logicalRootName, new List<string>()));
             Assert.AreEqual("A value for the argument 'roles' must be supplied", exception.Message);
         }
@@ -332,12 +320,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.ServerPark
         public void Given_A_Null_List_Of_Roles_When_I_Call_RegisterMachineOnServerPark_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
-            var serverParkName = "Park1";
-            var machineName = "Gusty01";
-            var logicalRootName = "Default";
+            const string machineName = "Gusty01";
+            const string logicalRootName = "Default";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RegisterMachineOnServerPark(serverParkName,
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RegisterMachineOnServerPark(_serverParkName,
                 machineName, logicalRootName, null));
             Assert.AreEqual("roles", exception.ParamName);
         }

@@ -447,7 +447,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
         public void Given_Valid_Arguments_When_I_Call_InstallSurvey_Then_The_Correct_Service_Method_Is_Called(SurveyInterviewType surveyInterviewType)
         {
             //arrange
-            var instrumentFile = @"d:\\opn2101a.pkg";
+            const string instrumentFile = @"d:\\opn2101a.pkg";
 
             //act
             _sut.InstallSurvey(instrumentFile, surveyInterviewType, _serverParkName);
@@ -461,7 +461,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
         public void Given_An_Empty_ServerParkName_When_I_Call_InstallSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //arrange
-            var instrumentFile = @"d:\\opn2101a.pkg";
+            const string instrumentFile = @"d:\\opn2101a.pkg";
 
             //act && assert
             var exception = Assert.Throws<ArgumentException>(() => _sut.InstallSurvey( 
@@ -473,7 +473,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
         public void Given_A_Null_ServerParkName_When_I_Call_InstallSurvey_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
-            var instrumentFile = @"d:\\opn2101a.pkg";
+            const string instrumentFile = @"d:\\opn2101a.pkg";
 
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.InstallSurvey(instrumentFile, 

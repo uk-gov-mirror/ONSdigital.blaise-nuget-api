@@ -17,14 +17,12 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.File
         public void Given_A_Valid_Instrument_When_I_Call_CreateInstrumentFile_Then_An_Instrument_Is_Backed_Up_To_File()
         {
             //arrange
-            var serverParkName = "LocalDevelopment";
-            var instrumentName = "OPN2004A";
-            var outputPath = @"d:\temp\backup";
+            const string serverParkName = "LocalDevelopment";
+            const string instrumentName = "OPN2004A";
+            const string outputPath = @"d:\temp";
 
-            //act
-            _sut.CreateInstrumentFile(serverParkName, instrumentName, outputPath);
-
-            //assert
+            //act && assert
+            Assert.DoesNotThrow(() =>_sut.CreateInstrumentFile(serverParkName, instrumentName, outputPath));
         }
     }
 }

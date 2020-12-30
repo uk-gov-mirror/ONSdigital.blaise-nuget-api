@@ -132,7 +132,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_ServerPark_Does_Not_Exist_When_I_Call_ServerParkExists_Then_False_Is_Returned()
         {
             //arrange
-            var serverParkName = "NotFound";
+            const string serverParkName = "NotFound";
 
             //act
             var result = _sut.ServerParkExists(_connectionModel, serverParkName);
@@ -158,7 +158,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_ServerPark_Does_Not_Exist_When_I_Call_GetServerPark_Then_A_DataNotFoundException_Is_Thrown()
         {
             //arrange
-            var serverParkName = "NotFound";
+            const string serverParkName = "NotFound";
 
             //act && assert
             var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetServerPark(_connectionModel, serverParkName));
@@ -203,8 +203,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
        public void Given_Valid_Arguments_I_Call_RegisterMachineOnServerPark_Then_The_Correct_Method_Is_Called()
         {
             //arrange
-            var machineName = "Gusty01";
-            var logicalRootName = "Default";
+            const string machineName = "Gusty01";
+            const string logicalRootName = "Default";
             var roles = new List<string> {"Web", "Cati"};
             var rolesArray = roles.ToArray();
 
