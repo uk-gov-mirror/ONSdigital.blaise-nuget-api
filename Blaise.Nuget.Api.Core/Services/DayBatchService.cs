@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blaise.Nuget.Api.Contracts.Exceptions;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
@@ -20,6 +21,14 @@ namespace Blaise.Nuget.Api.Core.Services
         public void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayBatchDate)
         {
             var catiManagement = GetCatiManagementForServerPark(connectionModel, serverParkName);
+
+            if (catiManagement.LoadCatiInstrumentManager(instrumentName)
+                .Specification
+                .SurveyDays
+                .All(d => d.Date.Date != dayBatchDate.Date))
+            {
+                throw new DataNotFoundException($"A survey day does not exist for the required daybatch date '{dayBatchDate.Date}'");
+            }
 
             catiManagement
                 .LoadCatiInstrumentManager(instrumentName)
