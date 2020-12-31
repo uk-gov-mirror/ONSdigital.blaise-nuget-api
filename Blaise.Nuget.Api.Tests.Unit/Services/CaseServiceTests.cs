@@ -73,165 +73,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_GetDataModel_Then_A_DataModel_Is_Returned()
-        {
-            //act
-            var result = _sut.GetDataModel(_connectionModel, _instrumentName, _serverParkName);
-
-            //assert
-            Assert.NotNull(result);
-            Assert.IsInstanceOf<IDatamodel>(result);
-        }
-
-        [Test]
-        public void Given_I_Call_GetDataModel_Then_The_Correct_DataModel_Is_Returned()
-        {
-            //act
-            var result = _sut.GetDataModel(_connectionModel, _instrumentName, _serverParkName);
-
-            //assert
-            Assert.AreEqual(_dataModelMock.Object, result);
-        }
-
-        [Test]
-        public void Given_I_Call_GetDataModel_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.GetDataModel(_connectionModel, _instrumentName, _serverParkName);
-
-            //assert
-            _dataModelServiceMock.Verify(v => v.GetDataModel(_connectionModel, _instrumentName, _serverParkName), Times.Once);
-        }
-
-        [Test]
-        public void Given_I_Call_GetDataModel_For_Local_Connection_Then_A_DataModel_Is_Returned()
-        {
-            //act
-            var result = _sut.GetDataModel(_databaseFile);
-
-            //assert
-            Assert.NotNull(result);
-            Assert.IsInstanceOf<IDatamodel>(result);
-        }
-
-        [Test]
-        public void Given_I_Call_GetDataModel_For_Local_Connection_Then_The_Correct_DataModel_Is_Returned()
-        {
-            //act
-            var result = _sut.GetDataModel(_databaseFile);
-
-            //assert
-            Assert.AreEqual(_dataModelMock.Object, result);
-        }
-
-        [Test]
-        public void Given_I_Call_GetDataModel_For_Local_Connection_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.GetDataModel(_databaseFile);
-
-            //assert
-            _dataModelServiceMock.Verify(v => v.GetDataModel(_databaseFile), Times.Once);
-        }
-        
-        [Test]
-        public void Given_I_Call_GetKey_Then_A_Key_Is_Returned()
-        {
-            //act
-            var result = _sut.GetKey(_dataModelMock.Object, _keyName);
-
-            //assert
-            Assert.NotNull(result);
-            Assert.IsInstanceOf<IKey>(result);
-        }
-
-        [Test]
-        public void Given_I_Call_GetKey_Then_The_Correct_Key_Is_Returned()
-        {
-            //act
-            var result = _sut.GetKey(_dataModelMock.Object, _keyName);
-
-            //assert
-            Assert.AreSame(_keyMock.Object, result);
-        }
-
-        [Test]
-        public void Given_I_Call_GetKey_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.GetKey(_dataModelMock.Object, _keyName);
-
-            //assert
-            _keyServiceMock.Verify(v => v.GetKey(_dataModelMock.Object, _keyName), Times.Once);
-        }
-
-        [Test]
-        public void Given_I_Call_GetPrimaryKey_Then_A_Key_Is_Returned()
-        {
-            //act
-            var result = _sut.GetPrimaryKey(_dataModelMock.Object);
-
-            //assert
-            Assert.NotNull(result);
-            Assert.IsInstanceOf<IKey>(result);
-        }
-
-        [Test]
-        public void Given_I_Call_GetPrimaryKey_Then_The_Correct_Key_Is_Returned()
-        {
-            //act
-            var result = _sut.GetPrimaryKey(_dataModelMock.Object);
-
-            //assert
-            Assert.AreSame(_keyMock.Object, result);
-        }
-
-        [Test]
-        public void Given_I_Call_GetPrimaryKey_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.GetPrimaryKey(_dataModelMock.Object);
-
-            //assert
-            _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataModelMock.Object), Times.Once);
-        }
-
-        [Test]
-        public void Given_I_Call_KeyExists_Then_A_Bool_Is_Returned()
-        {
-            //act
-            var result = _sut.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName);
-
-            //assert
-            Assert.NotNull(result);
-            Assert.IsInstanceOf<bool>(result);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void Given_I_Call_KeyExists_Then_A_The_Correct_Value_Is_Returned(bool keyExists)
-        {
-            //arrange 
-            _keyServiceMock.Setup(d => d.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName)).Returns(keyExists);
-
-            //act
-            var result = _sut.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName);
-
-            //assert
-            Assert.AreEqual(keyExists, result);
-        }
-
-        [Test]
-        public void Given_I_Call_KeyExists_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName);
-
-            //assert
-            _keyServiceMock.Verify(v => v.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName), Times.Once);
-        }
-
-        [Test]
         public void Given_I_Call_GetPrimaryKeyValue_Then_The_Correct_Key_Is_Returned()
         {
             //act
@@ -258,20 +99,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_AssignPrimaryKeyValue_Then_The_Correct_Services_Are_Called()
-        {
-            //arrange
-            const string primaryKeyValue = "Key1";
-            _keyServiceMock.Setup(k => k.AssignPrimaryKeyValue(It.IsAny<IKey>(), It.IsAny<string>()));
-            //act
-
-            _sut.AssignPrimaryKeyValue(_keyMock.Object, primaryKeyValue);
-
-            //assert
-            _keyServiceMock.Verify(v => v.AssignPrimaryKeyValue(_keyMock.Object, primaryKeyValue), Times.Once);
-        }
-
-        [Test]
         public void Given_I_Call_GetDataSet_Then_The_Correct_Services_Are_Called()
         {
             //act
@@ -292,47 +119,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_A_DataModel_When_I_Call_GetDataRecord_Then_A_DataRecord_Is_Returned()
-        {
-            //act
-            var result = _sut.GetDataRecord(_dataModelMock.Object);
-
-            //assert
-            Assert.NotNull(result);
-            Assert.IsInstanceOf<IDataRecord>(result);
-        }
-
-        [Test]
-        public void Given_A_DataModel_When_I_Call_GetDataRecord_Then_The_Correct_DataRecord_Is_Returned()
-        {
-            //act
-            var result = _sut.GetDataRecord(_dataModelMock.Object);
-
-            //assert
-            Assert.AreSame(_dataRecordMock.Object, result);
-        }
-
-        [Test]
-        public void Given_A_DataModel_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.GetDataRecord(_dataModelMock.Object);
-
-            //assert
-            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_dataModelMock.Object), Times.Once);
-        }
-
-        [Test]
-        public void Given_A_Key_And_An_InstrumentName_And_ServerParkName_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.GetDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName);
-
-            //assert
-            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName), Times.Once);
-        }
-
-        [Test]
         public void Given_A_KeyValue_And_An_InstrumentName_And_ServerParkName_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act
@@ -340,26 +126,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _dataRecordServiceMock.Verify(v => v.GetDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName), Times.Once);
-        }
-
-        [Test]
-        public void Given_A_DatabaseFile_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.GetDataRecord(_keyMock.Object, _databaseFile);
-
-            //assert
-            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_keyMock.Object, _databaseFile), Times.Once);
-        }
-
-        [Test]
-        public void Given_An_InstrumentName_And_ServerParkName_When_I_Call_WriteDataRecord_Then_The_Correct_Services_Are_Called()
-        {
-            //act
-            _sut.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName);
-
-            //assert
-            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
