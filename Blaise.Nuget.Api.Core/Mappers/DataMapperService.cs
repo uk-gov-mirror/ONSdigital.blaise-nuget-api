@@ -7,7 +7,7 @@ namespace Blaise.Nuget.Api.Core.Mappers
 {
     public class DataMapperService : IDataMapperService
     {
-        public IDataRecord MapDataRecordFields(IDataRecord dataRecord, IDatamodel dataModel, IKey key,
+        public IDataRecord MapDataRecordFields(IDataRecord dataRecord, IKey key,
             string primaryKeyValue, Dictionary<string, string> fieldData)
         {
             var idField = dataRecord.GetField(key.Fields[0].FullName);

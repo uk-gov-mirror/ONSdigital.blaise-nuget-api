@@ -111,7 +111,7 @@ namespace Blaise.Nuget.Api.Core.Services
             var key = _keyService.GetPrimaryKey(dataModel);
             var dataRecord = _dataRecordService.GetDataRecord(dataModel);
 
-            dataRecord = _mapperService.MapDataRecordFields(dataRecord, dataModel, key, primaryKeyValue, fieldData);
+            dataRecord = _mapperService.MapDataRecordFields(dataRecord, key, primaryKeyValue, fieldData);
 
             _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
         }
@@ -122,7 +122,7 @@ namespace Blaise.Nuget.Api.Core.Services
             var key = _keyService.GetPrimaryKey(dataModel);
             var dataRecord = _dataRecordService.GetDataRecord(dataModel);
 
-            dataRecord = _mapperService.MapDataRecordFields(dataRecord, dataModel, key, primaryKeyValue, fieldData);
+            dataRecord = _mapperService.MapDataRecordFields(dataRecord, key, primaryKeyValue, fieldData);
 
             WriteDataRecord(dataRecord, databaseFile);
         }
