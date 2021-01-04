@@ -206,7 +206,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             const string primaryKeyValue = "Key1";
             var fieldData = new Dictionary<string, string>();
 
-            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(), It.IsAny<IDatamodel>(),
+            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(), 
                     It.IsAny<IKey>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()))
                 .Returns(_dataRecordMock.Object);
 
@@ -217,7 +217,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataModelServiceMock.Verify(v => v.GetDataModel(_connectionModel, _instrumentName, _serverParkName), Times.Once);
             _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataModelMock.Object), Times.Once);
             _dataRecordServiceMock.Verify(v => v.GetDataRecord(_dataModelMock.Object), Times.Once);
-            _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, _dataModelMock.Object, _keyMock.Object, primaryKeyValue, fieldData), Times.Once);
+            _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object,  _keyMock.Object, primaryKeyValue, fieldData), Times.Once);
             _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
@@ -228,7 +228,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             const string primaryKeyValue = "Key1";
             var fieldData = new Dictionary<string, string>();
 
-            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(), It.IsAny<IDatamodel>(),
+            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(), 
                     It.IsAny<IKey>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()))
                 .Returns(_dataRecordMock.Object);
 
@@ -239,7 +239,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataModelServiceMock.Verify(v => v.GetDataModel(_databaseFile), Times.Once);
             _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataModelMock.Object), Times.Once);
             _dataRecordServiceMock.Verify(v => v.GetDataRecord(_dataModelMock.Object), Times.Once);
-            _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, _dataModelMock.Object, _keyMock.Object, primaryKeyValue, fieldData), Times.Once);
+            _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, _keyMock.Object, primaryKeyValue, fieldData), Times.Once);
             _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _databaseFile), Times.Once);
         }
 
