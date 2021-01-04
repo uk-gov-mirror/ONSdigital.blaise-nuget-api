@@ -10,6 +10,6 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         IEnumerable<string> GetNamesOfServerParks();
         bool ServerParkExists(string serverParkName);
         void RegisterMachineOnServerPark(string serverParkName, string machineName,
-                  string logicalRootName, IList<string> roles);
+                  string logicalServerName, IList<string> roles);
     }
 }
