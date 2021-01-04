@@ -63,7 +63,6 @@ namespace Blaise.Nuget.Api.Api
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
             machineName.ThrowExceptionIfNullOrEmpty("machineName");
             logicalRootName.ThrowExceptionIfNullOrEmpty("logicalRootName");
-
             roles.ThrowExceptionIfNullOrEmpty("roles");
 
             _parkService.RegisterMachineOnServerPark(_connectionModel,
