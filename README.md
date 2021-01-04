@@ -19,4 +19,4 @@ mocks where you will not need to consume the complete functionality.
 
 You can use the fluid API style class 'FluentBlaiseApi' which implements the 'IFluentBlaiseApi' interface.
 		
-Copyright (c) 2019 Crown Copyright (Government Digital Service)		
+Copyright (c) 2021 Crown Copyright (Government Digital Service)		
