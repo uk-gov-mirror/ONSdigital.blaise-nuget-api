@@ -5,7 +5,6 @@ using Blaise.Nuget.Api.Core.Interfaces.Mappers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
-using StatNeth.Blaise.API.Meta;
 
 namespace Blaise.Nuget.Api.Core.Services
 {
@@ -31,39 +30,9 @@ namespace Blaise.Nuget.Api.Core.Services
             _mapperService = mapperService;
         }
 
-        public IDatamodel GetDataModel(ConnectionModel connectionModel, string instrumentName, string serverParkName)
-        {
-            return _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
-        }
-
-        public IDatamodel GetDataModel(string databaseFile)
-        {
-            return _dataModelService.GetDataModel(databaseFile);
-        }
-
-        public IKey GetKey(IDatamodel dataModel, string keyName)
-        {
-            return _keyService.GetKey(dataModel, keyName);
-        }
-
-        public IKey GetPrimaryKey(IDatamodel dataModel)
-        {
-            return _keyService.GetPrimaryKey(dataModel);
-        }
-
-        public bool KeyExists(ConnectionModel connectionModel, IKey key, string instrumentName, string serverParkName)
-        {
-            return _keyService.KeyExists(connectionModel, key, instrumentName, serverParkName);
-        }
-
         public string GetPrimaryKeyValue(IDataRecord dataRecord)
         {
             return _keyService.GetPrimaryKeyValue(dataRecord);
-        }
-
-        public void AssignPrimaryKeyValue(IKey key, string primaryKeyValue)
-        {
-            _keyService.AssignPrimaryKeyValue(key, primaryKeyValue);
         }
 
         public IDataSet GetDataSet(ConnectionModel connectionModel, string instrumentName, string serverParkName)
@@ -76,16 +45,6 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataRecordService.GetDataSet(databaseFile);
         }
 
-        public IDataRecord GetDataRecord(IDatamodel datamodel)
-        {
-            return _dataRecordService.GetDataRecord(datamodel);
-        }
-
-        public IDataRecord GetDataRecord(ConnectionModel connectionModel, IKey key, string instrumentName, string serverParkName)
-        {
-            return _dataRecordService.GetDataRecord(connectionModel, key, instrumentName, serverParkName);
-        }
-
         public IDataRecord GetDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName)
         {
             var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
@@ -93,17 +52,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
             _keyService.AssignPrimaryKeyValue(primaryKey, primaryKeyValue);
 
-            return GetDataRecord(connectionModel, primaryKey, instrumentName, serverParkName);
-        }
-
-        public IDataRecord GetDataRecord(IKey key, string databaseFile)
-        {
-            return _dataRecordService.GetDataRecord(key, databaseFile);
-        }
-
-        public void WriteDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
-        {
-            _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
+            return _dataRecordService.GetDataRecord(connectionModel, primaryKey, instrumentName, serverParkName);
         }
 
         public void WriteDataRecord(IDataRecord dataRecord, string databaseFile)
@@ -158,22 +107,22 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public void CreateNewDataRecord(ConnectionModel connectionModel, string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName, string serverParkName)
         {
-            var dataModel = GetDataModel(connectionModel, instrumentName, serverParkName);
-            var key = GetPrimaryKey(dataModel);
-            var dataRecord = GetDataRecord(dataModel);
+            var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
+            var key = _keyService.GetPrimaryKey(dataModel);
+            var dataRecord = _dataRecordService.GetDataRecord(dataModel);
 
-            dataRecord = _mapperService.MapDataRecordFields(dataRecord, dataModel, key, primaryKeyValue, fieldData);
+            dataRecord = _mapperService.MapDataRecordFields(dataRecord, key, primaryKeyValue, fieldData);
 
-            WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
+            _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
         }
 
         public void CreateNewDataRecord(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData)
         {
-            var dataModel = GetDataModel(databaseFile);
-            var key = GetPrimaryKey(dataModel);
-            var dataRecord = GetDataRecord(dataModel);
+            var dataModel = _dataModelService.GetDataModel(databaseFile);
+            var key = _keyService.GetPrimaryKey(dataModel);
+            var dataRecord = _dataRecordService.GetDataRecord(dataModel);
 
-            dataRecord = _mapperService.MapDataRecordFields(dataRecord, dataModel, key, primaryKeyValue, fieldData);
+            dataRecord = _mapperService.MapDataRecordFields(dataRecord, key, primaryKeyValue, fieldData);
 
             WriteDataRecord(dataRecord, databaseFile);
         }
@@ -182,7 +131,7 @@ namespace Blaise.Nuget.Api.Core.Services
         {
             dataRecord = _mapperService.MapDataRecordFields(dataRecord, fieldData);
 
-            WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
+            _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
         }
     }
 }
