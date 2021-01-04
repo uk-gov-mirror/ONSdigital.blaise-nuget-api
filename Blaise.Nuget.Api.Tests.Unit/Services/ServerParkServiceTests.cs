@@ -35,7 +35,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _serverParkName = "tel";
 
             _serverParkMock = new Mock<IServerPark>();
-            _serverParkMock.As<IServerPark3>();
             _serverParkMock.Setup(s => s.Name).Returns(_serverParkName);
 
             var serverParkItems = new List<IServerPark> { _serverParkMock.Object };
@@ -213,8 +212,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
                 logicalRootName, roles);
 
             //assert
-            _serverParkMock.As<IServerPark3>().Verify(v => v.AddMachine("Gusty01", "Default", rolesArray,
-                _connectionModel.Port), Times.Once);
+            _serverParkMock.Verify(v => v.AddMachine("Gusty01", "Default", rolesArray), Times.Once);
         }
     }
 }

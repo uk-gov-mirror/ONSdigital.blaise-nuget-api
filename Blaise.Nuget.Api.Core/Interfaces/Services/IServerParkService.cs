@@ -15,6 +15,6 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         IEnumerable<IServerPark> GetServerParks(ConnectionModel connectionModel);
 
         void RegisterMachineOnServerPark(ConnectionModel connectionModel,string serverParkName, 
-            string machineName, string logicalRootName, IEnumerable<string> roles);
+            string machineName, string logicalServerName, IEnumerable<string> roles);
     }
 }

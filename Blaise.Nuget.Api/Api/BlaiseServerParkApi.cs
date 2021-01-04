@@ -58,15 +58,15 @@ namespace Blaise.Nuget.Api.Api
         }
 
         public void RegisterMachineOnServerPark(string serverParkName, string machineName,
-            string logicalRootName, IList<string> roles)
+            string logicalServerName, IList<string> roles)
         {
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
             machineName.ThrowExceptionIfNullOrEmpty("machineName");
-            logicalRootName.ThrowExceptionIfNullOrEmpty("logicalRootName");
+            logicalServerName.ThrowExceptionIfNullOrEmpty("logicalServerName");
             roles.ThrowExceptionIfNullOrEmpty("roles");
 
             _parkService.RegisterMachineOnServerPark(_connectionModel,
-                serverParkName, machineName, logicalRootName, roles);
+                serverParkName, machineName, logicalServerName, roles);
         }
     }
 }
