@@ -450,11 +450,35 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
             const string instrumentFile = @"d:\\opn2101a.pkg";
 
             //act
-            _sut.InstallSurvey(instrumentFile, surveyInterviewType, _serverParkName);
+            _sut.InstallSurvey(_instrumentName, _serverParkName, instrumentFile, surveyInterviewType);
 
             //assert
-            _surveyServiceMock.Verify(v => v.InstallInstrument(_connectionModel, instrumentFile,
-                                        surveyInterviewType, _serverParkName), Times.Once);
+            _surveyServiceMock.Verify(v => v.InstallInstrument(_connectionModel, _instrumentName,
+                _serverParkName, instrumentFile, surveyInterviewType), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_InstallSurvey_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            const string instrumentFile = @"d:\\opn2101a.pkg";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.InstallSurvey(string.Empty, _serverParkName,
+                instrumentFile, SurveyInterviewType.Cati));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_instrumentName_When_I_Call_InstallSurvey_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            const string instrumentFile = @"d:\\opn2101a.pkg";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.InstallSurvey( null, _serverParkName,
+                instrumentFile, SurveyInterviewType.Cati));
+            Assert.AreEqual("instrumentName", exception.ParamName);
         }
 
         [Test]
@@ -464,8 +488,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
             const string instrumentFile = @"d:\\opn2101a.pkg";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.InstallSurvey( 
-                                                                        instrumentFile, SurveyInterviewType.Cati, string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.InstallSurvey(_instrumentName, string.Empty,
+                                                                        instrumentFile, SurveyInterviewType.Cati));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
@@ -476,26 +500,26 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Survey
             const string instrumentFile = @"d:\\opn2101a.pkg";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.InstallSurvey(instrumentFile, 
-                                                                            SurveyInterviewType.Cati, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.InstallSurvey(_instrumentName, null, 
+                instrumentFile, SurveyInterviewType.Cati));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
         [Test]
-        public void Given_An_Empty_instrumentFile_When_I_Call_InstallSurvey_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_InstrumentFile_When_I_Call_InstallSurvey_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.InstallSurvey(string.Empty, 
-                                                                        SurveyInterviewType.Cati, _serverParkName));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.InstallSurvey(_instrumentName, _serverParkName,
+                string.Empty, SurveyInterviewType.Cati));
             Assert.AreEqual("A value for the argument 'instrumentFile' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_Null_instrumentFile_When_I_Call_InstallSurvey_Then_An_ArgumentNullException_Is_Thrown()
+        public void Given_A_Null_InstrumentFile_When_I_Call_InstallSurvey_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.InstallSurvey( null, 
-                                                                            SurveyInterviewType.Cati, _serverParkName));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.InstallSurvey( _instrumentName, _serverParkName,
+                null, SurveyInterviewType.Cati));
             Assert.AreEqual("instrumentFile", exception.ParamName);
         }
 
