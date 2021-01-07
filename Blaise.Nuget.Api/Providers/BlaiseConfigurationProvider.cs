@@ -21,10 +21,14 @@ namespace Blaise.Nuget.Api.Providers
             return connectionModel;
         }
 
-        public string LibraryDirectory => ConfigurationExtensions.GetConfigurationItem("ENV_LIBRARY_DIRECTORY");
+        public string LibraryDirectory => 
+            ConfigurationExtensions.GetConfigurationItem("ENV_LIBRARY_DIRECTORY");
 
         public int ConnectionExpiresInMinutes => ConfigurationExtensions.GetVariableAsInt(
                 ConfigurationExtensions.GetConfigurationItem("ENV_CONNECTION_EXPIRES_IN_MINUTES") ?? "30", 
                 "ENV_CONNECTION_EXPIRES_IN_MINUTES");
+
+        public string DatabaseConnectionString => 
+            ConfigurationExtensions.GetConfigurationItem("ENV_DB_CONNECTIONSTRING");
     }
 }
