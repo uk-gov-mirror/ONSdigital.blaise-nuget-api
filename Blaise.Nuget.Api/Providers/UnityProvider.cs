@@ -30,6 +30,7 @@ namespace Blaise.Nuget.Api.Providers
             _unityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>();
             _unityContainer.RegisterSingleton<ICatiManagementServerFactory, CatiManagementServerFactory>();
             _unityContainer.RegisterSingleton<ISecurityManagerFactory, SecurityManagerFactory>();
+            _unityContainer.RegisterSingleton<IDataInterfaceFactory, DataInterfaceFactory>();
 
             //mappers
             _unityContainer.RegisterType<IDataMapperService, DataMapperService>();
@@ -51,6 +52,7 @@ namespace Blaise.Nuget.Api.Providers
             _unityContainer.RegisterType<IFileService, FileService>();
             _unityContainer.RegisterType<IDayBatchService, DayBatchService>();
             _unityContainer.RegisterType<IRoleService, RoleService>();
+            _unityContainer.RegisterType<IDataInterfaceService, DataInterfaceService>();
         }
 
         public T Resolve<T>()

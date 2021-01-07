@@ -9,5 +9,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Providers
         string LibraryDirectory { get; }
 
         int ConnectionExpiresInMinutes { get; }
+
+        string DatabaseConnectionString { get; }
     }
 }
