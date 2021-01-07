@@ -82,6 +82,7 @@
     <Compile Include="Services\FieldServiceTests.cs" />
     <Compile Include="Services\KeyServiceTests.cs" />
     <Compile Include="Services\DataModelServiceTests.cs" />
+    <Compile Include="Services\DataInterfaceServiceTests.cs" />
     <Compile Include="Services\SurveyServiceTests.cs" />
     <Compile Include="Providers\RemoteDataLinkProviderTests.cs" />
     <Compile Include="Services\CaseServiceTests.cs" />

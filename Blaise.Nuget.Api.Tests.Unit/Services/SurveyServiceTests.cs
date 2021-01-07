@@ -16,6 +16,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
     public class SurveyServiceTests
     {
         private Mock<IServerParkService> _parkServiceMock;
+        private Mock<IDataInterfaceService> _dataInterfaceServiceMock;
 
         private Mock<ISurvey> _surveyMock;
         private Mock<ISurveyCollection> _surveyCollectionMock;
@@ -58,7 +59,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, _serverParkName)).Returns(_serverParkMock.Object);
             _parkServiceMock.Setup(p => p.GetServerParkNames(_connectionModel)).Returns(new List<string> { _serverParkName });
             
-            _sut = new SurveyService(_parkServiceMock.Object);
+            _dataInterfaceServiceMock = new Mock<IDataInterfaceService>();
+
+            _sut = new SurveyService(_parkServiceMock.Object, _dataInterfaceServiceMock.Object);
         }
 
         [Test]
@@ -425,12 +428,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             const string instrumentFile = @"d:\\opn2101a.pkg";
 
             //act
-            _sut.InstallInstrument(_connectionModel, instrumentFile, SurveyInterviewType.Cati, _serverParkName);
+            _sut.InstallInstrument(_connectionModel,_instrumentName, _serverParkName,
+                instrumentFile, SurveyInterviewType.Cati);
 
             //assert
             _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, _serverParkName), Times.Once);
             _serverParkMock.Verify(v => v.InstallSurvey(instrumentFile, SurveyInterviewType.Cati.FullName(),
                                         SurveyDataEntryType.StrictInterviewing.FullName(), DataOverwriteMode.Always), Times.Once);
+            _dataInterfaceServiceMock.Verify(v => v.UpdateDataInterfaceConnection(_connectionModel,
+                _instrumentId));
         }
 
         [Test]
