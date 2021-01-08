@@ -17,7 +17,7 @@ namespace Blaise.Nuget.Api.Core.Services
         private readonly IDataInterfaceService _dataInterfaceService;
 
         public SurveyService(
-            IServerParkService parkService, 
+            IServerParkService parkService,
             IDataInterfaceService dataInterfaceService)
         {
             _parkService = parkService;
@@ -120,19 +120,21 @@ namespace Blaise.Nuget.Api.Core.Services
             return configuration.DataFileName;
         }
 
-        public void InstallInstrument(ConnectionModel connectionModel, string instrumentName, string serverParkName, 
+        public void InstallInstrument(ConnectionModel connectionModel, string instrumentName, string serverParkName,
             string instrumentFile, SurveyInterviewType surveyInterviewType)
         {
             var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
 
             serverPark.InstallSurvey(
-                instrumentFile, 
-                surveyInterviewType.FullName(), 
-                SurveyDataEntryType.StrictInterviewing.ToString(), 
+                instrumentFile,
+                surveyInterviewType.FullName(),
+                SurveyDataEntryType.StrictInterviewing.ToString(),
                 DataOverwriteMode.Always);
 
-            var instrumentId = GetInstrumentId(instrumentName, serverPark);
-            _dataInterfaceService.UpdateDataInterfaceConnection(connectionModel, instrumentId);
+            var fileName = GetDataFileName(connectionModel, instrumentName, serverParkName);
+            var dataModelFileName = GetMetaFileName(connectionModel, instrumentName, serverParkName);
+
+            _dataInterfaceService.CreateDataInterface(fileName, dataModelFileName);
         }
 
         public void UninstallInstrument(ConnectionModel connectionModel, string instrumentName, string serverParkName)

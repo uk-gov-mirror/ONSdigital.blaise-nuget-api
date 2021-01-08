@@ -404,8 +404,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             var configurationMock = new Mock<IConfiguration>();
             configurationMock.Setup(c => c.DataFileName).Returns(dataFileName);
-
-
+            
             var configurationItems = new List<IConfiguration> { configurationMock.Object };
 
             var configurationCollectionMock = new Mock<IMachineConfigurationCollection>();
@@ -426,17 +425,29 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         {
             //arrange
             const string instrumentFile = @"d:\\opn2101a.pkg";
+            const string fileName = "OPN.bdix";
+            const string dataModelFileName = "OPN.bmix";
+
+            var configurationMock = new Mock<IConfiguration>();
+            configurationMock.Setup(c => c.DataFileName).Returns(fileName);
+            configurationMock.Setup(c => c.MetaFileName).Returns(dataModelFileName);
+
+            var configurationItems = new List<IConfiguration> { configurationMock.Object };
+
+            var configurationCollectionMock = new Mock<IMachineConfigurationCollection>();
+            configurationCollectionMock.Setup(s => s.Configurations).Returns(configurationItems);
+
+            _surveyMock.Setup(s => s.Configuration).Returns(configurationCollectionMock.Object);
 
             //act
             _sut.InstallInstrument(_connectionModel,_instrumentName, _serverParkName,
                 instrumentFile, SurveyInterviewType.Cati);
 
             //assert
-            _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, _serverParkName), Times.Once);
+            _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, _serverParkName), Times.AtLeastOnce);
             _serverParkMock.Verify(v => v.InstallSurvey(instrumentFile, SurveyInterviewType.Cati.FullName(),
                                         SurveyDataEntryType.StrictInterviewing.FullName(), DataOverwriteMode.Always), Times.Once);
-            _dataInterfaceServiceMock.Verify(v => v.UpdateDataInterfaceConnection(_connectionModel,
-                _instrumentId));
+            _dataInterfaceServiceMock.Verify(v => v.CreateDataInterface(fileName, dataModelFileName));
         }
 
         [Test]

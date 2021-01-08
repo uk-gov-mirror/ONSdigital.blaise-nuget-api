@@ -20,7 +20,7 @@ namespace Blaise.Nuget.Api.Core.Factories
             _dataInterfaces = new Dictionary<Guid, Tuple<IDataInterface, DateTime>>();
         }
 
-        public IDataInterface GetConnection(ConnectionModel connectionModel, Guid instrumentGuid)
+        public IDataInterface GetDataInterface(ConnectionModel connectionModel, Guid instrumentGuid)
         {
             if (!_dataInterfaces.ContainsKey(instrumentGuid))
             {
@@ -32,6 +32,20 @@ namespace Blaise.Nuget.Api.Core.Factories
             return expiryDate.HasExpired()
                 ? GetFreshServerConnection(connectionModel, instrumentGuid)
                 : dataInterface ?? GetFreshServerConnection(connectionModel, instrumentGuid);
+        }
+
+        public IDataInterface GetDataInterfaceForSql(string databaseConnectionString)
+        {
+            var dataInterface = DataInterfaceManager.GetDataInterface();
+            dataInterface.ConnectionInfo.DataSourceType = DataSourceType.MySQL;
+            dataInterface.ConnectionInfo.DataProviderType = DataProviderType.MySQLDataProvider;
+            dataInterface.DataPartitionType = DataPartitionType.Stream;
+
+            var connectionStringBuilder = DataInterfaceManager.GetBlaiseConnectionStringBuilder();
+            connectionStringBuilder.DataSource = databaseConnectionString;
+            dataInterface.ConnectionInfo.SetConnectionString(connectionStringBuilder.ConnectionString);
+
+            return dataInterface;
         }
 
         private IDataInterface GetFreshServerConnection(ConnectionModel connectionModel, Guid instrumentGuid)

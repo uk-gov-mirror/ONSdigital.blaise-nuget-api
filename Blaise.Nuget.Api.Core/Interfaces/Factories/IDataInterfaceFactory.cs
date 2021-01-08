@@ -6,6 +6,8 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Factories
 {
     public interface IDataInterfaceFactory
     {
-        IDataInterface GetConnection(ConnectionModel connectionModel, Guid instrumentGuid);
+        IDataInterface GetDataInterface(ConnectionModel connectionModel, Guid instrumentGuid);
+
+        IDataInterface GetDataInterfaceForSql(string databaseConnectionString);
     }
 }
