@@ -1,9 +1,6 @@
-﻿using System;
-using Blaise.Nuget.Api.Contracts.Models;
-using Blaise.Nuget.Api.Core.Interfaces.Factories;
+﻿using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
-using StatNeth.Blaise.API.DataInterface;
 
 namespace Blaise.Nuget.Api.Core.Services
 {
@@ -20,23 +17,15 @@ namespace Blaise.Nuget.Api.Core.Services
             _configurationProvider = configurationProvider;
         }
 
-        public void UpdateDataInterfaceConnection(ConnectionModel connectionModel, Guid instrumentGuid)
+        public void CreateDataInterface(string fileName, string dataModelFileName)
         {
-            //var dataInterface = _dataInterfaceFactory.GetConnection(connectionModel, instrumentGuid);
             var databaseConnectionString = _configurationProvider.DatabaseConnectionString;
-            
-            var dataInterface = DataInterfaceManager.GetDataInterface();
-            dataInterface.ConnectionInfo.DataSourceType = DataSourceType.Blaise;
-            dataInterface.ConnectionInfo.DataProviderType =DataProviderType.BlaiseDataProviderForDotNET;
-            dataInterface.DataPartitionType = DataPartitionType.Stream;
+            var dataInterface = _dataInterfaceFactory.GetDataInterfaceForSql(databaseConnectionString);
 
-            var connectionStringBuilder = DataInterfaceManager.GetBlaiseConnectionStringBuilder();
-            connectionStringBuilder.DataSource = databaseConnectionString; //@"D:\Flight.bdbx";
-            dataInterface.ConnectionInfo.SetConnectionString(connectionStringBuilder.ConnectionString);
-            dataInterface.DatamodelFileName = @"D:\Flight.bmix";
-
+            dataInterface.FileName = fileName;
+            dataInterface.DatamodelFileName = dataModelFileName;
             dataInterface.CreateTableDefinitions();
-            dataInterface.CreateDatabaseObjects(databaseConnectionString, true);
+            dataInterface.CreateDatabaseObjects(dataInterface.ConnectionInfo.GetConnectionString(), true);
             dataInterface.SaveToFile(true);
         }
     }

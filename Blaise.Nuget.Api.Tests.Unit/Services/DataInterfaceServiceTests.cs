@@ -47,7 +47,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataInterfaceMock.Setup(d => d.SaveToFile(It.IsAny<bool>()));
             
             _dataInterfaceFactoryMock = new Mock<IDataInterfaceFactory>();
-            _dataInterfaceFactoryMock.Setup(d => d.GetConnection(_connectionModel, _instrumentId)).Returns(_dataInterfaceMock.Object);
+            _dataInterfaceFactoryMock.Setup(d => d.GetDataInterfaceForSql(It.IsAny<string>())).Returns(_dataInterfaceMock.Object);
 
             _configurationProviderMock = new Mock<IBlaiseConfigurationProvider>();
             _configurationProviderMock.Setup(c => c.DatabaseConnectionString).Returns(_connectionString);
@@ -58,13 +58,17 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         [Test]
         public void Given_I_Call_GetSurveyNames_Then_I_Get_A_Correct_List_Of_Survey_Names_Returned()
         {
+            //arrange
+            const string fileName = "OPN.bdix";
+            const string dataModelFileName = "OPN.bmix";
+            _dataInterfaceMock.Setup(d => d.ConnectionInfo.GetConnectionString(null)).Returns(_connectionString);
+
             //act
-            _sut.UpdateDataInterfaceConnection(_connectionModel, _instrumentId);
+            _sut.CreateDataInterface(fileName, dataModelFileName);
 
             //assert
-            _dataInterfaceFactoryMock.Verify(v => v.GetConnection(_connectionModel, _instrumentId), Times.Once);
             _configurationProviderMock.Verify(v => v.DatabaseConnectionString, Times.Once);
-            _dataInterfaceMock.Verify(v => v.ConnectionInfo.SetConnectionString(_connectionString, null), Times.Once);
+            _dataInterfaceFactoryMock.Verify(v => v.GetDataInterfaceForSql(_connectionString), Times.Once);
             _dataInterfaceMock.Verify(v => v.CreateTableDefinitions(), Times.Once);
             _dataInterfaceMock.Verify(v => v.CreateDatabaseObjects(_connectionString, true), Times.Once);
             _dataInterfaceMock.Verify(v => v.SaveToFile(true), Times.Once);
