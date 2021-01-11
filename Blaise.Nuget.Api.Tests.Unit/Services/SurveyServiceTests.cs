@@ -112,6 +112,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [TestCase("TestInstrumentName", true)]
+        [TestCase("testinstrumentname", true)]
         [TestCase("InstrumentNotFound", false)]
         public void Given_I_Call_SurveyExists_Then_I_Get_A_Correct_Value_Returned(string instrumentName, bool exists)
         {
@@ -168,11 +169,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.AreEqual($"No surveys found for server park '{serverParkName}'", exception.Message);
         }
 
-        [Test]
-        public void Given_I_Call_GetSurvey_Then_I_Get_The_Correct_Survey_Returned()
+        [TestCase("Instrument1")]
+        [TestCase("instrument1")]
+        [TestCase("INSTRUMENT1")]
+        public void Given_I_Call_GetSurvey_Then_I_Get_The_Correct_Survey_Returned(string instrument1Name)
         {
             //arrange
-            const string instrument1Name = "Instrument1";
             var survey1Mock = new Mock<ISurvey>();
             survey1Mock.Setup(s => s.Name).Returns(instrument1Name);
 
@@ -397,30 +399,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_GetDataFileName_Then_The_Correct_Name_Is_Returned()
-        {
-            //arrange
-            const string dataFileName = "DataFileName";
-
-            var configurationMock = new Mock<IConfiguration>();
-            configurationMock.Setup(c => c.DataFileName).Returns(dataFileName);
-            
-            var configurationItems = new List<IConfiguration> { configurationMock.Object };
-
-            var configurationCollectionMock = new Mock<IMachineConfigurationCollection>();
-            configurationCollectionMock.Setup(s => s.Configurations).Returns(configurationItems);
-
-            _surveyMock.Setup(s => s.Configuration).Returns(configurationCollectionMock.Object);
-
-            //act
-            var result = _sut.GetDataFileName(_connectionModel, _instrumentName, _serverParkName);
-
-            //assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(dataFileName, result);
-        }
-
-        [Test]
         public void Given_Valid_Arguments_When_I_Call_InstallInstrument_Then_The_Correct_Services_Are_Called()
         {
             //arrange
@@ -444,7 +422,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
                 instrumentFile, SurveyInterviewType.Cati);
 
             //assert
-            _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, _serverParkName), Times.AtLeastOnce);
+            _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, _serverParkName), Times.Once);
             _serverParkMock.Verify(v => v.InstallSurvey(instrumentFile, SurveyInterviewType.Cati.FullName(),
                                         SurveyDataEntryType.StrictInterviewing.FullName(), DataOverwriteMode.Always), Times.Once);
             _dataInterfaceServiceMock.Verify(v => v.CreateDataInterface(fileName, dataModelFileName));

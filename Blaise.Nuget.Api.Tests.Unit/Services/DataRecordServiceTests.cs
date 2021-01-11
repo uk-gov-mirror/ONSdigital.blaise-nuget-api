@@ -194,34 +194,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_A_DatabaseFile_When_I_Call_GetDataRecord_I_Get_The_Correct_DataRecord_Back()
-        {
-            //arrange
-            _localDataLinkMock.Setup(d => d.ReadRecord(It.IsAny<IKey>())).Returns(_dataRecordMock.Object);
-
-            //act
-            var result = _sut.GetDataRecord(_keyMock.Object, _databaseFile);
-
-            //assert
-            Assert.NotNull(result);
-            Assert.AreSame(_dataRecordMock.Object, result);
-        }
-
-        [Test]
-        public void Given_A_DatabaseFile_When_I_Call_GetDataRecord_Then_The_Correct_Services_Are_Called()
-        {
-            //arrange
-            _localDataLinkMock.Setup(d => d.ReadRecord(It.IsAny<IKey>())).Returns(It.IsAny<IDataRecord>());
-
-            //act
-            _sut.GetDataRecord(_keyMock.Object, _databaseFile);
-
-            //assert
-            _localDataLinkProviderMock.Verify(v => v.GetDataLink(_databaseFile), Times.Once);
-            _localDataLinkMock.Verify(v => v.ReadRecord(_keyMock.Object), Times.Once);
-        }
-
-        [Test]
         public void Given_An_InstrumentName_And_ServerParkName_When_I_Call_WriteDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //arrange

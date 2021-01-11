@@ -15,8 +15,6 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         IDataRecord GetDataRecord(ConnectionModel connectionModel, IKey key, string instrumentName, string serverParkName);
 
-        IDataRecord GetDataRecord(IKey key, string databaseFile);
-
         void WriteDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
 
         void WriteDataRecord(IDataRecord dataRecord, string databaseFile);
