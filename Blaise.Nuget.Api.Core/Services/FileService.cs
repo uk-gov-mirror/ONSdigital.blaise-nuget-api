@@ -60,7 +60,6 @@ namespace Blaise.Nuget.Api.Core.Services
         public void UpdateInstrumentPackageWithSqlConnection(string instrumentName, 
             string instrumentFile)
         {
-            //unzip package
             var outputPath = $"{Path.GetDirectoryName(instrumentFile)}\\{instrumentName}";
             ZipFile.ExtractToDirectory(instrumentFile, outputPath);
             File.Delete(instrumentFile);
@@ -72,7 +71,6 @@ namespace Blaise.Nuget.Api.Core.Services
             _dataInterfaceService.CreateSqlDataInterface(databaseConnectionString, fileName,
                 dataModelFileName);
 
-            //zip package
             ZipFile.CreateFromDirectory(outputPath, instrumentFile);
             Directory.Delete(outputPath, true);
         }
