@@ -1,16 +1,17 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Exceptions;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
-using StatNeth.Blaise.API.DataInterface;
 
 namespace Blaise.Nuget.Api.Core.Services
 {
     public class FileService : IFileService
     {
         private readonly IBlaiseConfigurationProvider _configurationProvider;
+        private readonly IDataInterfaceService _dataInterfaceService;
 
         private const string DatabaseFileNameExt = "bdix";
         private const string DatabaseSourceExt = "bdbx";
@@ -18,9 +19,11 @@ namespace Blaise.Nuget.Api.Core.Services
         private const string LibraryFileExt = "blix";
 
         public FileService(
-            IBlaiseConfigurationProvider configurationProvider)
+            IBlaiseConfigurationProvider configurationProvider, 
+            IDataInterfaceService dataInterfaceService)
         {
             _configurationProvider = configurationProvider;
+            _dataInterfaceService = dataInterfaceService;
         }
 
         public bool DatabaseFileExists(string databaseFile, string instrumentName)
@@ -41,23 +44,37 @@ namespace Blaise.Nuget.Api.Core.Services
             var fileNameToCopy = GetFullFilePath(outputPath, instrumentName, DatabaseModelExt);
             File.Copy(metaFileName, fileNameToCopy, true);
 
-            var dataInterface = DataInterfaceManager.GetDataInterface();
-            dataInterface.ConnectionInfo.DataSourceType = DataSourceType.Blaise;
-            dataInterface.ConnectionInfo.DataProviderType = DataProviderType.BlaiseDataProviderForDotNET;
-            dataInterface.DataPartitionType = DataPartitionType.Stream;
-            var connectionBuilder = DataInterfaceManager.GetBlaiseConnectionStringBuilder();
-            connectionBuilder.DataSource = GetFullFilePath(outputPath, instrumentName, DatabaseSourceExt);
-            dataInterface.ConnectionInfo.SetConnectionString(connectionBuilder.ConnectionString);
-            dataInterface.DatamodelFileName = GetFullFilePath(outputPath, instrumentName, DatabaseModelExt);
-            dataInterface.FileName = GetFullFilePath(outputPath, instrumentName, DatabaseFileNameExt);
-            dataInterface.CreateTableDefinitions();
-            dataInterface.CreateDatabaseObjects(null, true);
-            dataInterface.SaveToFile(true);
+            var databaseSourceFileName = GetFullFilePath(outputPath, instrumentName, DatabaseSourceExt);
+            var fileName = GetFullFilePath(outputPath, instrumentName, DatabaseFileNameExt);
+            var dataModelFileName = GetFullFilePath(outputPath, instrumentName, DatabaseModelExt);
+            
+            var dataInterface = _dataInterfaceService.CreateFileDataInterface(databaseSourceFileName, fileName,
+                dataModelFileName);
 
             //yuck!
             OverwriteDatabaseFileToAvoidFixedDirectoryIssue(metaFileName, outputPath, instrumentName);
 
             return dataInterface.FileName;
+        }
+
+        public void UpdateInstrumentPackageWithSqlConnection(string instrumentName, 
+            string instrumentFile)
+        {
+            //unzip package
+            var outputPath = $"{Path.GetDirectoryName(instrumentFile)}\\{instrumentName}";
+            ZipFile.ExtractToDirectory(instrumentFile, outputPath);
+            File.Delete(instrumentFile);
+
+            var databaseConnectionString = _configurationProvider.DatabaseConnectionString;
+            var fileName = GetFullFilePath(outputPath, instrumentName, DatabaseFileNameExt);
+            var dataModelFileName = GetFullFilePath(outputPath, instrumentName, DatabaseModelExt);
+
+            _dataInterfaceService.CreateSqlDataInterface(databaseConnectionString, fileName,
+                dataModelFileName);
+
+            //zip package
+            ZipFile.CreateFromDirectory(outputPath, instrumentFile);
+            Directory.Delete(outputPath, true);
         }
 
         //fml

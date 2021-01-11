@@ -14,14 +14,10 @@ namespace Blaise.Nuget.Api.Core.Services
     public class SurveyService : ISurveyService
     {
         private readonly IServerParkService _parkService;
-        private readonly IDataInterfaceService _dataInterfaceService;
 
-        public SurveyService(
-            IServerParkService parkService,
-            IDataInterfaceService dataInterfaceService)
+        public SurveyService(IServerParkService parkService)
         {
             _parkService = parkService;
-            _dataInterfaceService = dataInterfaceService;
         }
 
         public IEnumerable<string> GetSurveyNames(ConnectionModel connectionModel, string serverParkName)
@@ -56,7 +52,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
             return GetSurvey(surveys, instrumentName);
         }
-        
+
         public SurveyStatusType GetSurveyStatus(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             var survey = GetSurvey(connectionModel, instrumentName, serverParkName);
@@ -67,7 +63,7 @@ namespace Blaise.Nuget.Api.Core.Services
         public SurveyInterviewType GetSurveyInterviewType(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             var survey = GetSurvey(connectionModel, instrumentName, serverParkName);
-            var configuration = survey.Configuration.Configurations.FirstOrDefault(c => 
+            var configuration = survey.Configuration.Configurations.FirstOrDefault(c =>
                     string.Equals(c.InstrumentName, instrumentName, StringComparison.CurrentCultureIgnoreCase));
 
             if (configuration == null)
@@ -116,11 +112,6 @@ namespace Blaise.Nuget.Api.Core.Services
                 surveyInterviewType.FullName(),
                 SurveyDataEntryType.StrictInterviewing.ToString(),
                 DataOverwriteMode.Always);
-
-            var survey = GetSurvey(serverPark.Surveys, instrumentName);
-            var configuration = GetSurveyConfiguration(survey);
-
-            _dataInterfaceService.CreateDataInterface(configuration.DataFileName, configuration.MetaFileName);
         }
 
         public void UninstallInstrument(ConnectionModel connectionModel, string instrumentName, string serverParkName)
@@ -145,7 +136,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
         private static ISurvey GetSurvey(IEnumerable<ISurvey> surveys, string instrumentName)
         {
-            var survey = surveys.FirstOrDefault(s=> string.Equals(s.Name, instrumentName, StringComparison.OrdinalIgnoreCase));
+            var survey = surveys.FirstOrDefault(s => string.Equals(s.Name, instrumentName, StringComparison.OrdinalIgnoreCase));
 
             if (survey == null)
             {
@@ -158,7 +149,7 @@ namespace Blaise.Nuget.Api.Core.Services
         private IConfiguration GetSurveyConfiguration(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             var survey = GetSurvey(connectionModel, instrumentName, serverParkName);
-            
+
             return GetSurveyConfiguration(survey);
         }
 
