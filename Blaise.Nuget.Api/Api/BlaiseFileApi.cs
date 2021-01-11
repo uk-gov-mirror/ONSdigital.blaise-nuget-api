@@ -66,5 +66,14 @@ namespace Blaise.Nuget.Api.Api
 
             return databaseFile;
         }
+
+        public void UpdateInstrumentFileWithSqlConnection(string instrumentName,
+            string instrumentFile)
+        {
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            instrumentFile.ThrowExceptionIfNullOrEmpty("instrumentFile");
+
+            _fileService.UpdateInstrumentPackageWithSqlConnection(instrumentName, instrumentFile);
+        }
     }
 }

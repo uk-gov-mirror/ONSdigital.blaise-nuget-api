@@ -1,7 +1,11 @@
-﻿namespace Blaise.Nuget.Api.Core.Interfaces.Services
+﻿using StatNeth.Blaise.API.DataInterface;
+
+namespace Blaise.Nuget.Api.Core.Interfaces.Services
 {
     public interface IDataInterfaceService
     {
-        void CreateDataInterface(string fileName,string dataModelFileName);
+        IDataInterface CreateFileDataInterface(string databaseSourceFileName, string fileName, string dataModelFileName);
+
+        void CreateSqlDataInterface(string databaseConnectionString, string fileName, string dataModelFileName);
     }
 }

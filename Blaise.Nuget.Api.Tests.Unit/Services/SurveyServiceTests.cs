@@ -16,7 +16,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
     public class SurveyServiceTests
     {
         private Mock<IServerParkService> _parkServiceMock;
-        private Mock<IDataInterfaceService> _dataInterfaceServiceMock;
 
         private Mock<ISurvey> _surveyMock;
         private Mock<ISurveyCollection> _surveyCollectionMock;
@@ -59,9 +58,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, _serverParkName)).Returns(_serverParkMock.Object);
             _parkServiceMock.Setup(p => p.GetServerParkNames(_connectionModel)).Returns(new List<string> { _serverParkName });
             
-            _dataInterfaceServiceMock = new Mock<IDataInterfaceService>();
-
-            _sut = new SurveyService(_parkServiceMock.Object, _dataInterfaceServiceMock.Object);
+            _sut = new SurveyService(_parkServiceMock.Object);
         }
 
         [Test]
@@ -425,7 +422,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, _serverParkName), Times.Once);
             _serverParkMock.Verify(v => v.InstallSurvey(instrumentFile, SurveyInterviewType.Cati.FullName(),
                                         SurveyDataEntryType.StrictInterviewing.FullName(), DataOverwriteMode.Always), Times.Once);
-            _dataInterfaceServiceMock.Verify(v => v.CreateDataInterface(fileName, dataModelFileName));
         }
 
         [Test]
