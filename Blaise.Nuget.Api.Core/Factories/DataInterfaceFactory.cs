@@ -27,7 +27,7 @@ namespace Blaise.Nuget.Api.Core.Factories
             dataInterface.DataPartitionType = DataPartitionType.Stream;
 
             var connectionStringBuilder = DataInterfaceManager.GetBlaiseConnectionStringBuilder();
-            connectionStringBuilder.DataSource = databaseConnectionString;
+            connectionStringBuilder.ConnectionString = databaseConnectionString;
             dataInterface.ConnectionInfo.SetConnectionString(connectionStringBuilder.ConnectionString);
 
             return dataInterface;
