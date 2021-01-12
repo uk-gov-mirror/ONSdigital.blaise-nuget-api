@@ -72,7 +72,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
         private static string ExtractInstrumentPackage(string instrumentName, string instrumentFile)
         {
-            var instrumentPath = $"{Path.GetDirectoryName(instrumentFile)}\\{instrumentName}";
+            var instrumentPath = $"{Path.GetDirectoryName(instrumentFile)}\\{instrumentName}\\{Guid.NewGuid()}";
 
             if (Directory.Exists(instrumentPath))
             {
