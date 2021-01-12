@@ -57,22 +57,38 @@ namespace Blaise.Nuget.Api.Core.Services
             return dataInterface.FileName;
         }
 
-        public void UpdateInstrumentPackageWithSqlConnection(string instrumentName, 
-            string instrumentFile)
+        public void UpdateInstrumentPackageWithSqlConnection(string instrumentName, string instrumentFile)
         {
-            var outputPath = $"{Path.GetDirectoryName(instrumentFile)}\\{instrumentName}";
-            ZipFile.ExtractToDirectory(instrumentFile, outputPath);
-            File.Delete(instrumentFile);
-
+            var instrumentPath = ExtractInstrumentPackage(instrumentName, instrumentFile);
             var databaseConnectionString = _configurationProvider.DatabaseConnectionString;
-            var fileName = GetFullFilePath(outputPath, instrumentName, DatabaseFileNameExt);
-            var dataModelFileName = GetFullFilePath(outputPath, instrumentName, DatabaseModelExt);
+            var fileName = GetFullFilePath(instrumentPath, instrumentName, DatabaseFileNameExt);
+            var dataModelFileName = GetFullFilePath(instrumentPath, instrumentName, DatabaseModelExt);
 
             _dataInterfaceService.CreateSqlDataInterface(databaseConnectionString, fileName,
                 dataModelFileName);
 
-            ZipFile.CreateFromDirectory(outputPath, instrumentFile);
-            Directory.Delete(outputPath, true);
+            CreateInstrumentPackage(instrumentPath, instrumentFile);
+        }
+
+        private static string ExtractInstrumentPackage(string instrumentName, string instrumentFile)
+        {
+            var instrumentPath = $"{Path.GetDirectoryName(instrumentFile)}\\{instrumentName}";
+
+            if (Directory.Exists(instrumentPath))
+            {
+                Directory.Delete(instrumentPath, true);
+            }
+
+            ZipFile.ExtractToDirectory(instrumentFile, instrumentPath);
+            File.Delete(instrumentFile);
+
+            return instrumentPath;
+        }
+
+        private static void CreateInstrumentPackage(string instrumentPath, string instrumentFile)
+        {
+            ZipFile.CreateFromDirectory(instrumentPath, instrumentFile);
+            Directory.Delete(instrumentPath, true);
         }
 
         //fml
