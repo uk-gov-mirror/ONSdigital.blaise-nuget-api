@@ -93,5 +93,21 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataInterfaceMock.Verify(v => v.SaveToFile(true), Times.Once);
         }
 
+        [Test]
+        public void Given_I_Call_CreateSqlDataInterface_Then_I_Get_A_Correct_DataInterface_Returned()
+        {
+            //arrange
+            const string fileName = "OPN.bdix";
+            const string dataModelFileName = "OPN.bmix";
+            _dataInterfaceMock.Setup(d => d.ConnectionInfo.GetConnectionString(null)).Returns(_connectionString);
+            
+            //act
+            var result =  _sut.CreateSqlDataInterface(_connectionString, fileName, dataModelFileName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<IDataInterface>(result);
+            Assert.AreSame(_dataInterfaceMock.Object, result);
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace Blaise.Nuget.Api.Core.Services
             return dataInterface;
         }
 
-        public void CreateSqlDataInterface(string databaseConnectionString, string fileName, string dataModelFileName)
+        public IDataInterface CreateSqlDataInterface(string databaseConnectionString, string fileName, string dataModelFileName)
         {
             var dataInterface = _dataInterfaceFactory.GetDataInterfaceForSql(databaseConnectionString);
 
@@ -35,6 +35,8 @@ namespace Blaise.Nuget.Api.Core.Services
             dataInterface.CreateTableDefinitions();
             dataInterface.CreateDatabaseObjects(dataInterface.ConnectionInfo.GetConnectionString(), true);
             dataInterface.SaveToFile(true);
+
+            return dataInterface;
         }
     }
 }
