@@ -10,8 +10,8 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
     {
         private readonly BlaiseSurveyApi _sut;
 
-        private const string ServerParkName = "LocalDevelopment";
-        private const string FullInstrumentPath = @"C:\Users\User\Desktop\OPN2101A.zip";
+        private const string ServerParkName = "gusty";
+        private const string FullInstrumentPath = @"D:\Opn\OPN2101A.zip";
         private const string InstrumentName = "OPN2101A";
 
         public SurveyTests()

@@ -46,13 +46,6 @@ namespace Blaise.Nuget.Api.Core.Services
             return dataLink.ReadRecord(key);
         }
 
-        public IDataRecord GetDataRecord(IKey key, string databaseFile)
-        {
-            var dataLink = _localDataLinkProvider.GetDataLink(databaseFile);
-
-            return dataLink.ReadRecord(key);
-        }
-
         public void WriteDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName)
         {
             var dataLink = _remoteDataLinkProvider.GetDataLink(connectionModel, instrumentName, serverParkName);
