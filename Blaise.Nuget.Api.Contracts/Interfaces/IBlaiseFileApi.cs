@@ -4,5 +4,8 @@
     {
         string CreateInstrumentFile(string serverParkName, string instrumentName, 
             string destinationFilePath);
+
+        void UpdateInstrumentFileWithSqlConnection(string instrumentName,
+            string instrumentFile);
     }
 }

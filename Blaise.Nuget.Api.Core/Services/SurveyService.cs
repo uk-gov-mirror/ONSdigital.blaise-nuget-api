@@ -14,14 +14,10 @@ namespace Blaise.Nuget.Api.Core.Services
     public class SurveyService : ISurveyService
     {
         private readonly IServerParkService _parkService;
-        private readonly IDataInterfaceService _dataInterfaceService;
 
-        public SurveyService(
-            IServerParkService parkService, 
-            IDataInterfaceService dataInterfaceService)
+        public SurveyService(IServerParkService parkService)
         {
             _parkService = parkService;
-            _dataInterfaceService = dataInterfaceService;
         }
 
         public IEnumerable<string> GetSurveyNames(ConnectionModel connectionModel, string serverParkName)
@@ -53,14 +49,8 @@ namespace Blaise.Nuget.Api.Core.Services
         public ISurvey GetSurvey(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             var surveys = GetSurveys(connectionModel, serverParkName);
-            var survey = surveys.FirstOrDefault(s => s.Name == instrumentName);
 
-            if (survey == null)
-            {
-                throw new DataNotFoundException($"No survey found for instrument name '{instrumentName}'");
-            }
-
-            return survey;
+            return GetSurvey(surveys, instrumentName);
         }
 
         public SurveyStatusType GetSurveyStatus(ConnectionModel connectionModel, string instrumentName, string serverParkName)
@@ -73,7 +63,8 @@ namespace Blaise.Nuget.Api.Core.Services
         public SurveyInterviewType GetSurveyInterviewType(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             var survey = GetSurvey(connectionModel, instrumentName, serverParkName);
-            var configuration = survey.Configuration.Configurations.FirstOrDefault(c => c.InstrumentName == instrumentName);
+            var configuration = survey.Configuration.Configurations.FirstOrDefault(c =>
+                    string.Equals(c.InstrumentName, instrumentName, StringComparison.CurrentCultureIgnoreCase));
 
             if (configuration == null)
             {
@@ -106,33 +97,21 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public string GetMetaFileName(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
-            var survey = GetSurvey(connectionModel, instrumentName, serverParkName);
-            var configuration = GetSurveyConfiguration(survey);
+            var configuration = GetSurveyConfiguration(connectionModel, instrumentName, serverParkName);
 
             return configuration.MetaFileName;
         }
 
-        public string GetDataFileName(ConnectionModel connectionModel, string instrumentName, string serverParkName)
-        {
-            var survey = GetSurvey(connectionModel, instrumentName, serverParkName);
-            var configuration = GetSurveyConfiguration(survey);
-
-            return configuration.DataFileName;
-        }
-
-        public void InstallInstrument(ConnectionModel connectionModel, string instrumentName, string serverParkName, 
+        public void InstallInstrument(ConnectionModel connectionModel, string instrumentName, string serverParkName,
             string instrumentFile, SurveyInterviewType surveyInterviewType)
         {
             var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
 
             serverPark.InstallSurvey(
-                instrumentFile, 
-                surveyInterviewType.FullName(), 
-                SurveyDataEntryType.StrictInterviewing.ToString(), 
+                instrumentFile,
+                surveyInterviewType.FullName(),
+                SurveyDataEntryType.StrictInterviewing.ToString(),
                 DataOverwriteMode.Always);
-
-            var instrumentId = GetInstrumentId(instrumentName, serverPark);
-            _dataInterfaceService.UpdateDataInterfaceConnection(connectionModel, instrumentId);
         }
 
         public void UninstallInstrument(ConnectionModel connectionModel, string instrumentName, string serverParkName)
@@ -153,6 +132,25 @@ namespace Blaise.Nuget.Api.Core.Services
             }
 
             return survey.InstrumentID;
+        }
+
+        private static ISurvey GetSurvey(IEnumerable<ISurvey> surveys, string instrumentName)
+        {
+            var survey = surveys.FirstOrDefault(s => string.Equals(s.Name, instrumentName, StringComparison.OrdinalIgnoreCase));
+
+            if (survey == null)
+            {
+                throw new DataNotFoundException($"No survey found for instrument name '{instrumentName}'");
+            }
+
+            return survey;
+        }
+
+        private IConfiguration GetSurveyConfiguration(ConnectionModel connectionModel, string instrumentName, string serverParkName)
+        {
+            var survey = GetSurvey(connectionModel, instrumentName, serverParkName);
+
+            return GetSurveyConfiguration(survey);
         }
 
         private static IConfiguration GetSurveyConfiguration(ISurvey survey)

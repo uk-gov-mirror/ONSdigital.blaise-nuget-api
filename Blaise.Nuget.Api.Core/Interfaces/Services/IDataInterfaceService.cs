@@ -1,10 +1,11 @@
-﻿using System;
-using Blaise.Nuget.Api.Contracts.Models;
+﻿using StatNeth.Blaise.API.DataInterface;
 
 namespace Blaise.Nuget.Api.Core.Interfaces.Services
 {
     public interface IDataInterfaceService
     {
-        void UpdateDataInterfaceConnection(ConnectionModel connectionModel, Guid instrumentGuid);
+        IDataInterface CreateFileDataInterface(string databaseSourceFileName, string fileName, string dataModelFileName);
+
+        IDataInterface CreateSqlDataInterface(string databaseConnectionString, string fileName, string dataModelFileName);
     }
 }

@@ -20,6 +20,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.File
         private readonly string _instrumentName;
         private readonly string _serverParkName;
         private readonly string _destinationFilePath;
+        private readonly string _instrumentFile;
 
         private IBlaiseFileApi _sut;
 
@@ -29,6 +30,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.File
             _instrumentName = "Instrument1";
             _serverParkName = "Park1";
             _destinationFilePath = "FilePath";
+            _instrumentFile = "OPN2021a.zip";
         }
         [SetUp]
         public void SetUpTests()
@@ -184,6 +186,53 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.File
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateInstrumentFile(_serverParkName, 
                 _instrumentName, null));
             Assert.AreEqual("destinationFilePath", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_Valid_Parameters_When_I_Call_UpdateInstrumentFileWithSqlConnection_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            _fileServiceMock.Setup(f => f.UpdateInstrumentPackageWithSqlConnection(It.IsAny<string>(), It.IsAny<string>()));
+
+            //act
+            _sut.UpdateInstrumentFileWithSqlConnection(_instrumentName, _instrumentFile);
+
+            //assert
+            _fileServiceMock.Verify(f => f.UpdateInstrumentPackageWithSqlConnection(_instrumentName,
+                _instrumentFile), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_UpdateInstrumentFileWithSqlConnection_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.UpdateInstrumentFileWithSqlConnection(string.Empty, _instrumentFile));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_UpdateInstrumentFileWithSqlConnection_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UpdateInstrumentFileWithSqlConnection(null, _instrumentFile));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentFile_When_I_Call_UpdateInstrumentFileWithSqlConnection_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.UpdateInstrumentFileWithSqlConnection(_instrumentName, 
+                string.Empty));
+            Assert.AreEqual("A value for the argument 'instrumentFile' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentFile_When_I_Call_UpdateInstrumentFileWithSqlConnection_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UpdateInstrumentFileWithSqlConnection(_instrumentName, null));
+            Assert.AreEqual("instrumentFile", exception.ParamName);
         }
     }
 }

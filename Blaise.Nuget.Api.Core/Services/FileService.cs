@@ -1,16 +1,17 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using Blaise.Nuget.Api.Contracts.Exceptions;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
-using StatNeth.Blaise.API.DataInterface;
 
 namespace Blaise.Nuget.Api.Core.Services
 {
     public class FileService : IFileService
     {
         private readonly IBlaiseConfigurationProvider _configurationProvider;
+        private readonly IDataInterfaceService _dataInterfaceService;
 
         private const string DatabaseFileNameExt = "bdix";
         private const string DatabaseSourceExt = "bdbx";
@@ -18,9 +19,11 @@ namespace Blaise.Nuget.Api.Core.Services
         private const string LibraryFileExt = "blix";
 
         public FileService(
-            IBlaiseConfigurationProvider configurationProvider)
+            IBlaiseConfigurationProvider configurationProvider, 
+            IDataInterfaceService dataInterfaceService)
         {
             _configurationProvider = configurationProvider;
+            _dataInterfaceService = dataInterfaceService;
         }
 
         public bool DatabaseFileExists(string databaseFile, string instrumentName)
@@ -41,23 +44,51 @@ namespace Blaise.Nuget.Api.Core.Services
             var fileNameToCopy = GetFullFilePath(outputPath, instrumentName, DatabaseModelExt);
             File.Copy(metaFileName, fileNameToCopy, true);
 
-            var dataInterface = DataInterfaceManager.GetDataInterface();
-            dataInterface.ConnectionInfo.DataSourceType = DataSourceType.Blaise;
-            dataInterface.ConnectionInfo.DataProviderType = DataProviderType.BlaiseDataProviderForDotNET;
-            dataInterface.DataPartitionType = DataPartitionType.Stream;
-            var connectionBuilder = DataInterfaceManager.GetBlaiseConnectionStringBuilder();
-            connectionBuilder.DataSource = GetFullFilePath(outputPath, instrumentName, DatabaseSourceExt);
-            dataInterface.ConnectionInfo.SetConnectionString(connectionBuilder.ConnectionString);
-            dataInterface.DatamodelFileName = GetFullFilePath(outputPath, instrumentName, DatabaseModelExt);
-            dataInterface.FileName = GetFullFilePath(outputPath, instrumentName, DatabaseFileNameExt);
-            dataInterface.CreateTableDefinitions();
-            dataInterface.CreateDatabaseObjects(null, true);
-            dataInterface.SaveToFile(true);
+            var databaseSourceFileName = GetFullFilePath(outputPath, instrumentName, DatabaseSourceExt);
+            var fileName = GetFullFilePath(outputPath, instrumentName, DatabaseFileNameExt);
+            var dataModelFileName = GetFullFilePath(outputPath, instrumentName, DatabaseModelExt);
+            
+            var dataInterface = _dataInterfaceService.CreateFileDataInterface(databaseSourceFileName, fileName,
+                dataModelFileName);
 
             //yuck!
             OverwriteDatabaseFileToAvoidFixedDirectoryIssue(metaFileName, outputPath, instrumentName);
 
             return dataInterface.FileName;
+        }
+
+        public void UpdateInstrumentPackageWithSqlConnection(string instrumentName, string instrumentFile)
+        {
+            var instrumentPath = ExtractInstrumentPackage(instrumentName, instrumentFile);
+            var databaseConnectionString = _configurationProvider.DatabaseConnectionString;
+            var fileName = GetFullFilePath(instrumentPath, instrumentName, DatabaseFileNameExt);
+            var dataModelFileName = GetFullFilePath(instrumentPath, instrumentName, DatabaseModelExt);
+
+            _dataInterfaceService.CreateSqlDataInterface(databaseConnectionString, fileName,
+                dataModelFileName);
+
+            CreateInstrumentPackage(instrumentPath, instrumentFile);
+        }
+
+        private static string ExtractInstrumentPackage(string instrumentName, string instrumentFile)
+        {
+            var instrumentPath = $"{Path.GetDirectoryName(instrumentFile)}\\{instrumentName}\\{Guid.NewGuid()}";
+
+            if (Directory.Exists(instrumentPath))
+            {
+                Directory.Delete(instrumentPath, true);
+            }
+
+            ZipFile.ExtractToDirectory(instrumentFile, instrumentPath);
+            File.Delete(instrumentFile);
+
+            return instrumentPath;
+        }
+
+        private static void CreateInstrumentPackage(string instrumentPath, string instrumentFile)
+        {
+            ZipFile.CreateFromDirectory(instrumentPath, instrumentFile);
+            Directory.Delete(instrumentPath, true);
         }
 
         //fml

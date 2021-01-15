@@ -1,33 +1,42 @@
-﻿using System;
-using Blaise.Nuget.Api.Contracts.Models;
-using Blaise.Nuget.Api.Core.Interfaces.Factories;
-using Blaise.Nuget.Api.Core.Interfaces.Providers;
+﻿using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
+using StatNeth.Blaise.API.DataInterface;
 
 namespace Blaise.Nuget.Api.Core.Services
 {
     public class DataInterfaceService : IDataInterfaceService
     {
         private readonly IDataInterfaceFactory _dataInterfaceFactory;
-        private readonly IBlaiseConfigurationProvider _configurationProvider;
-
-        public DataInterfaceService(
-            IDataInterfaceFactory dataInterfaceFactory, 
-            IBlaiseConfigurationProvider configurationProvider)
+        public DataInterfaceService(IDataInterfaceFactory dataInterfaceFactory)
         {
             _dataInterfaceFactory = dataInterfaceFactory;
-            _configurationProvider = configurationProvider;
         }
 
-        public void UpdateDataInterfaceConnection(ConnectionModel connectionModel, Guid instrumentGuid)
+        public IDataInterface CreateFileDataInterface(string databaseSourceFileName, string fileName,
+            string dataModelFileName)
         {
-            var dataInterface = _dataInterfaceFactory.GetConnection(connectionModel, instrumentGuid);
-            var databaseConnectionString = _configurationProvider.DatabaseConnectionString;
-
-            dataInterface.ConnectionInfo.SetConnectionString(databaseConnectionString);
+            var dataInterface = _dataInterfaceFactory.GetDataInterfaceForFile(databaseSourceFileName);
+            
+            dataInterface.FileName = fileName;
+            dataInterface.DatamodelFileName = dataModelFileName;
             dataInterface.CreateTableDefinitions();
-            dataInterface.CreateDatabaseObjects(databaseConnectionString, true);
+            dataInterface.CreateDatabaseObjects(null, true);
             dataInterface.SaveToFile(true);
+
+            return dataInterface;
+        }
+
+        public IDataInterface CreateSqlDataInterface(string databaseConnectionString, string fileName, string dataModelFileName)
+        {
+            var dataInterface = _dataInterfaceFactory.GetDataInterfaceForSql(databaseConnectionString);
+
+            dataInterface.FileName = fileName;
+            dataInterface.DatamodelFileName = dataModelFileName;
+            dataInterface.CreateTableDefinitions();
+            dataInterface.CreateDatabaseObjects(dataInterface.ConnectionInfo.GetConnectionString(), true);
+            dataInterface.SaveToFile(true);
+
+            return dataInterface;
         }
     }
 }
