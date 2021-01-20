@@ -6,7 +6,7 @@
 
         void DeleteDatabaseFile(string databaseFile, string instrumentName);
 
-        string CreateDatabaseFile(string metaFileName, string outputPath, string instrumentName);
+        string GetDatabaseFilePath(string outputPath, string instrumentName);
 
         void UpdateInstrumentPackageWithSqlConnection(string instrumentName,
             string instrumentFile);
