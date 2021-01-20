@@ -12,18 +12,15 @@ namespace Blaise.Nuget.Api.Api
     public class BlaiseFileApi : IBlaiseFileApi
     {
         private readonly ICaseService _caseService;
-        private readonly ISurveyService _surveyService;
         private readonly IFileService _fileService;
         private readonly ConnectionModel _connectionModel;
 
         internal BlaiseFileApi(
             ICaseService caseService,
-            ISurveyService surveyService,
             IFileService fileService,
             ConnectionModel connectionModel)
         {
             _caseService = caseService;
-            _surveyService = surveyService;
             _fileService = fileService;
             _connectionModel = connectionModel;
         }
@@ -34,14 +31,13 @@ namespace Blaise.Nuget.Api.Api
             unityProvider.RegisterDependencies();
 
             _caseService = unityProvider.Resolve<ICaseService>();
-            _surveyService = unityProvider.Resolve<ISurveyService>();
             _fileService = unityProvider.Resolve<IFileService>();
 
             var configurationProvider = unityProvider.Resolve<IBlaiseConfigurationProvider>();
             _connectionModel = connectionModel ?? configurationProvider.GetConnectionModel();
         }
 
-        public string CreateInstrumentFiles(string serverParkName, string instrumentName, string destinationFilePath)
+        public void CreateDatabaseFile(string serverParkName, string instrumentName, string destinationFilePath)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
@@ -52,8 +48,7 @@ namespace Blaise.Nuget.Api.Api
                 _fileService.DeleteDatabaseFile(destinationFilePath, instrumentName);
             }
 
-            var metaFileName = _surveyService.GetMetaFileName(_connectionModel, instrumentName, serverParkName);
-            var databaseFile =_fileService.CreateDatabaseFile(metaFileName, destinationFilePath, instrumentName);
+            var databaseFile =_fileService.GetDatabaseFilePath(destinationFilePath, instrumentName);
 
             var cases = _caseService.GetDataSet(_connectionModel, instrumentName, serverParkName);
 
@@ -63,8 +58,6 @@ namespace Blaise.Nuget.Api.Api
 
                 cases.MoveNext();
             }
-
-            return databaseFile;
         }
 
         public void UpdateInstrumentFileWithSqlConnection(string instrumentName,

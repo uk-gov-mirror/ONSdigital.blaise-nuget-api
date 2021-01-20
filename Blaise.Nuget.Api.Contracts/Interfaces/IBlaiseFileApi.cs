@@ -2,7 +2,7 @@
 {
     public interface IBlaiseFileApi
     {
-        string CreateInstrumentFiles(string serverParkName, string instrumentName, 
+        void CreateDatabaseFile(string serverParkName, string instrumentName, 
             string destinationFilePath);
 
         void UpdateInstrumentFileWithSqlConnection(string instrumentName,
