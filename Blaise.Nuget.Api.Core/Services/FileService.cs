@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
+using StatNeth.Blaise.API.DataRecord;
 
 namespace Blaise.Nuget.Api.Core.Services
 {
@@ -10,6 +12,7 @@ namespace Blaise.Nuget.Api.Core.Services
     {
         private readonly IBlaiseConfigurationProvider _configurationProvider;
         private readonly IDataInterfaceService _dataInterfaceService;
+        private readonly ICaseService _caseService;
 
         private const string DatabaseFileNameExt = "bdix";
         private const string DatabaseSourceExt = "bdbx";
@@ -17,27 +20,34 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public FileService(
             IBlaiseConfigurationProvider configurationProvider, 
-            IDataInterfaceService dataInterfaceService)
+            IDataInterfaceService dataInterfaceService, 
+            ICaseService caseService)
         {
             _configurationProvider = configurationProvider;
             _dataInterfaceService = dataInterfaceService;
+            _caseService = caseService;
         }
 
-        public bool DatabaseFileExists(string filePath, string instrumentName)
+        public void UpdateInstrumentFileWithData(ConnectionModel connectionModel, string instrumentFile, string instrumentName, string serverParkName)
         {
-            return File.Exists(GetFullFilePath(filePath, instrumentName, DatabaseSourceExt));
-        }
+            var instrumentPath = ExtractInstrumentPackage(instrumentName, instrumentFile);
+            var databaseFile = GetFullFilePath(instrumentPath, instrumentName, DatabaseSourceExt);
 
-        public void DeleteDatabaseFile(string filePath, string instrumentName)
-        {
-            File.Delete(GetFullFilePath(filePath, instrumentName, DatabaseSourceExt));
-        }
+            if (File.Exists(databaseFile))
+            {
+                File.Delete(databaseFile);
+            }
 
-        public string GetDatabaseFilePath(string outputPath, string instrumentName)
-        {
-            Directory.CreateDirectory(outputPath);
+            var cases = _caseService.GetDataSet(connectionModel, instrumentName, serverParkName);
 
-            return GetFullFilePath(outputPath, instrumentName, DatabaseSourceExt);
+            while (!cases.EndOfSet)
+            {
+                _caseService.WriteDataRecord((IDataRecord2)cases.ActiveRecord, databaseFile);
+
+                cases.MoveNext();
+            }
+
+            CreateInstrumentPackage(instrumentPath, instrumentFile);
         }
 
         public void UpdateInstrumentPackageWithSqlConnection(string instrumentName, string instrumentFile)
@@ -55,7 +65,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
         private static string ExtractInstrumentPackage(string instrumentName, string instrumentFile)
         {
-            var instrumentPath = $"{Path.GetDirectoryName(instrumentFile)}\\{instrumentName}\\{Guid.NewGuid()}";
+            var instrumentPath = GetTemporaryPath(instrumentName, instrumentFile);
 
             if (Directory.Exists(instrumentPath))
             {
@@ -66,6 +76,11 @@ namespace Blaise.Nuget.Api.Core.Services
             File.Delete(instrumentFile);
 
             return instrumentPath;
+        }
+
+        private static string GetTemporaryPath(string instrumentName, string instrumentFile)
+        {
+            return $"{Path.GetDirectoryName(instrumentFile)}\\{instrumentName}\\{Guid.NewGuid()}";
         }
 
         private static void CreateInstrumentPackage(string instrumentPath, string instrumentFile)
