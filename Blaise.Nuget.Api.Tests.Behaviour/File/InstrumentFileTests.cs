@@ -14,7 +14,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.File
 
         [Ignore("Integration")]
         [Test]
-        public void Given_A_Valid_Instrument_When_I_Call_CreateInstrumentFile_Then_An_Instrument_Is_Backed_Up_To_File()
+        public void Given_A_Valid_Instrument_When_I_Call_CreateInstrumentFiles_Then_An_Instrument_Is_Backed_Up_To_File()
         {
             //arrange
             const string serverParkName = "LocalDevelopment";
@@ -22,7 +22,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.File
             const string outputPath = @"d:\temp\opn";
 
             //act && assert
-            Assert.DoesNotThrow(() =>_sut.CreateInstrumentFile(serverParkName, instrumentName, outputPath));
+            Assert.DoesNotThrow(() =>_sut.CreateInstrumentFiles(serverParkName, instrumentName, outputPath));
         }
 
         [Ignore("Integration")]

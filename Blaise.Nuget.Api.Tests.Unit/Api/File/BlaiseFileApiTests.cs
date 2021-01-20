@@ -63,7 +63,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.File
         }
 
         [Test]
-        public void Given_Valid_Parameters_When_I_Call_CreateInstrumentFile_The_Correct_Services_Are_Called()
+        public void Given_Valid_Parameters_When_I_Call_CreateInstrumentFiles_The_Correct_Services_Are_Called()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord2>();
@@ -88,7 +88,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.File
                 .Returns(dataSetMock.Object);
 
             //act
-            _sut.CreateInstrumentFile(_serverParkName, _instrumentName, _destinationFilePath);
+            _sut.CreateInstrumentFiles(_serverParkName, _instrumentName, _destinationFilePath);
 
             //assert
             _fileServiceMock.Verify(f => f.DeleteDatabaseFile(_destinationFilePath,
@@ -102,7 +102,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.File
         }
 
         [Test]
-        public void Given_Database_Already_Exists_In_DestinationPath_When_I_Call_CreateInstrumentFile_The_Database_Is_Deleted()
+        public void Given_Database_Already_Exists_In_DestinationPath_When_I_Call_CreateInstrumentFiles_The_Database_Is_Deleted()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord2>();
@@ -127,7 +127,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.File
                 .Returns(dataSetMock.Object);
 
             //act
-            _sut.CreateInstrumentFile(_serverParkName, _instrumentName, _destinationFilePath);
+            _sut.CreateInstrumentFiles(_serverParkName, _instrumentName, _destinationFilePath);
 
             //assert
             _fileServiceMock.Verify(f => f.DeleteDatabaseFile(_destinationFilePath,
@@ -135,55 +135,55 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.File
         }
 
         [Test]
-        public void Given_An_Empty_ServerParkName_When_I_Call_CreateInstrumentFile_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_ServerParkName_When_I_Call_CreateInstrumentFiles_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateInstrumentFile(string.Empty, 
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateInstrumentFiles(string.Empty, 
                 _instrumentName, _destinationFilePath));
             Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_Null_ServerParkName_When_I_Call_CreateInstrumentFile_Then_An_ArgumentException_Is_Thrown()
+        public void Given_A_Null_ServerParkName_When_I_Call_CreateInstrumentFiles_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateInstrumentFile(null, 
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateInstrumentFiles(null, 
                 _instrumentName, _destinationFilePath));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
         [Test]
-        public void Given_An_Empty_InstrumentName_When_I_Call_CreateInstrumentFile_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_InstrumentName_When_I_Call_CreateInstrumentFiles_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateInstrumentFile(_serverParkName,
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateInstrumentFiles(_serverParkName,
                 string.Empty, _destinationFilePath));
             Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_Null_InstrumentName_When_I_Call_CreateInstrumentFile_Then_An_ArgumentException_Is_Thrown()
+        public void Given_A_Null_InstrumentName_When_I_Call_CreateInstrumentFiles_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateInstrumentFile(_serverParkName, 
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateInstrumentFiles(_serverParkName, 
                 null, _destinationFilePath));
             Assert.AreEqual("instrumentName", exception.ParamName);
         }
 
         [Test]
-        public void Given_An_Empty_DestinationFilePath_When_I_Call_CreateInstrumentFile_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_DestinationFilePath_When_I_Call_CreateInstrumentFiles_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateInstrumentFile(_serverParkName, 
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateInstrumentFiles(_serverParkName, 
                 _instrumentName, string.Empty));
             Assert.AreEqual("A value for the argument 'destinationFilePath' must be supplied", exception.Message);
         }
 
         [Test]
-        public void Given_A_Null_DestinationFilePath_When_I_Call_CreateInstrumentFile_Then_An_ArgumentException_Is_Thrown()
+        public void Given_A_Null_DestinationFilePath_When_I_Call_CreateInstrumentFiles_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateInstrumentFile(_serverParkName, 
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateInstrumentFiles(_serverParkName, 
                 _instrumentName, null));
             Assert.AreEqual("destinationFilePath", exception.ParamName);
         }

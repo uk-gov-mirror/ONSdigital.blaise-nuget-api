@@ -41,7 +41,7 @@ namespace Blaise.Nuget.Api.Api
             _connectionModel = connectionModel ?? configurationProvider.GetConnectionModel();
         }
 
-        public string CreateInstrumentFile(string serverParkName, string instrumentName, string destinationFilePath)
+        public string CreateInstrumentFiles(string serverParkName, string instrumentName, string destinationFilePath)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
