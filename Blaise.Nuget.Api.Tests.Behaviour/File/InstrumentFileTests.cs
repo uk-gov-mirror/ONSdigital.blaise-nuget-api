@@ -14,19 +14,6 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.File
 
         [Ignore("Integration")]
         [Test]
-        public void Given_A_Valid_Instrument_When_I_Call_CreateDatabaseFile_Then_An_Instrument_Is_Backed_Up_To_File()
-        {
-            //arrange
-            const string serverParkName = "LocalDevelopment";
-            const string instrumentName = "opn2101a";
-            const string outputPath = @"d:\temp\opn";
-
-            //act && assert
-            Assert.DoesNotThrow(() =>_sut.CreateDatabaseFile(serverParkName, instrumentName, outputPath));
-        }
-
-        [Ignore("Integration")]
-        [Test]
         public void Given_I_Call_UpdateInstrumentFileWithSqlConnection_Then_The_Instrument_Is_Updated()
         {
             //arrange
