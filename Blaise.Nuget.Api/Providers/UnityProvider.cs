@@ -39,6 +39,7 @@ namespace Blaise.Nuget.Api.Providers
             //data link providers
             _unityContainer.RegisterSingleton<ILocalDataLinkProvider, LocalDataLinkProvider>();
             _unityContainer.RegisterSingleton<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
+            _unityContainer.RegisterType<IDataInterfaceProvider, DataInterfaceProvider>();
 
             //services
             _unityContainer.RegisterType<IDataModelService, DataModelService>();
@@ -52,7 +53,6 @@ namespace Blaise.Nuget.Api.Providers
             _unityContainer.RegisterType<IFileService, FileService>();
             _unityContainer.RegisterType<IDayBatchService, DayBatchService>();
             _unityContainer.RegisterType<IRoleService, RoleService>();
-            _unityContainer.RegisterType<IDataInterfaceService, DataInterfaceService>();
         }
 
         public T Resolve<T>()

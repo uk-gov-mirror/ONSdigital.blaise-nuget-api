@@ -1,12 +1,12 @@
-﻿using Blaise.Nuget.Api.Core.Services;
+﻿using Blaise.Nuget.Api.Core.Interfaces.Factories;
+using Blaise.Nuget.Api.Core.Providers;
 using Moq;
 using NUnit.Framework;
-using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using StatNeth.Blaise.API.DataInterface;
 
-namespace Blaise.Nuget.Api.Tests.Unit.Services
+namespace Blaise.Nuget.Api.Tests.Unit.Providers
 {
-    public class DataInterfaceServiceTests
+    public class DataInterfaceProviderTests
     {
         private Mock<IDataInterfaceFactory> _dataInterfaceFactoryMock;
 
@@ -15,9 +15,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private readonly string _sourceFile;
         private readonly string _connectionString;
 
-        private DataInterfaceService _sut;
+        private DataInterfaceProvider _sut;
 
-        public DataInterfaceServiceTests()
+        public DataInterfaceProviderTests()
         {
             _sourceFile = "OPN2101A.bdbx";
             _connectionString = "testConnection";
@@ -39,7 +39,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataInterfaceFactoryMock.Setup(d => d.GetDataInterfaceForSql(It.IsAny<string>()))
                 .Returns(_dataInterfaceMock.Object);
 
-            _sut = new DataInterfaceService(_dataInterfaceFactoryMock.Object);
+            _sut = new DataInterfaceProvider(_dataInterfaceFactoryMock.Object);
         }
         
         [Test]
@@ -56,7 +56,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataInterfaceFactoryMock.Verify(v => v.GetDataInterfaceForFile(_sourceFile), Times.Once);
             _dataInterfaceMock.Verify(v => v.CreateTableDefinitions(), Times.Once);
             _dataInterfaceMock.Verify(v => v.CreateDatabaseObjects(null, true), Times.Once);
+            _dataInterfaceFactoryMock.Verify(v => v.UpdateDataFileSource(_dataInterfaceMock.Object, _sourceFile), Times.Once);
             _dataInterfaceMock.Verify(v => v.SaveToFile(true), Times.Once);
+
         }
 
         [Test]
