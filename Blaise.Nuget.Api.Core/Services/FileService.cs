@@ -11,7 +11,7 @@ namespace Blaise.Nuget.Api.Core.Services
     public class FileService : IFileService
     {
         private readonly IBlaiseConfigurationProvider _configurationProvider;
-        private readonly IDataInterfaceService _dataInterfaceService;
+        private readonly IDataInterfaceProvider _dataInterfaceService;
         private readonly ICaseService _caseService;
 
         private const string DatabaseFileNameExt = "bdix";
@@ -20,7 +20,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public FileService(
             IBlaiseConfigurationProvider configurationProvider, 
-            IDataInterfaceService dataInterfaceService, 
+            IDataInterfaceProvider dataInterfaceService, 
             ICaseService caseService)
         {
             _configurationProvider = configurationProvider;
@@ -31,18 +31,20 @@ namespace Blaise.Nuget.Api.Core.Services
         public void UpdateInstrumentFileWithData(ConnectionModel connectionModel, string instrumentFile, string instrumentName, string serverParkName)
         {
             var instrumentPath = ExtractInstrumentPackage(instrumentName, instrumentFile);
-            var databaseFile = GetFullFilePath(instrumentPath, instrumentName, DatabaseSourceExt);
+            var dataSourceFilePath = GetFullFilePath(instrumentPath, instrumentName, DatabaseSourceExt);
+            var dataInterfaceFilePath = GetFullFilePath(instrumentPath, instrumentName, DatabaseFileNameExt);
+            var dataModelFilePath = GetFullFilePath(instrumentPath, instrumentName, DatabaseModelExt);
 
-            if (File.Exists(databaseFile))
-            {
-                File.Delete(databaseFile);
-            }
+            DeleteFileIfExists(dataSourceFilePath);
+
+            _dataInterfaceService.CreateFileDataInterface(dataSourceFilePath, 
+                dataInterfaceFilePath, dataModelFilePath);
 
             var cases = _caseService.GetDataSet(connectionModel, instrumentName, serverParkName);
 
             while (!cases.EndOfSet)
             {
-                _caseService.WriteDataRecord((IDataRecord2)cases.ActiveRecord, databaseFile);
+                _caseService.WriteDataRecord((IDataRecord2)cases.ActiveRecord, dataInterfaceFilePath);
 
                 cases.MoveNext();
             }
@@ -63,6 +65,11 @@ namespace Blaise.Nuget.Api.Core.Services
             CreateInstrumentPackage(instrumentPath, instrumentFile);
         }
 
+        private static string GetTemporaryPath(string instrumentName, string instrumentFile)
+        {
+            return $"{Path.GetDirectoryName(instrumentFile)}\\{instrumentName}\\{Guid.NewGuid()}";
+        }
+
         private static string ExtractInstrumentPackage(string instrumentName, string instrumentFile)
         {
             var instrumentPath = GetTemporaryPath(instrumentName, instrumentFile);
@@ -78,15 +85,18 @@ namespace Blaise.Nuget.Api.Core.Services
             return instrumentPath;
         }
 
-        private static string GetTemporaryPath(string instrumentName, string instrumentFile)
-        {
-            return $"{Path.GetDirectoryName(instrumentFile)}\\{instrumentName}\\{Guid.NewGuid()}";
-        }
-
         private static void CreateInstrumentPackage(string instrumentPath, string instrumentFile)
         {
             ZipFile.CreateFromDirectory(instrumentPath, instrumentFile);
             Directory.Delete(instrumentPath, true);
+        }
+
+        private void DeleteFileIfExists(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
         }
 
         private static string GetFullFilePath(string filePath, string instrumentName, string extension)
