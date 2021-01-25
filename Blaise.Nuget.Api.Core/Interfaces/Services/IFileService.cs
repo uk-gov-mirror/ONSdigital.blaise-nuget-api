@@ -1,11 +1,13 @@
-﻿namespace Blaise.Nuget.Api.Core.Interfaces.Services
+﻿using Blaise.Nuget.Api.Contracts.Models;
+
+namespace Blaise.Nuget.Api.Core.Interfaces.Services
 {
     public interface IFileService
     {
-        bool DatabaseFileExists(string databaseFile, string instrumentName);
+        void UpdateInstrumentFileWithData(ConnectionModel connectionModel, string instrumentFile,
+            string instrumentName, string serverParkName);
 
-        void DeleteDatabaseFile(string databaseFile, string instrumentName);
-
-        string CreateDatabaseFile(string metaFileName, string outputPath, string instrumentName);
+        void UpdateInstrumentPackageWithSqlConnection(string instrumentName,
+            string instrumentFile);
     }
 }

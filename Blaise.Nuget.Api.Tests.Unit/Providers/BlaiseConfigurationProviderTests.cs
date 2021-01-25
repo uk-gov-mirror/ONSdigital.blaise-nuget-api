@@ -37,17 +37,6 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
         }
 
         [Test]
-        public void Given_LibraryDirectory_Value_Is_Set_When_I_Call_LibraryDirectory_I_Get_The_Correct_Value_Back()
-        {
-            //act
-            var result = _sut.LibraryDirectory;
-
-            //assert
-            Assert.NotNull(result);
-            Assert.AreEqual("LibraryDirectoryTest", result);
-        }
-
-        [Test]
         public void Given_ConnectionExpiresInMinutes_Value_Is_Set_When_I_Call_ConnectionExpiresInMinutes_I_Get_The_Correct_Value_Back()
         {
             //act
@@ -56,6 +45,17 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
             //assert
             Assert.NotNull(result);
             Assert.AreEqual(60, result);
+        }
+
+        [Test]
+        public void Given_ConnectionString_Value_Is_Set_When_I_Call_DatabaseConnectionString_I_Get_The_Correct_Value_Back()
+        {
+            //act
+            var result = _sut.DatabaseConnectionString;
+
+            //assert
+            Assert.NotNull(result);
+            Assert.AreEqual("TestConnectionString", result);
         }
     }
 }

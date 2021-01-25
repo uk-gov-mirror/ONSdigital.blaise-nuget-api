@@ -23,7 +23,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         Guid GetIdOfSurvey(string instrumentName, string serverParkName);
 
-        void InstallSurvey(string instrumentFile, SurveyInterviewType surveyInterviewType, string serverParkName);
+        void InstallSurvey(string instrumentName, string serverParkName, string instrumentFile, SurveyInterviewType surveyInterviewType);
 
         void UninstallSurvey(string instrumentName, string serverParkName);
 
