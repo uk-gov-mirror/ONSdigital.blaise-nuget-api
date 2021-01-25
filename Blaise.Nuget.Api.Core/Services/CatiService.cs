@@ -22,12 +22,24 @@ namespace Blaise.Nuget.Api.Core.Services
             _surveyService = surveyService;
         }
 
-        public IEnumerable<ISurvey> GetInstalledSurveys(ConnectionModel connectionModel, string serverPark)
+        public IEnumerable<ISurvey> GetInstalledSurveys(ConnectionModel connectionModel, string serverParkName)
         {
-            var catiManagement = _remoteCatiManagementServerProvider.GetCatiManagementForServerPark(connectionModel, serverPark);
-            var instruments = catiManagement.GetInstalledSurveys().Keys;
+            var instruments = GetInstalledCatiSurveys(connectionModel, serverParkName);
+            var instrumentNames = instruments.Keys;
 
-            return instruments.Select(instrument => _surveyService.GetSurvey(connectionModel, instrument, serverPark)).ToList();
+            return instrumentNames.Select(instrumentName => _surveyService.GetSurvey(connectionModel, instrumentName, serverParkName)).ToList();
+        }
+
+        public ISurvey GetInstalledSurvey(ConnectionModel connectionModel, string instrumentName, string serverParkName)
+        {
+            var instruments = GetInstalledCatiSurveys(connectionModel, serverParkName);
+
+            if (!instruments.ContainsKey(instrumentName))
+            {
+                throw new DataNotFoundException($"No survey called '{instrumentName}' was found on server park '{serverParkName}'");
+            }
+
+            return _surveyService.GetSurvey(connectionModel, instrumentName, serverParkName);
         }
 
         public void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayBatchDate)
@@ -108,6 +120,12 @@ namespace Blaise.Nuget.Api.Core.Services
                 .RemoveSurveyDays(surveyDays);
 
             catiManager.SaveSpecification();
+        }
+
+        private IDictionary<string, Guid> GetInstalledCatiSurveys(ConnectionModel connectionModel, string serverParkName)
+        {
+            var catiManagement = _remoteCatiManagementServerProvider.GetCatiManagementForServerPark(connectionModel, serverParkName);
+            return catiManagement.GetInstalledSurveys();
         }
     }
 }

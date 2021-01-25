@@ -11,7 +11,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
 {
     public class BlaiseCatiApiTests
     {
-        private Mock<ICatiService> _dayBatchServiceMock;
+        private Mock<ICatiService> _catiServiceMock;
 
         private readonly string _serverParkName;
         private readonly string _instrumentName;
@@ -29,9 +29,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
         [SetUp]
         public void SetUpTests()
         {
-            _dayBatchServiceMock = new Mock<ICatiService>();
+            _catiServiceMock = new Mock<ICatiService>();
 
-            _sut = new BlaiseCatiApi(_dayBatchServiceMock.Object, _connectionModel);
+            _sut = new BlaiseCatiApi(_catiServiceMock.Object, _connectionModel);
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
             _sut.GetInstalledSurveys(_serverParkName);
 
             //assert
-            _dayBatchServiceMock.Verify(v => v.GetInstalledSurveys(_connectionModel, _serverParkName), Times.Once);
+            _catiServiceMock.Verify(v => v.GetInstalledSurveys(_connectionModel, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -77,16 +77,55 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
         }
 
         [Test]
-        public void Given_Valid_Arguments_When_I_Call_CreateDayBatchForSurvey_Then_The_Correct_Service_Method_Is_Called()
+        public void Given_Valid_Arguments_When_I_Call_GetInstalledSurvey_Then_The_Correct_Service_Method_Is_Called()
         {
-            //arrange
-            var dayBatchDate = DateTime.Now;
-
             //act
-            _sut.CreateDayBatch(_instrumentName, _serverParkName, dayBatchDate);
+            _sut.GetInstalledSurvey(_instrumentName, _serverParkName);
 
             //assert
-            _dayBatchServiceMock.Verify(v => v.CreateDayBatch(_connectionModel, _instrumentName, _serverParkName, dayBatchDate), Times.Once);
+            _catiServiceMock.Verify(v => v.GetInstalledSurvey(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_GetInstalledSurvey_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetInstalledSurvey(string.Empty, _serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_GetInstalledSurvey_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetInstalledSurvey(null, _serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_GetInstalledSurvey_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetInstalledSurvey(_instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_GetInstalledSurvey_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetInstalledSurvey(_instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_CreateDayBatchForSurvey_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //act
+            _sut.GetInstalledSurvey(_instrumentName, _serverParkName);
+
+            //assert
+            _catiServiceMock.Verify(v => v.GetInstalledSurvey(_connectionModel, _instrumentName, _serverParkName), Times.Once);
         }
 
         [Test]
@@ -143,7 +182,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
             _sut.SetSurveyDay(_instrumentName, _serverParkName, surveyDay);
 
             //assert
-            _dayBatchServiceMock.Verify(v => v.SetSurveyDay(_connectionModel, _instrumentName, _serverParkName, surveyDay), Times.Once);
+            _catiServiceMock.Verify(v => v.SetSurveyDay(_connectionModel, _instrumentName, _serverParkName, surveyDay), Times.Once);
         }
 
         [Test]
@@ -206,7 +245,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
             _sut.SetSurveyDays(_instrumentName, _serverParkName, surveyDays);
 
             //assert
-            _dayBatchServiceMock.Verify(v => v.SetSurveyDays(_connectionModel, _instrumentName, _serverParkName, surveyDays), Times.Once);
+            _catiServiceMock.Verify(v => v.SetSurveyDays(_connectionModel, _instrumentName, _serverParkName, surveyDays), Times.Once);
         }
 
         [Test]
@@ -278,7 +317,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
                 new DateTime(2020, 12, 11)
             };
             //arrange
-            _dayBatchServiceMock.Setup(p => p.GetSurveyDays(_connectionModel, _instrumentName, _serverParkName)).Returns(surveyDays);
+            _catiServiceMock.Setup(p => p.GetSurveyDays(_connectionModel, _instrumentName, _serverParkName)).Returns(surveyDays);
 
             //act            
             var result = _sut.GetSurveyDays(_instrumentName, _serverParkName);
@@ -294,7 +333,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
         {
             var surveyDays = new List<DateTime>();
             //arrange
-            _dayBatchServiceMock.Setup(p => p.GetSurveyDays(_connectionModel, _instrumentName, _serverParkName)).Returns(surveyDays);
+            _catiServiceMock.Setup(p => p.GetSurveyDays(_connectionModel, _instrumentName, _serverParkName)).Returns(surveyDays);
 
             //act            
             var result = _sut.GetSurveyDays(_instrumentName, _serverParkName);
@@ -347,7 +386,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
             _sut.RemoveSurveyDay(_instrumentName, _serverParkName, surveyDay);
 
             //assert
-            _dayBatchServiceMock.Verify(v => v.RemoveSurveyDay(_connectionModel, _instrumentName, _serverParkName, surveyDay), Times.Once);
+            _catiServiceMock.Verify(v => v.RemoveSurveyDay(_connectionModel, _instrumentName, _serverParkName, surveyDay), Times.Once);
         }
 
         [Test]
@@ -408,7 +447,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
             _sut.RemoveSurveyDays(_instrumentName, _serverParkName, surveyDays);
 
             //assert
-            _dayBatchServiceMock.Verify(v => v.RemoveSurveyDays(_connectionModel, _instrumentName, _serverParkName, surveyDays), Times.Once);
+            _catiServiceMock.Verify(v => v.RemoveSurveyDays(_connectionModel, _instrumentName, _serverParkName, surveyDays), Times.Once);
         }
 
         [Test]
