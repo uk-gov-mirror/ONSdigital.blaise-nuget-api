@@ -40,7 +40,7 @@ namespace Blaise.Nuget.Api.Core.Services
             var surveyDays = new List<DateTime>();
             var catiManagement = GetCatiManagementForServerPark(connectionModel, serverParkName);
             var surveyDateCollection = catiManagement
-                .LoadCatiInstrumentManager(instrumentName).Specification.SurveyDays;
+                .LoadCatiInstrumentManager(instrumentName)?.Specification?.SurveyDays;
 
             if (surveyDateCollection == null || surveyDateCollection.Count == 0)
             {
