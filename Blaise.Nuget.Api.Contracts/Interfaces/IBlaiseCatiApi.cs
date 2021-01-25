@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Contracts.Interfaces
 {
     public interface IBlaiseCatiApi
     {
+        IEnumerable<ISurvey> GetInstalledSurveys(string serverParkName);
         void CreateDayBatch(string instrumentName, string serverParkName, DateTime dayBatchDate);
         List<DateTime> GetSurveyDays(string instrumentName, string serverParkName);
         void SetSurveyDay(string instrumentName, string serverParkName, DateTime surveyDay);

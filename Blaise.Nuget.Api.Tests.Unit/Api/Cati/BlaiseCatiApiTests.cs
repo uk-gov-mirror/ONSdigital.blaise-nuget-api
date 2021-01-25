@@ -11,7 +11,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
 {
     public class BlaiseCatiApiTests
     {
-        private Mock<IDayBatchService> _dayBatchServiceMock;
+        private Mock<ICatiService> _dayBatchServiceMock;
 
         private readonly string _serverParkName;
         private readonly string _instrumentName;
@@ -29,7 +29,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
         [SetUp]
         public void SetUpTests()
         {
-            _dayBatchServiceMock = new Mock<IDayBatchService>();
+            _dayBatchServiceMock = new Mock<ICatiService>();
 
             _sut = new BlaiseCatiApi(_dayBatchServiceMock.Object, _connectionModel);
         }
@@ -48,6 +48,32 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
             //act && assert
             // ReSharper disable once ObjectCreationAsStatement
             Assert.DoesNotThrow(() => new BlaiseCatiApi(new ConnectionModel()));
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_GetInstalledSurveys_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //act
+            _sut.GetInstalledSurveys(_serverParkName);
+
+            //assert
+            _dayBatchServiceMock.Verify(v => v.GetInstalledSurveys(_connectionModel, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_GetInstalledSurveys_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.GetInstalledSurveys(string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_GetInstalledSurveys_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetInstalledSurveys(null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
         [Test]

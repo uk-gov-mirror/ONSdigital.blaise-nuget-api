@@ -40,6 +40,7 @@ namespace Blaise.Nuget.Api.Providers
             _unityContainer.RegisterSingleton<ILocalDataLinkProvider, LocalDataLinkProvider>();
             _unityContainer.RegisterSingleton<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
             _unityContainer.RegisterType<IDataInterfaceProvider, DataInterfaceProvider>();
+            _unityContainer.RegisterType<IRemoteCatiManagementServerProvider, RemoteCatiManagementServerProvider>();
 
             //services
             _unityContainer.RegisterType<IDataModelService, DataModelService>();
@@ -51,7 +52,7 @@ namespace Blaise.Nuget.Api.Providers
             _unityContainer.RegisterType<ISurveyService, SurveyService>();
             _unityContainer.RegisterType<IUserService, UserService>();
             _unityContainer.RegisterType<IFileService, FileService>();
-            _unityContainer.RegisterType<IDayBatchService, DayBatchService>();
+            _unityContainer.RegisterType<ICatiService, CatiService>();
             _unityContainer.RegisterType<IRoleService, RoleService>();
         }
 
