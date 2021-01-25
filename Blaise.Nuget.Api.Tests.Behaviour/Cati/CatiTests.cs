@@ -19,6 +19,14 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Cati
 
         [Ignore("Integration")]
         [Test]
+        public void Given_An_Instrument_Is_Installed_When_I_Call_GetInstalledSurveys_The_Correct_Instruments_Are_Returned()
+        {
+            var result = _sut.GetInstalledSurveys(ServerParkName);
+            Assert.NotNull(result);
+        }
+
+        [Ignore("Integration")]
+        [Test]
         public void Given_An_Instrument_Is_Installed_And_Has_SurveyDays_When_I_Call_GetSurveyDays_They_Are_Returned()
         {
             var result = _sut.GetSurveyDays(SurveyName, ServerParkName);

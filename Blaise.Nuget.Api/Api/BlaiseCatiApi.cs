@@ -6,19 +6,20 @@ using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Extensions;
 using Blaise.Nuget.Api.Providers;
+using StatNeth.Blaise.API.ServerManager;
 
 namespace Blaise.Nuget.Api.Api
 {
     public class BlaiseCatiApi : IBlaiseCatiApi
     {
-        private readonly IDayBatchService _dayBatchService;
+        private readonly ICatiService _catiService;
         private readonly ConnectionModel _connectionModel;
 
         internal BlaiseCatiApi(
-            IDayBatchService dayBatchService,
+            ICatiService catiService,
             ConnectionModel connectionModel)
         {
-            _dayBatchService = dayBatchService;
+            _catiService = catiService;
             _connectionModel = connectionModel;
         }
 
@@ -27,18 +28,25 @@ namespace Blaise.Nuget.Api.Api
             var unityProvider = new UnityProvider();
             unityProvider.RegisterDependencies();
 
-            _dayBatchService = unityProvider.Resolve<IDayBatchService>();
+            _catiService = unityProvider.Resolve<ICatiService>();
             
             var configurationProvider = unityProvider.Resolve<IBlaiseConfigurationProvider>();
             _connectionModel = connectionModel ?? configurationProvider.GetConnectionModel();
         }
         
+        public IEnumerable<ISurvey> GetInstalledSurveys(string serverParkName)
+        {
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _catiService.GetInstalledSurveys(_connectionModel, serverParkName);
+        }
+
         public void CreateDayBatch(string instrumentName, string serverParkName, DateTime dayBatchDate)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            _dayBatchService.CreateDayBatch(_connectionModel, instrumentName, serverParkName, dayBatchDate);
+            _catiService.CreateDayBatch(_connectionModel, instrumentName, serverParkName, dayBatchDate);
         }
 
         public List<DateTime> GetSurveyDays(string instrumentName, string serverParkName)
@@ -46,7 +54,7 @@ namespace Blaise.Nuget.Api.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            return _dayBatchService.GetSurveyDays(_connectionModel, instrumentName, serverParkName);
+            return _catiService.GetSurveyDays(_connectionModel, instrumentName, serverParkName);
         }
 
         public void SetSurveyDay(string instrumentName, string serverParkName, DateTime surveyDay)
@@ -54,7 +62,7 @@ namespace Blaise.Nuget.Api.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            _dayBatchService.SetSurveyDay(_connectionModel, instrumentName, serverParkName, surveyDay);
+            _catiService.SetSurveyDay(_connectionModel, instrumentName, serverParkName, surveyDay);
         }
 
         public void SetSurveyDays(string instrumentName, string serverParkName, List<DateTime> surveyDays)
@@ -62,7 +70,7 @@ namespace Blaise.Nuget.Api.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            _dayBatchService.SetSurveyDays(_connectionModel, instrumentName, serverParkName, surveyDays);
+            _catiService.SetSurveyDays(_connectionModel, instrumentName, serverParkName, surveyDays);
         }
 
         public void RemoveSurveyDay(string instrumentName, string serverParkName, DateTime surveyDay)
@@ -70,7 +78,7 @@ namespace Blaise.Nuget.Api.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            _dayBatchService.RemoveSurveyDay(_connectionModel, instrumentName, serverParkName, surveyDay);
+            _catiService.RemoveSurveyDay(_connectionModel, instrumentName, serverParkName, surveyDay);
         }
 
         public void RemoveSurveyDays(string instrumentName, string serverParkName, List<DateTime> surveyDays)
@@ -78,7 +86,7 @@ namespace Blaise.Nuget.Api.Api
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
 
-            _dayBatchService.RemoveSurveyDays(_connectionModel, instrumentName, serverParkName, surveyDays);
+            _catiService.RemoveSurveyDays(_connectionModel, instrumentName, serverParkName, surveyDays);
         }
     }
 }

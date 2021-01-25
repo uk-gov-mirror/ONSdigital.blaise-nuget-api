@@ -21,8 +21,6 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         Guid GetInstrumentId(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
-        string GetMetaFileName(ConnectionModel connectionModel, string instrumentName, string serverParkName);
-        
         void InstallInstrument(ConnectionModel connectionModel, string instrumentName, string serverParkName, 
             string instrumentFile, SurveyInterviewType surveyInterviewType);
         
