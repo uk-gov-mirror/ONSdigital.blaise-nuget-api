@@ -63,7 +63,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_GetInstalledSurveys_Then_The_Correct_Services_Are_Called()
+        public void Given_Surveys_Are_Installed_When_I_Call_GetInstalledSurveys_Then_The_Correct_Services_Are_Called()
         {
             //arrange
             const string instrument1 = "OPN2004a";
@@ -110,7 +110,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
                 .Returns(surveyMock.Object);
 
             //act
-            var result =_sut.GetInstalledSurveys(_connectionModel, _serverParkName);
+            var result = _sut.GetInstalledSurveys(_connectionModel, _serverParkName);
 
             //assert
             Assert.IsNotNull(result);
@@ -123,16 +123,98 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         {
             //arrange
             var installedSurveys = new Dictionary<string, Guid>();
-            
+
             _catiManagementServerMock.Setup(c => c.GetInstalledSurveys()).Returns(installedSurveys);
 
             //act
-            var result= _sut.GetInstalledSurveys(_connectionModel, _serverParkName);
+            var result = _sut.GetInstalledSurveys(_connectionModel, _serverParkName);
 
             //assert
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<IEnumerable<ISurvey>>(result);
             Assert.IsEmpty(result);
+        }
+
+        [Test]
+        public void Given_A_Survey_Is_Installed_When_I_Call_GetInstalledSurvey_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            const string instrument1 = "OPN2004a";
+            const string instrument2 = "OPN2010a";
+            var installedSurveys = new Dictionary<string, Guid>
+            {
+                {instrument1, Guid.NewGuid()},
+                {instrument2, Guid.NewGuid()},
+                {_instrumentName, Guid.NewGuid()}
+            };
+
+            var surveyMock = new Mock<ISurvey>();
+
+            _catiManagementServerMock.Setup(c => c.GetInstalledSurveys()).Returns(installedSurveys);
+            _surveyServiceMock.Setup(s => s.GetSurvey(_connectionModel, It.IsAny<string>(), _serverParkName))
+                .Returns(surveyMock.Object);
+
+            //act
+            _sut.GetInstalledSurvey(_connectionModel, _instrumentName, _serverParkName);
+
+            //assert
+            _catiProviderMock.Verify(v => v.GetCatiManagementForServerPark(_connectionModel, _serverParkName),
+                Times.Once);
+
+            _surveyServiceMock.Verify(v => v.GetSurvey(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+            _surveyServiceMock.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void Given_A_Survey_Is_Installed_When_I_Call_GetInstalledSurvey_Then_The_Correct_Survey_Is_Returned()
+        {
+            //arrange
+            const string instrument1 = "OPN2004a";
+            const string instrument2 = "OPN2010a";
+            var installedSurveys = new Dictionary<string, Guid>
+            {
+                {instrument1, Guid.NewGuid()},
+                {instrument2, Guid.NewGuid()},
+                {_instrumentName, Guid.NewGuid()}
+            };
+
+            var surveyMock = new Mock<ISurvey>();
+
+            _catiManagementServerMock.Setup(c => c.GetInstalledSurveys()).Returns(installedSurveys);
+            _surveyServiceMock.Setup(s => s.GetSurvey(_connectionModel, _instrumentName, _serverParkName))
+                .Returns(surveyMock.Object);
+
+            //act
+            var result = _sut.GetInstalledSurvey(_connectionModel, _instrumentName, _serverParkName);
+
+            //assert
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<ISurvey>(result);
+            Assert.AreSame(surveyMock.Object, result);
+        }
+
+        [Test]
+        public void Given_A_Survey_Is_Not_Installed_When_I_Call_GetInstalledSurvey_Then_A_DataNotFound_Exception_Is_Thrown()
+        {
+            //arrange
+            const string instrument1 = "OPN2004a";
+            const string instrument2 = "OPN2010a";
+            var installedSurveys = new Dictionary<string, Guid>
+            {
+                {instrument1, Guid.NewGuid()},
+                {instrument2, Guid.NewGuid()},
+            };
+
+            var surveyMock = new Mock<ISurvey>();
+
+            _catiManagementServerMock.Setup(c => c.GetInstalledSurveys()).Returns(installedSurveys);
+            _surveyServiceMock.Setup(s => s.GetSurvey(_connectionModel, It.IsAny<string>(), _serverParkName))
+                .Returns(surveyMock.Object);
+
+            //act && assert
+            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetInstalledSurvey(_connectionModel, _instrumentName, _serverParkName));
+            Assert.AreEqual($"No survey called '{_instrumentName}' was found on server park '{_serverParkName}'", exception.Message);
         }
 
         [Test]

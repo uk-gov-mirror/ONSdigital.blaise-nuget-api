@@ -41,6 +41,14 @@ namespace Blaise.Nuget.Api.Api
             return _catiService.GetInstalledSurveys(_connectionModel, serverParkName);
         }
 
+        public ISurvey GetInstalledSurvey(string instrumentName, string serverParkName)
+        {
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            return _catiService.GetInstalledSurvey(_connectionModel, instrumentName, serverParkName);
+        }
+
         public void CreateDayBatch(string instrumentName, string serverParkName, DateTime dayBatchDate)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");

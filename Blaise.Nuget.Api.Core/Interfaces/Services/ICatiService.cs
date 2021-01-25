@@ -7,7 +7,9 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 {
     public interface ICatiService
     {
-        IEnumerable<ISurvey> GetInstalledSurveys(ConnectionModel connectionModel, string serverPark);
+        IEnumerable<ISurvey> GetInstalledSurveys(ConnectionModel connectionModel, string serverParkName);
+        
+        ISurvey GetInstalledSurvey(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         void CreateDayBatch(ConnectionModel connectionModel, string instrumentName, string serverParkName, DateTime dayBatchDate);
         List<DateTime> GetSurveyDays(ConnectionModel connectionModel, string instrumentName, string serverParkName);
