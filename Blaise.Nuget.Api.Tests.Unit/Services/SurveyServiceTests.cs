@@ -109,6 +109,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [TestCase("TestInstrumentName", true)]
+        [TestCase("testinstrumentname", true)]
         [TestCase("InstrumentNotFound", false)]
         public void Given_I_Call_SurveyExists_Then_I_Get_A_Correct_Value_Returned(string instrumentName, bool exists)
         {
@@ -165,11 +166,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.AreEqual($"No surveys found for server park '{serverParkName}'", exception.Message);
         }
 
-        [Test]
-        public void Given_I_Call_GetSurvey_Then_I_Get_The_Correct_Survey_Returned()
+        [TestCase("Instrument1")]
+        [TestCase("instrument1")]
+        [TestCase("INSTRUMENT1")]
+        public void Given_I_Call_GetSurvey_Then_I_Get_The_Correct_Survey_Returned(string instrument1Name)
         {
             //arrange
-            const string instrument1Name = "Instrument1";
             var survey1Mock = new Mock<ISurvey>();
             survey1Mock.Setup(s => s.Name).Returns(instrument1Name);
 
@@ -394,14 +396,16 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_I_Call_GetDataFileName_Then_The_Correct_Name_Is_Returned()
+        public void Given_Valid_Arguments_When_I_Call_InstallInstrument_Then_The_Correct_Services_Are_Called()
         {
             //arrange
-            const string dataFileName = "DataFileName";
+            const string instrumentFile = @"d:\\opn2101a.pkg";
+            const string fileName = "OPN.bdix";
+            const string dataModelFileName = "OPN.bmix";
 
             var configurationMock = new Mock<IConfiguration>();
-            configurationMock.Setup(c => c.DataFileName).Returns(dataFileName);
-
+            configurationMock.Setup(c => c.DataFileName).Returns(fileName);
+            configurationMock.Setup(c => c.MetaFileName).Returns(dataModelFileName);
 
             var configurationItems = new List<IConfiguration> { configurationMock.Object };
 
@@ -411,21 +415,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _surveyMock.Setup(s => s.Configuration).Returns(configurationCollectionMock.Object);
 
             //act
-            var result = _sut.GetDataFileName(_connectionModel, _instrumentName, _serverParkName);
-
-            //assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(dataFileName, result);
-        }
-
-        [Test]
-        public void Given_Valid_Arguments_When_I_Call_InstallInstrument_Then_The_Correct_Services_Are_Called()
-        {
-            //arrange
-            const string instrumentFile = @"d:\\opn2101a.pkg";
-
-            //act
-            _sut.InstallInstrument(_connectionModel, instrumentFile, SurveyInterviewType.Cati, _serverParkName);
+            _sut.InstallInstrument(_connectionModel,_instrumentName, _serverParkName,
+                instrumentFile, SurveyInterviewType.Cati);
 
             //assert
             _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, _serverParkName), Times.Once);
