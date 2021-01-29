@@ -67,7 +67,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
         private static string GetTemporaryPath(string instrumentName, string instrumentFile)
         {
-            return $"{Path.GetDirectoryName(instrumentFile)}\\{instrumentName}";
+            return $"{Path.GetDirectoryName(instrumentFile)}\\{instrumentName}\\{Guid.NewGuid()}";
         }
 
         private static string ExtractInstrumentPackage(string instrumentName, string instrumentFile)
