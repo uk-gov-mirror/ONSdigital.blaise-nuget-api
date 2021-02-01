@@ -75,7 +75,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
-        public void Given_No_Surveys_When_I_Call_GetSurveyNames_Then_A_Data_Not_Found_Exception_Is_Thrown()
+        public void Given_No_Surveys_When_I_Call_GetSurveyNames_Then_An_Empty_List_Is_Returned()
         {
             //arrange
             var surveyItems = new List<ISurvey>();
@@ -84,10 +84,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
             _parkServiceMock.Setup(s => s.GetServerPark(_connectionModel, It.IsAny<string>())).Returns(_serverParkMock.Object);
 
+            //act
+            var result = _sut.GetSurveyNames(_connectionModel, _serverParkName);
 
-            //act && assert
-            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetSurveyNames(_connectionModel, _serverParkName));
-            Assert.AreEqual($"No surveys found for server park '{_serverParkName}'", exception.Message);
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsEmpty(result);
         }
 
         [Test]
@@ -103,9 +105,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
             _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, It.IsAny<string>())).Returns(_serverParkMock.Object);
 
-            //act && assert
-            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetSurveyNames(_connectionModel, serverParkName));
-            Assert.AreEqual($"No surveys found for server park '{serverParkName}'", exception.Message);
+            //act
+            var result = _sut.GetSurveyNames(_connectionModel, serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsEmpty(result);
         }
 
         [TestCase("TestInstrumentName", true)]
@@ -143,9 +148,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => surveyItems.GetEnumerator());
             _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
 
-            //act && assert
-            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetSurveys(_connectionModel, _serverParkName));
-            Assert.AreEqual($"No surveys found for server park '{_serverParkName}'", exception.Message);
+            //act
+            var result = _sut.GetSurveyNames(_connectionModel, _serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsEmpty(result);
         }
 
         [Test]
@@ -161,9 +169,12 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
             _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, It.IsAny<string>())).Returns(_serverParkMock.Object);
 
-            //act && assert
-            var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetSurveys(_connectionModel, serverParkName));
-            Assert.AreEqual($"No surveys found for server park '{serverParkName}'", exception.Message);
+            //act
+            var result = _sut.GetSurveyNames(_connectionModel, serverParkName);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsEmpty(result);
         }
 
         [TestCase("Instrument1")]
