@@ -38,11 +38,6 @@ namespace Blaise.Nuget.Api.Core.Services
         {
             var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
 
-            if (!serverPark.Surveys.Any())
-            {
-                throw new DataNotFoundException($"No surveys found for server park '{serverParkName}'");
-            }
-
             return serverPark.Surveys;
         }
 
