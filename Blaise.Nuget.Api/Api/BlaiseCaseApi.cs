@@ -88,6 +88,15 @@ namespace Blaise.Nuget.Api.Api
             _caseService.CreateNewDataRecord(_connectionModel, primaryKeyValue, fieldData, instrumentName, serverParkName);
         }
 
+        public void CreateCase(IDataRecord dataRecord, string instrumentName, string serverParkName)
+        {
+            dataRecord.ThrowExceptionIfNull("dataRecord");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            _caseService.CreateNewDataRecord(_connectionModel, dataRecord, instrumentName, serverParkName);
+        }
+
         public void CreateCase(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData)
         {
             databaseFile.ThrowExceptionIfNullOrEmpty("databaseFile");
@@ -165,6 +174,13 @@ namespace Blaise.Nuget.Api.Api
             databaseFile.ThrowExceptionIfNullOrEmpty("databaseFile");
 
             return _caseService.GetNumberOfCases(databaseFile);
+        }
+
+        public Dictionary<string, string> GetRecordDataFields(IDataRecord dataRecord)
+        {
+            dataRecord.ThrowExceptionIfNull("dataRecord");
+
+            return _caseService.GetFieldDataFromRecord(dataRecord);
         }
     }
 }

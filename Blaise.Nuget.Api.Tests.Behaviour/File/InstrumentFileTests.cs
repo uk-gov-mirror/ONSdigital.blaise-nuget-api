@@ -20,7 +20,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.File
             //arrange
             const string serverParkName = "LocalDevelopment";
             const string instrumentName = "opn2101a";
-            const string instrumentFile = @"D:\Opn\Temp\OPN2101A.zip";
+            const string instrumentFile = @"D:\Opn\Temp\OPN2101A.bpkg";
 
             CreateCases(100, instrumentName, serverParkName);
 
@@ -44,7 +44,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.File
                 instrumentFile));
         }
 
-        private void CreateCases(int numberOfCases, string instrumentName, string serverParkName)
+        private static void CreateCases(int numberOfCases, string instrumentName, string serverParkName)
         {
             var blaiseCaseApi = new BlaiseCaseApi();
             var primaryKey = 90000;
@@ -58,7 +58,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.File
             }
         }
 
-        private void DeleteCasesInDatabase(string instrumentName, string serverParkName)
+        private static void DeleteCasesInDatabase(string instrumentName, string serverParkName)
         {
             var blaiseCaseApi = new BlaiseCaseApi();
 

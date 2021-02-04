@@ -42,5 +42,19 @@ namespace Blaise.Nuget.Api.Core.Mappers
 
             return dataRecord;
         }
+
+        public Dictionary<string, string> MapFieldDictionaryFromRecord(IDataRecord dataRecord)
+        {
+            var fieldDictionary = new Dictionary<string, string>();
+            var dataRecord2 = (IDataRecord2) dataRecord;
+            var dataFields = dataRecord2.GetDataFields();
+
+            foreach (var dataField in dataFields)
+            {
+                fieldDictionary[dataField.FullName] = dataField.DataValue.ValueAsText;
+            }
+
+            return fieldDictionary;
+        }
     }
 }
