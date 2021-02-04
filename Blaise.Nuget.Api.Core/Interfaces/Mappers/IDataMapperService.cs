@@ -9,5 +9,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Mappers
             string primaryKeyValue, Dictionary<string, string> fieldData);
 
         IDataRecord MapDataRecordFields(IDataRecord dataRecord, Dictionary<string, string> fieldData);
+
+        Dictionary<string, string> MapFieldDictionaryFromRecord(IDataRecord dataRecord);
     }
 }

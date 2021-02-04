@@ -222,6 +222,19 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
+        public void Given_A_DataRecord_When_I_Call_CreateNewDataRecord_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+
+            //act
+            _sut.CreateNewDataRecord(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName);
+
+            //assert
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName), 
+                Times.Once);
+        }
+
+        [Test]
         public void Given_Valid_Arguments_When_I_Call_CreateNewDataRecord_For_Local_Connection_Then_The_Correct_Services_Are_Called()
         {
             //arrange
@@ -393,6 +406,24 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //assert
             Assert.NotNull(result);
             Assert.AreEqual(numberOfCases, result);
+        }
+
+        [Test]
+        public void Given_I_Call_MapFieldDictionaryFromRecord_Then_The_Expected_Value_Is_Returned()
+        {
+            //arrange
+            var fieldDictionary = new Dictionary<string, string>();
+
+            _mapperServiceMock.Setup(m => m.MapFieldDictionaryFromRecord(_dataRecordMock.Object))
+                .Returns(fieldDictionary);
+
+            //act
+            var result = _sut.GetFieldDataFromRecord(_dataRecordMock.Object);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.IsInstanceOf<Dictionary<string, string>>(result);
+            Assert.AreSame(fieldDictionary, result);
         }
     }
 }
