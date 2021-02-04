@@ -182,5 +182,12 @@ namespace Blaise.Nuget.Api.Api
 
             return _caseService.GetFieldDataFromRecord(dataRecord);
         }
+
+        public int GetOutcomeCode(IDataRecord dataRecord)
+        {
+            dataRecord.ThrowExceptionIfNull("dataRecord");
+
+            return (int) _caseService.GetFieldValue(dataRecord, FieldNameType.HOut).IntegerValue;
+        }
     }
 }
