@@ -1079,5 +1079,54 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetRecordDataFields(null));
             Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
         }
+
+        [Test]
+        public void Given_A_DataRecord_When_I_Call_GetOutcomeCode_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var outcomeCode = 110;
+            var dataRecord = new Mock<IDataRecord>();
+            var fieldValue = new Mock<IDataValue>();
+            fieldValue.Setup(f => f.IntegerValue).Returns(outcomeCode);
+
+            _caseServiceMock.Setup(d => d.GetFieldValue(It.IsAny<IDataRecord>(), FieldNameType.HOut))
+                .Returns(fieldValue.Object);
+
+            //act
+            _sut.GetOutcomeCode(dataRecord.Object);
+
+            //assert
+            _caseServiceMock.Verify(v => v.GetFieldValue(dataRecord.Object, FieldNameType.HOut), 
+                Times.Once);
+        }
+
+        [Test]
+        public void Given_A_DataRecord_When_I_Call_GetOutcomeCode_Then_The_Expected_Value_Is_Returned()
+        {
+            //arrange
+            var outcomeCode = 110;
+            var dataRecord = new Mock<IDataRecord>();
+            var fieldValue = new Mock<IDataValue>();
+            fieldValue.Setup(f => f.IntegerValue).Returns(outcomeCode);
+
+            _caseServiceMock.Setup(d => d.GetFieldValue(It.IsAny<IDataRecord>(), FieldNameType.HOut))
+                .Returns(fieldValue.Object);
+
+            //act
+            var result = _sut.GetOutcomeCode(dataRecord.Object);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.IsInstanceOf<int>(result);
+            Assert.AreEqual(outcomeCode, result);
+        }
+
+        [Test]
+        public void Given_A_Null_DataRecord_When_I_Call_GetOutcomeCode_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetOutcomeCode(null));
+            Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
+        }
     }
 }

@@ -41,5 +41,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         int GetNumberOfCases(string databaseFile);
 
         Dictionary<string, string> GetRecordDataFields(IDataRecord dataRecord);
+
+        int GetOutcomeCode(IDataRecord dataRecord);
     }
 }
