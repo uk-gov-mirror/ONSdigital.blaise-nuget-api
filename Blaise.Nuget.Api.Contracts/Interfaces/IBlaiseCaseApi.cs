@@ -20,6 +20,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         void CreateCase(string primaryKeyValue, Dictionary<string, string> fieldData, 
             string instrumentName, string serverParkName);
 
+        void CreateCase(IDataRecord dataRecord, string instrumentName, string serverParkName);
+
         void CreateCase(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData);
 
         void UpdateCase(IDataRecord dataRecord, Dictionary<string, string> fieldData,
@@ -37,5 +39,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         int GetNumberOfCases(string instrumentName, string serverParkName);
         int GetNumberOfCases(string databaseFile);
+
+        Dictionary<string, string> GetRecordDataFields(IDataRecord dataRecord);
     }
 }

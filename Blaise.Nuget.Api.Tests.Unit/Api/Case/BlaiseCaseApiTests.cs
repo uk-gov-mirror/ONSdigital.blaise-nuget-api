@@ -410,6 +410,79 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         }
 
         [Test]
+        public void Given_A_DataRecord_When_I_Call_CreateCase_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataRecord = new Mock<IDataRecord>();
+            _caseServiceMock.Setup(d => d.CreateNewDataRecord(_connectionModel, It.IsAny<IDataRecord>(),
+                 It.IsAny<string>(), It.IsAny<string>()));
+
+            //act
+            _sut.CreateCase(dataRecord.Object, _instrumentName, _serverParkName);
+
+            //assert
+            _caseServiceMock.Verify(v => v.CreateNewDataRecord(_connectionModel, dataRecord.Object, _instrumentName, _serverParkName), 
+                Times.Once);
+        }
+
+        [Test]
+        public void Given_A_Null_DataRecord_When_I_Call_CreateCase_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateCase(null,
+                _instrumentName, _serverParkName));
+            Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_CreateCase_With_A_DataRecord_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var dataRecord = new Mock<IDataRecord>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateCase(dataRecord.Object,
+                string.Empty, _serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_CallCreateCase_With_A_DataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var dataRecord = new Mock<IDataRecord>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateCase(dataRecord.Object,
+                null, _serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_CreateCase_With_A_DataRecord_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var dataRecord = new Mock<IDataRecord>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.CreateCase(dataRecord.Object,
+                _instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_CreateCase_With_A_DataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+            var dataRecord = new Mock<IDataRecord>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CreateCase(dataRecord.Object,
+                _instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
         public void Given_Valid_Arguments_When_I_Call_CreateCase_For_Local_Connection_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
@@ -963,6 +1036,48 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveCase(_primaryKeyValue,
                 _instrumentName, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_A_DataRecord_When_I_Call_GetRecordDataFields_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataRecord = new Mock<IDataRecord>();
+            _caseServiceMock.Setup(d => d.GetFieldDataFromRecord(It.IsAny<IDataRecord>()));
+
+            //act
+            _sut.GetRecordDataFields(dataRecord.Object);
+
+            //assert
+            _caseServiceMock.Verify(v => v.GetFieldDataFromRecord(dataRecord.Object), 
+                Times.Once);
+        }
+
+        [Test]
+        public void Given_A_DataRecord_When_I_Call_GetRecordDataFields_Then_The_Expected_Value_Is_Returned()
+        {
+            //arrange
+            var dataRecord = new Mock<IDataRecord>();
+            var fieldDictionary = new Dictionary<string, string>();
+
+            _caseServiceMock.Setup(d => d.GetFieldDataFromRecord(It.IsAny<IDataRecord>()))
+                .Returns(fieldDictionary);
+
+            //act
+            var result = _sut.GetRecordDataFields(dataRecord.Object);
+
+            //assert
+            Assert.NotNull(result);
+            Assert.IsInstanceOf<Dictionary<string, string>>(result);
+            Assert.AreSame(fieldDictionary, result);
+        }
+
+        [Test]
+        public void Given_A_Null_DataRecord_When_I_Call_GetRecordDataFields_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetRecordDataFields(null));
+            Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
         }
     }
 }
