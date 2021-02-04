@@ -22,6 +22,9 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         void CreateNewDataRecord(ConnectionModel connectionModel, string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName,
             string serverParkName);
+        
+        void CreateNewDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord ,string instrumentName, 
+            string serverParkName);
 
         void CreateNewDataRecord(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData);
 
@@ -36,5 +39,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         int GetNumberOfCases(ConnectionModel connectionModel, string instrumentName, string serverParkName);
         int GetNumberOfCases(string databaseFile);
+
+        Dictionary<string, string> GetFieldDataFromRecord(IDataRecord dataRecord);
     }
 }

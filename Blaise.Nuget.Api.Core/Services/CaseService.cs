@@ -116,6 +116,11 @@ namespace Blaise.Nuget.Api.Core.Services
             _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
         }
 
+        public void CreateNewDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord ,string instrumentName, string serverParkName)
+        {
+            _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
+        }
+
         public void CreateNewDataRecord(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData)
         {
             var dataModel = _dataModelService.GetDataModel(databaseFile);
@@ -132,6 +137,11 @@ namespace Blaise.Nuget.Api.Core.Services
             dataRecord = _mapperService.MapDataRecordFields(dataRecord, fieldData);
 
             _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
+        }
+
+        public Dictionary<string, string> GetFieldDataFromRecord(IDataRecord dataRecord)
+        {
+            return _mapperService.MapFieldDictionaryFromRecord(dataRecord);
         }
     }
 }
