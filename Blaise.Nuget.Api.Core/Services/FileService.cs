@@ -83,7 +83,7 @@ namespace Blaise.Nuget.Api.Core.Services
         private static void CreateInstrumentPackage(string instrumentPath, string instrumentFile)
         {
             ZipFile.CreateFromDirectory(instrumentPath, instrumentFile);
-            DeleteDirectoryAndFilesInPath(instrumentPath);
+            Directory.Delete(instrumentPath, true);
         }
 
         private void DeleteFileIfExists(string filePath)
@@ -97,25 +97,6 @@ namespace Blaise.Nuget.Api.Core.Services
         private static string GetFullFilePath(string filePath, string instrumentName, string extension)
         {
             return Path.Combine(filePath, $"{instrumentName}.{extension}");
-        }
-
-        public static void DeleteDirectoryAndFilesInPath(string path)
-        {
-            var dirInfo = new DirectoryInfo(path);
-            foreach (var dir in dirInfo.GetDirectories())
-            {
-                foreach (var file in dir.GetFiles())
-                {
-                    file.Delete();
-                }
-
-                dir.Delete(true);
-            }
-
-            foreach (var file in Directory.GetFiles(path))
-            {
-                File.Delete(file);
-            }
         }
     }
 }
