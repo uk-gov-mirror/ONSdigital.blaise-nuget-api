@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Compression;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
@@ -66,7 +67,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
         private static string ExtractInstrumentPackage(string instrumentFile)
         {
-            var instrumentPath = Path.GetDirectoryName(instrumentFile);
+            var instrumentPath =  $"{Path.GetDirectoryName(instrumentFile)}\\{Guid.NewGuid()}";
 
             if (Directory.Exists(instrumentPath))
             {
