@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
@@ -30,7 +29,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public void UpdateInstrumentFileWithData(ConnectionModel connectionModel, string instrumentFile, string instrumentName, string serverParkName)
         {
-            var instrumentPath = ExtractInstrumentPackage(instrumentName, instrumentFile);
+            var instrumentPath = ExtractInstrumentPackage(instrumentFile);
             var dataSourceFilePath = GetFullFilePath(instrumentPath, instrumentName, DatabaseSourceExt);
             var dataInterfaceFilePath = GetFullFilePath(instrumentPath, instrumentName, DatabaseFileNameExt);
             var dataModelFilePath = GetFullFilePath(instrumentPath, instrumentName, DatabaseModelExt);
@@ -54,7 +53,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public void UpdateInstrumentPackageWithSqlConnection(string instrumentName, string instrumentFile)
         {
-            var instrumentPath = ExtractInstrumentPackage(instrumentName, instrumentFile);
+            var instrumentPath = ExtractInstrumentPackage(instrumentFile);
             var databaseConnectionString = _configurationProvider.DatabaseConnectionString;
             var fileName = GetFullFilePath(instrumentPath, instrumentName, DatabaseFileNameExt);
             var dataModelFileName = GetFullFilePath(instrumentPath, instrumentName, DatabaseModelExt);
@@ -65,14 +64,9 @@ namespace Blaise.Nuget.Api.Core.Services
             CreateInstrumentPackage(instrumentPath, instrumentFile);
         }
 
-        private static string GetTemporaryPath(string instrumentName, string instrumentFile)
+        private static string ExtractInstrumentPackage(string instrumentFile)
         {
-            return $"{Path.GetDirectoryName(instrumentFile)}\\{instrumentName}\\{Guid.NewGuid()}";
-        }
-
-        private static string ExtractInstrumentPackage(string instrumentName, string instrumentFile)
-        {
-            var instrumentPath = GetTemporaryPath(instrumentName, instrumentFile);
+            var instrumentPath = Path.GetDirectoryName(instrumentFile);
 
             if (Directory.Exists(instrumentPath))
             {
