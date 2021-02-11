@@ -37,7 +37,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.File
         {
             //arrange
             const string instrumentName = "opn2101a";
-            const string instrumentFile = @"D:\Opn\Temp\OPN2101A.zip";
+            const string instrumentFile = @"D:\Opn\Temp\OPN2101A.bpkg";
 
             //act && assert
             Assert.DoesNotThrow(() => _sut.UpdateInstrumentFileWithSqlConnection(instrumentName,
