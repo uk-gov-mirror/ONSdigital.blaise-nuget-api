@@ -272,5 +272,35 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.NotNull(result);
             Assert.AreEqual(2, result);
         }
+
+        [Test]
+        public void Given_Valid_Parameters_When_I_Call_LockDataRecord_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            const string lockId = "Lock123";
+            _remoteDataLinkMock.Setup(d => d.Lock(It.IsAny<IKey>(), lockId));
+
+            //act
+            _sut.LockDataRecord(_connectionModel, _instrumentName, _serverParkName, _keyMock.Object, lockId);
+
+            //assert
+            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+            _remoteDataLinkMock.Verify(v => v.Lock(_keyMock.Object, lockId), Times.Once);
+        }
+
+        [Test]
+        public void Given_Valid_Parameters_When_I_Call_UnLockDataRecord_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            const string lockId = "Lock123";
+            _remoteDataLinkMock.Setup(d => d.Unlock(It.IsAny<IKey>(), lockId));
+
+            //act
+            _sut.UnLockDataRecord(_connectionModel, _instrumentName, _serverParkName, _keyMock.Object, lockId);
+
+            //assert
+            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+            _remoteDataLinkMock.Verify(v => v.Unlock(_keyMock.Object, lockId), Times.Once);
+        }
     }
 }

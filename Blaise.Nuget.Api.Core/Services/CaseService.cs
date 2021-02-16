@@ -143,5 +143,25 @@ namespace Blaise.Nuget.Api.Core.Services
         {
             return _mapperService.MapFieldDictionaryFromRecord(dataRecord);
         }
+
+        public void LockDataRecord(ConnectionModel connectionModel, string instrumentName, string serverParkName, string primaryKeyValue,
+            string lockId)
+        {
+            var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
+            var primaryKey = _keyService.GetPrimaryKey(dataModel);
+            _keyService.AssignPrimaryKeyValue(primaryKey, primaryKeyValue);
+
+            _dataRecordService.LockDataRecord(connectionModel, instrumentName, serverParkName, primaryKey, lockId);
+        }
+
+        public void UnLockDataRecord(ConnectionModel connectionModel, string instrumentName, string serverParkName, string primaryKeyValue,
+            string lockId)
+        {
+            var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
+            var primaryKey = _keyService.GetPrimaryKey(dataModel);
+            _keyService.AssignPrimaryKeyValue(primaryKey, primaryKeyValue);
+
+            _dataRecordService.UnLockDataRecord(connectionModel, instrumentName, serverParkName, primaryKey, lockId);
+        }
     }
 }

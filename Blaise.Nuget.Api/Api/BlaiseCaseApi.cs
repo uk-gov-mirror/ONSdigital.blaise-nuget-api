@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Interfaces;
 using Blaise.Nuget.Api.Contracts.Models;
@@ -188,6 +189,46 @@ namespace Blaise.Nuget.Api.Api
             dataRecord.ThrowExceptionIfNull("dataRecord");
 
             return (int) _caseService.GetFieldValue(dataRecord, FieldNameType.HOut).IntegerValue;
+        }
+
+        public void LockDataRecord(string instrumentName, string serverParkName, string primaryKeyValue, string lockId)
+        {
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+            lockId.ThrowExceptionIfNullOrEmpty("lockId");
+
+           _caseService.LockDataRecord(_connectionModel, instrumentName, serverParkName, primaryKeyValue, lockId);
+        }
+
+        public void UnLockDataRecord(string instrumentName, string serverParkName, string primaryKeyValue, string lockId)
+        {
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+            lockId.ThrowExceptionIfNullOrEmpty("lockId");
+
+            _caseService.UnLockDataRecord(_connectionModel, instrumentName, serverParkName, primaryKeyValue, lockId);
+        }
+
+        //Ugghh :(
+        public bool DataRecordIsLocked(string instrumentName, string serverParkName, string primaryKeyValue)
+        {
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            try
+            {
+                _caseService.GetDataRecord(_connectionModel, primaryKeyValue, instrumentName, serverParkName);
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return true;
         }
     }
 }
