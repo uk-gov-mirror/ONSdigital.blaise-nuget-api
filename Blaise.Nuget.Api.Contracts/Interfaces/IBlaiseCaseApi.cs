@@ -43,5 +43,14 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         Dictionary<string, string> GetRecordDataFields(IDataRecord dataRecord);
 
         int GetOutcomeCode(IDataRecord dataRecord);
+
+        void LockDataRecord(string instrumentName, string serverParkName,
+            string primaryKeyValue, string lockId);
+
+        void UnLockDataRecord(string instrumentName, string serverParkName,
+            string primaryKeyValue, string lockId);
+        
+        bool DataRecordIsLocked(string instrumentName, string serverParkName,
+            string primaryKeyValue);
     }
 }

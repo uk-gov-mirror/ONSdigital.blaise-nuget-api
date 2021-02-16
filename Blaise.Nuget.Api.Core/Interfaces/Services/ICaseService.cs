@@ -34,12 +34,21 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         bool FieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName, FieldNameType fieldNameType);
 
         void RemoveDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName);
+
         IDataValue GetFieldValue(IDataRecord dataRecord, FieldNameType fieldNameType);
+
         bool FieldExists(IDataRecord dataRecord, FieldNameType fieldNameType);
 
         int GetNumberOfCases(ConnectionModel connectionModel, string instrumentName, string serverParkName);
+
         int GetNumberOfCases(string databaseFile);
 
         Dictionary<string, string> GetFieldDataFromRecord(IDataRecord dataRecord);
+
+        void LockDataRecord(ConnectionModel connectionModel, string instrumentName, string serverParkName,
+            string primaryKeyValue, string lockId);
+
+        void UnLockDataRecord(ConnectionModel connectionModel, string instrumentName, string serverParkName,
+            string primaryKeyValue, string lockId);
     }
 }

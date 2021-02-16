@@ -121,11 +121,15 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Cati
         [Test]
         public void Given_Valid_Arguments_When_I_Call_CreateDayBatchForSurvey_Then_The_Correct_Service_Method_Is_Called()
         {
+            //arrange
+            var dayBatchDate = DateTime.Now;
+
             //act
-            _sut.GetInstalledSurvey(_instrumentName, _serverParkName);
+            _sut.CreateDayBatch(_instrumentName, _serverParkName, dayBatchDate);
 
             //assert
-            _catiServiceMock.Verify(v => v.GetInstalledSurvey(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+            _catiServiceMock.Verify(v => v.CreateDayBatch(_connectionModel, _instrumentName, 
+                _serverParkName, dayBatchDate), Times.Once);
         }
 
         [Test]

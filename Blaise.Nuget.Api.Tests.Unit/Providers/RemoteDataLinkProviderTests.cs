@@ -7,6 +7,7 @@ using Blaise.Nuget.Api.Core.Providers;
 using Moq;
 using NUnit.Framework;
 using StatNeth.Blaise.API.DataLink;
+using StatNeth.Blaise.API.DataRecord;
 using StatNeth.Blaise.API.Meta;
 
 namespace Blaise.Nuget.Api.Tests.Unit.Providers
@@ -131,6 +132,34 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
 
             //assert
             _remoteDataServerMock.Verify(v => v.GetDataLink(It.IsAny<Guid>(), It.IsAny<string>()), Times.Exactly(2));
+        }
+
+        [Test]
+        public void Given_I_Call_LockDataRecord_Then_The_Record_Is_Locked()
+        {
+            //arrange
+            var primaryKey = new Mock<IKey>();
+            const string lockId = "Lock123";
+
+            //act
+            _sut.LockDataRecord(_connectionModel, _instrumentName, _serverParkName, primaryKey.Object, lockId);
+
+            //assert
+            _dataLinkMock.Verify(v => v.Lock(primaryKey.Object, lockId), Times.Once);
+        }
+
+        [Test]
+        public void Given_I_Call_UnLockDataRecord_Then_The_Record_Is_UnLocked()
+        {
+            //arrange
+            var primaryKey = new Mock<IKey>();
+            const string lockId = "Lock123";
+
+            //act
+            _sut.UnLockDataRecord(_connectionModel, _instrumentName, _serverParkName, primaryKey.Object, lockId);
+
+            //assert
+            _dataLinkMock.Verify(v => v.Unlock(primaryKey.Object, lockId), Times.Once);
         }
     }
 }

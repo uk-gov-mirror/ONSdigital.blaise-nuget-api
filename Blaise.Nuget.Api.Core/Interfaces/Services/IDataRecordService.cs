@@ -23,5 +23,11 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         int GetNumberOfRecords(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         int GetNumberOfRecords(string databaseFile);
+
+        void LockDataRecord(ConnectionModel connectionModel, string instrumentName, string serverParkName,
+            IKey primaryKey, string lockId);
+
+        void UnLockDataRecord(ConnectionModel connectionModel, string instrumentName, string serverParkName,
+            IKey primaryKey, string lockId);
     }
 }

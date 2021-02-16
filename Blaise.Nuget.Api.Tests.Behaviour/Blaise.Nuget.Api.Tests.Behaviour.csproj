@@ -113,6 +113,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Case\UpdateCaseTests.cs" />
     <Compile Include="File\InstrumentFileTests.cs" />
     <Compile Include="Case\GetCaseTests.cs" />
     <Compile Include="Case\CreateCaseTests.cs" />
