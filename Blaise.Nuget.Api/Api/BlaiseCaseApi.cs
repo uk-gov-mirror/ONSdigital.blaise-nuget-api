@@ -106,6 +106,18 @@ namespace Blaise.Nuget.Api.Api
 
             _caseService.CreateNewDataRecord(databaseFile, primaryKeyValue, fieldData);
         }
+        
+        public void UpdateCase(string primaryKeyValue, Dictionary<string, string> fieldData, 
+            string instrumentName, string serverParkName)
+        {
+            primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
+            fieldData.ThrowExceptionIfNull("fieldData");
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            _caseService.UpdateDataRecord(_connectionModel, primaryKeyValue, fieldData,
+                instrumentName, serverParkName);
+        }
 
         public void UpdateCase(IDataRecord dataRecord, Dictionary<string, string> fieldData,
             string instrumentName, string serverParkName)
@@ -191,28 +203,28 @@ namespace Blaise.Nuget.Api.Api
             return (int) _caseService.GetFieldValue(dataRecord, FieldNameType.HOut).IntegerValue;
         }
 
-        public void LockDataRecord(string instrumentName, string serverParkName, string primaryKeyValue, string lockId)
+        public void LockDataRecord(string primaryKeyValue, string instrumentName, string serverParkName, string lockId)
         {
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
             lockId.ThrowExceptionIfNullOrEmpty("lockId");
 
-           _caseService.LockDataRecord(_connectionModel, instrumentName, serverParkName, primaryKeyValue, lockId);
+           _caseService.LockDataRecord(_connectionModel, primaryKeyValue, instrumentName, serverParkName, lockId);
         }
 
-        public void UnLockDataRecord(string instrumentName, string serverParkName, string primaryKeyValue, string lockId)
+        public void UnLockDataRecord(string primaryKeyValue, string instrumentName, string serverParkName, string lockId)
         {
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
             lockId.ThrowExceptionIfNullOrEmpty("lockId");
 
-            _caseService.UnLockDataRecord(_connectionModel, instrumentName, serverParkName, primaryKeyValue, lockId);
+            _caseService.UnLockDataRecord(_connectionModel, primaryKeyValue, instrumentName, serverParkName, lockId);
         }
 
         //Ugghh :(
-        public bool DataRecordIsLocked(string instrumentName, string serverParkName, string primaryKeyValue)
+        public bool DataRecordIsLocked(string primaryKeyValue, string instrumentName, string serverParkName)
         {
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");

@@ -281,7 +281,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.Lock(It.IsAny<IKey>(), lockId));
 
             //act
-            _sut.LockDataRecord(_connectionModel, _instrumentName, _serverParkName, _keyMock.Object, lockId);
+            _sut.LockDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName, lockId);
 
             //assert
             _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);
@@ -296,7 +296,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkMock.Setup(d => d.Unlock(It.IsAny<IKey>(), lockId));
 
             //act
-            _sut.UnLockDataRecord(_connectionModel, _instrumentName, _serverParkName, _keyMock.Object, lockId);
+            _sut.UnLockDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName, lockId);
 
             //assert
             _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);

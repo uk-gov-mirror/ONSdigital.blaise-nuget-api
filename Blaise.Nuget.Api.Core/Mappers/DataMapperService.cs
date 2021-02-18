@@ -22,8 +22,9 @@ namespace Blaise.Nuget.Api.Core.Mappers
 
             foreach (var field in fieldData)
             {
-                // Adding try / catch around processing payload fields so that it doesn't stop
-                // if a field is found that isn't in the Blaise data model as we still want to process it
+                /* Adding try / catch around processing payload fields so that it doesn't stop
+                   if a field is found that isn't in the Blaise data model as we still want to process the 
+                   remaining fields */
                 try
                 {
                     if (!definitionScope.FieldExists(field.Key))
