@@ -553,6 +553,105 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         public void Given_Valid_Arguments_When_I_Call_UpdateCase_Then_The_Correct_Service_Method_Is_Called()
         {
             //arrange
+            var fieldData = new Dictionary<string, string>();
+
+            _caseServiceMock.Setup(d => d.UpdateDataRecord(_connectionModel, It.IsAny<string>(), 
+                It.IsAny<Dictionary<string, string>>(), It.IsAny<string>(), It.IsAny<string>()));
+
+            //act
+            _sut.UpdateCase(_primaryKeyValue, fieldData, _instrumentName, _serverParkName);
+
+            //assert
+            _caseServiceMock.Verify(v => v.UpdateDataRecord(_connectionModel, _primaryKeyValue, fieldData,
+                _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_PrimaryKeyValue_When_I_Call_UpdateCase_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var fieldData = new Dictionary<string, string>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.UpdateCase(string.Empty, fieldData, _instrumentName,
+                _serverParkName));
+            Assert.AreEqual("A value for the argument 'primaryKeyValue' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_PrimaryKeyValue_When_I_Call_UpdateCase_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var fieldData = new Dictionary<string, string>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UpdateCase((string) null, fieldData,
+                _instrumentName, _serverParkName));
+            Assert.AreEqual("primaryKeyValue", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_A_Null_Dictionary_Of_FieldData_When_I_Call_UpdateCase_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UpdateCase(_primaryKeyValue, null,
+                _instrumentName, _serverParkName));
+            Assert.AreEqual("The argument 'fieldData' must be supplied", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_UpdateCase_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var fieldData = new Dictionary<string, string>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.UpdateCase(_primaryKeyValue, fieldData, string.Empty,
+                _serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_UpdateCase_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            var fieldData = new Dictionary<string, string>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UpdateCase(_primaryKeyValue, fieldData,
+                null, _serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_UpdateCase_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            var fieldData = new Dictionary<string, string>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.UpdateCase(_primaryKeyValue, fieldData,
+                _instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_UpdateCase_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange 
+
+            var fieldData = new Dictionary<string, string>();
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UpdateCase(_primaryKeyValue, fieldData,
+                _instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_Valid_Arguments_When_I_Call_UpdateCase_With_DataRecord_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
             var dataRecordMock = new Mock<IDataRecord>();
             var fieldData = new Dictionary<string, string>();
 
@@ -567,19 +666,19 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         }
 
         [Test]
-        public void Given_A_Null_DataRecord_When_I_Call_UpdateCase_Then_An_ArgumentNullException_Is_Thrown()
+        public void Given_A_Null_DataRecord_When_I_Call_UpdateCase_With_DataRecord_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
             var fieldData = new Dictionary<string, string>();
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UpdateCase(null, fieldData,
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UpdateCase((IDataRecord) null, fieldData,
                 _instrumentName, _serverParkName));
             Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
         }
 
         [Test]
-        public void Given_A_Null_Dictionary_Of_FieldData_When_I_Call_UpdateCase_Then_An_ArgumentNullException_Is_Thrown()
+        public void Given_A_Null_Dictionary_Of_FieldData_When_I_Call_UpdateCase_With_DataRecord_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
@@ -591,7 +690,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         }
 
         [Test]
-        public void Given_An_Empty_InstrumentName_When_I_Call_UpdateCase_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_InstrumentName_When_I_Call_UpdateCase_With_DataRecord_Then_An_ArgumentException_Is_Thrown()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
@@ -604,7 +703,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         }
 
         [Test]
-        public void Given_A_Null_InstrumentName_When_I_Call_UpdateCase_Then_An_ArgumentNullException_Is_Thrown()
+        public void Given_A_Null_InstrumentName_When_I_Call_UpdateCase_With_DataRecord_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
@@ -617,7 +716,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         }
 
         [Test]
-        public void Given_An_Empty_ServerParkName_When_I_Call_UpdateCase_Then_An_ArgumentException_Is_Thrown()
+        public void Given_An_Empty_ServerParkName_When_I_Call_UpdateCase_With_DataRecord_Then_An_ArgumentException_Is_Thrown()
         {
             //arrange
             var dataRecordMock = new Mock<IDataRecord>();
@@ -630,7 +729,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         }
 
         [Test]
-        public void Given_A_Null_ServerParkName_When_I_Call_UpdateCase_Then_An_ArgumentNullException_Is_Thrown()
+        public void Given_A_Null_ServerParkName_When_I_Call_UpdateCase_With_DataRecord_Then_An_ArgumentNullException_Is_Thrown()
         {
             //arrange 
             var dataRecordMock = new Mock<IDataRecord>();
@@ -641,6 +740,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
                 fieldData, _instrumentName, null));
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
+
         [TestCase(FieldNameType.HOut)]
         [TestCase(FieldNameType.Mode)]
         [TestCase(FieldNameType.TelNo)]
@@ -1139,59 +1239,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
                 It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
 
             //act
-            _sut.LockDataRecord(_instrumentName, _serverParkName, _primaryKeyValue, lockId);
+            _sut.LockDataRecord(_primaryKeyValue, _instrumentName, _serverParkName, lockId);
 
             //assert
-            _caseServiceMock.Verify(v => v.LockDataRecord(_connectionModel, _instrumentName, _serverParkName,
-                    _primaryKeyValue, lockId), Times.Once);
-        }
-
-        [Test]
-        public void Given_An_Empty_InstrumentName_When_I_Call_LockDataRecord_Then_An_ArgumentException_Is_Thrown()
-        {
-            //arrange
-            const string lockId = "Lock123";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.LockDataRecord(string.Empty, _serverParkName,
-                _primaryKeyValue, lockId));
-            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_A_Null_InstrumentName_When_I_Call_LockDataRecord_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange
-            const string lockId = "Lock123";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.LockDataRecord(null, _serverParkName,
-                _primaryKeyValue, lockId));
-            Assert.AreEqual("instrumentName", exception.ParamName);
-        }
-
-        [Test]
-        public void Given_An_Empty_ServerParkName_When_I_Call_LockDataRecord_Then_An_ArgumentException_Is_Thrown()
-        {
-            //arrange
-            const string lockId = "Lock123";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.LockDataRecord(_instrumentName, string.Empty,
-                _primaryKeyValue, lockId));
-            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_A_Null_ServerParkName_When_I_Call_LockDataRecord_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange
-            const string lockId = "Lock123";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.LockDataRecord(_instrumentName, null,
-                _primaryKeyValue, lockId));
-            Assert.AreEqual("serverParkName", exception.ParamName);
+            _caseServiceMock.Verify(v => v.LockDataRecord(_connectionModel, _primaryKeyValue, 
+                _instrumentName, _serverParkName, lockId), Times.Once);
         }
 
         [Test]
@@ -1201,8 +1253,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             const string lockId = "Lock123";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.LockDataRecord(_instrumentName, _serverParkName,
-                string.Empty, lockId));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.LockDataRecord(string.Empty,
+                _instrumentName, _serverParkName, lockId));
             Assert.AreEqual("A value for the argument 'primaryKeyValue' must be supplied", exception.Message);
         }
 
@@ -1213,17 +1265,65 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             const string lockId = "Lock123";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.LockDataRecord(_instrumentName, _serverParkName,
-                null, lockId));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.LockDataRecord(null,
+                _instrumentName, _serverParkName, lockId));
             Assert.AreEqual("primaryKeyValue", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_LockDataRecord_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            const string lockId = "Lock123";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.LockDataRecord(_primaryKeyValue,
+                string.Empty, _serverParkName, lockId));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_LockDataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            const string lockId = "Lock123";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.LockDataRecord(_primaryKeyValue,
+                null, _serverParkName, lockId));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_LockDataRecord_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            const string lockId = "Lock123";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.LockDataRecord(_primaryKeyValue,
+                _instrumentName, string.Empty,lockId));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_LockDataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            const string lockId = "Lock123";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.LockDataRecord(_primaryKeyValue,
+                _instrumentName, null, lockId));
+            Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
         [Test]
         public void Given_An_Empty_LockId_When_I_Call_LockDataRecord_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.LockDataRecord(_instrumentName, _serverParkName,
-                _primaryKeyValue, string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.LockDataRecord(_primaryKeyValue,
+            _instrumentName, _serverParkName, string.Empty));
             Assert.AreEqual("A value for the argument 'lockId' must be supplied", exception.Message);
         }
 
@@ -1231,8 +1331,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         public void Given_A_Null_LockId_When_I_Call_LockDataRecord_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.LockDataRecord(_instrumentName, _serverParkName,
-                _primaryKeyValue, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.LockDataRecord(_primaryKeyValue, _instrumentName, _serverParkName, null));
             Assert.AreEqual("lockId", exception.ParamName);
         }
 
@@ -1254,62 +1353,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         }
 
         [Test]
-        public void Given_An_Empty_InstrumentName_When_I_Call_UnLockDataRecord_Then_An_ArgumentException_Is_Thrown()
-        {
-            //arrange
-            const string lockId = "Lock123";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.UnLockDataRecord(string.Empty, _serverParkName,
-                _primaryKeyValue, lockId));
-            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_A_Null_InstrumentName_When_I_Call_UnLockDataRecord_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange
-            const string lockId = "Lock123";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UnLockDataRecord(null, _serverParkName,
-                _primaryKeyValue, lockId));
-            Assert.AreEqual("instrumentName", exception.ParamName);
-        }
-
-        [Test]
-        public void Given_An_Empty_ServerParkName_When_I_Call_UnLockDataRecord_Then_An_ArgumentException_Is_Thrown()
-        {
-            //arrange
-            const string lockId = "Lock123";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.UnLockDataRecord(_instrumentName, string.Empty,
-                _primaryKeyValue, lockId));
-            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_A_Null_ServerParkName_When_I_Call_UnLockDataRecord_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //arrange
-            const string lockId = "Lock123";
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UnLockDataRecord(_instrumentName, null,
-                _primaryKeyValue, lockId));
-            Assert.AreEqual("serverParkName", exception.ParamName);
-        }
-
-        [Test]
         public void Given_An_Empty_PrimaryKeyValue_When_I_Call_UnLockDataRecord_Then_An_ArgumentException_Is_Thrown()
         {
             //arrange
             const string lockId = "Lock123";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.UnLockDataRecord(_instrumentName, _serverParkName,
-                string.Empty, lockId));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.UnLockDataRecord(string.Empty,
+                _instrumentName, _serverParkName, lockId));
             Assert.AreEqual("A value for the argument 'primaryKeyValue' must be supplied", exception.Message);
         }
 
@@ -1320,17 +1371,65 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             const string lockId = "Lock123";
 
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UnLockDataRecord(_instrumentName, _serverParkName,
-                null, lockId));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UnLockDataRecord(null, 
+                _instrumentName, _serverParkName, lockId));
             Assert.AreEqual("primaryKeyValue", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_UnLockDataRecord_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            const string lockId = "Lock123";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.UnLockDataRecord(_primaryKeyValue,
+                string.Empty, _serverParkName, lockId));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_UnLockDataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            const string lockId = "Lock123";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UnLockDataRecord(_primaryKeyValue,
+                null, _serverParkName, lockId));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_UnLockDataRecord_Then_An_ArgumentException_Is_Thrown()
+        {
+            //arrange
+            const string lockId = "Lock123";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.UnLockDataRecord(_primaryKeyValue,
+                _instrumentName, string.Empty, lockId));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_UnLockDataRecord_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //arrange
+            const string lockId = "Lock123";
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UnLockDataRecord(_primaryKeyValue,
+                _instrumentName, null, lockId));
+            Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
         [Test]
         public void Given_An_Empty_LockId_When_I_Call_UnLockDataRecord_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.UnLockDataRecord(_instrumentName, _serverParkName,
-                _primaryKeyValue, string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.UnLockDataRecord(_primaryKeyValue, 
+                _instrumentName, _serverParkName, string.Empty));
             Assert.AreEqual("A value for the argument 'lockId' must be supplied", exception.Message);
         }
 
@@ -1338,8 +1437,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         public void Given_A_Null_LockId_When_I_Call_UnLockDataRecord_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UnLockDataRecord(_instrumentName, _serverParkName,
-                _primaryKeyValue, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.UnLockDataRecord(_primaryKeyValue, 
+                _instrumentName, _serverParkName, null));
             Assert.AreEqual("lockId", exception.ParamName);
         }
 
@@ -1351,7 +1450,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
                 _instrumentName, _serverParkName)).Throws(new Exception());
 
             //act
-            var result = _sut.DataRecordIsLocked(_instrumentName, _serverParkName, _primaryKeyValue);
+            var result = _sut.DataRecordIsLocked(_primaryKeyValue, _instrumentName, _serverParkName);
 
             //assert
             Assert.True(result);
@@ -1362,59 +1461,22 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         {
             //arrange
             var dataRecord = new Mock<IDataRecord>();
-            _caseServiceMock.Setup(d => d.GetDataRecord(_connectionModel, _instrumentName,
-                _serverParkName, _primaryKeyValue)).Returns(dataRecord.Object);
+            _caseServiceMock.Setup(d => d.GetDataRecord(_connectionModel, _primaryKeyValue,
+                _instrumentName, _serverParkName)).Returns(dataRecord.Object);
 
             //act
-            var result = _sut.DataRecordIsLocked(_instrumentName, _serverParkName, _primaryKeyValue);
+            var result = _sut.DataRecordIsLocked(_primaryKeyValue, _instrumentName, _serverParkName);
 
             //assert
             Assert.False(result);
         }
 
         [Test]
-        public void Given_An_Empty_InstrumentName_When_I_Call_DataRecordIsLocked_Then_An_ArgumentException_Is_Thrown()
-        {
-
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.DataRecordIsLocked(string.Empty, _serverParkName,
-                _primaryKeyValue));
-            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_A_Null_InstrumentName_When_I_Call_DataRecordIsLocked_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.DataRecordIsLocked(null, _serverParkName,
-                _primaryKeyValue));
-            Assert.AreEqual("instrumentName", exception.ParamName);
-        }
-
-        [Test]
-        public void Given_An_Empty_ServerParkName_When_I_Call_DataRecordIsLocked_Then_An_ArgumentException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.DataRecordIsLocked(_instrumentName, string.Empty,
-                _primaryKeyValue));
-            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
-        }
-
-        [Test]
-        public void Given_A_Null_ServerParkName_When_I_Call_DataRecordIsLocked_Then_An_ArgumentNullException_Is_Thrown()
-        {
-            //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.DataRecordIsLocked(_instrumentName, null,
-                _primaryKeyValue));
-            Assert.AreEqual("serverParkName", exception.ParamName);
-        }
-
-        [Test]
         public void Given_An_Empty_PrimaryKeyValue_When_I_Call_DataRecordIsLocked_Then_An_ArgumentException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentException>(() => _sut.DataRecordIsLocked(_instrumentName, _serverParkName,
-                string.Empty));
+            var exception = Assert.Throws<ArgumentException>(() => _sut.DataRecordIsLocked(string.Empty,
+                _instrumentName, _serverParkName));
             Assert.AreEqual("A value for the argument 'primaryKeyValue' must be supplied", exception.Message);
         }
 
@@ -1422,9 +1484,46 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         public void Given_A_Null_PrimaryKeyValue_When_I_Call_DataRecordIsLocked_Then_An_ArgumentNullException_Is_Thrown()
         {
             //act && assert
-            var exception = Assert.Throws<ArgumentNullException>(() => _sut.DataRecordIsLocked(_instrumentName, _serverParkName,
-                null));
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.DataRecordIsLocked(null,
+                _instrumentName, _serverParkName));
             Assert.AreEqual("primaryKeyValue", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_DataRecordIsLocked_Then_An_ArgumentException_Is_Thrown()
+        {
+
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.DataRecordIsLocked(_primaryKeyValue,
+                string.Empty, _serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_DataRecordIsLocked_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.DataRecordIsLocked(_primaryKeyValue,
+                null, _serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_DataRecordIsLocked_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.DataRecordIsLocked(_primaryKeyValue,
+                _instrumentName, string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_DataRecordIsLocked_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.DataRecordIsLocked(_primaryKeyValue,
+                _instrumentName, null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
         }
     }
 }

@@ -81,7 +81,7 @@ namespace Blaise.Nuget.Api.Core.Services
             return GetNumberOfRecords(records);
         }
 
-        public void LockDataRecord(ConnectionModel connectionModel, string instrumentName, string serverParkName, IKey primaryKey,
+        public void LockDataRecord(ConnectionModel connectionModel, IKey primaryKey, string instrumentName, string serverParkName, 
             string lockId)
         {
             var dataLink = _remoteDataLinkProvider.GetDataLink(connectionModel, instrumentName, serverParkName);
@@ -89,7 +89,7 @@ namespace Blaise.Nuget.Api.Core.Services
             dataLink.Lock(primaryKey, lockId);
         }
 
-        public void UnLockDataRecord(ConnectionModel connectionModel, string instrumentName, string serverParkName, IKey primaryKey,
+        public void UnLockDataRecord(ConnectionModel connectionModel,IKey primaryKey, string instrumentName, string serverParkName, 
             string lockId)
         {
             var dataLink = _remoteDataLinkProvider.GetDataLink(connectionModel, instrumentName, serverParkName);

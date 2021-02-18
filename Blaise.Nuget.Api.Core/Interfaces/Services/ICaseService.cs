@@ -20,20 +20,25 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         void WriteDataRecord(IDataRecord dataRecord, string databaseFile);
 
-        void CreateNewDataRecord(ConnectionModel connectionModel, string primaryKeyValue, Dictionary<string, string> fieldData, string instrumentName,
-            string serverParkName);
+        void CreateNewDataRecord(ConnectionModel connectionModel, string primaryKeyValue, 
+            Dictionary<string, string> fieldData, string instrumentName, string serverParkName);
         
         void CreateNewDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord ,string instrumentName, 
             string serverParkName);
 
         void CreateNewDataRecord(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData);
 
-        void UpdateDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, Dictionary<string, string> fieldData, string instrumentName,
+        void UpdateDataRecord(ConnectionModel connectionModel, string primaryKeyValue,
+            Dictionary<string, string> fieldData, string instrumentName, string serverParkName);
+
+        void UpdateDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, 
+            Dictionary<string, string> fieldData, string instrumentName, string serverParkName);
+
+        bool FieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName, 
+            FieldNameType fieldNameType);
+
+        void RemoveDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, 
             string serverParkName);
-
-        bool FieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName, FieldNameType fieldNameType);
-
-        void RemoveDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName);
 
         IDataValue GetFieldValue(IDataRecord dataRecord, FieldNameType fieldNameType);
 
@@ -45,10 +50,10 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         Dictionary<string, string> GetFieldDataFromRecord(IDataRecord dataRecord);
 
-        void LockDataRecord(ConnectionModel connectionModel, string instrumentName, string serverParkName,
-            string primaryKeyValue, string lockId);
+        void LockDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName,
+             string lockId);
 
-        void UnLockDataRecord(ConnectionModel connectionModel, string instrumentName, string serverParkName,
-            string primaryKeyValue, string lockId);
+        void UnLockDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName,
+            string lockId);
     }
 }
