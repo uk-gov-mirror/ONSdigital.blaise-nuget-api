@@ -857,6 +857,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         [TestCase(FieldNameType.HOut)]
         [TestCase(FieldNameType.Mode)]
         [TestCase(FieldNameType.TelNo)]
+        [TestCase(FieldNameType.CaseInUse)]
         public void Given_A_DataRecord_When_I_Call_GetFieldValue_Then_The_Correct_Value(FieldNameType fieldNameType)
         {
             //arrange
@@ -888,6 +889,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
         [TestCase(FieldNameType.HOut)]
         [TestCase(FieldNameType.Mode)]
         [TestCase(FieldNameType.TelNo)]
+        [TestCase(FieldNameType.CaseInUse)]
         public void Given_A_PrimaryKeyValue_When_I_Call_GetFieldValue_Then_The_Correct_Value(FieldNameType fieldNameType)
         {
             //arrange
