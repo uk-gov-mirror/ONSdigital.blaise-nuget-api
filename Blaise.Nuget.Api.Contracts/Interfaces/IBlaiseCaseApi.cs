@@ -24,6 +24,9 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         void CreateCase(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData);
 
+        void UpdateCase(string primaryKeyValue, Dictionary<string, string> fieldData,
+            string instrumentName, string serverParkName);
+
         void UpdateCase(IDataRecord dataRecord, Dictionary<string, string> fieldData,
             string instrumentName, string serverParkName);
 
@@ -43,5 +46,13 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         Dictionary<string, string> GetRecordDataFields(IDataRecord dataRecord);
 
         int GetOutcomeCode(IDataRecord dataRecord);
+
+        void LockDataRecord(string primaryKeyValue, string instrumentName, string serverParkName,
+            string lockId);
+
+        void UnLockDataRecord(string primaryKeyValue, string instrumentName, string serverParkName,
+           string lockId);
+        
+        bool DataRecordIsLocked(string primaryKeyValue, string instrumentName, string serverParkName);
     }
 }

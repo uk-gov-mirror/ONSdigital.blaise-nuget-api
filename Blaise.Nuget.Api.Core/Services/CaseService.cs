@@ -132,7 +132,17 @@ namespace Blaise.Nuget.Api.Core.Services
             WriteDataRecord(dataRecord, databaseFile);
         }
 
-        public void UpdateDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, Dictionary<string, string> fieldData, string instrumentName, string serverParkName)
+        public void UpdateDataRecord(ConnectionModel connectionModel, string primaryKeyValue, Dictionary<string, string> fieldData, 
+            string instrumentName, string serverParkName)
+        {
+            var dataRecord = GetDataRecord(connectionModel, primaryKeyValue, instrumentName, serverParkName);
+
+            dataRecord = _mapperService.MapDataRecordFields(dataRecord, fieldData);
+            _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
+        }
+
+        public void UpdateDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, Dictionary<string, string> fieldData, 
+            string instrumentName, string serverParkName)
         {
             dataRecord = _mapperService.MapDataRecordFields(dataRecord, fieldData);
 
@@ -142,6 +152,26 @@ namespace Blaise.Nuget.Api.Core.Services
         public Dictionary<string, string> GetFieldDataFromRecord(IDataRecord dataRecord)
         {
             return _mapperService.MapFieldDictionaryFromRecord(dataRecord);
+        }
+
+        public void LockDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName,
+            string lockId)
+        {
+            var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
+            var primaryKey = _keyService.GetPrimaryKey(dataModel);
+            _keyService.AssignPrimaryKeyValue(primaryKey, primaryKeyValue);
+
+            _dataRecordService.LockDataRecord(connectionModel, primaryKey, instrumentName, serverParkName, lockId);
+        }
+
+        public void UnLockDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, 
+            string serverParkName, string lockId)
+        {
+            var dataModel = _dataModelService.GetDataModel(connectionModel, instrumentName, serverParkName);
+            var primaryKey = _keyService.GetPrimaryKey(dataModel);
+            _keyService.AssignPrimaryKeyValue(primaryKey, primaryKeyValue);
+
+            _dataRecordService.UnLockDataRecord(connectionModel, primaryKey, instrumentName, serverParkName, lockId);
         }
     }
 }

@@ -6,6 +6,7 @@ using Blaise.Nuget.Api.Core.Interfaces.Factories;
 using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using StatNeth.Blaise.API.DataLink;
+using StatNeth.Blaise.API.DataRecord;
 
 namespace Blaise.Nuget.Api.Core.Providers
 {
@@ -24,6 +25,22 @@ namespace Blaise.Nuget.Api.Core.Providers
             _surveyService = surveyService;
 
             _dataLinkConnections = new Dictionary<Tuple<string, string>, Tuple<IDataLink4, DateTime>>();
+        }
+
+        public void LockDataRecord(ConnectionModel connectionModel, string instrumentName, string serverParkName,
+            IKey primaryKey, string lockId)
+        {
+            var dataLink = GetDataLink(connectionModel, instrumentName, serverParkName);
+
+            dataLink.Lock(primaryKey, lockId);
+        }
+
+        public void UnLockDataRecord(ConnectionModel connectionModel, string instrumentName, string serverParkName,
+            IKey primaryKey, string lockId)
+        {
+            var dataLink = GetDataLink(connectionModel, instrumentName, serverParkName);
+
+            dataLink.Unlock(primaryKey, lockId);
         }
 
         public IDataLink4 GetDataLink(ConnectionModel connectionModel, string instrumentName, string serverParkName)

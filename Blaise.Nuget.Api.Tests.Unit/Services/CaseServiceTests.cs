@@ -59,6 +59,8 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             _dataRecordServiceMock = new Mock<IDataRecordService>();
             _dataRecordServiceMock.Setup(d => d.GetDataRecord(_dataModelMock.Object)).Returns(_dataRecordMock.Object);
+            _dataRecordServiceMock.Setup(d => d.GetDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName))
+                .Returns(_dataRecordMock.Object);
 
             _fieldServiceMock = new Mock<IFieldService>();
 
@@ -258,6 +260,29 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
         [Test]
         public void Given_Valid_Arguments_When_I_Call_UpdateDataRecord_Then_The_Correct_Services_Are_Called()
+        {
+            //arrange
+            const string primaryKeyValue = "Key1";
+            var fieldData = new Dictionary<string, string>();
+
+            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(), 
+                It.IsAny<Dictionary<string, string>>())).Returns(_dataRecordMock.Object);
+
+            //act
+            _sut.UpdateDataRecord(_connectionModel, primaryKeyValue, fieldData, _instrumentName, _serverParkName);
+
+            //assert
+            _dataModelServiceMock.Verify(v => v.GetDataModel(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+            _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataModelMock.Object), Times.Once);
+            _keyServiceMock.Verify(v => v.AssignPrimaryKeyValue(_keyMock.Object, primaryKeyValue), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.GetDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName), Times.Once);
+            _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, fieldData), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, _dataRecordMock.Object, 
+                _instrumentName, _serverParkName), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_DataRecord_When_I_Call_UpdateDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //arrange
             var fieldData = new Dictionary<string, string>();
