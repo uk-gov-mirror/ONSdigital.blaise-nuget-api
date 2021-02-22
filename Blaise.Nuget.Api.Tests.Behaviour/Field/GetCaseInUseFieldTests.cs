@@ -17,7 +17,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Field
             _primaryKey = "9000001";
         }
 
-        //[Ignore("Integration")]
+        [Ignore("Integration")]
         [TestCase(0)]
         [TestCase(1)]
         public void Given_CaseInUse_Value_Set_When_I_Call_GetFieldValue_Then_The_Correct_Value_Is_Returned(int caseInUse)
