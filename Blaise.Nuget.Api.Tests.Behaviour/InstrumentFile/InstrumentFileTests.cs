@@ -2,12 +2,11 @@
 using Blaise.Nuget.Api.Api;
 using NUnit.Framework;
 
-namespace Blaise.Nuget.Api.Tests.Behaviour.File
+namespace Blaise.Nuget.Api.Tests.Behaviour.InstrumentFile
 {
     public class InstrumentFileTests
     {
         private readonly BlaiseFileApi _sut;
-
         public InstrumentFileTests()
         {
             _sut = new BlaiseFileApi();
@@ -68,7 +67,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.File
             {
                 var primaryKey = blaiseCaseApi.GetPrimaryKeyValue(cases.ActiveRecord);
 
-                blaiseCaseApi.RemoveCase( primaryKey, instrumentName, serverParkName);
+                blaiseCaseApi.RemoveCase(primaryKey, instrumentName, serverParkName);
 
                 cases.MoveNext();
             }

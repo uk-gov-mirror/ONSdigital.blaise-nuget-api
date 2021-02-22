@@ -11,6 +11,9 @@ namespace Blaise.Nuget.Api.Contracts.Enums
         Mode,
 
         [Description("QDataBag.TelNo")]
-        TelNo
+        TelNo,
+
+        [Description("CaseInUse")]
+        CaseInUse
     }
 }
