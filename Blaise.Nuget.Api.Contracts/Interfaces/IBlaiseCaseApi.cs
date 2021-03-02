@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
 using StatNeth.Blaise.API.DataLink;
 using StatNeth.Blaise.API.DataRecord;
@@ -54,5 +55,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
            string lockId);
         
         bool DataRecordIsLocked(string primaryKeyValue, string instrumentName, string serverParkName);
+
+        DateTime? GetLastUpdatedDateTime(IDataRecord dataRecord);
     }
 }
