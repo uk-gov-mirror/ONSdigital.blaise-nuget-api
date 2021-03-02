@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Mappers;
@@ -459,7 +460,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             string dateField, string timeField, int month)
         {
             //arrange
-            var expectedDateTime = DateTime.Parse($"{dateField} {timeField}");
+            var expectedDateTime = DateTime.ParseExact($"{dateField} {timeField}","dd-MM-yyyy HH:mm:ss", CultureInfo.InvariantCulture);
 
             //setup date
             var dateDataValueMock = new Mock<IDataValue>();
