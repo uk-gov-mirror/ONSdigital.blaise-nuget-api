@@ -201,5 +201,26 @@ namespace Blaise.Nuget.Api.Core.Services
 
             return null;
         }
+
+        public bool CaseInUseInCati(IDataRecord dataRecord)
+        {
+            var lastUpdated = GetLastUpdatedDateTime(dataRecord);
+
+            if (lastUpdated == null)
+            {
+                return false;
+            }
+
+            //time = 16:00
+            //last updated = 15:50
+            //now = 15:30
+
+            if (lastUpdated?.AddMinutes(31) > DateTime.Now)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
