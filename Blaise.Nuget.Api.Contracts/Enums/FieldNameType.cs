@@ -13,7 +13,13 @@ namespace Blaise.Nuget.Api.Contracts.Enums
         [Description("QDataBag.TelNo")]
         TelNo,
 
-        [Description("CaseInUse")]
-        CaseInUse
+        [Description("DateTimeStamp")]
+        LastUpdated,
+
+        [Description("DateStamp")]
+        LastUpdatedDate,
+
+        [Description("TimeStamp")]
+        LastUpdatedTime
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Mappers;
@@ -172,6 +173,31 @@ namespace Blaise.Nuget.Api.Core.Services
             _keyService.AssignPrimaryKeyValue(primaryKey, primaryKeyValue);
 
             _dataRecordService.UnLockDataRecord(connectionModel, primaryKey, instrumentName, serverParkName, lockId);
+        }
+
+        public DateTime? GetLastUpdatedDateTime(IDataRecord dataRecord)
+        {
+            if (!_fieldService.FieldExists(dataRecord, FieldNameType.LastUpdatedDate) || 
+                !_fieldService.FieldExists(dataRecord, FieldNameType.LastUpdatedTime))
+            {
+                return null;
+            }
+
+            var dateField = _fieldService.GetField(dataRecord, FieldNameType.LastUpdatedDate);
+            var timeField = _fieldService.GetField(dataRecord, FieldNameType.LastUpdatedTime);
+
+            if (string.IsNullOrWhiteSpace(dateField?.DataValue?.ValueAsText) || 
+                string.IsNullOrWhiteSpace(timeField?.DataValue?.ValueAsText))
+            {
+                return null;
+            }
+
+            if (DateTime.TryParse($"{dateField.DataValue.ValueAsText} {timeField.DataValue.ValueAsText}", out var dateTime))
+            {
+                return dateTime;
+            }
+
+            return null;
         }
     }
 }
