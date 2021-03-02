@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Mappers;
@@ -208,7 +209,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             const string primaryKeyValue = "Key1";
             var fieldData = new Dictionary<string, string>();
 
-            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(), 
+            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(),
                     It.IsAny<IKey>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()))
                 .Returns(_dataRecordMock.Object);
 
@@ -219,7 +220,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataModelServiceMock.Verify(v => v.GetDataModel(_connectionModel, _instrumentName, _serverParkName), Times.Once);
             _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataModelMock.Object), Times.Once);
             _dataRecordServiceMock.Verify(v => v.GetDataRecord(_dataModelMock.Object), Times.Once);
-            _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object,  _keyMock.Object, primaryKeyValue, fieldData), Times.Once);
+            _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, _keyMock.Object, primaryKeyValue, fieldData), Times.Once);
             _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
@@ -232,7 +233,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _sut.CreateNewDataRecord(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName);
 
             //assert
-            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName), 
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _instrumentName, _serverParkName),
                 Times.Once);
         }
 
@@ -243,7 +244,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             const string primaryKeyValue = "Key1";
             var fieldData = new Dictionary<string, string>();
 
-            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(), 
+            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(),
                     It.IsAny<IKey>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()))
                 .Returns(_dataRecordMock.Object);
 
@@ -265,7 +266,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             const string primaryKeyValue = "Key1";
             var fieldData = new Dictionary<string, string>();
 
-            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(), 
+            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(),
                 It.IsAny<Dictionary<string, string>>())).Returns(_dataRecordMock.Object);
 
             //act
@@ -277,7 +278,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _keyServiceMock.Verify(v => v.AssignPrimaryKeyValue(_keyMock.Object, primaryKeyValue), Times.Once);
             _dataRecordServiceMock.Verify(v => v.GetDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName), Times.Once);
             _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, fieldData), Times.Once);
-            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, _dataRecordMock.Object, 
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, _dataRecordMock.Object,
                 _instrumentName, _serverParkName), Times.Once);
         }
 
@@ -287,7 +288,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //arrange
             var fieldData = new Dictionary<string, string>();
 
-            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(), 
+            _mapperServiceMock.Setup(m => m.MapDataRecordFields(It.IsAny<IDataRecord>(),
                     It.IsAny<Dictionary<string, string>>())).Returns(_dataRecordMock.Object);
 
             //act
@@ -399,7 +400,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
                 _connectionModel, _instrumentName, _serverParkName)).Returns(numberOfCases);
 
             //act
-            var result =_sut.GetNumberOfCases(_connectionModel, _instrumentName, _serverParkName);
+            var result = _sut.GetNumberOfCases(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             Assert.NotNull(result);
@@ -449,6 +450,172 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.NotNull(result);
             Assert.IsInstanceOf<Dictionary<string, string>>(result);
             Assert.AreSame(fieldDictionary, result);
+        }
+
+
+        [TestCase("02-12-2021", "09:23:59", 12)]
+        [TestCase("12-01-2021", "23:45:59", 01)]
+        public void Given_The_Date_And_Time_Fields_Are_Set_When_I_Call_GetLastUpdatedDateTime_Then_The_Correct_Value_Is_Returned(
+            string dateField, string timeField, int month)
+        {
+            //arrange
+            var expectedDateTime = DateTime.Parse($"{dateField} {timeField}");
+
+            //setup date
+            var dateDataValueMock = new Mock<IDataValue>();
+            var dateFieldMock = new Mock<IField>();
+            dateDataValueMock.Setup(d => d.ValueAsText).Returns(dateField);
+            dateFieldMock.Setup(f => f.DataValue).Returns(dateDataValueMock.Object);
+            _fieldServiceMock.Setup(f => f.FieldExists(_dataRecordMock.Object, FieldNameType.LastUpdatedDate))
+                .Returns(true);
+            _fieldServiceMock.Setup(f => f.GetField(_dataRecordMock.Object, FieldNameType.LastUpdatedDate))
+                .Returns(dateFieldMock.Object);
+
+            //setup time
+            var timeDataValueMock = new Mock<IDataValue>();
+            var timeFieldMock = new Mock<IField>();
+            timeDataValueMock.Setup(d => d.ValueAsText).Returns(timeField);
+            timeFieldMock.Setup(f => f.DataValue).Returns(timeDataValueMock.Object);
+            _fieldServiceMock.Setup(f => f.FieldExists(_dataRecordMock.Object, FieldNameType.LastUpdatedTime))
+                .Returns(true);
+            _fieldServiceMock.Setup(f => f.GetField(_dataRecordMock.Object, FieldNameType.LastUpdatedTime))
+                .Returns(timeFieldMock.Object);
+
+
+            //act
+            var result = _sut.GetLastUpdatedDateTime(_dataRecordMock.Object);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<DateTime>(result);
+            Assert.AreEqual(expectedDateTime, result);
+            Assert.AreEqual(month, result?.Month);
+        }
+
+        [TestCase("", "09:23:59")]
+        [TestCase(null, "09:23:59")]
+        [TestCase("01-01-2021", "")]
+        [TestCase("01-01-2021", null)]
+        [TestCase("", null)]
+        [TestCase(null, null)]
+        public void Given_The_Date_Or_Time_Field_Is_Not_Set_Are_Set_When_I_Call_GetLastUpdatedDateTime_Then_Null_Is_Returned(
+            string dateField, string timeField)
+        {
+            //arrange
+            //setup date
+            var dateDataValueMock = new Mock<IDataValue>();
+            var dateFieldMock = new Mock<IField>();
+            dateDataValueMock.Setup(d => d.ValueAsText).Returns(dateField);
+            dateFieldMock.Setup(f => f.DataValue).Returns(dateDataValueMock.Object);
+            _fieldServiceMock.Setup(f => f.FieldExists(_dataRecordMock.Object, FieldNameType.LastUpdatedDate))
+                .Returns(true);
+            _fieldServiceMock.Setup(f => f.GetField(_dataRecordMock.Object, FieldNameType.LastUpdatedDate))
+                .Returns(dateFieldMock.Object);
+
+            //setup time
+            var timeDataValueMock = new Mock<IDataValue>();
+            var timeFieldMock = new Mock<IField>();
+            timeDataValueMock.Setup(d => d.ValueAsText).Returns(timeField);
+            timeFieldMock.Setup(f => f.DataValue).Returns(timeDataValueMock.Object);
+            _fieldServiceMock.Setup(f => f.FieldExists(_dataRecordMock.Object, FieldNameType.LastUpdatedTime))
+                .Returns(true);
+            _fieldServiceMock.Setup(f => f.GetField(_dataRecordMock.Object, FieldNameType.LastUpdatedTime))
+                .Returns(timeFieldMock.Object);
+
+
+            //act
+            var result = _sut.GetLastUpdatedDateTime(_dataRecordMock.Object);
+
+            //assert
+            Assert.IsNull(result);
+        }
+
+        [TestCase("2017", "09:23:59")]
+        [TestCase("02-2017", "09:23:59")]
+        [TestCase("01-01-2021", "09")]
+        public void Given_The_Date_Or_Time_Field_Is_In_Incorrect_Format_When_I_Call_GetLastUpdatedDateTime_Then_Null_Is_Returned(
+            string dateField, string timeField)
+        {
+            //arrange
+
+            //setup date
+            var dateDataValueMock = new Mock<IDataValue>();
+            var dateFieldMock = new Mock<IField>();
+            dateDataValueMock.Setup(d => d.ValueAsText).Returns(dateField);
+            dateFieldMock.Setup(f => f.DataValue).Returns(dateDataValueMock.Object);
+            _fieldServiceMock.Setup(f => f.FieldExists(_dataRecordMock.Object, FieldNameType.LastUpdatedDate))
+                .Returns(true);
+            _fieldServiceMock.Setup(f => f.GetField(_dataRecordMock.Object, FieldNameType.LastUpdatedDate))
+                .Returns(dateFieldMock.Object);
+
+            //setup time
+            var timeDataValueMock = new Mock<IDataValue>();
+            var timeFieldMock = new Mock<IField>();
+            timeDataValueMock.Setup(d => d.ValueAsText).Returns(timeField);
+            timeFieldMock.Setup(f => f.DataValue).Returns(timeDataValueMock.Object);
+            _fieldServiceMock.Setup(f => f.FieldExists(_dataRecordMock.Object, FieldNameType.LastUpdatedTime))
+                .Returns(true);
+            _fieldServiceMock.Setup(f => f.GetField(_dataRecordMock.Object, FieldNameType.LastUpdatedTime))
+                .Returns(timeFieldMock.Object);
+
+
+            //act
+            var result = _sut.GetLastUpdatedDateTime(_dataRecordMock.Object);
+
+            //assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void Given_The_Date_Field_Does_Not_Exist_When_I_Call_GetLastUpdatedDateTime_Then_Null_Is_Returned()
+        {
+            //arrange
+
+            //setup date
+            _fieldServiceMock.Setup(f => f.FieldExists(_dataRecordMock.Object, FieldNameType.LastUpdatedDate))
+                .Returns(false);
+
+            //setup time
+            var timeDataValueMock = new Mock<IDataValue>();
+            var timeFieldMock = new Mock<IField>();
+            timeDataValueMock.Setup(d => d.ValueAsText).Returns("09:23:59");
+            timeFieldMock.Setup(f => f.DataValue).Returns(timeDataValueMock.Object);
+            _fieldServiceMock.Setup(f => f.FieldExists(_dataRecordMock.Object, FieldNameType.LastUpdatedTime))
+                .Returns(true);
+            _fieldServiceMock.Setup(f => f.GetField(_dataRecordMock.Object, FieldNameType.LastUpdatedTime))
+                .Returns(timeFieldMock.Object);
+
+            //act
+            var result = _sut.GetLastUpdatedDateTime(_dataRecordMock.Object);
+
+            //assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void Given_The_Time_Field_Does_Not_Exist_When_I_Call_GetLastUpdatedDateTime_Then_Null_Is_Returned()
+        {
+            //arrange
+
+            //setup date
+            var dateDataValueMock = new Mock<IDataValue>();
+            var dateFieldMock = new Mock<IField>();
+            dateDataValueMock.Setup(d => d.ValueAsText).Returns("02-12-2021");
+            dateFieldMock.Setup(f => f.DataValue).Returns(dateDataValueMock.Object);
+            _fieldServiceMock.Setup(f => f.FieldExists(_dataRecordMock.Object, FieldNameType.LastUpdatedDate))
+                .Returns(true);
+            _fieldServiceMock.Setup(f => f.GetField(_dataRecordMock.Object, FieldNameType.LastUpdatedDate))
+                .Returns(dateFieldMock.Object);
+
+            //setup time
+            _fieldServiceMock.Setup(f => f.FieldExists(_dataRecordMock.Object, FieldNameType.LastUpdatedTime))
+                .Returns(false);
+
+            //act
+            var result = _sut.GetLastUpdatedDateTime(_dataRecordMock.Object);
+
+            //assert
+            Assert.IsNull(result);
         }
     }
 }
