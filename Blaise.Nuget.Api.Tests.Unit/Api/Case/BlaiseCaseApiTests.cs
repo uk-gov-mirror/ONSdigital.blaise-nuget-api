@@ -1559,7 +1559,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             _caseServiceMock.Setup(d => d.CaseInUseInCati(It.IsAny<IDataRecord>()));
 
             //act
-            _sut.GetLastUpdatedDateTime(dataRecord.Object);
+            _sut.CaseInUseInCati(dataRecord.Object);
 
             //assert
             _caseServiceMock.Verify(v => v.CaseInUseInCati(dataRecord.Object),
