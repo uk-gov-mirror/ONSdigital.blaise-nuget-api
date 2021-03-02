@@ -211,16 +211,7 @@ namespace Blaise.Nuget.Api.Core.Services
                 return false;
             }
 
-            //time = 16:00
-            //last updated = 15:50
-            //now = 15:30
-
-            if (lastUpdated?.AddMinutes(31) > DateTime.Now)
-            {
-                return true;
-            }
-
-            return false;
+            return lastUpdated?.AddMinutes(31) > DateTime.Now;
         }
     }
 }
