@@ -1550,5 +1550,28 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.GetLastUpdatedDateTime(null));
             Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
         }
+
+        [Test]
+        public void Given_A_DataRecord_When_I_Call_CaseInUseInCati_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //arrange
+            var dataRecord = new Mock<IDataRecord>();
+            _caseServiceMock.Setup(d => d.CaseInUseInCati(It.IsAny<IDataRecord>()));
+
+            //act
+            _sut.GetLastUpdatedDateTime(dataRecord.Object);
+
+            //assert
+            _caseServiceMock.Verify(v => v.CaseInUseInCati(dataRecord.Object),
+                Times.Once);
+        }
+
+        [Test]
+        public void Given_A_Null_DataRecord_When_I_Call_CaseInUseInCati_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.CaseInUseInCati(null));
+            Assert.AreEqual("The argument 'dataRecord' must be supplied", exception.ParamName);
+        }
     }
 }

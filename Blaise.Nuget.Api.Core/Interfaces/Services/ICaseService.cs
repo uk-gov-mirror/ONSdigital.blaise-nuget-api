@@ -58,5 +58,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
             string lockId);
 
         DateTime? GetLastUpdatedDateTime(IDataRecord dataRecord);
+
+        bool CaseInUseInCati(IDataRecord dataRecord);
     }
 }

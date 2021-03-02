@@ -57,5 +57,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         bool DataRecordIsLocked(string primaryKeyValue, string instrumentName, string serverParkName);
 
         DateTime? GetLastUpdatedDateTime(IDataRecord dataRecord);
+
+        bool CaseInUseInCati(IDataRecord dataRecord);
     }
 }
