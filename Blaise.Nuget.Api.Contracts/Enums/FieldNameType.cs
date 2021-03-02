@@ -14,6 +14,12 @@ namespace Blaise.Nuget.Api.Contracts.Enums
         TelNo,
 
         [Description("DateTimeStamp")]
-        LastUpdated
+        LastUpdated,
+
+        [Description("DateStamp")]
+        LastUpdatedDate,
+
+        [Description("TimeStamp")]
+        LastUpdatedTime
     }
 }

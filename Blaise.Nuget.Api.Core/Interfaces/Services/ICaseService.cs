@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Models;
 using StatNeth.Blaise.API.DataLink;
@@ -55,5 +56,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         void UnLockDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName,
             string lockId);
+
+        DateTime? GetLastUpdatedDateTime(IDataRecord dataRecord);
     }
 }
