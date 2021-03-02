@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Blaise.Nuget.Api.Contracts.Enums;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Mappers;
@@ -192,7 +193,8 @@ namespace Blaise.Nuget.Api.Core.Services
                 return null;
             }
 
-            if (DateTime.TryParse($"{dateField.DataValue.ValueAsText} {timeField.DataValue.ValueAsText}", out var dateTime))
+            if(DateTime.TryParseExact($"{dateField.DataValue.ValueAsText} {timeField.DataValue.ValueAsText}",
+                "dd-MM-yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime))
             {
                 return dateTime;
             }
