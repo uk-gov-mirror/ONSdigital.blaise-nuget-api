@@ -24,7 +24,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         void InstallInstrument(ConnectionModel connectionModel, string instrumentName, string serverParkName, 
             string instrumentFile, SurveyInterviewType surveyInterviewType);
         
-        void UninstallInstrument(ConnectionModel connectionModel, string instrumentName, string serverParkName);
+        bool UninstallInstrument(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
         SurveyInterviewType GetSurveyInterviewType(ConnectionModel connectionModel, string instrumentName, string serverParkName);
     }
