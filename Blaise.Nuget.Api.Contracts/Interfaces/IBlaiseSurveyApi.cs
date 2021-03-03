@@ -25,7 +25,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
 
         void InstallSurvey(string instrumentName, string serverParkName, string instrumentFile, SurveyInterviewType surveyInterviewType);
 
-        void UninstallSurvey(string instrumentName, string serverParkName);
+        bool UninstallSurvey(string instrumentName, string serverParkName);
 
         void ActivateSurvey(string instrumentName, string serverParkName);
 
