@@ -115,11 +115,6 @@ namespace Blaise.Nuget.Api.Core.Services
             var instrumentId = GetInstrumentId(connectionModel, instrumentName, serverParkName);
 
             serverPark.RemoveSurvey(instrumentId);
-
-            if (SurveyExists(connectionModel, instrumentName, serverParkName))
-            {
-                throw new MethodFailedException($"Instrument '{instrumentName}' failed to uninstall from server park '{serverParkName}'");
-            }
         }
 
         private static Guid GetInstrumentId(string instrumentName, IServerPark serverPark)
