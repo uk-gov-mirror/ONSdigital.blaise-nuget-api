@@ -50,6 +50,7 @@
     <Compile Include="Enums\FieldNameType.cs" />
     <Compile Include="Enums\SurveyInterviewType.cs" />
     <Compile Include="Enums\SurveyStatusType.cs" />
+    <Compile Include="Exceptions\MethodFailedException.cs" />
     <Compile Include="Exceptions\DataNotFoundException.cs" />
     <Compile Include="Exceptions\SurveyConfigurationException.cs" />
     <Compile Include="Extensions\EnumExtension.cs" />
