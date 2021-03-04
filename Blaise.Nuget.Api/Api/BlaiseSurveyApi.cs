@@ -105,12 +105,12 @@ namespace Blaise.Nuget.Api.Api
                 instrumentFile, surveyInterviewType);
         }
 
-        public bool UninstallSurvey(string instrumentName, string serverParkName)
+        public void UninstallSurvey(string instrumentName, string serverParkName)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
             serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
             
-            return _surveyService.UninstallInstrument(_connectionModel, instrumentName, serverParkName);
+            _surveyService.UninstallInstrument(_connectionModel, instrumentName, serverParkName);
         }
 
         public void ActivateSurvey(string instrumentName, string serverParkName)

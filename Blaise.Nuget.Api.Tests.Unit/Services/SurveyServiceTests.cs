@@ -438,12 +438,28 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         [Test]
         public void Given_An_Instrument_Exists_When_I_Call_UninstallInstrument_Then_The_Correct_Services_Are_Called()
         {
+            //arrange
+            var surveyItemsBefore  = new List<ISurvey> { _surveyMock.Object };
+            var surveyItemsAfter= new List<ISurvey>();
+
+            _surveyCollectionMock.SetupSequence(s => s.GetEnumerator())
+                .Returns(() => surveyItemsBefore.GetEnumerator())
+                .Returns(() => surveyItemsAfter.GetEnumerator());
+
             //act
             _sut.UninstallInstrument(_connectionModel, _instrumentName, _serverParkName);
 
             //assert
             _parkServiceMock.Verify(v => v.GetServerPark(_connectionModel, _serverParkName), Times.AtLeastOnce);
             _serverParkMock.Verify(v => v.RemoveSurvey(_instrumentId), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Instrument_Fails_To_Uninstall_When_I_Call_UninstallInstrument_Then_A_MethodFailedException_is_Thrown()
+        {
+            //act && assert
+            var ex = Assert.Throws<MethodFailedException>(() => _sut.UninstallInstrument(_connectionModel, _instrumentName, _serverParkName));
+            Assert.AreEqual(ex.Message, $"Instrument '{_instrumentName}' failed to uninstall from server park '{_serverParkName}'");
         }
     }
 }

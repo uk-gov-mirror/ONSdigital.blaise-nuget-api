@@ -109,13 +109,17 @@ namespace Blaise.Nuget.Api.Core.Services
                 DataOverwriteMode.Always);
         }
 
-        public bool UninstallInstrument(ConnectionModel connectionModel, string instrumentName, string serverParkName)
+        public void UninstallInstrument(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
             var instrumentId = GetInstrumentId(connectionModel, instrumentName, serverParkName);
 
             serverPark.RemoveSurvey(instrumentId);
-            return !SurveyExists(connectionModel, instrumentName, serverParkName);
+
+            if (SurveyExists(connectionModel, instrumentName, serverParkName))
+            {
+                throw new MethodFailedException($"Instrument '{instrumentName}' failed to uninstall from server park '{serverParkName}'");
+            }
         }
 
         private static Guid GetInstrumentId(string instrumentName, IServerPark serverPark)
