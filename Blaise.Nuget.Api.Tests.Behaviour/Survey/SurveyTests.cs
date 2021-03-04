@@ -31,21 +31,6 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
             Assert.IsNotNull(surveys.First(s => s.Name == InstrumentName));
         }
 
-        [Test]
-        public void Given_An_Instrument_Is_Installed_It_Gets_Uninstalled_From_The_Server_Park()
-        {
-            //arrange
-            _sut.InstallSurvey(InstrumentName, ServerParkName,FullInstrumentPath, SurveyInterviewType.Cati);
-            var surveys = _sut.GetSurveys(ServerParkName).ToList();
-            Assert.IsNotNull(surveys.First(s => s.Name == InstrumentName));
-
-            //act_
-            var surveyHasUninstalled = _sut.UninstallSurvey(InstrumentName, ServerParkName);
-
-            //assert
-            Assert.IsTrue(surveyHasUninstalled);
-        }
-
         [Ignore("Integration")]
         [Test]
         public void Given_An_Instrument_Is_Installed_When_I_Call_GetSurvey_The_Correct_Survey_Is_Returned()
