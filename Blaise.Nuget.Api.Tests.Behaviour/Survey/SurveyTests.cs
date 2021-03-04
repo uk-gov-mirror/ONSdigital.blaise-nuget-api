@@ -11,8 +11,8 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
         private readonly BlaiseSurveyApi _sut;
 
         private const string ServerParkName = "gusty";
-        private const string FullInstrumentPath = @"D:\Opn\OPN2101A.zip";
-        private const string InstrumentName = "OPN2101A";
+        private const string FullInstrumentPath = @"C:\users\user\desktop\OPN2102R.bpkg";
+        private const string InstrumentName = "OPN2102R";
 
         public SurveyTests()
         {
@@ -31,7 +31,6 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
             Assert.IsNotNull(surveys.First(s => s.Name == InstrumentName));
         }
 
-        [Ignore("Integration")]
         [Test]
         public void Given_An_Instrument_Is_Installed_It_Gets_Uninstalled_From_The_Server_Park()
         {
@@ -41,11 +40,10 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Survey
             Assert.IsNotNull(surveys.First(s => s.Name == InstrumentName));
 
             //act_
-            _sut.UninstallSurvey(ServerParkName, InstrumentName);
+            var surveyHasUninstalled = _sut.UninstallSurvey(InstrumentName, ServerParkName);
 
             //assert
-            var surveysInstalled = _sut.GetSurveys(ServerParkName).ToList();
-            Assert.IsNull(surveysInstalled.FirstOrDefault(s => s.Name == InstrumentName));
+            Assert.IsTrue(surveyHasUninstalled);
         }
 
         [Ignore("Integration")]
