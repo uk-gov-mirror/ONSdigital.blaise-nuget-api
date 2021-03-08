@@ -490,7 +490,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<DateTime>(result);
             Assert.AreEqual(expectedDateTime, result);
-            Assert.AreEqual(month, result?.Month);
+            Assert.AreEqual(month, result.Value.Month);
         }
 
         [TestCase("", "09:23:59")]
