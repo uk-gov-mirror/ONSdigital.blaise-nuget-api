@@ -78,9 +78,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_No_Surveys_When_I_Call_GetSurveyNames_Then_An_Empty_List_Is_Returned()
         {
             //arrange
-            var surveyItems = new List<ISurvey>();
             _surveyCollectionMock = new Mock<ISurveyCollection>();
-            _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => surveyItems.GetEnumerator());
+            _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() 
+                => new List<ISurvey>().GetEnumerator());
             _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
             _parkServiceMock.Setup(s => s.GetServerPark(_connectionModel, It.IsAny<string>())).Returns(_serverParkMock.Object);
 
@@ -97,10 +97,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         {
             //arrange
             const string serverParkName = "ServerParkDoesNotExist";
-            var surveyItems = new List<ISurvey>();
 
             _surveyCollectionMock = new Mock<ISurveyCollection>();
-            _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => surveyItems.GetEnumerator());
+            _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() 
+                => new List<ISurvey>().GetEnumerator());
 
             _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
             _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, It.IsAny<string>())).Returns(_serverParkMock.Object);
@@ -114,7 +114,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [TestCase("TestInstrumentName", true)]
-        [TestCase("testinstrumentname", true)]
+        [TestCase("TestInstrumentName", true)]
         [TestCase("InstrumentNotFound", false)]
         public void Given_I_Call_SurveyExists_Then_I_Get_A_Correct_Value_Returned(string instrumentName, bool exists)
         {
@@ -143,9 +143,9 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_No_Surveys_When_I_Call_GetSurveys_Then_A_Data_Not_Found_Exception_Is_Thrown()
         {
             //arrange
-            var surveyItems = new List<ISurvey>();
             _surveyCollectionMock = new Mock<ISurveyCollection>();
-            _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => surveyItems.GetEnumerator());
+            _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() 
+                => new List<ISurvey>().GetEnumerator());
             _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
 
             //act
@@ -161,10 +161,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         {
             //arrange
             const string serverParkName = "ServerParkDoesNotExist";
-            var surveyItems = new List<ISurvey>();
 
             _surveyCollectionMock = new Mock<ISurveyCollection>();
-            _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() => surveyItems.GetEnumerator());
+            _surveyCollectionMock.Setup(s => s.GetEnumerator()).Returns(() 
+                => new List<ISurvey>().GetEnumerator());
 
             _serverParkMock.Setup(s => s.Surveys).Returns(_surveyCollectionMock.Object);
             _parkServiceMock.Setup(p => p.GetServerPark(_connectionModel, It.IsAny<string>())).Returns(_serverParkMock.Object);

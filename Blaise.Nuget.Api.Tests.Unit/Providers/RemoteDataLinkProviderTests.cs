@@ -2,6 +2,7 @@
 using System.Threading;
 using Blaise.Nuget.Api.Contracts.Models;
 using Blaise.Nuget.Api.Core.Interfaces.Factories;
+using Blaise.Nuget.Api.Core.Interfaces.Providers;
 using Blaise.Nuget.Api.Core.Interfaces.Services;
 using Blaise.Nuget.Api.Core.Providers;
 using Moq;
@@ -26,7 +27,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Providers
         private readonly string _serverParkName;
         private readonly Guid _instrumentId;
 
-        private RemoteDataLinkProvider _sut;
+        private IRemoteDataLinkProvider _sut;
 
         public RemoteDataLinkProviderTests()
         {
