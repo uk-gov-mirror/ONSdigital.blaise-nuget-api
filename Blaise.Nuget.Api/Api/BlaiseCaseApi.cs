@@ -174,6 +174,14 @@ namespace Blaise.Nuget.Api.Api
             _caseService.RemoveDataRecord(_connectionModel, primaryKeyValue, instrumentName, serverParkName);
         }
 
+        public void RemoveCases(string instrumentName, string serverParkName)
+        {
+            instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");
+            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
+
+            _caseService.RemoveDataRecords(_connectionModel, instrumentName, serverParkName);
+        }
+
         public int GetNumberOfCases(string instrumentName, string serverParkName)
         {
             instrumentName.ThrowExceptionIfNullOrEmpty("instrumentName");

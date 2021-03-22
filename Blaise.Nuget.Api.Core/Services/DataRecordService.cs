@@ -67,6 +67,13 @@ namespace Blaise.Nuget.Api.Core.Services
             dataLink.Delete(primaryKey);
         }
 
+        public void DeleteDataRecords(ConnectionModel connectionModel, string instrumentName, string serverParkName)
+        {
+            var dataLink = _remoteDataLinkProvider.GetDataLink(connectionModel, instrumentName, serverParkName);
+
+            dataLink.DeleteAll();
+        }
+
         public int GetNumberOfRecords(ConnectionModel connectionModel, string instrumentName, string serverParkName)
         {
             var records = GetDataSet(connectionModel, instrumentName, serverParkName);
