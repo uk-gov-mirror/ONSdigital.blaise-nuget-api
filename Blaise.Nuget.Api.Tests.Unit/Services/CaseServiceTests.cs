@@ -310,6 +310,16 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataRecordServiceMock.Verify(v => v.DeleteDataRecord(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName), Times.Once);
         }
 
+        [Test]
+        public void Given_An_InstrumentName_And_ServerParkName_When_I_Call_RemoveDataRecords_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.RemoveDataRecords(_connectionModel, _instrumentName, _serverParkName);
+
+            //assert
+            _dataRecordServiceMock.Verify(v => v.DeleteDataRecords(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+        }
+
         [TestCase(FieldNameType.HOut)]
         [TestCase(FieldNameType.Mode)]
         [TestCase(FieldNameType.TelNo)]

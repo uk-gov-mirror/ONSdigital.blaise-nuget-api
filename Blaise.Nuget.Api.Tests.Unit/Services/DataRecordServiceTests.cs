@@ -236,6 +236,17 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         }
 
         [Test]
+        public void Given_I_Call_RemoveDataRecords_Then_The_Correct_Services_Are_Called()
+        {
+            //act
+            _sut.DeleteDataRecords(_connectionModel, _instrumentName, _serverParkName);
+
+            //assert
+            _remoteDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _instrumentName, _serverParkName), Times.Once);
+            _remoteDataLinkMock.Verify(v => v.DeleteAll(), Times.Once);
+        }
+
+        [Test]
         public void Given_I_Call_GetNumberOfRecords_I_Get_The_Correct_Number_Back()
         {
             //arrange
