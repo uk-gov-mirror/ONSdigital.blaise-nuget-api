@@ -41,6 +41,8 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         void RemoveDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, 
             string serverParkName);
 
+        void RemoveDataRecords(ConnectionModel connectionModel, string instrumentName, string serverParkName);
+
         IDataValue GetFieldValue(IDataRecord dataRecord, FieldNameType fieldNameType);
 
         bool FieldExists(IDataRecord dataRecord, FieldNameType fieldNameType);

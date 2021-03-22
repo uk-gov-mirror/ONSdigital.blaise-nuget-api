@@ -1140,6 +1140,52 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
+ [Test]
+        public void Given_Valid_Arguments_When_I_Call_RemoveCases_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //act
+            _sut.RemoveCases(_instrumentName, _serverParkName);
+
+            //assert
+            _caseServiceMock.Verify(v => v.RemoveDataRecords(_connectionModel, _instrumentName, _serverParkName),
+                Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_InstrumentName_When_I_Call_RemoveCases_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.RemoveCases(string.Empty, _serverParkName));
+            Assert.AreEqual("A value for the argument 'instrumentName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_InstrumentName_When_I_Call_RemoveCases_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveCases(null, 
+                _serverParkName));
+            Assert.AreEqual("instrumentName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_ServerParkName_When_I_Call_RemoveCases_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.RemoveCases(_instrumentName,
+                string.Empty));
+            Assert.AreEqual("A value for the argument 'serverParkName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_Null_ServerParkName_When_I_Call_RemoveCases_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveCases(_instrumentName, 
+                null));
+            Assert.AreEqual("serverParkName", exception.ParamName);
+        }
+
         [Test]
         public void Given_A_DataRecord_When_I_Call_GetRecordDataFields_Then_The_Correct_Service_Method_Is_Called()
         {

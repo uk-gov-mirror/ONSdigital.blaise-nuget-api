@@ -41,6 +41,8 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         void RemoveCase(string primaryKeyValue, string instrumentName, 
             string serverParkName);
 
+        void RemoveCases(string instrumentName, string serverParkName);
+
         int GetNumberOfCases(string instrumentName, string serverParkName);
         int GetNumberOfCases(string databaseFile);
 
