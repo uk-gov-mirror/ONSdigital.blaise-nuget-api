@@ -26,8 +26,8 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Field
             //arrange
             const string serverParkName = "localdevelopment";
             const string instrumentName = "OPN2102R";
-            var dateValue = "02-12-2021";
-            var timeValue = "09:23:59";
+            const string dateValue = "02-12-2021";
+            const string timeValue = "09:23:59";
 
             var lastUpdated = DateTime.ParseExact($"{dateValue} {timeValue}", "dd-MM-yyyy hh:mm:ss", CultureInfo.InvariantCulture);
 

@@ -195,22 +195,5 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var exception = Assert.Throws<DataNotFoundException>(() => _sut.GetServerParks(_connectionModel));
             Assert.AreEqual("No server parks found", exception.Message);
         }
-
-       [Test]
-       public void Given_Valid_Arguments_I_Call_RegisterMachineOnServerPark_Then_The_Correct_Method_Is_Called()
-        {
-            //arrange
-            const string machineName = "Gusty01";
-            const string logicalRootName = "Default";
-            var roles = new List<string> {"Web", "Cati"};
-            var rolesArray = roles.ToArray();
-
-            //act
-            _sut.RegisterMachineOnServerPark(_connectionModel, _serverParkName, machineName,
-                logicalRootName, roles);
-
-            //assert
-            _serverParkMock.Verify(v => v.AddMachine("Gusty01", "Default", rolesArray), Times.Once);
-        }
     }
 }
