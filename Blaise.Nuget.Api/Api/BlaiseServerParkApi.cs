@@ -56,17 +56,5 @@ namespace Blaise.Nuget.Api.Api
 
             return _parkService.ServerParkExists(_connectionModel, serverParkName);
         }
-
-        public void RegisterMachineOnServerPark(string serverParkName, string machineName,
-            string logicalServerName, IList<string> roles)
-        {
-            serverParkName.ThrowExceptionIfNullOrEmpty("serverParkName");
-            machineName.ThrowExceptionIfNullOrEmpty("machineName");
-            logicalServerName.ThrowExceptionIfNullOrEmpty("logicalServerName");
-            roles.ThrowExceptionIfNullOrEmpty("roles");
-
-            _parkService.RegisterMachineOnServerPark(_connectionModel,
-                serverParkName, machineName, logicalServerName, roles);
-        }
     }
 }

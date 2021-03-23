@@ -86,7 +86,7 @@ namespace Blaise.Nuget.Api.Core.Services
             Directory.Delete(instrumentPath, true);
         }
 
-        private void DeleteFileIfExists(string filePath)
+        private static void DeleteFileIfExists(string filePath)
         {
             if (File.Exists(filePath))
             {

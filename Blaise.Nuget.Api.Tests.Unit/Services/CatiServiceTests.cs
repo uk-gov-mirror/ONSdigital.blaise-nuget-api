@@ -203,7 +203,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var installedSurveys = new Dictionary<string, Guid>
             {
                 {instrument1, Guid.NewGuid()},
-                {instrument2, Guid.NewGuid()},
+                {instrument2, Guid.NewGuid()}
             };
 
             var surveyMock = new Mock<ISurvey>();

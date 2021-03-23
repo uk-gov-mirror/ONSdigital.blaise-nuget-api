@@ -1140,7 +1140,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             Assert.AreEqual("serverParkName", exception.ParamName);
         }
 
- [Test]
+        [Test]
         public void Given_Valid_Arguments_When_I_Call_RemoveCases_Then_The_Correct_Service_Method_Is_Called()
         {
             //act
