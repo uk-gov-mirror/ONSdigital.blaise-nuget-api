@@ -21,5 +21,7 @@ namespace Blaise.Nuget.Api.Contracts.Interfaces
         void UpdateServerParks(string userName, IEnumerable<string> serverParkNames, string defaultServerPark);
 
         void RemoveUser(string userName);
+
+        bool ValidateUser(string userName, string password);
     }
 }
