@@ -96,5 +96,13 @@ namespace Blaise.Nuget.Api.Api
 
             _userService.RemoveUser(_connectionModel, userName);
         }
+
+        public bool ValidateUser(string userName, string password)
+        {
+            userName.ThrowExceptionIfNullOrEmpty("userName");
+            password.ThrowExceptionIfNullOrEmpty("password");
+
+            return _userService.ValidateUser(_connectionModel, userName, password);
+        }
     }
 }

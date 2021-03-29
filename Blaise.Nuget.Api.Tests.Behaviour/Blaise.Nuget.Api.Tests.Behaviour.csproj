@@ -123,6 +123,7 @@
     <Compile Include="Cati\CatiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Survey\SurveyTests.cs" />
+    <Compile Include="Users\UserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
