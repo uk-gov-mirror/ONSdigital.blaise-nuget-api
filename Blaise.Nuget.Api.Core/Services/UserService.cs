@@ -38,7 +38,7 @@ namespace Blaise.Nuget.Api.Core.Services
         public bool UserExists(ConnectionModel connectionModel, string userName)
         {
             var connection = _connectedServerFactory.GetConnection(connectionModel);
-
+            
             return connection.Users.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
         }
 
@@ -88,6 +88,22 @@ namespace Blaise.Nuget.Api.Core.Services
             var connection = _connectedServerFactory.GetConnection(connectionModel);
 
             connection.RemoveUser(userName);
+        }
+
+        public bool ValidateUser(ConnectionModel connectionModel, string userName, string password)
+        {
+            connectionModel.UserName = userName;
+            connectionModel.Password = password;
+
+            try
+            {
+                _connectedServerFactory.GetConnection(connectionModel);
+                return true;
+            }
+            catch // sad times
+            {
+                return false;
+            }
         }
 
         private static void AddServerParksToUser(IUser user, IEnumerable<string> serverParkNames)

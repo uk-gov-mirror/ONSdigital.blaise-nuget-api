@@ -505,5 +505,47 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.User
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.RemoveUser(null));
             Assert.AreEqual("userName", exception.ParamName);
         }
+
+        [Test]
+        public void When_I_Call_ValidateUser_Then_The_Correct_Service_Method_Is_Called()
+        {
+            //act
+            _sut.ValidateUser(_userName, _password);
+
+            //assert
+            _userServiceMock.Verify(v => v.ValidateUser(_connectionModel, _userName, _password), Times.Once);
+        }
+
+        [Test]
+        public void Given_An_Empty_UserName_When_I_Call_ValidateUser_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.ValidateUser(string.Empty, _password));
+            Assert.AreEqual("A value for the argument 'userName' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_null_UserName_When_I_Call_ValidateUser_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ValidateUser(null, _password));
+            Assert.AreEqual("userName", exception.ParamName);
+        }
+
+        [Test]
+        public void Given_An_Empty_Password_When_I_Call_ValidateUser_Then_An_ArgumentException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentException>(() => _sut.ValidateUser(_userName, string.Empty));
+            Assert.AreEqual("A value for the argument 'Password' must be supplied", exception.Message);
+        }
+
+        [Test]
+        public void Given_A_null_Password_When_I_Call_ValidateUser_Then_An_ArgumentNullException_Is_Thrown()
+        {
+            //act && assert
+            var exception = Assert.Throws<ArgumentNullException>(() => _sut.ValidateUser(_userName, null));
+            Assert.AreEqual("Password", exception.ParamName);
+        }
     }
 }
