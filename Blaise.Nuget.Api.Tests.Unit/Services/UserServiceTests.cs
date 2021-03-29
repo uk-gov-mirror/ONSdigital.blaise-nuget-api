@@ -24,7 +24,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         private Mock<IUserServerParkCollection> _userServerParkCollectionMock;
         private Mock<IUserCollection> _userCollectionMock;
         private Mock<IUserPreferenceCollection> _userPreferenceCollectionMock;
-        private Mock<IUserPreference>_userPreferenceMock;
+        private Mock<IUserPreference> _userPreferenceMock;
 
         private readonly ConnectionModel _connectionModel;
         private readonly string _serverParkName;
@@ -126,7 +126,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var result = _sut.GetUsers(_connectionModel);
 
             //assert
-            Assert.AreSame(_userCollectionMock.Object,result);
+            Assert.AreSame(_userCollectionMock.Object, result);
         }
 
         [Test]
@@ -153,7 +153,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             var result = _sut.GetUser(_connectionModel, _userName);
 
             //assert
-           Assert.AreEqual(_userName,result.Name);
+            Assert.AreEqual(_userName, result.Name);
         }
 
         [TestCase("User1")]
@@ -177,7 +177,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         {
             //arrange 
             _userMock.Setup(u => u.Name).Returns("NotFound");
-            
+
             //act
             var result = _sut.UserExists(_connectionModel, _userName);
 
@@ -286,7 +286,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             };
 
             const string defaultServerPark = "ServerPark2";
-           
+
             //act
             _sut.UpdateServerParks(_connectionModel, _userName, serverParkNameList, defaultServerPark);
 
@@ -304,7 +304,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             _userMock.Verify(v => v.Save(), Times.Once);
         }
-        
+
         [Test]
         public void Given_Valid_Arguments_When_I_Call_RemoveUser_Then_The_Correct_Services_Are_Called()
         {
@@ -313,6 +313,31 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             //assert
             _connectedServerMock.Verify(v => v.RemoveUser(_userName), Times.Once);
+        }
+
+        [Test]
+        public void Given_A_Valid_User_When_I_Call_ValidateUser_Then_True_Is_Returned()
+        {
+            //act
+            var result = _sut.ValidateUser(_connectionModel, _userName, _password);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.True(result);
+        }
+
+        [Test]
+        public void Given_An_Invalid_User_When_I_Call_ValidateUser_Then_False_Is_Returned()
+        {
+            //arrange
+            _connectionFactoryMock.Setup(c => c.GetConnection(_connectionModel)).Throws(new Exception());
+
+            //act
+            var result = _sut.ValidateUser(_connectionModel, _userName, _password);
+
+            //assert
+            Assert.IsNotNull(result);
+            Assert.False(result);
         }
     }
 }
