@@ -537,7 +537,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.User
         {
             //act && assert
             var exception = Assert.Throws<ArgumentException>(() => _sut.ValidateUser(_userName, string.Empty));
-            Assert.AreEqual("A value for the argument 'Password' must be supplied", exception.Message);
+            Assert.AreEqual("A value for the argument 'password' must be supplied", exception.Message);
         }
 
         [Test]
@@ -545,7 +545,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.User
         {
             //act && assert
             var exception = Assert.Throws<ArgumentNullException>(() => _sut.ValidateUser(_userName, null));
-            Assert.AreEqual("Password", exception.ParamName);
+            Assert.AreEqual("password", exception.ParamName);
         }
     }
 }

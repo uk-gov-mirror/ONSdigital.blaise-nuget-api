@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Blaise.Nuget.Api.Api;
+﻿using Blaise.Nuget.Api.Api;
 using NUnit.Framework;
 
 namespace Blaise.Nuget.Api.Tests.Behaviour.Users
@@ -24,6 +22,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Users
             _sut = new BlaiseUserApi();
         }
 
+        [Ignore("Integration")]
         [Test]
         public void Given_A_Valid_User_When_I_Call_ValidateUser_Then_True_Is_Returned()
         {
@@ -35,6 +34,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Users
             Assert.True(result);
         }
 
+        [Ignore("Integration")]
         [Test]
         public void Given_An_Invalid_User_Name_When_I_Call_ValidateUser_Then_False_Is_Returned()
         {
@@ -46,6 +46,7 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Users
             Assert.False(result);
         }
 
+        [Ignore("Integration")]
         [Test]
         public void Given_An_Invalid_User_Password_When_I_Call_ValidateUser_Then_False_Is_Returned()
         {
@@ -56,7 +57,8 @@ namespace Blaise.Nuget.Api.Tests.Behaviour.Users
             Assert.IsNotNull(result);
             Assert.False(result);
         }
-        
+
+        [Ignore("Integration")]
         [Test]
         public void Given_An_Invalid_User_When_I_Call_ValidateUser_Then_False_Is_Returned()
         {
