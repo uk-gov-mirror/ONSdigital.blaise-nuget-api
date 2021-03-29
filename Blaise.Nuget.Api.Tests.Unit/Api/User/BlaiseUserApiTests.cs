@@ -516,6 +516,20 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.User
             _userServiceMock.Verify(v => v.ValidateUser(_connectionModel, _userName, _password), Times.Once);
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
+        public void When_I_Call_ValidateUser_Then_The_Expected_Result_Is_Returned(bool userValid)
+        {
+            //arrange
+            _userServiceMock.Setup(u => u.ValidateUser(_connectionModel, _userName, _password)).Returns(userValid);
+
+            //act
+            var result = _sut.ValidateUser(_userName, _password);
+
+            //assert
+            Assert.AreEqual(userValid, result);
+        }
+
         [Test]
         public void Given_An_Empty_UserName_When_I_Call_ValidateUser_Then_An_ArgumentException_Is_Thrown()
         {
