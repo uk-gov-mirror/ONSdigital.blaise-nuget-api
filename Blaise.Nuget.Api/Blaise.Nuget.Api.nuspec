@@ -1,28 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
-  <metadata>
-    <id>Blaise.Nuget.Api</id>
-    <version>$version$</version>
-    <authors>Jamie Kerr</authors>
-    <owners>Jamie Kerr</owners>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>API package to interact with Blaise</description>
-    <dependencies>
-      <group targetFramework="net472">
-        <dependency id="Blaise.Nuget.Api.Contracts" version="$version$" />
-        <dependency id="Unity" version="5.11.6" exclude="Build,Analyzers" />
-        <dependency id="System.Configuration.ConfigurationManager" version="4.7.0" />
-        <dependency id="StatNeth.Blaise.API.x64" version="5.8.7" />
-        <dependency id="System.Data.SQLite" version="1.0.112.0" />
-        <dependency id="MySql.Data" version="8.0.22" />
-        <dependency id="System.IO.Compression.ZipFile" version="4.3.0" />
-      </group>
-    </dependencies>
-    <repository type="git" url="https://github.com/onsdigital/blaise-csharp-build.git" />
-  </metadata>
-  <files>
-    <file src="bin\release\Blaise.Nuget.Api.dll" target="lib\net472\Blaise.Nuget.Api.dll" />
-    <file src="bin\release\Blaise.Nuget.Api.Core.dll" target="lib\net472\Blaise.Nuget.Api.Core.dll" />
-  </files>
+	<metadata>
+		<id>Blaise.Nuget.Api</id>
+		<version>$version$</version>
+		<authors>Jamie Kerr</authors>
+		<owners>Jamie Kerr</owners>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>API package to interact with Blaise</description>
+		<dependencies>
+			<group targetFramework="net472">
+				<dependency id="Blaise.Nuget.Api.Contracts" version="$version$" />
+				<dependency id="Unity" version="5.11.6" exclude="Build,Analyzers" />
+				<dependency id="System.Configuration.ConfigurationManager" version="4.7.0" />
+				<dependency id="StatNeth.Blaise.API.x64" version="5.9.1" />
+				<dependency id="System.Data.SQLite" version="1.0.112.0" />
+				<dependency id="MySql.Data" version="8.0.22" />
+				<dependency id="System.IO.Compression.ZipFile" version="4.3.0" />
+			</group>
+			<group targetFramework="netstandard2.1">
+				<dependency id="Blaise.Nuget.Api.Contracts" version="$version$" />
+				<dependency id="Unity" version="5.11.6" exclude="Build,Analyzers" />
+				<dependency id="System.Configuration.ConfigurationManager" version="4.7.0" />
+				<dependency id="StatNeth.Blaise.API.x64" version="5.9.1" />
+				<dependency id="System.Data.SQLite" version="1.0.112.0" />
+				<dependency id="MySql.Data" version="8.0.22" />
+				<dependency id="System.IO.Compression.ZipFile" version="4.3.0" />
+			</group>
+		</dependencies>
+		<repository type="git" url="https://github.com/onsdigital/blaise-csharp-build.git" />
+	</metadata>
+	<files>
+		<file src="bin\release\Blaise.Nuget.Api.dll" target="lib\net472\Blaise.Nuget.Api.dll" />
+		<file src="bin\release\Blaise.Nuget.Api.Core.dll" target="lib\net472\Blaise.Nuget.Api.Core.dll" />
+		<file src="bin\release\Blaise.Nuget.Api.dll" target="lib\netstandard2.1\Blaise.Nuget.Api.dll" />
+		<file src="bin\release\Blaise.Nuget.Api.Core.dll" target="lib\netstandard2.1\Blaise.Nuget.Api.Core.dll" />
+	</files>
 </package>
 
