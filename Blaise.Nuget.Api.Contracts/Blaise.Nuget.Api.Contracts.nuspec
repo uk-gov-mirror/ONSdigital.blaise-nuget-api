@@ -11,7 +11,7 @@
       <group targetFramework="net472">
 	      <dependency id="StatNeth.Blaise.API.x64" version="5.9.1" />
       </group>
-	    <group targetFramework="netstandard2.1">
+	    <group targetFramework="netcoreapp3.1">
 		    <dependency id="StatNeth.Blaise.API.x64" version="5.9.1" />
 	    </group>
     </dependencies>
@@ -19,6 +19,6 @@
   </metadata>
   <files>
     <file src="bin\release\Blaise.Nuget.Api.Contracts.dll" target="lib\net472\Blaise.Nuget.Api.Contracts.dll" />
-    <file src="bin\release\Blaise.Nuget.Api.Contracts.dll" target="lib\netstandard2.1\Blaise.Nuget.Api.Contracts.dll" />
+    <file src="bin\release\Blaise.Nuget.Api.Contracts.dll" target="lib\netcoreapp3.1\Blaise.Nuget.Api.Contracts.dll" />
   </files>
 </package>
