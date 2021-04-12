@@ -44,7 +44,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
             while (!cases.EndOfSet)
             {
-                _caseService.WriteDataRecord((IDataRecord2)cases.ActiveRecord, dataInterfaceFilePath);
+                _caseService.WriteDataRecord(connectionModel, (IDataRecord2)cases.ActiveRecord, dataInterfaceFilePath);
 
                 cases.MoveNext();
             }

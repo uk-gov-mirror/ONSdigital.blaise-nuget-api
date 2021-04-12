@@ -60,7 +60,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkProviderMock.Setup(r => r.GetDataLink(_connectionModel, _instrumentName, _serverParkName)).Returns(_remoteDataLinkMock.Object);
 
             _localDataLinkProviderMock = new Mock<ILocalDataLinkProvider>();
-            _localDataLinkProviderMock.Setup(r => r.GetDataLink(_databaseFile)).Returns(_localDataLinkMock.Object);
+            _localDataLinkProviderMock.Setup(r => r.GetDataLink(_connectionModel, _databaseFile)).Returns(_localDataLinkMock.Object);
 
             _sut = new DataRecordService(
                 _remoteDataLinkProviderMock.Object,
@@ -116,7 +116,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _localDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
 
             //act
-            var result = _sut.GetDataSet(_databaseFile);
+            var result = _sut.GetDataSet(_connectionModel, _databaseFile);
 
             //assert
             Assert.NotNull(result);
@@ -130,7 +130,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _localDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
 
             //act
-            var result = _sut.GetDataSet(_databaseFile);
+            var result = _sut.GetDataSet(_connectionModel, _databaseFile);
 
             //assert
             Assert.NotNull(result);
@@ -144,10 +144,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _localDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
 
             //act
-            _sut.GetDataSet(_databaseFile);
+            _sut.GetDataSet(_connectionModel, _databaseFile);
 
             //assert
-            _localDataLinkProviderMock.Verify(v => v.GetDataLink(_databaseFile), Times.Once);
+            _localDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _databaseFile), Times.Once);
             _localDataLinkMock.Verify(v => v.Read(null), Times.Once);
         }
 
@@ -214,10 +214,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _localDataLinkMock.Setup(d => d.Write(It.IsAny<IDataRecord>()));
 
             //act
-            _sut.WriteDataRecord(_dataRecordMock.Object, _databaseFile);
+            _sut.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _databaseFile);
 
             //assert
-            _localDataLinkProviderMock.Verify(v => v.GetDataLink(_databaseFile), Times.Once);
+            _localDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _databaseFile), Times.Once);
             _localDataLinkMock.Verify(v => v.Write(_dataRecordMock.Object), Times.Once);
         }
 
@@ -277,7 +277,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _localDataLinkMock.Setup(d => d.Read(It.IsAny<string>())).Returns(_dataSetMock.Object);
 
             //act
-            var result = _sut.GetNumberOfRecords(_databaseFile);
+            var result = _sut.GetNumberOfRecords(_connectionModel, _databaseFile);
 
             //assert
             Assert.NotNull(result);

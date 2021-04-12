@@ -9,7 +9,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
     {
         IDataSet GetDataSet(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
-        IDataSet GetDataSet(string databaseFile);
+        IDataSet GetDataSet(ConnectionModel connectionModel, string databaseFile);
 
         IDataRecord GetDataRecord(IDatamodel dataModel);
 
@@ -17,7 +17,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         void WriteDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, string instrumentName, string serverParkName);
 
-        void WriteDataRecord(IDataRecord dataRecord, string databaseFile);
+        void WriteDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, string databaseFile);
 
         void DeleteDataRecord(ConnectionModel connectionModel, IKey primaryKey, string instrumentName, string serverParkName);
 
@@ -25,7 +25,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         int GetNumberOfRecords(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
-        int GetNumberOfRecords(string databaseFile);
+        int GetNumberOfRecords(ConnectionModel connectionModel, string databaseFile);
 
         void LockDataRecord(ConnectionModel connectionModel, IKey primaryKey, string instrumentName, string serverParkName,
             string lockId);

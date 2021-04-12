@@ -31,9 +31,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return dataLink.Datamodel;
         }
 
-        public IDatamodel GetDataModel(string databaseFile)
+        public IDatamodel GetDataModel(ConnectionModel connectionModel, string databaseFile)
         {
-            var dataLink = _localDataLinkProvider.GetDataLink(databaseFile);
+            var dataLink = _localDataLinkProvider.GetDataLink(connectionModel, databaseFile);
 
             if (dataLink?.Datamodel == null)
             {

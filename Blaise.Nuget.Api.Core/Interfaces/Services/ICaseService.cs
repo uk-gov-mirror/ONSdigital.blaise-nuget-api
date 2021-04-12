@@ -15,11 +15,11 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         IDataSet GetDataSet(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
-        IDataSet GetDataSet(string databaseFile);
+        IDataSet GetDataSet(ConnectionModel connectionModel, string databaseFile);
 
         IDataRecord GetDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName);
 
-        void WriteDataRecord(IDataRecord dataRecord, string databaseFile);
+        void WriteDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, string databaseFile);
 
         void CreateNewDataRecord(ConnectionModel connectionModel, string primaryKeyValue, 
             Dictionary<string, string> fieldData, string instrumentName, string serverParkName);
@@ -27,7 +27,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         void CreateNewDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord ,string instrumentName, 
             string serverParkName);
 
-        void CreateNewDataRecord(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData);
+        void CreateNewDataRecord(ConnectionModel connectionModel, string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData);
 
         void UpdateDataRecord(ConnectionModel connectionModel, string primaryKeyValue,
             Dictionary<string, string> fieldData, string instrumentName, string serverParkName);
@@ -49,7 +49,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
 
         int GetNumberOfCases(ConnectionModel connectionModel, string instrumentName, string serverParkName);
 
-        int GetNumberOfCases(string databaseFile);
+        int GetNumberOfCases(ConnectionModel connectionModel, string databaseFile);
 
         Dictionary<string, string> GetFieldDataFromRecord(IDataRecord dataRecord);
 

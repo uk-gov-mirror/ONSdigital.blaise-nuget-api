@@ -223,13 +223,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             //arrange
             const string databaseFile = "File1.bdix";
 
-            _caseServiceMock.Setup(d => d.GetDataSet(It.IsAny<string>()));
+            _caseServiceMock.Setup(d => d.GetDataSet(_connectionModel, It.IsAny<string>()));
 
             //act
             _sut.GetCases(databaseFile);
 
             //assert
-            _caseServiceMock.Verify(v => v.GetDataSet(databaseFile), Times.Once);
+            _caseServiceMock.Verify(v => v.GetDataSet(_connectionModel, databaseFile), Times.Once);
         }
 
         [Test]
@@ -488,13 +488,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             //arrange
             var fieldData = new Dictionary<string, string>();
 
-            _caseServiceMock.Setup(d => d.CreateNewDataRecord(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()));
+            _caseServiceMock.Setup(d => d.CreateNewDataRecord(_connectionModel, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()));
 
             //act
             _sut.CreateCase(_databaseFile, _primaryKeyValue, fieldData);
 
             //assert
-            _caseServiceMock.Verify(v => v.CreateNewDataRecord(_databaseFile, _primaryKeyValue, fieldData), Times.Once);
+            _caseServiceMock.Verify(v => v.CreateNewDataRecord(_connectionModel, _databaseFile, _primaryKeyValue, fieldData), Times.Once);
         }
 
         [Test]
@@ -1034,13 +1034,13 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             //arrange
             const string databaseFile = "File1.bdix";
 
-            _caseServiceMock.Setup(d => d.GetNumberOfCases(It.IsAny<string>()));
+            _caseServiceMock.Setup(d => d.GetNumberOfCases(_connectionModel, It.IsAny<string>()));
 
             //act
             _sut.GetNumberOfCases(databaseFile);
 
             //assert
-            _caseServiceMock.Verify(v => v.GetNumberOfCases(databaseFile), Times.Once);
+            _caseServiceMock.Verify(v => v.GetNumberOfCases(_connectionModel, databaseFile), Times.Once);
         }
 
         [Test]
@@ -1049,7 +1049,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Api.Case
             //arrange
             const int numberOfCases = 5;
 
-            _caseServiceMock.Setup(d => d.GetNumberOfCases(
+            _caseServiceMock.Setup(d => d.GetNumberOfCases(_connectionModel,
                 It.IsAny<string>())).Returns(numberOfCases);
 
             //act

@@ -57,7 +57,7 @@ namespace Blaise.Nuget.Api.Api
         {
             databaseFile.ThrowExceptionIfNullOrEmpty("databaseFile");
 
-            return _caseService.GetDataSet(databaseFile);
+            return _caseService.GetDataSet(_connectionModel, databaseFile);
         }
 
         public IDataSet GetCases(string instrumentName, string serverParkName)
@@ -104,7 +104,7 @@ namespace Blaise.Nuget.Api.Api
             primaryKeyValue.ThrowExceptionIfNullOrEmpty("primaryKeyValue");
             fieldData.ThrowExceptionIfNull("fieldData");
 
-            _caseService.CreateNewDataRecord(databaseFile, primaryKeyValue, fieldData);
+            _caseService.CreateNewDataRecord(_connectionModel, databaseFile, primaryKeyValue, fieldData);
         }
         
         public void UpdateCase(string primaryKeyValue, Dictionary<string, string> fieldData, 
@@ -194,7 +194,7 @@ namespace Blaise.Nuget.Api.Api
         {
             databaseFile.ThrowExceptionIfNullOrEmpty("databaseFile");
 
-            return _caseService.GetNumberOfCases(databaseFile);
+            return _caseService.GetNumberOfCases(_connectionModel, databaseFile);
         }
 
         public Dictionary<string, string> GetRecordDataFields(IDataRecord dataRecord)

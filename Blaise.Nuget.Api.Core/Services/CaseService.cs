@@ -42,9 +42,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataRecordService.GetDataSet(connectionModel, instrumentName, serverParkName);
         }
 
-        public IDataSet GetDataSet(string databaseFile)
+        public IDataSet GetDataSet(ConnectionModel connectionModel, string databaseFile)
         {
-            return _dataRecordService.GetDataSet(databaseFile);
+            return _dataRecordService.GetDataSet(connectionModel, databaseFile);
         }
 
         public IDataRecord GetDataRecord(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName)
@@ -57,9 +57,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataRecordService.GetDataRecord(connectionModel, primaryKey, instrumentName, serverParkName);
         }
 
-        public void WriteDataRecord(IDataRecord dataRecord, string databaseFile)
+        public void WriteDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, string databaseFile)
         {
-            _dataRecordService.WriteDataRecord(dataRecord, databaseFile);
+            _dataRecordService.WriteDataRecord(connectionModel, dataRecord, databaseFile);
         }
 
         public bool FieldExists(ConnectionModel connectionModel, string instrumentName, string serverParkName, FieldNameType fieldNameType)
@@ -97,9 +97,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return _dataRecordService.GetNumberOfRecords(connectionModel, instrumentName, serverParkName);
         }
 
-        public int GetNumberOfCases(string databaseFile)
+        public int GetNumberOfCases(ConnectionModel connectionModel, string databaseFile)
         {
-            return _dataRecordService.GetNumberOfRecords(databaseFile);
+            return _dataRecordService.GetNumberOfRecords(connectionModel, databaseFile);
         }
 
         public bool CaseExists(ConnectionModel connectionModel, string primaryKeyValue, string instrumentName, string serverParkName)
@@ -128,15 +128,15 @@ namespace Blaise.Nuget.Api.Core.Services
             _dataRecordService.WriteDataRecord(connectionModel, dataRecord, instrumentName, serverParkName);
         }
 
-        public void CreateNewDataRecord(string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData)
+        public void CreateNewDataRecord(ConnectionModel connectionModel, string databaseFile, string primaryKeyValue, Dictionary<string, string> fieldData)
         {
-            var dataModel = _dataModelService.GetDataModel(databaseFile);
+            var dataModel = _dataModelService.GetDataModel(connectionModel, databaseFile);
             var key = _keyService.GetPrimaryKey(dataModel);
             var dataRecord = _dataRecordService.GetDataRecord(dataModel);
 
             dataRecord = _mapperService.MapDataRecordFields(dataRecord, key, primaryKeyValue, fieldData);
 
-            WriteDataRecord(dataRecord, databaseFile);
+            WriteDataRecord(connectionModel, dataRecord, databaseFile);
         }
 
         public void UpdateDataRecord(ConnectionModel connectionModel, string primaryKeyValue, Dictionary<string, string> fieldData, 

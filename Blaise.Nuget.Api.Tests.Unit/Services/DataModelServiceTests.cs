@@ -44,7 +44,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _remoteDataLinkProviderMock.Setup(r => r.GetDataLink(_connectionModel, _instrumentName, _serverParkName)).Returns(_dataLinkMock.Object);
 
             _localDataLinkProviderMock = new Mock<ILocalDataLinkProvider>();
-            _localDataLinkProviderMock.Setup(r => r.GetDataLink(_databaseFile)).Returns(_dataLinkMock.Object);
+            _localDataLinkProviderMock.Setup(r => r.GetDataLink(_connectionModel, _databaseFile)).Returns(_dataLinkMock.Object);
 
             _sut = new DataModelService(_remoteDataLinkProviderMock.Object, _localDataLinkProviderMock.Object);
         }
@@ -97,7 +97,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataModel_For_Local_Connection_I_Get_A_DataModel_Back()
         {
             //act
-            var result = _sut.GetDataModel(_databaseFile);
+            var result = _sut.GetDataModel(_connectionModel, _databaseFile);
 
             //assert
             Assert.NotNull(result);
@@ -108,7 +108,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataModel_For_Local_Connection_I_Get_The_Correct_DataModel_Back()
         {
             //act
-            var result = _sut.GetDataModel(_databaseFile);
+            var result = _sut.GetDataModel(_connectionModel, _databaseFile);
 
             //assert
             Assert.AreEqual(_dataModelMock.Object, result);
@@ -121,7 +121,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             _dataLinkMock.Setup(d => d.Datamodel).Returns(null as IDatamodel);
 
             //act && assert
-            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataModel(_databaseFile));
+            var exception = Assert.Throws<NullReferenceException>(() => _sut.GetDataModel(_connectionModel, _databaseFile));
             Assert.AreEqual($"No datamodel was found for file '{_databaseFile}'", exception.Message);
         }
 
@@ -129,10 +129,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_I_Call_GetDataModel_For_Local_Connection_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.GetDataModel(_databaseFile);
+            _sut.GetDataModel(_connectionModel, _databaseFile);
 
             //assert
-            _localDataLinkProviderMock.Verify(v => v.GetDataLink(_databaseFile), Times.Once);
+            _localDataLinkProviderMock.Verify(v => v.GetDataLink(_connectionModel, _databaseFile), Times.Once);
             _dataLinkMock.Verify(v => v.Datamodel, Times.AtLeastOnce);
         }
     }

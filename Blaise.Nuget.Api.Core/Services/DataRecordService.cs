@@ -27,9 +27,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return dataLink.Read(null);
         }
 
-        public IDataSet GetDataSet(string databaseFile)
+        public IDataSet GetDataSet(ConnectionModel connectionModel, string databaseFile)
         {
-            var dataLink = _localDataLinkProvider.GetDataLink(databaseFile);
+            var dataLink = _localDataLinkProvider.GetDataLink(connectionModel, databaseFile);
 
             return dataLink.Read(null);
         }
@@ -53,9 +53,9 @@ namespace Blaise.Nuget.Api.Core.Services
             dataLink.Write(dataRecord);
         }
 
-        public void WriteDataRecord(IDataRecord dataRecord, string databaseFile)
+        public void WriteDataRecord(ConnectionModel connectionModel, IDataRecord dataRecord, string databaseFile)
         {
-            var dataLink = _localDataLinkProvider.GetDataLink(databaseFile);
+            var dataLink = _localDataLinkProvider.GetDataLink(connectionModel, databaseFile);
 
             dataLink.Write(dataRecord);
         }
@@ -81,9 +81,9 @@ namespace Blaise.Nuget.Api.Core.Services
             return GetNumberOfRecords(records);
         }
 
-        public int GetNumberOfRecords(string databaseFile)
+        public int GetNumberOfRecords(ConnectionModel connectionModel, string databaseFile)
         {
-            var records = GetDataSet(databaseFile);
+            var records = GetDataSet(connectionModel, databaseFile);
 
             return GetNumberOfRecords(records);
         }
