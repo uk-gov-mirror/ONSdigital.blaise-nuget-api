@@ -52,7 +52,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
 
             _dataModelServiceMock = new Mock<IDataModelService>();
             _dataModelServiceMock.Setup(d => d.GetDataModel(_connectionModel, _instrumentName, _serverParkName)).Returns(_dataModelMock.Object);
-            _dataModelServiceMock.Setup(d => d.GetDataModel(_databaseFile)).Returns(_dataModelMock.Object);
+            _dataModelServiceMock.Setup(d => d.GetDataModel(_connectionModel, _databaseFile)).Returns(_dataModelMock.Object);
 
             _keyServiceMock = new Mock<IKeyService>();
             _keyServiceMock.Setup(d => d.KeyExists(_connectionModel, _keyMock.Object, _instrumentName, _serverParkName)).Returns(true);
@@ -116,10 +116,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_File_I_Call_GetDataSet_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.GetDataSet(_databaseFile);
+            _sut.GetDataSet(_connectionModel, _databaseFile);
 
             //assert
-            _dataRecordServiceMock.Verify(v => v.GetDataSet(_databaseFile), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.GetDataSet(_connectionModel, _databaseFile), Times.Once);
         }
 
         [Test]
@@ -136,10 +136,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_DatabaseFile_When_I_Call_WriteDataRecord_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.WriteDataRecord(_dataRecordMock.Object, _databaseFile);
+            _sut.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _databaseFile);
 
             //assert
-            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _databaseFile), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _databaseFile), Times.Once);
         }
 
         [TestCase(FieldNameType.HOut)]
@@ -250,14 +250,14 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
                 .Returns(_dataRecordMock.Object);
 
             //act
-            _sut.CreateNewDataRecord(_databaseFile, primaryKeyValue, fieldData);
+            _sut.CreateNewDataRecord(_connectionModel, _databaseFile, primaryKeyValue, fieldData);
 
             //assert
-            _dataModelServiceMock.Verify(v => v.GetDataModel(_databaseFile), Times.Once);
+            _dataModelServiceMock.Verify(v => v.GetDataModel(_connectionModel, _databaseFile), Times.Once);
             _keyServiceMock.Verify(v => v.GetPrimaryKey(_dataModelMock.Object), Times.Once);
             _dataRecordServiceMock.Verify(v => v.GetDataRecord(_dataModelMock.Object), Times.Once);
             _mapperServiceMock.Verify(v => v.MapDataRecordFields(_dataRecordMock.Object, _keyMock.Object, primaryKeyValue, fieldData), Times.Once);
-            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_dataRecordMock.Object, _databaseFile), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.WriteDataRecord(_connectionModel, _dataRecordMock.Object, _databaseFile), Times.Once);
         }
 
         [Test]
@@ -422,10 +422,10 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_A_File_I_Call_GetNumberOfCases_For_Local_Connection_Then_The_Correct_Services_Are_Called()
         {
             //act
-            _sut.GetNumberOfCases(_databaseFile);
+            _sut.GetNumberOfCases(_connectionModel, _databaseFile);
 
             //assert
-            _dataRecordServiceMock.Verify(v => v.GetNumberOfRecords(_databaseFile), Times.Once);
+            _dataRecordServiceMock.Verify(v => v.GetNumberOfRecords(_connectionModel, _databaseFile), Times.Once);
         }
 
         [Test]
@@ -434,11 +434,11 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
             //arrange
             const int numberOfCases = 5;
 
-            _dataRecordServiceMock.Setup(dr => dr.GetNumberOfRecords(
+            _dataRecordServiceMock.Setup(dr => dr.GetNumberOfRecords(_connectionModel,
                 _databaseFile)).Returns(numberOfCases);
 
             //act
-            var result = _sut.GetNumberOfCases(_databaseFile);
+            var result = _sut.GetNumberOfCases(_connectionModel, _databaseFile);
 
             //assert
             Assert.NotNull(result);
