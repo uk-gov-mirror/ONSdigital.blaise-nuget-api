@@ -92,17 +92,26 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public bool ValidateUser(ConnectionModel connectionModel, string userName, string password)
         {
-            connectionModel.UserName = userName;
-            connectionModel.Password = password;
-
             try
             {
-                _connectedServerFactory.GetIsolatedConnection(connectionModel);
+                _connectedServerFactory.GetIsolatedConnection(new ConnectionModel
+                {
+                    ServerName = connectionModel.ServerName,
+                    UserName = userName,
+                    Password = password,
+                    Binding = connectionModel.Binding,
+                    Port = connectionModel.Port,
+                    ConnectionExpiresInMinutes = connectionModel.ConnectionExpiresInMinutes
+                });
                 return true;
             }
             catch // sad times
             {
                 return false;
+            }
+            finally
+            {
+                _connectedServerFactory.GetIsolatedConnection(connectionModel);
             }
         }
 
