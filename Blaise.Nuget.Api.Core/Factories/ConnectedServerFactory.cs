@@ -34,6 +34,11 @@ namespace Blaise.Nuget.Api.Core.Factories
                 : connectedServer ?? GetFreshServerConnection(connectionModel);
         }
 
+        public IConnectedServer GetIsolatedConnection(ConnectionModel connectionModel)
+        {
+            return CreateServerConnection(connectionModel);
+        }
+
         private IConnectedServer GetFreshServerConnection(ConnectionModel connectionModel)
         {
             var connectedServer = CreateServerConnection(connectionModel);

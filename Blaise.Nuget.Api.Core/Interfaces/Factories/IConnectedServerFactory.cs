@@ -6,5 +6,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Factories
     public interface IConnectedServerFactory
     {
         IConnectedServer GetConnection(ConnectionModel connectionModel);
+
+        IConnectedServer GetIsolatedConnection(ConnectionModel connectionModel);
     }
 }
