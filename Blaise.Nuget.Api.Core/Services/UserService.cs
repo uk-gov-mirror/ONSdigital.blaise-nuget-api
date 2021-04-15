@@ -97,7 +97,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
             try
             {
-                _connectedServerFactory.GetConnection(connectionModel);
+                _connectedServerFactory.GetIsolatedConnection(connectionModel);
                 return true;
             }
             catch // sad times

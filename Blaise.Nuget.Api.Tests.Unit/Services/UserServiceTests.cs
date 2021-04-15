@@ -330,7 +330,7 @@ namespace Blaise.Nuget.Api.Tests.Unit.Services
         public void Given_An_Invalid_User_When_I_Call_ValidateUser_Then_False_Is_Returned()
         {
             //arrange
-            _connectionFactoryMock.Setup(c => c.GetConnection(_connectionModel)).Throws(new Exception());
+            _connectionFactoryMock.Setup(c => c.GetIsolatedConnection(_connectionModel)).Throws(new Exception());
 
             //act
             var result = _sut.ValidateUser(_connectionModel, _userName, _password);
