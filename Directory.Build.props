@@ -16,7 +16,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="StatNeth.Blaise.API.x64" Version="5.16.2.4035" />
+    <PackageReference Include="StatNeth.Blaise.API.x64" Version="5.14.13.3705" />
     <PackageReference Include="MySql.Data" Version="9.4.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
   </ItemGroup>
