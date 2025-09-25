@@ -6,13 +6,14 @@
 
   <ItemGroup>
     <PackageReference Include="Unity.Container" Version="5.11.11" />
+    <PackageReference Include="Unity.Interception" Version="5.11.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Blaise.Nuget.Api.Contracts\Blaise.Nuget.Api.Contracts.csproj" />    
     <ProjectReference Include="..\Blaise.Nuget.Api.Core\Blaise.Nuget.Api.Core.csproj">
       <PrivateAssets>all</PrivateAssets>
-    </ProjectReference>
+    </ProjectReference>    
   </ItemGroup>
   
   <ItemGroup>

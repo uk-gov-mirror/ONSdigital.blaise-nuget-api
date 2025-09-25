@@ -1,5 +1,6 @@
 namespace Blaise.Nuget.Api.Providers
 {
+    using System.ComponentModel;
     using Blaise.Nuget.Api.Core.Factories;
     using Blaise.Nuget.Api.Core.Interfaces.Factories;
     using Blaise.Nuget.Api.Core.Interfaces.Mappers;
@@ -9,6 +10,9 @@ namespace Blaise.Nuget.Api.Providers
     using Blaise.Nuget.Api.Core.Providers;
     using Blaise.Nuget.Api.Core.Services;
     using Unity;
+    using Unity.Interception;
+    using Unity.Interception.ContainerIntegration;
+    using Unity.Interception.Interceptors.InstanceInterceptors.InterfaceInterception;
 
     public static class UnityProvider
     {
@@ -23,6 +27,9 @@ namespace Blaise.Nuget.Api.Providers
 
             // password service
             UnityContainer.RegisterType<IPasswordService, PasswordService>();
+
+            // Add interception support
+            UnityContainer.AddNewExtension<Interception>();
 
             // factories
             UnityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>();
@@ -50,7 +57,9 @@ namespace Blaise.Nuget.Api.Providers
             UnityContainer.RegisterType<IFieldService, FieldService>();
             UnityContainer.RegisterType<IKeyService, KeyService>();
             UnityContainer.RegisterType<IServerParkService, ServerParkService>();
-            UnityContainer.RegisterType<IQuestionnaireService, QuestionnaireService>();
+            UnityContainer.RegisterType<IQuestionnaireService, QuestionnaireService>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
             UnityContainer.RegisterType<IUserService, UserService>();
             UnityContainer.RegisterType<IFileService, FileService>();
             UnityContainer.RegisterType<ICatiService, CatiService>();
@@ -58,6 +67,8 @@ namespace Blaise.Nuget.Api.Providers
             UnityContainer.RegisterType<IQuestionnaireMetaService, QuestionnaireMetaService>();
             UnityContainer.RegisterType<ISqlService, SqlService>();
             UnityContainer.RegisterType<IAuditTrailService, AuditTrailService>();
+
+            UnityContainer.RegisterType<LoggingInterceptionBehavior>();
         }
 
         public static T Resolve<T>()
