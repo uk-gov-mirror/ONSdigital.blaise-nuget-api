@@ -2,6 +2,7 @@ namespace Blaise.Nuget.Api.Core.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using Blaise.Nuget.Api.Contracts.Enums;
     using Blaise.Nuget.Api.Contracts.Exceptions;
@@ -41,7 +42,9 @@ namespace Blaise.Nuget.Api.Core.Services
         /// <inheritdoc/>
         public IEnumerable<ISurvey> GetQuestionnaires(ConnectionModel connectionModel, string serverParkName)
         {
+            EventLog.WriteEntry("NUGET_LOG", $"[LOG] Connection Model Binding={connectionModel.Binding}, UserName={connectionModel.UserName},  Password={connectionModel.Password},  Port={connectionModel.Port},  HashCode={connectionModel.GetHashCode()}");
             var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
+            EventLog.WriteEntry("NUGET_LOG", $"[LOG] Server Park WebsiteID={serverPark.WebsiteID}, Name={serverPark.Name},  LoadBalancer={serverPark.LoadBalancer},  Location={serverPark.Location}");
 
             return serverPark.Surveys;
         }
