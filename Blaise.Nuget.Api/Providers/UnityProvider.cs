@@ -32,7 +32,9 @@ namespace Blaise.Nuget.Api.Providers
             UnityContainer.AddNewExtension<Interception>();
 
             // factories
-            UnityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>();
+            UnityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
             UnityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>();
             UnityContainer.RegisterType<ICatiManagementServerFactory, CatiManagementServerFactory>();
             UnityContainer.RegisterSingleton<ISecurityManagerFactory, SecurityManagerFactory>();
