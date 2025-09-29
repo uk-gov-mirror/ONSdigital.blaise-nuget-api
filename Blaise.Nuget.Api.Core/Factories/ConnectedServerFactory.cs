@@ -1,6 +1,7 @@
 namespace Blaise.Nuget.Api.Core.Factories
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using Blaise.Nuget.Api.Contracts.Models;
     using Blaise.Nuget.Api.Core.Extensions;
@@ -12,44 +13,47 @@ namespace Blaise.Nuget.Api.Core.Factories
     {
         private readonly IPasswordService _passwordService;
 
-        private readonly Dictionary<string, Tuple<IConnectedServer, DateTime>> _connections;
+        private readonly ConcurrentDictionary<string, ConnectedServerEntry> _connections;
 
         public ConnectedServerFactory(IPasswordService passwordService)
         {
             _passwordService = passwordService;
-            _connections = new Dictionary<string, Tuple<IConnectedServer, DateTime>>(StringComparer.OrdinalIgnoreCase);
+            _connections = new ConcurrentDictionary<string, ConnectedServerEntry>(StringComparer.OrdinalIgnoreCase);
         }
 
         /// <inheritdoc/>
         public IConnectedServer GetConnection(ConnectionModel connectionModel)
         {
-            if (!_connections.ContainsKey(connectionModel.ServerName))
-            {
-                return GetFreshServerConnection(connectionModel);
-            }
+            var entry = _connections.AddOrUpdate(
+                connectionModel.ServerName,
+                key =>
+                {
+                    var connectedServer = CreateServerConnection(connectionModel);
+                    return new ConnectedServerEntry(
+                        connectedServer,
+                        connectionModel.ConnectionExpiresInMinutes.GetExpiryDate());
+                },
+                (key, existingEntry) =>
+                {
+                    var connectedServer = existingEntry.ConnectedServer;
+                    var expiryDate = existingEntry.ExpiryDate;
 
-            var (connectedServer, expiryDate) = _connections[connectionModel.ServerName];
+                    if (expiryDate.HasExpired() || connectedServer == null)
+                    {
+                        connectedServer = CreateServerConnection(connectionModel);
+                        expiryDate = connectionModel.ConnectionExpiresInMinutes.GetExpiryDate();
+                    }
 
-            return expiryDate.HasExpired()
-                ? GetFreshServerConnection(connectionModel)
-                : connectedServer ?? GetFreshServerConnection(connectionModel);
+                    return new ConnectedServerEntry(connectedServer, expiryDate);
+                });
+
+            return entry.ConnectedServer;
         }
 
         /// <inheritdoc/>
         public IConnectedServer GetIsolatedConnection(ConnectionModel connectionModel)
         {
             return CreateServerConnection(connectionModel);
-        }
-
-        private IConnectedServer GetFreshServerConnection(ConnectionModel connectionModel)
-        {
-            var connectedServer = CreateServerConnection(connectionModel);
-
-            _connections[connectionModel.ServerName] = null;
-            _connections[connectionModel.ServerName] =
-                new Tuple<IConnectedServer, DateTime>(connectedServer, connectionModel.ConnectionExpiresInMinutes.GetExpiryDate());
-
-            return connectedServer;
         }
 
         private IConnectedServer CreateServerConnection(ConnectionModel connectionModel)
@@ -60,6 +64,19 @@ namespace Blaise.Nuget.Api.Core.Factories
                 connectionModel.UserName,
                 _passwordService.CreateSecurePassword(connectionModel.Password),
                 connectionModel.Binding);
+        }
+    }
+
+    public class ConnectedServerEntry
+    {
+        public IConnectedServer ConnectedServer { get; }
+
+        public DateTime ExpiryDate { get; }
+
+        public ConnectedServerEntry(IConnectedServer connectedServer, DateTime expiryDate)
+        {
+            ConnectedServer = connectedServer;
+            ExpiryDate = expiryDate;
         }
     }
 }
