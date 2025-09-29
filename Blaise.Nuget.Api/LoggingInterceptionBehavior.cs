@@ -4,6 +4,7 @@ namespace Blaise.Nuget.Api
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Security;
     using Unity.Interception.InterceptionBehaviors;
     using Unity.Interception.PolicyInjection.Pipeline;
 
@@ -15,28 +16,42 @@ namespace Blaise.Nuget.Api
 
         public IMethodReturn Invoke(IMethodInvocation input, GetNextInterceptionBehaviorDelegate getNext)
         {
-            if (!EventLog.SourceExists("NUGET_LOG"))
+            const string source = "NUGET_LOG";
+
+            TryLog(() =>
             {
-                EventLog.CreateEventSource("NUGET_LOG", "Application");
-            }
+                var args = string.Join(", ", input.Arguments.Cast<object>().Select(a => a?.ToString() ?? "<null>"));
+                EventLog.WriteEntry(source, $"[LOG] Calling {input.MethodBase.Name} with args: {args}");
+            });
 
-            var args = string.Join(", ", input.Arguments.Cast<object>().Select(a => a?.ToString() ?? "<null>"));
-            EventLog.WriteEntry("NUGET_LOG", $"[LOG] Calling {input.MethodBase.Name} with args: {args}");
-
-            // Call the actual method
             var result = getNext()(input, getNext);
 
-            if (result.Exception == null && input.MethodBase is System.Reflection.MethodInfo methodInfo &&
-                methodInfo.ReturnType != typeof(void))
+            TryLog(() =>
             {
-                EventLog.WriteEntry("NUGET_LOG", $"[LOG] {input.MethodBase.Name} returned {result.ReturnValue}");
-            }
-            else if (result.Exception != null)
-            {
-                EventLog.WriteEntry("NUGET_LOG", $"[LOG] {input.MethodBase.Name} threw exception: {result.Exception.Message}");
-            }
+                if (result.Exception == null && input.MethodBase is System.Reflection.MethodInfo methodInfo &&
+                    methodInfo.ReturnType != typeof(void))
+                {
+                    EventLog.WriteEntry(source, $"[LOG] {input.MethodBase.Name} returned {result.ReturnValue}");
+                }
+                else if (result.Exception != null)
+                {
+                    EventLog.WriteEntry(source, $"[LOG] {input.MethodBase.Name} threw exception: {result.Exception.Message}");
+                }
+            });
 
             return result;
+        }
+
+        private void TryLog(Action logAction)
+        {
+            try
+            {
+                logAction();
+            }
+            catch
+            {
+                Console.WriteLine("EventLog write failed.");
+            }
         }
     }
 }

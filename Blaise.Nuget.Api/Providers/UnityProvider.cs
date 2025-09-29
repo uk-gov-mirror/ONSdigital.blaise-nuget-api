@@ -22,53 +22,108 @@ namespace Blaise.Nuget.Api.Providers
         {
             UnityContainer = new UnityContainer();
 
-            // configuration provider
-            UnityContainer.RegisterSingleton<IBlaiseConfigurationProvider, BlaiseConfigurationProvider>();
-
-            // password service
-            UnityContainer.RegisterType<IPasswordService, PasswordService>();
-
             // Add interception support
             UnityContainer.AddNewExtension<Interception>();
+
+            // configuration provider
+            UnityContainer.RegisterSingleton<IBlaiseConfigurationProvider, BlaiseConfigurationProvider>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+
+            // password service
+            UnityContainer.RegisterType<IPasswordService, PasswordService>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+
 
             // factories
             UnityContainer.RegisterSingleton<IConnectedServerFactory, ConnectedServerFactory>(
                 new Interceptor<InterfaceInterceptor>(),
                 new InterceptionBehavior<LoggingInterceptionBehavior>());
-            UnityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>();
-            UnityContainer.RegisterType<ICatiManagementServerFactory, CatiManagementServerFactory>();
-            UnityContainer.RegisterSingleton<ISecurityManagerFactory, SecurityManagerFactory>();
-            UnityContainer.RegisterType<IDataInterfaceFactory, DataInterfaceFactory>();
-            UnityContainer.RegisterType<IAuditTrailManagerFactory, AuditTrailManagerFactory>();
+            UnityContainer.RegisterSingleton<IRemoteDataServerFactory, RemoteDataServerFactory>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<ICatiManagementServerFactory, CatiManagementServerFactory>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterSingleton<ISecurityManagerFactory, SecurityManagerFactory>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<IDataInterfaceFactory, DataInterfaceFactory>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<IAuditTrailManagerFactory, AuditTrailManagerFactory>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
 
             // mappers
-            UnityContainer.RegisterType<IDataRecordMapper, DataRecordMapper>();
-            UnityContainer.RegisterType<IRolePermissionMapper, RolePermissionMapper>();
-            UnityContainer.RegisterType<IAuditTrailDataMapper, AuditTrailDataMapper>();
+            UnityContainer.RegisterType<IDataRecordMapper, DataRecordMapper>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<IRolePermissionMapper, RolePermissionMapper>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<IAuditTrailDataMapper, AuditTrailDataMapper>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
 
             // data link providers
-            UnityContainer.RegisterType<ILocalDataLinkProvider, LocalDataLinkProvider>();
-            UnityContainer.RegisterSingleton<IRemoteDataLinkProvider, RemoteDataLinkProvider>();
-            UnityContainer.RegisterType<IDataInterfaceProvider, DataInterfaceProvider>();
-            UnityContainer.RegisterType<IRemoteCatiManagementServerProvider, RemoteCatiManagementServerProvider>();
+            UnityContainer.RegisterType<ILocalDataLinkProvider, LocalDataLinkProvider>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterSingleton<IRemoteDataLinkProvider, RemoteDataLinkProvider>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<IDataInterfaceProvider, DataInterfaceProvider>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<IRemoteCatiManagementServerProvider, RemoteCatiManagementServerProvider>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
 
             // services
-            UnityContainer.RegisterType<IDataModelService, DataModelService>();
-            UnityContainer.RegisterType<IDataRecordService, DataRecordService>();
-            UnityContainer.RegisterType<ICaseService, CaseService>();
-            UnityContainer.RegisterType<IFieldService, FieldService>();
-            UnityContainer.RegisterType<IKeyService, KeyService>();
-            UnityContainer.RegisterType<IServerParkService, ServerParkService>();
+            UnityContainer.RegisterType<IDataModelService, DataModelService>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<IDataRecordService, DataRecordService>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<ICaseService, CaseService>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<IFieldService, FieldService>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<IKeyService, KeyService>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<IServerParkService, ServerParkService>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
             UnityContainer.RegisterType<IQuestionnaireService, QuestionnaireService>(
                 new Interceptor<InterfaceInterceptor>(),
                 new InterceptionBehavior<LoggingInterceptionBehavior>());
-            UnityContainer.RegisterType<IUserService, UserService>();
-            UnityContainer.RegisterType<IFileService, FileService>();
-            UnityContainer.RegisterType<ICatiService, CatiService>();
-            UnityContainer.RegisterType<IRoleService, RoleService>();
-            UnityContainer.RegisterType<IQuestionnaireMetaService, QuestionnaireMetaService>();
-            UnityContainer.RegisterType<ISqlService, SqlService>();
-            UnityContainer.RegisterType<IAuditTrailService, AuditTrailService>();
+            UnityContainer.RegisterType<IUserService, UserService>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<IFileService, FileService>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<ICatiService, CatiService>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<IRoleService, RoleService>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<IQuestionnaireMetaService, QuestionnaireMetaService>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<ISqlService, SqlService>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
+            UnityContainer.RegisterType<IAuditTrailService, AuditTrailService>(
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<LoggingInterceptionBehavior>());
 
             UnityContainer.RegisterType<LoggingInterceptionBehavior>();
         }
