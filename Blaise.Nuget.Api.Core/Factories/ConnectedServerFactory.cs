@@ -24,21 +24,21 @@ namespace Blaise.Nuget.Api.Core.Factories
         /// <inheritdoc/>
         public IConnectedServer GetConnection(ConnectionModel connectionModel)
         {
-            var entry = _connections.AddOrUpdate(
+            if (_connections.TryGetValue(connectionModel.ServerName, out ConnectedServerEntry existingEntry))
+            {
+                if (existingEntry.ConnectedServer != null && !existingEntry.ExpiryDate.HasExpired())
+                {
+                    return existingEntry.ConnectedServer;
+                }
+                else
+                {
+                    _connections.TryRemove(connectionModel.ServerName, out _);
+                }
+            }
+
+            var entry = _connections.GetOrAdd(
                 connectionModel.ServerName,
-                key =>
-                {
-                    var connectedServer = CreateServerConnection(connectionModel);
-                    return new ConnectedServerEntry(
-                        connectedServer,
-                        connectionModel.ConnectionExpiresInMinutes.GetExpiryDate());
-                },
-                (key, existingEntry) =>
-                {
-                    if (existingEntry.ConnectedServer != null && !existingEntry.ExpiryDate.HasExpired())
-                    {
-                        return existingEntry;
-                    }
+                key => {
                     var newConnectedServer = CreateServerConnection(connectionModel);
                     var newExpiryDate = connectionModel.ConnectionExpiresInMinutes.GetExpiryDate();
                     return new ConnectedServerEntry(newConnectedServer, newExpiryDate);
