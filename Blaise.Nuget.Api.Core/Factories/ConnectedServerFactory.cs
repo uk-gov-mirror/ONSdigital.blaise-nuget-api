@@ -35,16 +35,13 @@ namespace Blaise.Nuget.Api.Core.Factories
                 },
                 (key, existingEntry) =>
                 {
-                    var connectedServer = existingEntry.ConnectedServer;
-                    var expiryDate = existingEntry.ExpiryDate;
-
-                    if (expiryDate.HasExpired() || connectedServer == null)
+                    if (existingEntry.ConnectedServer != null && !existingEntry.ExpiryDate.HasExpired())
                     {
-                        connectedServer = CreateServerConnection(connectionModel);
-                        expiryDate = connectionModel.ConnectionExpiresInMinutes.GetExpiryDate();
+                        return existingEntry;
                     }
-
-                    return new ConnectedServerEntry(connectedServer, expiryDate);
+                    var newConnectedServer = CreateServerConnection(connectionModel);
+                    var newExpiryDate = connectionModel.ConnectionExpiresInMinutes.GetExpiryDate();
+                    return new ConnectedServerEntry(newConnectedServer, newExpiryDate);
                 });
 
             return entry.ConnectedServer;
