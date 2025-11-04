@@ -15,7 +15,7 @@ namespace Blaise.Nuget.Api.Core.Services
     {
         private readonly IServerParkService _parkService;
 
-        private static readonly IMemoryCache _cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new MemoryCacheOptions());
+        private static readonly IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
 
         public QuestionnaireService(IServerParkService parkService)
         {
