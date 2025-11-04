@@ -3,19 +3,19 @@ namespace Blaise.Nuget.Api.Core.Services
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.Caching;
     using Blaise.Nuget.Api.Contracts.Enums;
     using Blaise.Nuget.Api.Contracts.Exceptions;
     using Blaise.Nuget.Api.Contracts.Models;
     using Blaise.Nuget.Api.Core.Extensions;
     using Blaise.Nuget.Api.Core.Interfaces.Services;
-    using Microsoft.Extensions.Caching.Memory;
     using StatNeth.Blaise.API.ServerManager;
 
     public class QuestionnaireService : IQuestionnaireService
     {
         private readonly IServerParkService _parkService;
 
-        private static readonly IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
+        private static readonly ObjectCache _cache = MemoryCache.Default;
 
         public QuestionnaireService(IServerParkService parkService)
         {
@@ -166,6 +166,25 @@ namespace Blaise.Nuget.Api.Core.Services
             return configuration;
         }
 
+        public static List<ISurvey> GetSurveys(IServerPark serverPark)
+        {
+            string cacheKey = "ServerParkSurveys";
+
+            // Try get from cache
+            if (_cache.Contains(cacheKey))
+            {
+                return (List<ISurvey>)_cache.Get(cacheKey);
+            }
+
+            // Otherwise fetch and store
+            var surveys = serverPark.Surveys?.ToList() ?? new List<ISurvey>();
+
+            // Set cache for 5 minutes
+            _cache.Set(cacheKey, surveys, DateTimeOffset.Now.AddMinutes(5));
+
+            return surveys;
+        }
+
         private static Guid GetQuestionnaireId(string questionnaireName, IServerPark serverPark)
         {
             /*var questionnaire = serverPark.Surveys.FirstOrDefault(s => string.Equals(s.Name, questionnaireName, StringComparison.OrdinalIgnoreCase));
@@ -185,11 +204,7 @@ namespace Blaise.Nuget.Api.Core.Services
                 throw new ArgumentException("Questionnaire name must be provided", nameof(questionnaireName));
             }
 
-            var surveys = _cache.GetOrCreate("ServerParkSurveys", entry =>
-            {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
-                return serverPark.Surveys?.ToList() ?? new List<ISurvey>();
-            });
+            var surveys = GetSurveys(serverPark);
 
             if (surveys == null || surveys.Count == 0)
             {
