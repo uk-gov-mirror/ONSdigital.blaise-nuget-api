@@ -8,11 +8,14 @@ namespace Blaise.Nuget.Api.Core.Services
     using Blaise.Nuget.Api.Contracts.Models;
     using Blaise.Nuget.Api.Core.Extensions;
     using Blaise.Nuget.Api.Core.Interfaces.Services;
+    using Microsoft.Extensions.Caching.Memory;
     using StatNeth.Blaise.API.ServerManager;
 
     public class QuestionnaireService : IQuestionnaireService
     {
         private readonly IServerParkService _parkService;
+
+        private static readonly IMemoryCache _cache = new Microsoft.Extensions.Caching.Memory.MemoryCache(new MemoryCacheOptions());
 
         public QuestionnaireService(IServerParkService parkService)
         {
@@ -182,7 +185,11 @@ namespace Blaise.Nuget.Api.Core.Services
                 throw new ArgumentException("Questionnaire name must be provided", nameof(questionnaireName));
             }
 
-            var surveys = serverPark.Surveys?.ToList();
+            var surveys = _cache.GetOrCreate("ServerParkSurveys", entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
+                return serverPark.Surveys?.ToList() ?? new List<ISurvey>();
+            });
 
             if (surveys == null || surveys.Count == 0)
             {
