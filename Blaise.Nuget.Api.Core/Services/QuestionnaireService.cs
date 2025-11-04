@@ -165,11 +165,38 @@ namespace Blaise.Nuget.Api.Core.Services
 
         private static Guid GetQuestionnaireId(string questionnaireName, IServerPark serverPark)
         {
-            var questionnaire = serverPark.Surveys.FirstOrDefault(s => string.Equals(s.Name, questionnaireName, StringComparison.OrdinalIgnoreCase));
+            /*var questionnaire = serverPark.Surveys.FirstOrDefault(s => string.Equals(s.Name, questionnaireName, StringComparison.OrdinalIgnoreCase));
 
             if (questionnaire == null)
             {
                 throw new DataNotFoundException($"Questionnaire '{questionnaireName}' not found on server park '{serverPark.Name}'");
+            }*/
+
+            if (serverPark == null)
+            {
+                throw new ArgumentNullException(nameof(serverPark));
+            }
+
+            if (string.IsNullOrWhiteSpace(questionnaireName))
+            {
+                throw new ArgumentException("Questionnaire name must be provided", nameof(questionnaireName));
+            }
+
+            var surveys = serverPark.Surveys?.ToList();
+
+            if (surveys == null || surveys.Count == 0)
+            {
+                throw new DataNotFoundException(
+                    $"No surveys found on server park '{serverPark.Name}' (possible concurrency or connection issue)");
+            }
+
+            var questionnaire = surveys.FirstOrDefault(
+                s => string.Equals(s.Name, questionnaireName, StringComparison.OrdinalIgnoreCase));
+
+            if (questionnaire == null)
+            {
+                throw new DataNotFoundException(
+                    $"Questionnaire '{questionnaireName}' not found on server park '{serverPark.Name}'");
             }
 
             return questionnaire.InstrumentID;
