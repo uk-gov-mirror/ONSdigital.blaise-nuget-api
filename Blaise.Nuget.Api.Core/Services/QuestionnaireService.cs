@@ -185,6 +185,40 @@ namespace Blaise.Nuget.Api.Core.Services
             return surveys;
         }
 
+        public static List<ISurvey> GetSurveys(IServerPark serverPark, ConnectionModel connection, IServerParkService parkService)
+        {
+            string cacheKey = $"ServerParkSurveys_{serverPark.Name}";
+            List<ISurvey> cachedSurveys = null;
+
+            if (_cache.Contains(cacheKey))
+            {
+                cachedSurveys = (List<ISurvey>)_cache.Get(cacheKey);
+            }
+
+            List<ISurvey> freshSurveys = null;
+
+            //this can throw an exception
+            freshSurveys = parkService.GetSurveys(connection, serverPark.Name).ToList();
+
+            if (freshSurveys != null)
+            {
+                _cache.Set(cacheKey, freshSurveys, DateTimeOffset.Now.AddMinutes(5));
+                return freshSurveys;
+            }
+
+            if (cachedSurveys != null)
+            {
+                // Extend the expiration another 5 minutes
+                _cache.Set(cacheKey, cachedSurveys, DateTimeOffset.Now.AddMinutes(5));
+                return cachedSurveys;
+            }
+
+            var emptyList = new List<ISurvey>();
+            _cache.Set(cacheKey, emptyList, DateTimeOffset.Now.AddMinutes(5));
+            return emptyList;
+        }
+
+
         private static Guid GetQuestionnaireId(string questionnaireName, IServerPark serverPark, IServerParkService parkservice, ConnectionModel connection)
         {
             /*var questionnaire = serverPark.Surveys.FirstOrDefault(s => string.Equals(s.Name, questionnaireName, StringComparison.OrdinalIgnoreCase));
@@ -204,7 +238,15 @@ namespace Blaise.Nuget.Api.Core.Services
                 throw new ArgumentException("Questionnaire name must be provided", nameof(questionnaireName));
             }
 
-            var surveys = parkservice.GetSurveys(connection, serverPark.Name);
+            var surveys = new List<ISurvey>();
+            try
+            {
+                surveys = GetSurveys(serverPark, connection, parkservice);
+            }
+            catch (Exception ex)
+            {
+                throw new DataNotFoundException($"SHARAZ EXCEPTION with exception meesage: {ex.Message} and stacktrace: '{ex.StackTrace}'");
+            }
 
             if (surveys == null || surveys.Count == 0)
             {
