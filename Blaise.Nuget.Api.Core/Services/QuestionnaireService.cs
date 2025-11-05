@@ -15,7 +15,6 @@ namespace Blaise.Nuget.Api.Core.Services
     {
         private readonly IServerParkService _parkService;
 
-        private static readonly ObjectCache _cache = MemoryCache.Default;
 
         public QuestionnaireService(IServerParkService parkService)
         {
@@ -165,43 +164,55 @@ namespace Blaise.Nuget.Api.Core.Services
             return configuration;
         }
 
+        private static readonly ObjectCache _cache = MemoryCache.Default;
+        private static readonly object _cacheLock = new object();
+
         public static List<ISurvey> GetSurveys(IServerPark serverPark)
         {
             string cacheKey = $"ServerParkSurveys_{serverPark.Name}";
-            List<ISurvey> cachedSurveys = null;
+            string backupKey = $"{cacheKey}_Backup";
 
-            if (_cache.Contains(cacheKey))
-            {
-                cachedSurveys = (List<ISurvey>)_cache.Get(cacheKey);
-            }
-
-            List<ISurvey> freshSurveys = null;
-
-            try
-            {
-                freshSurveys = serverPark.Surveys?.ToList();
-            }
-            catch (Exception ex)
-            {
-            }
-
-            if (freshSurveys != null)
-            {
-                _cache.Set(cacheKey, freshSurveys, DateTimeOffset.Now.AddMinutes(5));
-                return freshSurveys;
-            }
-
+            var cachedSurveys = _cache.Get(cacheKey) as List<ISurvey>;
             if (cachedSurveys != null)
             {
-                // Extend the expiration another 5 minutes
-                _cache.Set(cacheKey, cachedSurveys, DateTimeOffset.Now.AddMinutes(5));
                 return cachedSurveys;
             }
 
-            var emptyList = new List<ISurvey>();
-            _cache.Set(cacheKey, emptyList, DateTimeOffset.Now.AddMinutes(5));
-            return emptyList;
+            lock (_cacheLock)
+            {
+                cachedSurveys = _cache.Get(cacheKey) as List<ISurvey>;
+                if (cachedSurveys != null)
+                {
+                    return cachedSurveys;
+                }
+
+                List<ISurvey> freshSurveys = null;
+                try
+                {
+                    freshSurveys = serverPark.Surveys?.ToList();
+                }
+                catch (Exception ex)
+                {
+                }
+
+                if (freshSurveys != null)
+                {
+                    _cache.Set(cacheKey, freshSurveys, DateTimeOffset.Now.AddMinutes(5));
+                    _cache.Set(backupKey, freshSurveys, ObjectCache.InfiniteAbsoluteExpiration);
+                    return freshSurveys;
+                }
+
+                var backupSurveys = _cache.Get(backupKey) as List<ISurvey>;
+                if (backupSurveys != null)
+                {
+                    _cache.Set(cacheKey, backupSurveys, DateTimeOffset.Now.AddMinutes(5));
+                    return backupSurveys;
+                }
+
+                return new List<ISurvey>();
+            }
         }
+
 
 
         private static Guid GetQuestionnaireId(string questionnaireName, IServerPark serverPark)
