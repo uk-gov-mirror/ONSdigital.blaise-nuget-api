@@ -46,7 +46,7 @@ namespace Blaise.Nuget.Api.Core.Services
         {
             var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
 
-            return serverPark.Surveys;
+            return GetSurveys(serverPark);
         }
 
         /// <inheritdoc/>
@@ -101,12 +101,11 @@ namespace Blaise.Nuget.Api.Core.Services
         public IEnumerable<ISurvey> GetAllQuestionnaires(ConnectionModel connectionModel)
         {
             var questionnaireList = new List<ISurvey>();
-            var serverParkNames = _parkService.GetServerParkNames(connectionModel);
+            var serverParks = _parkService.GetServerParks(connectionModel);
 
-            foreach (var serverParkName in serverParkNames)
+            foreach (var serverPark in serverParks)
             {
-                var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
-                questionnaireList.AddRange(serverPark.Surveys);
+                questionnaireList.AddRange(GetSurveys(serverPark));
             }
 
             return questionnaireList;
@@ -117,7 +116,7 @@ namespace Blaise.Nuget.Api.Core.Services
         {
             var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
 
-            return GetQuestionnaireId(questionnaireName, serverPark, _parkService, connectionModel);
+            return GetQuestionnaireId(questionnaireName, serverPark);
         }
 
         public string GetMetaFileName(ConnectionModel connectionModel, string questionnaireName, string serverParkName)
@@ -168,25 +167,6 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public static List<ISurvey> GetSurveys(IServerPark serverPark)
         {
-            string cacheKey = "ServerParkSurveys";
-
-            // Try get from cache
-            if (_cache.Contains(cacheKey))
-            {
-                return (List<ISurvey>)_cache.Get(cacheKey);
-            }
-
-            // Otherwise fetch and store
-            var surveys = serverPark.Surveys?.ToList() ?? new List<ISurvey>();
-
-            // Set cache for 5 minutes
-            _cache.Set(cacheKey, surveys, DateTimeOffset.Now.AddMinutes(5));
-
-            return surveys;
-        }
-
-        public static List<ISurvey> GetSurveys(IServerPark serverPark, ConnectionModel connection, IServerParkService parkService)
-        {
             string cacheKey = $"ServerParkSurveys_{serverPark.Name}";
             List<ISurvey> cachedSurveys = null;
 
@@ -199,7 +179,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
             try
             {
-                freshSurveys = parkService.GetSurveys(connection, serverPark.Name).ToList();
+                freshSurveys = serverPark.Surveys?.ToList();
             }
             catch (Exception ex)
             {
@@ -224,7 +204,7 @@ namespace Blaise.Nuget.Api.Core.Services
         }
 
 
-        private static Guid GetQuestionnaireId(string questionnaireName, IServerPark serverPark, IServerParkService parkservice, ConnectionModel connection)
+        private static Guid GetQuestionnaireId(string questionnaireName, IServerPark serverPark)
         {
             /*var questionnaire = serverPark.Surveys.FirstOrDefault(s => string.Equals(s.Name, questionnaireName, StringComparison.OrdinalIgnoreCase));
 
@@ -244,7 +224,7 @@ namespace Blaise.Nuget.Api.Core.Services
             }
 
             var surveys = new List<ISurvey>();
-            surveys = GetSurveys(serverPark, connection, parkservice);
+            surveys = GetSurveys(serverPark);
 
             if (surveys == null || surveys.Count == 0)
             {
