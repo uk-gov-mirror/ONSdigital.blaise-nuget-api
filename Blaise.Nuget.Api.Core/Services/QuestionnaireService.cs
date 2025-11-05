@@ -197,8 +197,13 @@ namespace Blaise.Nuget.Api.Core.Services
 
             List<ISurvey> freshSurveys = null;
 
-            //this can throw an exception
-            freshSurveys = parkService.GetSurveys(connection, serverPark.Name).ToList();
+            try
+            {
+                freshSurveys = parkService.GetSurveys(connection, serverPark.Name).ToList();
+            }
+            catch (Exception ex)
+            {
+            }
 
             if (freshSurveys != null)
             {
@@ -239,14 +244,7 @@ namespace Blaise.Nuget.Api.Core.Services
             }
 
             var surveys = new List<ISurvey>();
-            try
-            {
-                surveys = GetSurveys(serverPark, connection, parkservice);
-            }
-            catch (Exception ex)
-            {
-                throw new DataNotFoundException($"SHARAZ EXCEPTION with exception meesage: {ex.Message} and stacktrace: '{ex.StackTrace}'");
-            }
+            surveys = GetSurveys(serverPark, connection, parkservice);
 
             if (surveys == null || surveys.Count == 0)
             {
