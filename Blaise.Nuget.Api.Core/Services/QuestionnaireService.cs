@@ -117,7 +117,7 @@ namespace Blaise.Nuget.Api.Core.Services
         {
             var serverPark = _parkService.GetServerPark(connectionModel, serverParkName);
 
-            return GetQuestionnaireId(questionnaireName, serverPark);
+            return GetQuestionnaireId(questionnaireName, serverPark, _parkService, connectionModel);
         }
 
         public string GetMetaFileName(ConnectionModel connectionModel, string questionnaireName, string serverParkName)
@@ -185,7 +185,7 @@ namespace Blaise.Nuget.Api.Core.Services
             return surveys;
         }
 
-        private static Guid GetQuestionnaireId(string questionnaireName, IServerPark serverPark)
+        private static Guid GetQuestionnaireId(string questionnaireName, IServerPark serverPark, IServerParkService parkservice, ConnectionModel connection)
         {
             /*var questionnaire = serverPark.Surveys.FirstOrDefault(s => string.Equals(s.Name, questionnaireName, StringComparison.OrdinalIgnoreCase));
 
@@ -204,7 +204,7 @@ namespace Blaise.Nuget.Api.Core.Services
                 throw new ArgumentException("Questionnaire name must be provided", nameof(questionnaireName));
             }
 
-            var surveys = GetSurveys(serverPark);
+            var surveys = parkservice.GetSurveys(connection, serverPark.Name);
 
             if (surveys == null || surveys.Count == 0)
             {

@@ -61,5 +61,18 @@ namespace Blaise.Nuget.Api.Core.Services
 
             return serverParks;
         }
+
+        public ISurveyCollection GetSurveys(ConnectionModel connectionModel, string serverParkName)
+        {
+            var connection = _connectionFactory.GetConnection(connectionModel);
+            var surveys = connection.GetSurveys(serverParkName);
+
+            if (!surveys.Any())
+            {
+                throw new DataNotFoundException("No surveys found");
+            }
+
+            return surveys;
+        }
     }
 }

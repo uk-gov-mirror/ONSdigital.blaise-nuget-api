@@ -13,5 +13,7 @@ namespace Blaise.Nuget.Api.Core.Interfaces.Services
         IServerPark GetServerPark(ConnectionModel connectionModel, string serverParkName);
 
         IEnumerable<IServerPark> GetServerParks(ConnectionModel connectionModel);
+
+        ISurveyCollection GetSurveys(ConnectionModel connectionModel, string serverParkName);
     }
 }
