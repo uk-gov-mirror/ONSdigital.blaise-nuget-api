@@ -173,7 +173,7 @@ namespace Blaise.Nuget.Api.Core.Services
             string backupKey = $"{cacheKey}_Backup";
 
             var cachedSurveys = _cache.Get(cacheKey) as List<ISurvey>;
-            if (cachedSurveys != null)
+            if (cachedSurveys != null && cachedSurveys.Count > 0)
             {
                 return cachedSurveys;
             }
@@ -181,7 +181,7 @@ namespace Blaise.Nuget.Api.Core.Services
             lock (_cacheLock)
             {
                 cachedSurveys = _cache.Get(cacheKey) as List<ISurvey>;
-                if (cachedSurveys != null)
+                if (cachedSurveys != null && cachedSurveys.Count > 0)
                 {
                     return cachedSurveys;
                 }
@@ -195,7 +195,7 @@ namespace Blaise.Nuget.Api.Core.Services
                 {
                 }
 
-                if (freshSurveys != null)
+                if (freshSurveys != null && freshSurveys.Count > 0)
                 {
                     _cache.Set(cacheKey, freshSurveys, DateTimeOffset.Now.AddMinutes(5));
                     _cache.Set(backupKey, freshSurveys, ObjectCache.InfiniteAbsoluteExpiration);
@@ -203,7 +203,7 @@ namespace Blaise.Nuget.Api.Core.Services
                 }
 
                 var backupSurveys = _cache.Get(backupKey) as List<ISurvey>;
-                if (backupSurveys != null)
+                if (backupSurveys != null && backupSurveys.Count > 0)
                 {
                     _cache.Set(cacheKey, backupSurveys, DateTimeOffset.Now.AddMinutes(5));
                     return backupSurveys;
