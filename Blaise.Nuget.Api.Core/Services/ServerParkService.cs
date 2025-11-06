@@ -3,6 +3,7 @@ namespace Blaise.Nuget.Api.Core.Services
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.Caching;
     using Blaise.Nuget.Api.Contracts.Exceptions;
     using Blaise.Nuget.Api.Contracts.Models;
     using Blaise.Nuget.Api.Core.Interfaces.Factories;
@@ -52,7 +53,7 @@ namespace Blaise.Nuget.Api.Core.Services
         public IEnumerable<IServerPark> GetServerParks(ConnectionModel connectionModel)
         {
             var connection = _connectionFactory.GetConnection(connectionModel);
-            var serverParks = connection.ServerParks;
+            var serverParks = GetServerParks(connection);
 
             if (!serverParks.Any())
             {
@@ -60,6 +61,55 @@ namespace Blaise.Nuget.Api.Core.Services
             }
 
             return serverParks;
+        }
+
+        private static readonly ObjectCache _cache = MemoryCache.Default;
+        private static readonly object _cacheLock = new object();
+
+        public static List<IServerPark> GetServerParks(IConnectedServer connection)
+        {
+            string cacheKey = $"ServerParks";
+            string backupKey = $"{cacheKey}_Backup";
+
+            var cachedServerParks = _cache.Get(cacheKey) as List<IServerPark>;
+            if (cachedServerParks != null && cachedServerParks.Count > 0)
+            {
+                return cachedServerParks;
+            }
+
+            lock (_cacheLock)
+            {
+                cachedServerParks = _cache.Get(cacheKey) as List<IServerPark>;
+                if (cachedServerParks != null && cachedServerParks.Count > 0)
+                {
+                    return cachedServerParks;
+                }
+
+                List<IServerPark> freshServerParks = null;
+                try
+                {
+                    freshServerParks = connection.ServerParks?.ToList();
+                }
+                catch (Exception ex)
+                {
+                }
+
+                if (freshServerParks != null && freshServerParks.Count > 0)
+                {
+                    _cache.Set(cacheKey, freshServerParks, DateTimeOffset.Now.AddMinutes(5));
+                    _cache.Set(backupKey, freshServerParks, ObjectCache.InfiniteAbsoluteExpiration);
+                    return freshServerParks;
+                }
+
+                var backupServerParks = _cache.Get(backupKey) as List<IServerPark>;
+                if (backupServerParks != null && backupServerParks.Count > 0)
+                {
+                    _cache.Set(cacheKey, backupServerParks, DateTimeOffset.Now.AddMinutes(5));
+                    return backupServerParks;
+                }
+
+                return new List<IServerPark>();
+            }
         }
 
         public ISurveyCollection GetSurveys(ConnectionModel connectionModel, string serverParkName)
