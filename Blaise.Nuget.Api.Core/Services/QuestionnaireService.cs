@@ -248,11 +248,9 @@ namespace Blaise.Nuget.Api.Core.Services
 
             if (questionnaire == null)
             {
-                throw new DataNotFoundException(
-                    $"Questionnaire '{questionnaireName}' not found on server park '{serverPark.Name}'");
             }
 
-            return questionnaire.InstrumentID;
+            return questionnaire?.InstrumentID;
         }
 
         private static ISurvey GetQuestionnaire(IEnumerable<ISurvey> questionnaires, string questionnaireName)
