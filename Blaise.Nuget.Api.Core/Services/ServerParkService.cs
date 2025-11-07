@@ -49,10 +49,80 @@ namespace Blaise.Nuget.Api.Core.Services
             return serverPark;
         }
 
+        private static readonly ObjectCache _connectionCache = MemoryCache.Default;
+        private static readonly object _connectionCacheLock = new object();
+
+        private IConnectedServer GetCachedConnection(ConnectionModel connectionModel)
+        {
+            string cacheKey = $"Connection_{connectionModel.ServerName}";
+            string backupKey = $"{cacheKey}_Backup";
+            int expiresInMinutes = connectionModel.ConnectionExpiresInMinutes > 0 ? connectionModel.ConnectionExpiresInMinutes : 5;
+
+            var cachedConnection = _connectionCache.Get(cacheKey) as IConnectedServer;
+            if (IsConnectionValid(cachedConnection))
+            {
+                return cachedConnection;
+            }
+
+            lock (_connectionCacheLock)
+            {
+                cachedConnection = _connectionCache.Get(cacheKey) as IConnectedServer;
+                if (IsConnectionValid(cachedConnection))
+                {
+                    return cachedConnection;
+                }
+
+                IConnectedServer freshConnection = null;
+                try
+                {
+                    freshConnection = _connectionFactory.GetConnection(connectionModel);
+                }
+                catch (Exception ex)
+                {
+                }
+
+                if (IsConnectionValid(freshConnection))
+                {
+                    _connectionCache.Set(cacheKey, freshConnection, DateTimeOffset.Now.AddMinutes(expiresInMinutes));
+                    _connectionCache.Set(backupKey, freshConnection, ObjectCache.InfiniteAbsoluteExpiration);
+                    return freshConnection;
+                }
+
+                var backupConnection = _connectionCache.Get(backupKey) as IConnectedServer;
+                if (IsConnectionValid(backupConnection))
+                {
+                    _connectionCache.Set(cacheKey, backupConnection, DateTimeOffset.Now.AddMinutes(expiresInMinutes));
+                    return backupConnection;
+                }
+
+                throw new DataNotFoundException("Unable to establish a valid connection to the Blaise server.");
+            }
+        }
+
+        private bool IsConnectionValid(IConnectedServer connection)
+        {
+            if (connection == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                var _ = connection.ServerParks?.Count;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
         /// <inheritdoc/>
         public IEnumerable<IServerPark> GetServerParks(ConnectionModel connectionModel)
         {
-            var connection = _connectionFactory.GetConnection(connectionModel);
+            var connection = GetCachedConnection(connectionModel);
+
             var serverParks = GetServerParks(connection);
 
             if (!serverParks.Any())
@@ -114,7 +184,7 @@ namespace Blaise.Nuget.Api.Core.Services
 
         public ISurveyCollection GetSurveys(ConnectionModel connectionModel, string serverParkName)
         {
-            var connection = _connectionFactory.GetConnection(connectionModel);
+            var connection = GetCachedConnection(connectionModel);
             var surveys = connection.GetSurveys(serverParkName);
 
             if (!surveys.Any())
