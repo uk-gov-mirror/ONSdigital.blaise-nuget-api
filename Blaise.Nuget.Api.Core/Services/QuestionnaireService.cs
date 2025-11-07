@@ -248,9 +248,10 @@ namespace Blaise.Nuget.Api.Core.Services
 
             if (questionnaire == null)
             {
+                return default;
             }
 
-            return questionnaire?.InstrumentID;
+            return questionnaire.InstrumentID;
         }
 
         private static ISurvey GetQuestionnaire(IEnumerable<ISurvey> questionnaires, string questionnaireName)
